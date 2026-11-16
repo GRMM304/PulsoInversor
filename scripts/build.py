@@ -2,9 +2,17 @@ import os, urllib.parse
 R = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 EMAIL = 'contacto@pulsoinversor.cl'
 
+# WhatsApp comercial. PENDIENTE: confirmar el número (hoy es el que aparecía en el sitio anterior).
+# Si cambia, actualizarlo también en assets/js/main.js (WHATSAPP).
+WHATSAPP = '56983554676'
+AGENDAR = 'Agendar una reunión'
+
 def mail(subject=None):
-    # PENDIENTE (global): confirmar si el CTA usará este correo o un formulario/WhatsApp comercial.
-    return f'mailto:{EMAIL}' + (('?subject=' + urllib.parse.quote(subject)) if subject else '')
+    """Enlace de contacto de los botones: abre WhatsApp con un mensaje que conserva el tema."""
+    texto = 'Hola, quiero agendar una reunión con un asesor de Pulso Inversor.'
+    if subject:
+        texto += f' Tema: {subject}.'
+    return f'https://wa.me/{WHATSAPP}?text=' + urllib.parse.quote(texto)
 
 def P(text):
     """Marcador interno: no se muestra en el sitio."""
@@ -25,7 +33,7 @@ def header(slug):
         active = any(s == slug for s, _ in subs)
         links = ''.join(f'<li><a href="{s}"{" aria-current=page" if s==slug else ""}>{t}</a></li>' for s, t in subs)
         items.append(f'<li class="has-sub{" active" if active else ""}"><button type="button" aria-expanded="false" aria-controls="sub{i}">{label}</button><ul class="submenu" id="sub{i}">{links}</ul></li>')
-    items.append(f'<li class="nav-cta-item" hidden-desktop><a href="{mail("Conversemos")}">Conversemos</a></li>')
+    items.append(f'<li class="nav-cta-item" hidden-desktop><a href="{mail()}" target="_blank" rel="noopener">{AGENDAR}</a></li>')
     return f'''<a class="skip" href="#contenido">Saltar al contenido</a>
 <header class="header">
   <div class="container nav">
@@ -33,7 +41,7 @@ def header(slug):
     <nav aria-label="Principal">
       <ul class="menu" id="menu">{''.join(items)}</ul>
     </nav>
-    <div class="nav-actions"><a class="btn nav-cta" href="{mail("Conversemos")}">Conversemos</a></div>
+    <div class="nav-actions"><a class="btn nav-cta" href="{mail()}" target="_blank" rel="noopener">{AGENDAR}</a></div>
     <button class="mobile-toggle" type="button" aria-controls="menu" aria-expanded="false" aria-label="Abrir menú">☰</button>
   </div>
 </header>'''
@@ -100,7 +108,22 @@ def hero(crumb, h1, p, eyebrow=None):
 def cta(h, p, label, subject):
     return f'''<section class="section"><div class="container"><div class="cta-band">
 <div><h2>{h}</h2><p>{p}</p></div>
-<a class="btn btn-primary" href="{mail(subject)}">{label}</a></div></div></section>'''
+<a class="btn btn-primary" href="{mail(subject)}" target="_blank" rel="noopener">{label}</a></div></div></section>'''
+
+def cta_final():
+    return f'''<section class="cta-final">
+  <div class="container">
+    <span class="eyebrow dark">Tu siguiente paso</span>
+    <h2>Cuéntanos qué quieres <span class="accent">construir</span></h2>
+    <p>Una conversación para conocernos y ver por dónde partir. Sin apuro.</p>
+    <a class="btn btn-primary btn-xl" href="{mail()}" target="_blank" rel="noopener">{AGENDAR} <span aria-hidden="true">→</span></a>
+    <ul class="cta-final-notes">
+      <li>Te responde una persona del equipo</li>
+      <li>No te pedimos decidir en la reunión</li>
+      <li>Puedes venir con tu abogado</li>
+    </ul>
+  </div>
+</section>'''
 
 
 # ---------------- Íconos (trazo simple, heredan el color del texto) ----------------
@@ -123,7 +146,7 @@ PASOS = '''<li><strong>Nos cuentas qué buscas</strong><span>Partimos por escuch
     <li><strong>Decides con calma</strong><span>Te llevas los documentos y resolvemos cada pregunta, las veces que haga falta.</span></li>
     <li><strong>Inviertes acompañado</strong><span>Formalizas tu inversión y sigues en contacto directo con el equipo.</span></li>'''
 
-CTA_GENERAL = ('Cuéntanos qué quieres construir', 'Una conversación para conocernos y ver por dónde partir. Sin apuro.', 'Conversemos', 'Quiero conversar con el equipo')
+CTA_GENERAL = ('Cuéntanos qué quieres construir', 'Una conversación para conocernos y ver por dónde partir. Sin apuro.', AGENDAR, None)
 
 PRODUCTS = [
     ('Proyecta un Hogar', 'Haz crecer tu capital y ayuda a que una familia que enfrenta un remate tenga una nueva oportunidad.', 'proyecta-un-hogar'),
@@ -148,14 +171,21 @@ CAMINOS = [
      ('Tu propiedad', 'El capital que hoy está detenido en tu inmueble'),
      ('Un mejor flujo', 'Un flujo de dinero mejor que el que hoy te genera tu propiedad')),
 ]
-cards = ''.join(f'''<details class="card product-card camino">
-  <summary><div class="card-num">0{i+1}</div><h3>{t}</h3><p>{d}</p><span class="camino-toggle">Ver qué activas y qué logras</span></summary>
-  <div class="camino-body">
-    <div class="camino-row"><span class="camino-label">Qué activas</span><strong>{act[0]}</strong><span>{act[1]}</span></div>
-    <div class="camino-row"><span class="camino-label">Qué logras</span><strong>{log[0]}</strong><span>{log[1]}</span></div>
-    <a class="link-arrow" href="inversiones.html#{a}">Conocer más</a>
+_ARROW = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>'
+cards = ''.join(f'''<a class="camino{' is-open' if i == 0 else ''}" href="inversiones.html#{a}" data-camino>
+  <div class="camino-bg camino-bg-{i+1}" aria-hidden="true"></div>
+  <div class="camino-top"><span class="camino-num">0{i+1}</span><span class="camino-arrow">{_ARROW}</span></div>
+  <div class="camino-bottom">
+    <h3>{t}</h3>
+    <div class="camino-detail"><div class="camino-inner">
+      <p>{d}</p>
+      <div class="camino-rows">
+        <div class="camino-row"><span class="camino-label">Qué activas</span><strong>{act[0]}</strong><span>{act[1]}</span></div>
+        <div class="camino-row"><span class="camino-label">Qué logras</span><strong>{log[0]}</strong><span>{log[1]}</span></div>
+      </div>
+    </div></div>
   </div>
-</details>''' for i, (a, t, d, act, log) in enumerate(CAMINOS))
+</a>''' for i, (a, t, d, act, log) in enumerate(CAMINOS))
 
 def bullets(items):
     return '<ul class="choice-list">' + ''.join(f'<li>{x}</li>' for x in items) + '</ul>'
@@ -176,13 +206,13 @@ page('index.html', 'Inicio',
     <span class="eyebrow dark">Inversión con Garantía Real</span>
     <h1>Tu próxima inversión <span class="accent">comienza con claridad</span></h1>
     <p>Explora alternativas vinculadas al mercado inmobiliario y encuentra un punto de partida para tus objetivos.</p>
-    {P("AGENDA: hoy el formulario abre un correo a contacto@pulsoinversor.cl con el nombre. Reemplazar por el enlace de agenda del asesor (Calendly, Google Calendar u otro) cuando exista; se cambia en assets/js/main.js (AGENDA_URL).")}
+    {P("El formulario abre WhatsApp con el nombre en el mensaje. CONFIRMAR número en assets/js/main.js (WHATSAPP) y en scripts/build.py (WHATSAPP).")}
     <form class="hero-form" data-agenda novalidate>
       <label for="agenda-nombre" class="sr-only">Tu nombre</label>
       <input id="agenda-nombre" name="nombre" type="text" autocomplete="given-name" placeholder="Escribe tu nombre" required>
       <button class="btn btn-primary" type="submit">Empecemos por ti <span aria-hidden="true">→</span></button>
     </form>
-    <p class="hero-form-note">Agenda una conversación con un asesor. Sin apuro y sin compromiso.</p>
+    <p class="hero-form-note">Se abrirá WhatsApp para agendar una reunión con un asesor. Sin apuro y sin compromiso.</p>
   </div></div>
 </section>
 
@@ -219,8 +249,8 @@ page('index.html', 'Inicio',
         <p>Comprar para arrendar exige una inversión mayor y gestión continua.</p>
       </div>
       <div class="why-col why-pulso">
-        <span class="why-kicker">Pulso Inversor</span>
-        <h3>Una alternativa diferente</h3>
+        <span class="why-kicker">Con nosotros</span>
+        <h3>Pulso Inversor</h3>
         <p>Rentabilidades pactadas en UF, con potencial de superar alternativas conservadoras.</p>
         <p>Retornos definidos contractualmente, sin depender directamente de la cotización diaria de un fondo.</p>
         <p>Participación en operaciones inmobiliarias sin comprar ni administrar una propiedad.</p>
@@ -233,16 +263,15 @@ page('index.html', 'Inicio',
         <article class="igr-item">{icon('doc-check')}<div><h3>¿Qué queda a mi favor?</h3><p>Un documento firmado ante notario que puedes revisar con tu abogado.</p></div></article>
         <article class="igr-item">{icon('calendario')}<div><h3>¿Cómo recupero mi dinero?</h3><p>Un calendario de pagos por escrito, antes de firmar.</p></div></article>
       </div>
-      <div class="actions"><a class="btn btn-dark" href="como-funciona.html">Ver cómo funciona, paso a paso</a></div>
+      <div class="actions"><a class="btn btn-dark" href="como-funciona.html">Cómo funciona</a></div>
     </div>
   </div>
   <p class="disclaimer">Comparación general y referencial. Toda inversión, incluidas las nuestras, tiene riesgos.</p>
 </div></section>
 
 <section class="section"><div class="container">
-  <div class="title center"><span class="eyebrow">Formas de invertir</span><h2>Tres caminos, según lo que quieres construir</h2>
-    <p class="lead">Toca cada uno para ver qué activas y qué logras.</p></div>
-  <div class="grid-3 caminos">{cards}</div>
+  <div class="title center"><span class="eyebrow">Formas de invertir</span><h2>Tres caminos, según lo que quieres construir</h2></div>
+  <div class="caminos-acc">{cards}</div>
   <p class="center-note">¿Quieres ordenar todo tu patrimonio? <a href="inversiones.html#configuracion-patrimonial">Conoce Configuración Patrimonial</a></p>
   <div class="actions" style="justify-content:center"><a class="btn btn-outline" href="inversiones.html#comparar">Compararlas lado a lado</a></div>
 </div></section>
@@ -264,7 +293,7 @@ page('index.html', 'Inicio',
   {P("INCORPORAR enlace al perfil oficial de Pulso en Google: botón 'Ver opiniones en Google'.")}
   <p class="disclaimer" style="text-align:center">Las experiencias corresponden a casos particulares y no aseguran resultados futuros.</p>
 </div></section>
-''' + cta(*CTA_GENERAL))
+''' + cta_final())
 
 # ---------------- 2.1 Cómo funciona ----------------
 page('como-funciona.html', 'Cómo funciona',
@@ -308,7 +337,7 @@ page('como-funciona.html', 'Cómo funciona',
 # ---------------- 2.2 Inversiones ----------------
 def product(anchor, num, title, text):
     return f'''<article class="card product-card" id="{anchor}"><div class="card-num">{num}</div><h3>{title}</h3><p>{text}</p>
-<a class="btn btn-outline" href="{mail('Quiero saber más: ' + title)}">Quiero saber más</a></article>'''
+<a class="btn btn-outline" href="{mail(title)}" target="_blank" rel="noopener">Quiero saber más</a></article>'''
 
 page('inversiones.html', 'Inversiones',
      'Cuatro alternativas de inversión con respaldo inmobiliario. Mira para quién es cada una y compara sus condiciones con calma.',
@@ -447,7 +476,7 @@ page('simuladores.html', 'Simuladores',
 </div>
 <p class="disclaimer">Los resultados son referenciales y dependen de los datos y supuestos que uses. Las condiciones reales de una operación están en su documentación, y una simulación no asegura rentabilidad.</p>
 </div></section>
-''' + cta('¿Prefieres ver los números con alguien?', 'Te acompañamos a leerlos y a resolver tus dudas.', 'Conversemos', 'Consulta sobre simuladores'))
+''' + cta('¿Prefieres ver los números con alguien?', 'Te acompañamos a leerlos y a resolver tus dudas.', AGENDAR, 'Consulta sobre simuladores'))
 
 # ---------------- 3.1 Nosotros ----------------
 page('nosotros.html', 'Nosotros',
@@ -507,7 +536,7 @@ page('verifica-a-pulso.html', 'Verifica a Pulso',
     <article class="card">{icon('documento')}<h3>Los antecedentes</h3><p>Tasación, ficha, contratos e inscripciones.</p></article>
     <article class="card">{icon('grafico')}<h3>El seguimiento</h3><p>Hitos, pagos previstos y realizados, novedades y cómo va hoy.</p></article>
   </div>
-  <div class="actions"><a class="btn btn-outline" href="#" aria-disabled="true">Ver documentos del caso</a><a class="btn btn-dark" href="{mail('Consulta sobre la operación abierta')}">Preguntar por esta operación</a></div>
+  <div class="actions"><a class="btn btn-outline" href="#" aria-disabled="true">Ver documentos del caso</a><a class="btn btn-dark" href="{mail('la operación abierta')}" target="_blank" rel="noopener">Preguntar por esta operación</a></div>
   <p class="disclaimer">Las condiciones y resultados de este caso corresponden a una operación específica.</p>
 </div></section>
 
@@ -584,7 +613,7 @@ page('mi-primera-inversion.html', 'Mi primera inversión',
     <li>¿Qué costos tengo que considerar y qué pasa si necesito mi dinero antes?</li>
   </ul>
 </div></section>
-''' + cta('Cuéntanos qué quieres construir', 'Partimos por lo básico, sin apuro y sin tecnicismos.', 'Conversemos', 'Mi primera inversión'))
+''' + cta('Cuéntanos qué quieres construir', 'Partimos por lo básico, sin apuro y sin tecnicismos.', AGENDAR, 'Mi primera inversión'))
 
 # ---------------- 4.2 Experiencia ----------------
 page('ya-tengo-experiencia.html', 'Ya tengo experiencia invirtiendo',

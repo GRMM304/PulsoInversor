@@ -21,9 +21,9 @@
   <div class="container nav">
     <a class="logo" href="index.html" aria-label="Pulso Inversor, ir al inicio"><img src="assets/img/logo-pulso-gmm.webp" alt="Pulso Inversor · Una empresa de Grupo Matchmaking" width="560" height="62"></a>
     <nav aria-label="Principal">
-      <ul class="menu" id="menu"><li class="active"><a href="index.html" aria-current=page>Inicio</a></li><li class="has-sub"><button type="button" aria-expanded="false" aria-controls="sub0">Cómo invertir</button><ul class="submenu" id="sub0"><li><a href="como-funciona.html">Cómo funciona</a></li><li><a href="inversiones.html">Inversiones</a></li><li><a href="garantias-y-documentos.html">Garantías y documentos</a></li><li><a href="simuladores.html">Simuladores</a></li></ul></li><li class="has-sub"><button type="button" aria-expanded="false" aria-controls="sub1">Conócenos</button><ul class="submenu" id="sub1"><li><a href="nosotros.html">Nosotros</a></li><li><a href="verifica-a-pulso.html">Verifica a Pulso</a></li></ul></li><li class="has-sub"><button type="button" aria-expanded="false" aria-controls="sub2">Recursos</button><ul class="submenu" id="sub2"><li><a href="mi-primera-inversion.html">Mi primera inversión</a></li><li><a href="ya-tengo-experiencia.html">Ya tengo experiencia invirtiendo</a></li><li><a href="preguntas-frecuentes.html">Preguntas frecuentes</a></li></ul></li><li class="nav-cta-item" data-mobile-only><a href="mailto:contacto@pulsoinversor.cl?subject=Conversemos">Conversemos</a></li></ul>
+      <ul class="menu" id="menu"><li class="active"><a href="index.html" aria-current=page>Inicio</a></li><li class="has-sub"><button type="button" aria-expanded="false" aria-controls="sub0">Cómo invertir</button><ul class="submenu" id="sub0"><li><a href="como-funciona.html">Cómo funciona</a></li><li><a href="inversiones.html">Inversiones</a></li><li><a href="garantias-y-documentos.html">Garantías y documentos</a></li><li><a href="simuladores.html">Simuladores</a></li></ul></li><li class="has-sub"><button type="button" aria-expanded="false" aria-controls="sub1">Conócenos</button><ul class="submenu" id="sub1"><li><a href="nosotros.html">Nosotros</a></li><li><a href="verifica-a-pulso.html">Verifica a Pulso</a></li></ul></li><li class="has-sub"><button type="button" aria-expanded="false" aria-controls="sub2">Recursos</button><ul class="submenu" id="sub2"><li><a href="mi-primera-inversion.html">Mi primera inversión</a></li><li><a href="ya-tengo-experiencia.html">Ya tengo experiencia invirtiendo</a></li><li><a href="preguntas-frecuentes.html">Preguntas frecuentes</a></li></ul></li><li class="nav-cta-item" data-mobile-only><a href="https://wa.me/56983554676?text=Hola%2C%20quiero%20agendar%20una%20reuni%C3%B3n%20con%20un%20asesor%20de%20Pulso%20Inversor." target="_blank" rel="noopener">Agendar una reunión</a></li></ul>
     </nav>
-    <div class="nav-actions"><a class="btn nav-cta" href="mailto:contacto@pulsoinversor.cl?subject=Conversemos">Conversemos</a></div>
+    <div class="nav-actions"><a class="btn nav-cta" href="https://wa.me/56983554676?text=Hola%2C%20quiero%20agendar%20una%20reuni%C3%B3n%20con%20un%20asesor%20de%20Pulso%20Inversor." target="_blank" rel="noopener">Agendar una reunión</a></div>
     <button class="mobile-toggle" type="button" aria-controls="menu" aria-expanded="false" aria-label="Abrir menú">☰</button>
   </div>
 </header>
@@ -35,13 +35,13 @@
     <span class="eyebrow dark">Inversión con Garantía Real</span>
     <h1>Tu próxima inversión <span class="accent">comienza con claridad</span></h1>
     <p>Explora alternativas vinculadas al mercado inmobiliario y encuentra un punto de partida para tus objetivos.</p>
-    <!-- PENDIENTE: AGENDA: hoy el formulario abre un correo a contacto@pulsoinversor.cl con el nombre. Reemplazar por el enlace de agenda del asesor (Calendly, Google Calendar u otro) cuando exista; se cambia en assets/js/main.js (AGENDA_URL). -->
+    <!-- PENDIENTE: El formulario abre WhatsApp con el nombre en el mensaje. CONFIRMAR número en assets/js/main.js (WHATSAPP) y en scripts/build.py (WHATSAPP). -->
     <form class="hero-form" data-agenda novalidate>
       <label for="agenda-nombre" class="sr-only">Tu nombre</label>
       <input id="agenda-nombre" name="nombre" type="text" autocomplete="given-name" placeholder="Escribe tu nombre" required>
       <button class="btn btn-primary" type="submit">Empecemos por ti <span aria-hidden="true">→</span></button>
     </form>
-    <p class="hero-form-note">Agenda una conversación con un asesor. Sin apuro y sin compromiso.</p>
+    <p class="hero-form-note">Se abrirá WhatsApp para agendar una reunión con un asesor. Sin apuro y sin compromiso.</p>
   </div></div>
 </section>
 
@@ -74,8 +74,8 @@
         <p>Comprar para arrendar exige una inversión mayor y gestión continua.</p>
       </div>
       <div class="why-col why-pulso">
-        <span class="why-kicker">Pulso Inversor</span>
-        <h3>Una alternativa diferente</h3>
+        <span class="why-kicker">Con nosotros</span>
+        <h3>Pulso Inversor</h3>
         <p>Rentabilidades pactadas en UF, con potencial de superar alternativas conservadoras.</p>
         <p>Retornos definidos contractualmente, sin depender directamente de la cotización diaria de un fondo.</p>
         <p>Participación en operaciones inmobiliarias sin comprar ni administrar una propiedad.</p>
@@ -88,37 +88,54 @@
         <article class="igr-item"><div class="card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l3 3v8"/><path d="M6 3v18h7"/><path d="M9 8h6M9 11h6M9 14h3"/><circle cx="17.5" cy="18" r="3.5"/><path d="M16 18l1 1 2-2"/></svg></div><div><h3>¿Qué queda a mi favor?</h3><p>Un documento firmado ante notario que puedes revisar con tu abogado.</p></div></article>
         <article class="igr-item"><div class="card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17"/><path d="M8 3v4M16 3v4"/><path d="M8 14h2M14 14h2M8 17h2M14 17h2"/></svg></div><div><h3>¿Cómo recupero mi dinero?</h3><p>Un calendario de pagos por escrito, antes de firmar.</p></div></article>
       </div>
-      <div class="actions"><a class="btn btn-dark" href="como-funciona.html">Ver cómo funciona, paso a paso</a></div>
+      <div class="actions"><a class="btn btn-dark" href="como-funciona.html">Cómo funciona</a></div>
     </div>
   </div>
   <p class="disclaimer">Comparación general y referencial. Toda inversión, incluidas las nuestras, tiene riesgos.</p>
 </div></section>
 
 <section class="section"><div class="container">
-  <div class="title center"><span class="eyebrow">Formas de invertir</span><h2>Tres caminos, según lo que quieres construir</h2>
-    <p class="lead">Toca cada uno para ver qué activas y qué logras.</p></div>
-  <div class="grid-3 caminos"><details class="card product-card camino">
-  <summary><div class="card-num">01</div><h3>Proyecta un Hogar</h3><p>Haz crecer tu capital y ayuda a que una familia que enfrenta un remate tenga una nueva oportunidad.</p><span class="camino-toggle">Ver qué activas y qué logras</span></summary>
-  <div class="camino-body">
-    <div class="camino-row"><span class="camino-label">Qué activas</span><strong>Capital disponible</strong><span>Desde $5.000.000</span></div>
-    <div class="camino-row"><span class="camino-label">Qué logras</span><strong>Renta periódica</strong><span>Flujos mensuales o trimestrales con factibilidad de interés</span></div>
-    <a class="link-arrow" href="inversiones.html#proyecta-un-hogar">Conocer más</a>
+  <div class="title center"><span class="eyebrow">Formas de invertir</span><h2>Tres caminos, según lo que quieres construir</h2></div>
+  <div class="caminos-acc"><a class="camino is-open" href="inversiones.html#proyecta-un-hogar" data-camino>
+  <div class="camino-bg camino-bg-1" aria-hidden="true"></div>
+  <div class="camino-top"><span class="camino-num">01</span><span class="camino-arrow"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></span></div>
+  <div class="camino-bottom">
+    <h3>Proyecta un Hogar</h3>
+    <div class="camino-detail"><div class="camino-inner">
+      <p>Haz crecer tu capital y ayuda a que una familia que enfrenta un remate tenga una nueva oportunidad.</p>
+      <div class="camino-rows">
+        <div class="camino-row"><span class="camino-label">Qué activas</span><strong>Capital disponible</strong><span>Desde $5.000.000</span></div>
+        <div class="camino-row"><span class="camino-label">Qué logras</span><strong>Renta periódica</strong><span>Flujos mensuales o trimestrales con factibilidad de interés</span></div>
+      </div>
+    </div></div>
   </div>
-</details><details class="card product-card camino">
-  <summary><div class="card-num">02</div><h3>Hipoteca Inteligente</h3><p>Usa tu capacidad de crédito para empezar a construir tu patrimonio inmobiliario.</p><span class="camino-toggle">Ver qué activas y qué logras</span></summary>
-  <div class="camino-body">
-    <div class="camino-row"><span class="camino-label">Qué activas</span><strong>Capacidad financiera</strong><span>Desde 2.000 UF de crédito hipotecario</span></div>
-    <div class="camino-row"><span class="camino-label">Qué logras</span><strong>Capital y patrimonio</strong><span>Tu capacidad bancaria genera retorno y activos</span></div>
-    <a class="link-arrow" href="inversiones.html#hipoteca-inteligente">Conocer más</a>
+</a><a class="camino" href="inversiones.html#hipoteca-inteligente" data-camino>
+  <div class="camino-bg camino-bg-2" aria-hidden="true"></div>
+  <div class="camino-top"><span class="camino-num">02</span><span class="camino-arrow"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></span></div>
+  <div class="camino-bottom">
+    <h3>Hipoteca Inteligente</h3>
+    <div class="camino-detail"><div class="camino-inner">
+      <p>Usa tu capacidad de crédito para empezar a construir tu patrimonio inmobiliario.</p>
+      <div class="camino-rows">
+        <div class="camino-row"><span class="camino-label">Qué activas</span><strong>Capacidad financiera</strong><span>Desde 2.000 UF de crédito hipotecario</span></div>
+        <div class="camino-row"><span class="camino-label">Qué logras</span><strong>Capital y patrimonio</strong><span>Tu capacidad bancaria genera retorno y activos</span></div>
+      </div>
+    </div></div>
   </div>
-</details><details class="card product-card camino">
-  <summary><div class="card-num">03</div><h3>Inversión Inmobiliaria Circular</h3><p>Dale una nueva vida al capital de tu propiedad, con menos preocupaciones de arriendo.</p><span class="camino-toggle">Ver qué activas y qué logras</span></summary>
-  <div class="camino-body">
-    <div class="camino-row"><span class="camino-label">Qué activas</span><strong>Tu propiedad</strong><span>El capital que hoy está detenido en tu inmueble</span></div>
-    <div class="camino-row"><span class="camino-label">Qué logras</span><strong>Un mejor flujo</strong><span>Un flujo de dinero mejor que el que hoy te genera tu propiedad</span></div>
-    <a class="link-arrow" href="inversiones.html#inversion-circular">Conocer más</a>
+</a><a class="camino" href="inversiones.html#inversion-circular" data-camino>
+  <div class="camino-bg camino-bg-3" aria-hidden="true"></div>
+  <div class="camino-top"><span class="camino-num">03</span><span class="camino-arrow"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></span></div>
+  <div class="camino-bottom">
+    <h3>Inversión Inmobiliaria Circular</h3>
+    <div class="camino-detail"><div class="camino-inner">
+      <p>Dale una nueva vida al capital de tu propiedad, con menos preocupaciones de arriendo.</p>
+      <div class="camino-rows">
+        <div class="camino-row"><span class="camino-label">Qué activas</span><strong>Tu propiedad</strong><span>El capital que hoy está detenido en tu inmueble</span></div>
+        <div class="camino-row"><span class="camino-label">Qué logras</span><strong>Un mejor flujo</strong><span>Un flujo de dinero mejor que el que hoy te genera tu propiedad</span></div>
+      </div>
+    </div></div>
   </div>
-</details></div>
+</a></div>
   <p class="center-note">¿Quieres ordenar todo tu patrimonio? <a href="inversiones.html#configuracion-patrimonial">Conoce Configuración Patrimonial</a></p>
   <div class="actions" style="justify-content:center"><a class="btn btn-outline" href="inversiones.html#comparar">Compararlas lado a lado</a></div>
 </div></section>
@@ -155,9 +172,19 @@
   <!-- PENDIENTE: INCORPORAR enlace al perfil oficial de Pulso en Google: botón 'Ver opiniones en Google'. -->
   <p class="disclaimer" style="text-align:center">Las experiencias corresponden a casos particulares y no aseguran resultados futuros.</p>
 </div></section>
-<section class="section"><div class="container"><div class="cta-band">
-<div><h2>Cuéntanos qué quieres construir</h2><p>Una conversación para conocernos y ver por dónde partir. Sin apuro.</p></div>
-<a class="btn btn-primary" href="mailto:contacto@pulsoinversor.cl?subject=Quiero%20conversar%20con%20el%20equipo">Conversemos</a></div></div></section>
+<section class="cta-final">
+  <div class="container">
+    <span class="eyebrow dark">Tu siguiente paso</span>
+    <h2>Cuéntanos qué quieres <span class="accent">construir</span></h2>
+    <p>Una conversación para conocernos y ver por dónde partir. Sin apuro.</p>
+    <a class="btn btn-primary btn-xl" href="https://wa.me/56983554676?text=Hola%2C%20quiero%20agendar%20una%20reuni%C3%B3n%20con%20un%20asesor%20de%20Pulso%20Inversor." target="_blank" rel="noopener">Agendar una reunión <span aria-hidden="true">→</span></a>
+    <ul class="cta-final-notes">
+      <li>Te responde una persona del equipo</li>
+      <li>No te pedimos decidir en la reunión</li>
+      <li>Puedes venir con tu abogado</li>
+    </ul>
+  </div>
+</section>
 </main>
 <footer class="footer">
   <div class="container">
