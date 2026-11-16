@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tu primera inversión fuera del banco · Pulso Inversor</title>
+<meta name="description" content="Invierte tus ahorros desde $5 millones sabiendo qué propiedad respalda tu dinero, qué documento queda a tu favor y cómo lo recuperas. Míralo antes de firmar.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<!--
+  LANDING · PERFIL 1 (primera inversión fuera del banco)
+  Campaña: Invierte con Respaldo Inmobiliario · "Míralo antes de firmar."
+  Reglas de mensaje (Minuta de definiciones): sin tasas en piezas públicas, sin "seguro" ni
+  "garantizado", con la línea legal en cada pieza.
+  Todo lo que aparece en amarillo con [REQUIERE: ...] es un dato que falta confirmar antes de publicar.
+  Buscar "REQUIERE" en este archivo para encontrarlos todos.
+-->
+<style>
+:root{
+  --oscuro:#0E2C28;      /* fondo marca */
+  --oscuro-2:#123D35;
+  --verde:#599675;       /* verde Pulso */
+  --verde-osc:#1E5746;
+  --lima:#C7D95D;        /* verde limón */
+  --oliva:#599675;
+  --dorado:#F5B05E;
+  --texto:#0E2C28;
+  --texto-2:#4d5a53;
+  --borde:#E3E8E2;
+  --fondo:#ffffff;
+  --fondo-2:#f4f6f2;
+  --radio:14px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--texto);background:var(--fondo);line-height:1.6;font-size:17px;-webkit-font-smoothing:antialiased}
+img{max-width:100%}
+a{color:var(--verde-osc)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+.narrow{max-width:760px}
+h1,h2,h3{line-height:1.2;margin:0 0 .5em;letter-spacing:-.01em}
+h2{font-size:clamp(1.6rem,3.6vw,2.3rem);font-weight:800}
+h3{font-size:1.15rem;font-weight:700}
+p{margin:0 0 1em}
+.eyebrow{display:inline-block;font-size:.78rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--verde);margin-bottom:.8em}
+section{padding:72px 0}
+.alt{background:var(--fondo-2)}
+.dark{background:var(--oscuro);color:#e9eee9}
+.dark h2,.dark h3{color:#fff}
+.dark .eyebrow{color:var(--oliva)}
+.lead{font-size:1.15rem;color:var(--texto-2)}
+.dark .lead{color:#c9d3cc}
+.ph{background:#fff3c4;color:#6b5200;border:1px dashed #d9b300;border-radius:4px;padding:0 4px;font-size:.92em;font-weight:600}
+
+/* Botones */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5em;padding:15px 26px;border-radius:999px;font-weight:700;font-size:1rem;text-decoration:none;border:2px solid transparent;cursor:pointer;font-family:inherit;text-align:center;transition:transform .15s ease, box-shadow .15s ease}
+.btn:hover{transform:translateY(-1px)}
+.btn-lima{background:var(--lima);color:var(--oscuro);box-shadow:0 6px 20px rgba(199,217,93,.25)}
+.btn-ghost{border-color:rgba(255,255,255,.35);color:#fff;background:transparent}
+.btn-verde{background:var(--verde);color:#fff}
+.btn-wsp{background:#25d366;color:#0b2e17}
+
+/* Barra superior */
+.top{position:sticky;top:0;z-index:20;background:rgba(14,44,40,.97);backdrop-filter:blur(6px);border-bottom:1px solid rgba(255,255,255,.06)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;height:64px;gap:12px}
+.logo{display:flex;flex-direction:column;line-height:1.1;text-decoration:none}
+.logo b{color:#fff;font-size:1.1rem;letter-spacing:.02em}
+.logo b span{color:var(--lima)}
+.logo small{color:#9fb0a5;font-size:.7rem}
+.top .btn{padding:10px 18px;font-size:.9rem}
+.franja{height:5px;display:grid;grid-template-columns:repeat(4,1fr)}
+.franja i:nth-child(1){background:var(--verde)}.franja i:nth-child(2){background:var(--oliva)}.franja i:nth-child(3){background:var(--dorado)}.franja i:nth-child(4){background:var(--lima)}
+
+/* Hero */
+.hero{background:var(--oscuro);color:#fff;padding:72px 0 64px;position:relative;overflow:hidden}
+.hero .grid{display:grid;grid-template-columns:1.25fr .9fr;gap:48px;align-items:center;position:relative;z-index:1}
+.hero h1{font-size:clamp(2rem,5vw,3.2rem);font-weight:800;margin-bottom:.4em}
+.hero h1 em{font-style:normal;color:var(--lima)}
+.hero .lead{color:#cfd9d2;font-size:1.18rem;max-width:36em}
+.hero .ctas{display:flex;flex-wrap:wrap;gap:12px;margin:28px 0 22px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;padding:0;margin:0;list-style:none}
+.chips li{font-size:.86rem;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.07);color:#dfe7e1;border:1px solid rgba(255,255,255,.08)}
+.chips li:before{content:"✓ ";color:var(--lima);font-weight:700}
+.hero-card{background:#fff;color:var(--texto);border-radius:18px;padding:26px;box-shadow:0 20px 50px rgba(0,0,0,.35)}
+.hero-card h3{font-size:1rem;margin-bottom:14px;color:var(--verde-osc);text-transform:uppercase;letter-spacing:.08em}
+.preg{display:flex;gap:14px;padding:14px 0;border-top:1px solid var(--borde)}
+.preg:first-of-type{border-top:none;padding-top:0}
+.preg .n{flex:0 0 34px;height:34px;border-radius:50%;background:var(--lima);color:var(--oscuro);display:grid;place-items:center;font-weight:800}
+.preg b{display:block}
+.preg span{font-size:.92rem;color:var(--texto-2)}
+.legal-mini{font-size:.78rem;color:#93a399;margin-top:18px;max-width:46em}
+
+/* Empatía */
+.dudas{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:30px 0}
+.duda{background:#fff;border:1px solid var(--borde);border-radius:var(--radio);padding:18px 20px;font-size:1.02rem;position:relative}
+.duda:before{content:"“";position:absolute;top:-6px;left:14px;font-size:2.6rem;color:var(--lima);font-weight:800;line-height:1}
+.duda p{margin:10px 0 0;font-style:italic;color:var(--texto)}
+.remate{font-size:1.25rem;font-weight:700;border-left:5px solid var(--lima);padding:4px 0 4px 18px;margin-top:28px}
+
+/* Señales de estafa */
+.senales{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:30px}
+.senal{background:var(--oscuro-2);border-radius:var(--radio);padding:24px;border:1px solid rgba(255,255,255,.06)}
+.senal .alerta{font-size:.8rem;font-weight:700;color:#f5b05e;text-transform:uppercase;letter-spacing:.08em}
+.senal h3{margin:8px 0 14px}
+.senal .resp{border-top:1px solid rgba(255,255,255,.1);padding-top:14px;color:#d5ded8;font-size:.97rem}
+.senal .resp b{color:var(--lima)}
+
+/* Diagnóstico */
+.dos-col{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+.barra{display:flex;border-radius:12px;overflow:hidden;height:64px;margin:16px 0 10px;font-weight:700;font-size:.95rem}
+.barra div{display:flex;align-items:center;justify-content:center;text-align:center;padding:0 8px}
+.barra .inv{flex:1;background:var(--verde);color:#fff}
+.barra .col{flex:1;background:var(--lima);color:var(--oscuro)}
+.caja{background:#fff;border:1px solid var(--borde);border-radius:var(--radio);padding:24px}
+.para{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:34px}
+.para ul{margin:0;padding:0;list-style:none}
+.para li{padding:8px 0 8px 30px;position:relative;border-top:1px solid var(--borde)}
+.para li:first-child{border-top:none}
+.para .si li:before{content:"✓";position:absolute;left:4px;color:var(--verde);font-weight:800}
+.para .no li:before{content:"✕";position:absolute;left:4px;color:#c0583c;font-weight:800}
+
+/* Pilares */
+.pilares{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:30px}
+.pilar{background:#fff;border:1px solid var(--borde);border-radius:var(--radio);padding:26px;border-top:5px solid var(--verde)}
+.pilar .num{font-size:.78rem;font-weight:800;color:var(--verde);letter-spacing:.1em}
+.pilar .simple{background:var(--fondo-2);border-radius:10px;padding:12px 14px;font-size:.93rem;margin-top:14px}
+.pilar .simple b{color:var(--verde-osc)}
+
+/* Explicación en simple */
+.ejemplo{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:12px;align-items:stretch;margin:30px 0}
+.ej{background:#fff;border:1px solid var(--borde);border-radius:var(--radio);padding:20px;text-align:center}
+.ej .ico{font-size:1.8rem}
+.ej b{display:block;margin:6px 0}
+.ej span{font-size:.92rem;color:var(--texto-2)}
+.flecha{display:grid;place-items:center;font-size:1.6rem;color:var(--verde)}
+.nota{font-size:.92rem;color:var(--texto-2);background:#fff;border-left:4px solid var(--dorado);padding:12px 16px;border-radius:0 10px 10px 0}
+table.lineas{width:100%;border-collapse:collapse;margin-top:20px;background:#fff;border-radius:var(--radio);overflow:hidden;border:1px solid var(--borde);font-size:.95rem}
+.lineas th,.lineas td{padding:14px 16px;text-align:left;border-bottom:1px solid var(--borde);vertical-align:top}
+.lineas th{background:var(--oscuro);color:#fff;font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.05em}
+.lineas tr.destacada td{background:#f3f9e6}
+.tag{display:inline-block;font-size:.72rem;font-weight:800;background:var(--lima);color:var(--oscuro);border-radius:999px;padding:2px 8px;margin-left:6px;vertical-align:middle}
+.tabla-scroll{overflow-x:auto}
+
+/* Glosario */
+.glosario{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:26px}
+.glosario div{background:#fff;border:1px solid var(--borde);border-radius:12px;padding:16px 18px}
+.glosario dt{font-weight:800;color:var(--verde-osc)}
+.glosario dd{margin:4px 0 0;color:var(--texto-2);font-size:.95rem}
+
+/* Pasos */
+.pasos{list-style:none;padding:0;margin:34px 0 0;counter-reset:p;display:grid;gap:14px}
+.pasos li{counter-increment:p;display:grid;grid-template-columns:52px 1fr;gap:16px;align-items:start;background:#fff;border:1px solid var(--borde);border-radius:var(--radio);padding:18px 20px}
+.pasos li:before{content:counter(p);width:44px;height:44px;border-radius:50%;background:var(--oscuro);color:var(--lima);display:grid;place-items:center;font-weight:800;font-size:1.15rem}
+.pasos li b{display:block;font-size:1.05rem}
+.pasos li span{color:var(--texto-2);font-size:.95rem}
+.despues{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:22px}
+.despues div{background:var(--oscuro);color:#e5ece7;border-radius:12px;padding:16px;font-size:.93rem}
+.despues b{display:block;color:var(--lima);margin-bottom:4px}
+
+/* Testimonios */
+.testis{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:30px}
+.testi{background:var(--oscuro-2);border-radius:var(--radio);padding:24px;display:flex;flex-direction:column}
+.testi blockquote{margin:0 0 16px;font-size:1.08rem;color:#fff;font-weight:600}
+.testi .quien{margin-top:auto;display:flex;gap:12px;align-items:center}
+.avatar{width:46px;height:46px;border-radius:50%;background:var(--verde);display:grid;place-items:center;font-weight:800;color:#fff;flex:0 0 46px}
+.testi .quien b{color:#fff;display:block}
+.testi .quien span{color:#a9b8ae;font-size:.88rem}
+.testi p{color:#cbd5ce;font-size:.95rem}
+.testi.vacio{border:2px dashed rgba(255,255,255,.2);background:transparent}
+.disc{font-size:.8rem;color:#93a399;margin-top:18px}
+
+/* Equipo / verifica */
+.equipo{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:26px}
+.persona{background:#fff;border:1px solid var(--borde);border-radius:var(--radio);padding:22px;text-align:center}
+.persona .foto{width:96px;height:96px;border-radius:50%;margin:0 auto 12px;background:var(--fondo-2);border:2px dashed var(--oliva);display:grid;place-items:center;font-size:.7rem;color:var(--texto-2);padding:6px}
+.persona b{display:block;font-size:1.05rem}
+.persona span{font-size:.9rem;color:var(--texto-2)}
+.verifica{margin-top:34px;display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.verifica ul{margin:0;padding-left:20px}
+.verifica li{margin-bottom:6px}
+
+/* FAQ */
+.faq details{background:#fff;border:1px solid var(--borde);border-radius:12px;margin-bottom:10px;overflow:hidden}
+.faq summary{cursor:pointer;list-style:none;padding:18px 54px 18px 20px;font-weight:700;position:relative;font-size:1.03rem}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary:after{content:"+";position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:1.5rem;color:var(--verde);font-weight:400}
+.faq details[open] summary:after{content:"–"}
+.faq details[open] summary{color:var(--verde-osc)}
+.faq .r{padding:0 20px 18px;color:var(--texto-2)}
+.faq .r p:last-child{margin:0}
+
+/* Formulario */
+.form-sec{background:var(--oscuro);color:#fff}
+.form-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:44px;align-items:start}
+.promesas{list-style:none;padding:0;margin:22px 0 0}
+.promesas li{padding:10px 0 10px 34px;position:relative;color:#d5ded8;border-top:1px solid rgba(255,255,255,.08)}
+.promesas li:before{content:"✓";position:absolute;left:6px;color:var(--lima);font-weight:800}
+form.lead{background:#fff;color:var(--texto);border-radius:18px;padding:28px;box-shadow:0 20px 50px rgba(0,0,0,.3)}
+.campo{margin-bottom:16px}
+.campo label,.campo legend{display:block;font-weight:700;font-size:.93rem;margin-bottom:6px}
+.campo small{display:block;color:var(--texto-2);font-size:.82rem;margin-top:-2px;margin-bottom:6px;font-weight:400}
+.campo input[type=text],.campo input[type=tel],.campo input[type=email]{width:100%;padding:13px 14px;border:1.5px solid var(--borde);border-radius:10px;font-size:1rem;font-family:inherit}
+.campo input:focus{outline:none;border-color:var(--verde);box-shadow:0 0 0 3px rgba(89,150,117,.2)}
+fieldset.campo{border:none;padding:0;margin:0 0 16px}
+.opciones{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.opciones.tres{grid-template-columns:repeat(3,1fr)}
+.opciones label{display:flex;align-items:center;gap:8px;border:1.5px solid var(--borde);border-radius:10px;padding:11px 12px;font-weight:600;font-size:.92rem;cursor:pointer;margin:0}
+.opciones input{accent-color:var(--verde)}
+.opciones label:has(input:checked){border-color:var(--verde);background:#eef6f1}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:.85rem;color:var(--texto-2);margin:6px 0 18px}
+.check input{margin-top:4px;accent-color:var(--verde)}
+form.lead .btn{width:100%;font-size:1.05rem}
+.bajo-btn{font-size:.82rem;color:var(--texto-2);text-align:center;margin:12px 0 0}
+.error{color:#b3401f;font-size:.85rem;margin-top:4px;display:none}
+.gracias{display:none;background:#fff;color:var(--texto);border-radius:18px;padding:30px;box-shadow:0 20px 50px rgba(0,0,0,.3)}
+.gracias h3{font-size:1.4rem}
+
+/* Footer */
+footer{background:#111514;color:#9fb0a5;font-size:.88rem;padding:40px 0 100px}
+footer .legal{border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:16px 18px;color:#c9d3cc;margin-bottom:22px}
+footer a{color:#c9d3cc}
+
+/* CTA fijo móvil */
+.cta-movil{display:none;position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(14,44,40,.97);padding:10px 16px calc(10px + env(safe-area-inset-bottom));border-top:1px solid rgba(255,255,255,.08)}
+.cta-movil .btn{width:100%}
+
+@media (max-width:900px){
+  .hero .grid,.dos-col,.form-grid{grid-template-columns:1fr;gap:32px}
+  .senales,.pilares,.testis,.equipo{grid-template-columns:1fr}
+  .despues{grid-template-columns:1fr 1fr}
+  .ejemplo{grid-template-columns:1fr}
+  .flecha{transform:rotate(90deg);height:28px}
+}
+@media (max-width:640px){
+  body{font-size:16px}
+  section{padding:56px 0}
+  .wrap{padding:0 16px}
+  .dudas,.para,.glosario,.verifica,.opciones,.opciones.tres,.despues{grid-template-columns:1fr}
+  .top .btn{display:none}
+  .cta-movil{display:block}
+  .hero{padding:48px 0}
+  .hero .ctas .btn{width:100%;padding:14px 18px}
+  .cta-movil .btn{padding:12px 18px}
+  form.lead,.gracias{padding:22px}
+}
+</style>
+<link rel="icon" type="image/png" href="assets/img/favicon.png">
+<link rel="apple-touch-icon" href="assets/img/icono-180.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Pulso">
+<link rel="stylesheet" href="assets/css/menu.css">
+<link rel="stylesheet" href="assets/css/app-movil.css">
+<script src="assets/js/menu.js" defer></script>
+<script src="assets/js/app-movil.js" defer></script>
+<meta name="theme-color" content="#0E2C28">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Pulso Inversor">
+<meta property="og:title" content="Tu primera inversión fuera del banco · Pulso Inversor">
+<meta property="og:description" content="Invierte tus ahorros desde $5 millones sabiendo qué propiedad respalda tu dinero, qué documento queda a tu favor y cómo lo recuperas. Míralo antes de firmar.">
+<meta property="og:image" content="assets/img/compartir-pulso.jpg">
+<!-- [REQUIERE: al publicar, cambiar og:image por la URL completa del dominio] -->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="assets/css/prototipo1.css">
+</head>
+<body>
+
+<header class="pi-top">
+  <div class="pi-in">
+    <a class="pi-logo" href="index.html" aria-label="Pulso Inversor, inicio"><img src="assets/img/logo-pulso-gmm.png" alt="Pulso Inversor · Una empresa de Grupo Matchmaking" width="861" height="101"></a>
+    <button class="pi-hamb" type="button" aria-expanded="false" aria-controls="pi-nav">Menú</button>
+    <nav class="pi-nav" id="pi-nav" aria-label="Principal"><a href="index.html">Inicio</a><details class="pi-g"><summary>Cómo invertir</summary><div class="pi-dd"><a href="como-funciona.html">Cómo funciona<small>El Modelo IGR en tres preguntas</small></a><a href="soluciones.html">Soluciones<small>Desde cuánto parte cada una</small></a><a href="simuladores.html">Simuladores<small>Elige monto y plazo</small></a><a href="operacion-abierta.html">Operación abierta<small>Una operación real, de punta a punta</small></a></div></details><details class="pi-g"><summary>Conócenos</summary><div class="pi-dd"><a href="nosotros.html">Quiénes somos<small>Misión, visión e historia</small></a><a href="equipo.html">Equipo<small>Las personas que vas a conocer</small></a><a href="verifica.html">Verifica a Pulso<small>Compruébalo tú mismo</small></a></div></details><details class="pi-g pi-act"><summary>Recursos</summary><div class="pi-dd"><a href="landing_primera_inversion_pulso.html" class="pi-act">Primera inversión<small>Para dar el primer paso</small></a><a href="landing_inversionista_experiencia_pulso.html">Ya he invertido<small>Para revisar una operación</small></a><a href="preguntas.html">Preguntas frecuentes<small>Las dudas de siempre, en simple</small></a></div></details><a class="pi-cta" href="#agenda">Conversemos</a></nav>
+  </div>
+</header>
+<div class="pi-franja" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+
+<!-- 1. HERO -->
+<section class="hero" id="inicio">
+  <div class="wrap grid">
+    <div>
+      <span class="eyebrow" style="color:var(--oliva)">Tu primera inversión fuera del banco</span>
+      <h1>Invierte tus ahorros sabiendo qué hay detrás. <em>Míralo antes de firmar.</em></h1>
+      <p class="lead">Si tienes desde $5 millones en el banco y nunca has invertido, te explicamos en simple qué propiedad respalda tu dinero, qué documento queda a tu favor y cómo lo recuperas. Sin tecnicismos, sin apuro y con tu abogado revisando todo si quieres.</p>
+      <div class="ctas">
+        <a class="btn btn-lima" href="#agenda">Quiero una conversación sin compromiso</a>
+        <a class="btn btn-ghost" href="#como-funciona">Primero quiero entender</a>
+      </div>
+      <ul class="chips">
+        <li>Desde $5 millones</li>
+        <li>Firma ante notario</li>
+        <li>Puedes venir con tu pareja o tu abogado</li>
+        <li>No te pedimos decidir en la reunión</li>
+      </ul>
+    </div>
+    <aside class="hero-card" aria-label="Las tres preguntas">
+      <h3>Antes de invertir, deberías poder responder esto</h3>
+      <div class="preg"><div class="n">1</div><div><b>¿Qué respalda mi dinero?</b><span>Una propiedad concreta, con su tasación y su precio de compra.</span></div></div>
+      <div class="preg"><div class="n">2</div><div><b>¿Qué queda a mi favor?</b><span>Un documento firmado ante notario que te permite cobrar.</span></div></div>
+      <div class="preg"><div class="n">3</div><div><b>¿Cómo recupero mi dinero?</b><span>Un calendario de pagos por escrito, antes de firmar.</span></div></div>
+      <p style="font-size:.9rem;color:var(--texto-2);margin:14px 0 0">Si alguien te ofrece invertir y no te responde estas tres preguntas con documentos, no firmes. Tampoco con nosotros.</p>
+    </aside>
+  </div>
+  <div class="wrap"><p class="legal-mini">Operaciones bajo contratos civiles, no reguladas por la CMF. Toda inversión tiene riesgos. Revisa los documentos con tu abogado antes de firmar.</p></div>
+</section>
+
+<!-- 2. EMPATÍA -->
+<section class="alt" id="te-entendemos">
+  <div class="wrap narrow">
+    <span class="eyebrow">Si te sientes así, no eres el único</span>
+    <h2>Tienes ahorros, quieres que crezcan y cada alternativa te deja con más dudas que confianza</h2>
+    <p class="lead">Es lo que nos dice casi todo el que llega por primera vez. Y tiene sentido: con tu dinero no se juega.</p>
+    <div class="dudas">
+      <div class="duda"><p>Sé que el depósito a plazo no alcanza, pero no sé qué otra cosa hacer.</p></div>
+      <div class="duda"><p>Me da miedo que me estafen. Escucho cada historia…</p></div>
+      <div class="duda"><p>No quiero firmar algo que no entiendo.</p></div>
+      <div class="duda"><p>Invertir es para gente con mucho dinero o que sabe de finanzas.</p></div>
+      <div class="duda"><p>¿Y si necesito el dinero y no lo puedo sacar?</p></div>
+      <div class="duda"><p>Lo tengo que conversar con mi pareja antes de hacer cualquier cosa.</p></div>
+    </div>
+    <p>Lo que hace casi todo el mundo es renovar el depósito una vez más, probar una app "con poquito" sin entender bien qué hay detrás, o seguir el consejo de un conocido. Y el tiempo pasa con el dinero quieto, perdiendo poder de compra frente a la inflación.</p>
+    <p class="remate">No te frena la falta de dinero ni de inteligencia. Te frena que nadie te explicó una opción que pudieras entender completa, con algo concreto detrás.</p>
+  </div>
+</section>
+
+<!-- 3. SEÑALES DE ESTAFA -->
+<section class="dark" id="estafa">
+  <div class="wrap">
+    <span class="eyebrow">Para que te cuides de todos, incluidos nosotros</span>
+    <h2>Tres señales de una estafa. Mídenos con ellas.</h2>
+    <p class="lead" style="max-width:44em">Preguntar si algo es una estafa no es desconfianza, es responsabilidad. Estas son las tres señales que te recomendamos revisar en cualquier inversión, y cómo respondemos a cada una.</p>
+    <div class="senales">
+      <div class="senal">
+        <div class="alerta">⚠ Señal 1</div>
+        <h3>Te prometen rentabilidades muy altas y rápidas</h3>
+        <div class="resp"><b>En Pulso:</b> no usamos la rentabilidad para atraerte. No prometemos ganancias fuera de mercado: las condiciones de cada operación están escritas en el contrato que revisas antes de firmar.</div>
+      </div>
+      <div class="senal">
+        <div class="alerta">⚠ Señal 2</div>
+        <h3>No te dicen en qué está tu dinero</h3>
+        <div class="resp"><b>En Pulso:</b> te mostramos una operación real, con la propiedad, su tasación y su precio de compra, y te entregamos los documentos para que los revises con tu abogado.</div>
+      </div>
+      <div class="senal">
+        <div class="alerta">⚠ Señal 3</div>
+        <h3>Te apuran para firmar</h3>
+        <div class="resp"><b>En Pulso:</b> no te pedimos decidir en la reunión. Te llevas los documentos, los revisas con calma, con quien quieras, y si decides avanzar firmamos ante notario.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. PRIMERO TÚ: DIAGNÓSTICO -->
+<section id="primero-tu">
+  <div class="wrap">
+    <div class="dos-col">
+      <div>
+        <span class="eyebrow">Antes de hablar de tasas, hablamos de ti</span>
+        <h2>En tu primera inversión, lo primero no es cuánto ganas. Es cuánto puedes mover sin quedarte sin colchón.</h2>
+        <p class="lead">Si inviertes el dinero que vas a necesitar, cualquier imprevisto te obliga a salir en mal momento. Y una primera mala experiencia se convierte en la razón para no volver a invertir nunca.</p>
+        <p>Por eso la primera conversación es sobre ti: cuánto tienes, para qué es ese dinero y cuánto necesitas disponible si pasa algo. Si lo sensato es que inviertas menos, o que todavía no lo hagas, te lo vamos a decir.</p>
+      </div>
+      <div class="caja">
+        <h3>Un ejemplo</h3>
+        <p style="color:var(--texto-2);margin-bottom:0">Tienes $10 millones ahorrados. Quizás lo sensato es mover 5 y dejar 5 de colchón.</p>
+        <div class="barra" role="img" aria-label="De 10 millones, 5 se invierten y 5 quedan como colchón">
+          <div class="inv">$5 MM<br>para invertir</div>
+          <div class="col">$5 MM<br>tu colchón</div>
+        </div>
+        <p style="font-size:.9rem;color:var(--texto-2);margin:0">Empiezas con el mínimo y creces a medida que ganas confianza. No tienes que poner todos tus ahorros.</p>
+      </div>
+    </div>
+    <div class="para">
+      <div class="caja si">
+        <h3>Esto es para ti si…</h3>
+        <ul>
+          <li>Tienes al menos $5 millones que no vas a necesitar en el corto plazo.</li>
+          <li>Nunca has invertido fuera del banco, o lo hiciste sin entender bien.</li>
+          <li>Quieres entender qué hay detrás de tu dinero antes de moverlo.</li>
+          <li>Estás dispuesto a conversar y revisar documentos con calma.</li>
+        </ul>
+      </div>
+      <div class="caja no">
+        <h3>Esto NO es para ti si…</h3>
+        <ul>
+          <li>Buscas hacerte rico rápido.</li>
+          <li>Ese ahorro es tu único fondo de emergencia.</li>
+          <li>Quieres que alguien decida por ti sin explicarte.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. CÓMO FUNCIONA: 3 PILARES -->
+<section class="alt" id="como-funciona">
+  <div class="wrap">
+    <span class="eyebrow">Cómo funciona</span>
+    <h2>El respaldo no se promete, se muestra</h2>
+    <p class="lead" style="max-width:46em">Muchas alternativas dicen "respaldo inmobiliario" sin explicar qué hay detrás. Nosotros trabajamos al revés: antes de que inviertas un peso, puedes revisar tres cosas.</p>
+    <div class="pilares">
+      <div class="pilar">
+        <div class="num">PILAR 1</div>
+        <h3>Conoce qué respalda tu dinero</h3>
+        <p>Pulso compra propiedades en oportunidad, entre 35% y 50% bajo su valor comercial estimado. Te mostramos la propiedad, su tasación y su precio de compra.</p>
+        <div class="simple"><b>En simple:</b> no confías a ciegas. Ves el activo y decides con información.</div>
+      </div>
+      <div class="pilar">
+        <div class="num">PILAR 2</div>
+        <h3>Entiende qué queda a tu favor</h3>
+        <p>Sabes quién te debe pagar, qué documento tienes en la mano y qué puedes hacer si algo no se cumple. Todo se firma ante notario.</p>
+        <div class="simple"><b>En simple:</b> es como un préstamo con un documento que te permite cobrar si no te pagan.</div>
+      </div>
+      <div class="pilar">
+        <div class="num">PILAR 3</div>
+        <h3>Ten claro cómo recuperas tu dinero</h3>
+        <p>El contrato define el plazo, las fechas de pago y la devolución de tu capital. Lo conoces antes de firmar, no al vencimiento.</p>
+        <div class="simple"><b>En simple:</b> sabes qué día te llega cada pago y cuándo vuelve tu dinero.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. TU PRIMER PASO, EXPLICADO -->
+<section id="primer-paso">
+  <div class="wrap">
+    <span class="eyebrow">Tu primer paso, explicado sin letra chica</span>
+    <h2>Proyecta un Hogar: la forma de empezar desde $5 millones</h2>
+    <p class="lead" style="max-width:46em">Es la línea pensada para quien invierte por primera vez. Así funciona, paso por paso:</p>
+    <div class="ejemplo">
+      <div class="ej"><div class="ico" aria-hidden="true">💰</div><b>Tú inviertes</b><span>Desde $5 millones, por 12, 18 o 24 meses.</span></div>
+      <div class="flecha" aria-hidden="true">→</div>
+      <div class="ej"><div class="ico" aria-hidden="true">🏠</div><b>Pulso lo destina a propiedades</b><span>Compradas en oportunidad, bajo su valor comercial estimado.</span></div>
+      <div class="flecha" aria-hidden="true">→</div>
+      <div class="ej"><div class="ico" aria-hidden="true">📄</div><b>Tú quedas con documentos a tu favor</b><span>Un mutuo y un pagaré firmados ante notario, respaldados por el patrimonio inmobiliario de Pulso.</span></div>
+    </div>
+    <p class="nota"><b>Con honestidad:</b> comprar bajo el valor comercial es un antecedente que revisas antes de firmar, no una promesa. Ese margen no elimina el riesgo. Por eso te pedimos que lleves los documentos a tu abogado.</p>
+
+    <h3 style="margin-top:40px">Cuando ganes confianza, puedes crecer</h3>
+    <p style="color:var(--texto-2)">Pulso tiene tres líneas. En cada una cambia el monto de entrada y el documento que queda a tu favor.</p>
+    <div class="tabla-scroll">
+      <table class="lineas">
+        <thead><tr><th>Línea</th><th>Desde</th><th>Qué queda a tu favor</th><th>Plazos</th></tr></thead>
+        <tbody>
+          <tr class="destacada"><td><b>Proyecta un Hogar</b><span class="tag">Para empezar</span></td><td>$5 millones</td><td>Mutuo y pagaré ante notario, respaldados por el patrimonio inmobiliario de Pulso</td><td>12, 18 o 24 meses</td></tr>
+          <tr><td><b>Hipoteca Inteligente</b></td><td>$25 millones</td><td>Hipoteca inscrita en el Conservador de Bienes Raíces a tu favor</td><td>15, 21 o 27 meses</td></tr>
+          <tr><td><b>Inversión Inmobiliaria Circular</b></td><td>$100 millones</td><td>La propiedad inscrita a tu nombre</td><td>15, 21 o 27 meses</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:.82rem;color:var(--texto-2);margin-top:10px">Las condiciones de cada operación (rentabilidad, fechas de pago y devolución) quedan escritas en tu contrato y te las mostramos en la reunión. Operaciones bajo contratos civiles, no reguladas por la CMF. Toda inversión tiene riesgos.</p>
+  </div>
+</section>
+
+<!-- 7. GLOSARIO -->
+<section class="alt" id="glosario">
+  <div class="wrap">
+    <span class="eyebrow">Sin tecnicismos</span>
+    <h2>Las palabras que vas a escuchar, en simple</h2>
+    <p class="lead">Para que llegues a la reunión entendiendo todo, y puedas explicárselo a tu pareja.</p>
+    <dl class="glosario">
+      <div><dt>Mutuo</dt><dd>Un contrato de préstamo. Tú prestas una cantidad de dinero y queda escrito cuánto, por cuánto tiempo y cómo se devuelve.</dd></div>
+      <div><dt>Pagaré</dt><dd>Un documento en que alguien se compromete a pagarte una suma en una fecha. Si no te paga, te permite cobrar por la vía legal.</dd></div>
+      <div><dt>Notario</dt><dd>Un ministro de fe que certifica quién firma y qué se firma. Le da validez y fecha cierta a tus documentos.</dd></div>
+      <div><dt>Tasación</dt><dd>La estimación de cuánto vale una propiedad en el mercado, hecha por un tasador.</dd></div>
+      <div><dt>Valor comercial</dt><dd>El precio al que normalmente se vendería esa propiedad. Comprar bajo ese valor deja un margen.</dd></div>
+      <div><dt>Hipoteca a tu favor</dt><dd>Un derecho inscrito sobre una propiedad que te respalda: si no se cumple el pago, puedes hacerlo valer sobre ese inmueble.</dd></div>
+      <div><dt>Conservador de Bienes Raíces</dt><dd>El registro público donde se inscriben las propiedades y las hipotecas. Cualquiera puede pedir un certificado y revisarlo.</dd></div>
+      <div><dt>Contrato civil (no CMF)</dt><dd>Un acuerdo entre personas regido por el Código Civil. No es un producto regulado por la Comisión para el Mercado Financiero, y por eso es tan importante que lo revise tu abogado.</dd></div>
+    </dl>
+  </div>
+</section>
+
+<!-- 8. PASO A PASO -->
+<section id="paso-a-paso">
+  <div class="wrap narrow">
+    <span class="eyebrow">Qué pasa después de que dejas tus datos</span>
+    <h2>Así de simple, y sin sorpresas</h2>
+    <ol class="pasos">
+      <li><div><b>Te escribe un asesor con nombre y apellido</b><span>Por WhatsApp, en el horario que elijas, para coordinar una conversación. No es un robot vendiéndote algo.</span></div></li>
+      <li><div><b>Conversamos sobre ti, sin compromiso</b><span>Revisamos tu situación y te decimos con honestidad si esto es para ti hoy. Puedes venir con tu pareja, un socio o tu abogado.</span></div></li>
+      <li><div><b>Te mostramos una operación real y sus documentos</b><span>La propiedad, su tasación, el precio de compra, el documento que queda a tu favor y el calendario de pagos.</span></div></li>
+      <li><div><b>Te los llevas y los revisas con calma</b><span>Con quien quieras, el tiempo que necesites. Si algo no queda claro, no avanzas.</span></div></li>
+      <li><div><b>Si decides avanzar, firmamos ante notario</b><span>Solo cuando tú estés tranquilo con lo que firmas.</span></div></li>
+    </ol>
+    <h3 style="margin-top:36px">Y después de firmar, no quedas solo</h3>
+    <div class="despues">
+      <div><b>Pagos en fecha</b>En tu cuenta, en las fechas pactadas en tu contrato.</div>
+      <div><b>Reportes simples</b>Cada trimestre sabes cómo va tu inversión.</div>
+      <div><b>Tu asesor al teléfono</b>Una persona a quien llamar si tienes una duda.</div>
+      <div><b>Al terminar, decides</b>Recuperas tu capital y te ayudamos a evaluar si reinviertes.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 9. TESTIMONIOS -->
+<section class="dark" id="testimonios">
+  <div class="wrap">
+    <span class="eyebrow">Personas reales, con nombre</span>
+    <h2>Perfiles distintos que encontraron lo mismo: condiciones claras, documentos verificables y cumplimiento de lo acordado</h2>
+    <div class="testis">
+      <div class="testi">
+        <blockquote>“Para mí han sido personas confiables y lo he podido comprobar durante estos dos años.”</blockquote>
+        <p>Tenía sus ahorros en el banco. Lleva dos años invirtiendo con Pulso, recibe reportes trimestrales y sus pagos en las fechas acordadas.</p>
+        <div class="quien"><div class="avatar">RA</div><div><b>Ronald Avilés</b><span>Profesor jubilado</span></div></div>
+      </div>
+      <div class="testi">
+        <blockquote>“Buscaba un respaldo más concreto.”</blockquote>
+        <p>En su operación se cumplieron el plazo y la rentabilidad pactados. Valoró que todo se formaliza ante notario.</p>
+        <div class="quien"><div class="avatar">LM</div><div><b>Leonardo Mediavilla</b><span>Empresario</span></div></div>
+      </div>
+      <div class="testi vacio">
+        <blockquote><span class="ph">[REQUIERE: caso real de primera inversión]</span></blockquote>
+        <p>Profesión y edad · cuánto tenía en el banco · cuál era su miedo principal · con cuánto empezó · una frase textual, con autorización escrita.</p>
+        <div class="quien"><div class="avatar">?</div><div><b>[Nombre]</b><span>[Profesión]</span></div></div>
+      </div>
+    </div>
+    <p class="disc">Experiencias personales. Resultados anteriores no aseguran resultados futuros. Operaciones bajo contratos civiles, no reguladas por la CMF. Toda inversión tiene riesgos. Revisa los documentos con tu abogado antes de firmar.</p>
+  </div>
+</section>
+
+<!-- 10. QUIÉNES SOMOS / VERIFICA -->
+<section id="verifica">
+  <div class="wrap">
+    <span class="eyebrow">No inviertes con una marca sin rostro</span>
+    <h2>Verifica quiénes somos antes de conversar</h2>
+    <p class="lead" style="max-width:46em">Pulso Inversor es una empresa de Grupo MatchMaking. Estas son algunas de las personas que vas a conocer, y los datos que puedes revisar por tu cuenta.</p>
+    <div class="equipo">
+      <div class="persona"><div class="foto foto-ini" aria-hidden="true">RV</div><b>Renato Vargas</b><span>Asesor de inversiones · te acompaña si partes entre $5 y $25 millones</span></div>
+      <div class="persona"><img class="retrato" src="assets/img/retrato-felipe-rojas.jpg" alt="Felipe Rojas" loading="lazy" width="140" height="140"><b>Felipe Rojas</b><span><span class="ph">[REQUIERE: cargo]</span></span></div>
+      <div class="persona"><img class="retrato" src="assets/img/retrato-ivan-barboza.jpg" alt="Iván Barboza" loading="lazy" width="140" height="140"><b>Iván Barboza</b><span><span class="ph">[REQUIERE: cargo]</span></span></div>
+    </div>
+    <div class="verifica">
+      <div class="caja">
+        <h3>Datos de la empresa</h3>
+        <ul>
+          <li>Razón social: <span class="ph">[REQUIERE]</span></li>
+          <li>RUT: <span class="ph">[REQUIERE]</span></li>
+          <li>Dirección de la oficina: <span class="ph">[REQUIERE]</span> (puedes venir a conocernos)</li>
+          <li>Reseñas de nuestros clientes en Google: <span class="ph">[REQUIERE: enlace al Perfil de Empresa]</span></li>
+        </ul>
+      </div>
+      <div class="caja">
+        <h3>Cómo revisar una operación por tu cuenta</h3>
+        <ul>
+          <li>Pide el certificado de la propiedad o de la hipoteca en el Conservador de Bienes Raíces que corresponda.</li>
+          <li>Compara la tasación con propiedades parecidas de la misma comuna.</li>
+          <li>Pídele a tu abogado que revise el mutuo, el pagaré o la escritura antes de firmar.</li>
+          <li>Pregunta lo que quieras. Si una respuesta no te convence, no avances.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 11. FAQ -->
+<section class="alt" id="preguntas">
+  <div class="wrap narrow faq">
+    <span class="eyebrow">Preguntas frecuentes</span>
+    <h2>Las preguntas que todos se hacen (y las incómodas también)</h2>
+    <details open>
+      <summary>¿Cómo sé que esto no es una estafa?</summary>
+      <div class="r"><p>Con hechos que puedes revisar: personas con nombre y cara, clientes reales que cuentan su experiencia, una operación concreta con su propiedad y sus documentos, y firma ante notario. No prometemos rentabilidades fuera de mercado ni te apuramos. Y te pedimos que lleves todo a tu abogado antes de firmar.</p></div>
+    </details>
+    <details>
+      <summary>¿Por qué no están regulados por la CMF?</summary>
+      <div class="r"><p>Porque no son un producto financiero de la CMF, como un fondo mutuo o un depósito. Son contratos civiles, regidos por el Código Civil, entre tú y Pulso. Eso significa que tu respaldo está en los documentos que firmas (el mutuo, el pagaré, la hipoteca o el título), y por eso es tan importante que los revise tu abogado.</p></div>
+    </details>
+    <details>
+      <summary>¿Qué pasa si Pulso deja de funcionar?</summary>
+      <div class="r"><p>Por eso importa qué documento queda a tu favor. En Proyecta un Hogar tienes un mutuo y un pagaré firmados ante notario, que te permiten cobrar por la vía legal. En Hipoteca Inteligente tienes una hipoteca inscrita a tu favor, y en Inversión Inmobiliaria Circular la propiedad queda a tu nombre. Cada línea mantiene riesgos, y te los explicamos de frente en la reunión.</p></div>
+    </details>
+    <details>
+      <summary>¿Cuánto voy a ganar?</summary>
+      <div class="r"><p>Las condiciones de cada operación (rentabilidad, fechas de pago y devolución del capital) quedan escritas en tu contrato y te las mostramos en la reunión, con los números de tu caso. No las publicamos como anzuelo, porque la pregunta más importante en tu primera inversión no es cuánto ganas, sino qué respalda tu dinero.</p></div>
+    </details>
+    <details>
+      <summary>¿Y si necesito el dinero antes de que termine el plazo?</summary>
+      <div class="r"><p><span class="ph">[REQUIERE: política real de salida anticipada]</span>. Por eso partimos con un diagnóstico: para que inviertas solo lo que no vas a necesitar en ese plazo y conserves tu colchón.</p></div>
+    </details>
+    <details>
+      <summary>¿Y si la propiedad baja de valor?</summary>
+      <div class="r"><p>Pulso compra propiedades entre 35% y 50% bajo su valor comercial estimado. Ese margen es un antecedente que puedes revisar, pero no elimina el riesgo. Te lo decimos así, sin adornos.</p></div>
+    </details>
+    <details>
+      <summary>$5 millones es mucho para "probar". ¿Tengo que invertir todo lo que tengo?</summary>
+      <div class="r"><p>No. $5 millones es el mínimo, y la idea es justamente que no pongas todo tu ahorro. Si lo sensato es que inviertas una parte y dejes el resto de colchón, te lo vamos a recomendar.</p></div>
+    </details>
+    <details>
+      <summary>¿Puedo ir a la reunión con mi pareja o con mi abogado?</summary>
+      <div class="r"><p>Sí, y te lo recomendamos. Es una decisión que se toma mejor acompañado. Puedes venir con tu pareja, un socio, un familiar o tu abogado.</p></div>
+    </details>
+    <details>
+      <summary>¿Tengo que decidir en la reunión?</summary>
+      <div class="r"><p>No. La reunión es para responder tus dudas, no para firmar. Te llevas los documentos y los revisas con calma.</p></div>
+    </details>
+    <details>
+      <summary>¿Cómo recibo mis pagos y cómo sé cómo va mi inversión?</summary>
+      <div class="r"><p>Los pagos llegan a tu cuenta en las fechas pactadas en tu contrato. Además recibes reportes trimestrales y tienes a tu asesor disponible por teléfono hasta el cierre.</p></div>
+    </details>
+    <details>
+      <summary>¿Qué datos me van a pedir y qué hacen con ellos?</summary>
+      <div class="r"><p>Para la primera conversación solo necesitamos tu nombre, tu WhatsApp, tu correo y una idea de cuánto podrías invertir. Los usamos únicamente para contactarte por esta consulta. Más detalle en nuestra <a href="privacidad.html">política de privacidad</a>.</p></div>
+    </details>
+  </div>
+</section>
+
+<!-- 12. FORMULARIO -->
+<section class="form-sec" id="agenda">
+  <div class="wrap form-grid">
+    <div>
+      <span class="eyebrow" style="color:var(--oliva)">Agenda tu conversación</span>
+      <h2 style="color:#fff">Es para responder tus dudas, no para firmar</h2>
+      <p class="lead">Déjanos tus datos y un asesor con nombre y apellido te escribe por WhatsApp para coordinar. Trae todas tus preguntas.</p>
+      <ul class="promesas">
+        <li>Sin costo y sin compromiso.</li>
+        <li>Te decimos con honestidad si esto es para ti hoy.</li>
+        <li>Te mostramos una operación real con sus documentos.</li>
+        <li>Puedes venir con tu pareja, socio o abogado.</li>
+        <li>No te vamos a pedir que decidas en la llamada.</li>
+      </ul>
+    </div>
+
+    <div>
+      <!-- CONECTAR: reemplazar data-endpoint por la URL del CRM / Brevo / webhook que reciba el lead. -->
+      <form class="lead" id="form-lead" novalidate data-endpoint="">
+        <div class="campo">
+          <label for="nombre">Tu nombre</label>
+          <input type="text" id="nombre" name="nombre" autocomplete="name" required>
+          <div class="error" id="e-nombre">Escribe tu nombre.</div>
+        </div>
+        <div class="campo">
+          <label for="telefono">Tu WhatsApp</label>
+          <input type="tel" id="telefono" name="telefono" autocomplete="tel" placeholder="+56 9 1234 5678" required>
+          <div class="error" id="e-telefono">Escribe un número de WhatsApp válido.</div>
+        </div>
+        <div class="campo">
+          <label for="correo">Tu correo</label>
+          <input type="email" id="correo" name="correo" autocomplete="email" required>
+          <div class="error" id="e-correo">Escribe un correo válido.</div>
+        </div>
+        <fieldset class="campo">
+          <legend>¿Cuánto podrías invertir sin tocar tu fondo de emergencia?</legend>
+          <small>Es solo una referencia para asignarte al asesor adecuado.</small>
+          <div class="opciones">
+            <label><input type="radio" name="monto" value="Menos de $5 MM"> Menos de $5 MM</label>
+            <label><input type="radio" name="monto" value="$5 a $25 MM"> $5 a $25 MM</label>
+            <label><input type="radio" name="monto" value="$25 a $100 MM"> $25 a $100 MM</label>
+            <label><input type="radio" name="monto" value="Más de $100 MM"> Más de $100 MM</label>
+          </div>
+          <div class="error" id="e-monto">Elige una opción.</div>
+        </fieldset>
+        <fieldset class="campo">
+          <legend>¿Has invertido antes fuera del banco?</legend>
+          <div class="opciones">
+            <label><input type="radio" name="experiencia" value="No"> No, sería mi primera vez</label>
+            <label><input type="radio" name="experiencia" value="Sí"> Sí</label>
+          </div>
+          <div class="error" id="e-experiencia">Elige una opción.</div>
+        </fieldset>
+        <fieldset class="campo">
+          <legend>¿Cuándo te acomoda que te contactemos?</legend>
+          <div class="opciones tres">
+            <label><input type="radio" name="horario" value="Mañana"> Mañana</label>
+            <label><input type="radio" name="horario" value="Tarde"> Tarde</label>
+            <label><input type="radio" name="horario" value="Después de las 19:00"> Después de 19:00</label>
+          </div>
+        </fieldset>
+        <!-- Campos ocultos para saber qué anuncio trajo el lead -->
+        <input type="hidden" name="utm_source"><input type="hidden" name="utm_medium"><input type="hidden" name="utm_campaign"><input type="hidden" name="utm_content">
+        <label class="check"><input type="checkbox" id="consent" name="consentimiento" value="Sí" required> <span>Autorizo a Pulso Inversor a contactarme por WhatsApp, teléfono y correo para responder esta consulta, según su <a href="privacidad.html">política de privacidad</a>. <b>(Obligatoria)</b></span></label>
+        <div class="error" id="e-consent" style="margin-top:-12px;margin-bottom:12px">Necesitamos tu autorización para contactarte. La casilla de publicidad es aparte y opcional.</div>
+        <label class="check"><input type="checkbox" id="publicidad" name="acepta_publicidad" value="Sí"> <span>Quiero recibir novedades y publicidad de Pulso Inversor y de otras empresas de Grupo MatchMaking por correo y WhatsApp. <b>(Opcional)</b> Puedo darme de baja cuando quiera. Si no la marco, igual me responden.</span></label>
+        <button class="btn btn-lima" type="submit">Quiero mi conversación sin compromiso</button>
+        <p class="bajo-btn">Te escribimos en menos de 1 hora hábil. Operaciones bajo contratos civiles, no reguladas por la CMF. Toda inversión tiene riesgos.</p>
+      </form>
+
+      <div class="gracias" id="gracias" role="status" aria-live="polite">
+        <h3 id="g-titulo">¡Listo! Ya tenemos tus datos.</h3>
+        <p id="g-texto">Un asesor de Pulso te escribirá por WhatsApp con su nombre para coordinar la conversación. Si prefieres adelantarte, escríbenos ahora:</p>
+        <a class="btn btn-wsp" id="g-wsp" href="#" target="_blank" rel="noopener">Escribir por WhatsApp</a>
+        <p style="font-size:.88rem;color:var(--texto-2);margin:16px 0 0">Mientras tanto, anota tus preguntas y, si quieres, invita a tu pareja o a tu abogado a la reunión.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="legal"><b>Información importante.</b> Operaciones bajo contratos civiles, no reguladas por la CMF. Toda inversión tiene riesgos. Resultados anteriores no aseguran resultados futuros. Revisa los documentos con tu abogado antes de firmar.</div>
+    <p><b style="color:#fff">Pulso Inversor</b>, una empresa de Grupo MatchMaking.<br>
+    <span class="ph">[REQUIERE: razón social · RUT · dirección]</span><br>
+    WhatsApp: <a href="https://wa.me/56983554676">+56 9 8355 4676</a> · Correo: <a href="mailto:contacto@pulsoinversor.cl">contacto@pulsoinversor.cl</a></p>
+    <p><a href="index.html">Volver al inicio</a> · <a href="privacidad.html">Política de privacidad</a> · <a href="#verifica">Verifica a Pulso</a> · <a href="#preguntas">Preguntas frecuentes</a></p>
+    <p>Conoce más: <a href="como-funciona.html">Cómo funciona</a> · <a href="soluciones.html">Soluciones</a> · <a href="simuladores.html">Simuladores</a> · <a href="operacion-abierta.html">Operación abierta del mes</a> · <a href="nosotros.html">Quiénes somos</a> · <a href="equipo.html">Equipo</a> · <a href="verifica.html">Verifica a Pulso</a></p>
+  <div class="pi-redes-cab">Síguenos y conversemos</div><div class="pi-redes pi-redes-pie"><a class="pi-red" href="https://instagram.com/pulsoinversorcl" target="_blank" rel="noopener" aria-label="Instagram de Pulso Inversor"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.4" cy="6.6" r="1.3" fill="currentColor"/></svg><span class="pi-red-t"><b>Instagram</b><small>@pulsoinversorcl</small></span></a><span class="pi-red pi-pend"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 10.5V17M8 7.4v.1M11.5 17v-6.5M11.5 13.2c0-1.6 1-2.8 2.5-2.8s2.5 1 2.5 2.8V17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="pi-red-t"><b>LinkedIn</b><small class=ph>[REQUIERE: crear la página de empresa]</small></span></span><span class="pi-red pi-pend"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 21v-7.5h2.6l.4-3H14V8.7c0-.9.3-1.5 1.6-1.5H17V4.5c-.3 0-1.2-.1-2.3-.1-2.3 0-3.8 1.4-3.8 3.9v2.2H8.3v3H11V21" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg><span class="pi-red-t"><b>Facebook</b><small class=ph>[REQUIERE: URL de la página]</small></span></span><a class="pi-red" href="https://wa.me/56983554676" target="_blank" rel="noopener" aria-label="WhatsApp de Pulso Inversor"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.2-3.9A8 8 0 1 1 8 19z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9.2 8.6c.2-.4.5-.4.7-.4h.5c.2 0 .4 0 .5.4l.7 1.6c.1.2 0 .4-.1.6l-.5.6c.6 1.1 1.5 2 2.6 2.6l.6-.5c.2-.1.4-.2.6-.1l1.6.7c.3.1.4.3.4.5v.5c0 .3-.1.5-.4.7-.5.4-1.3.6-2 .4-2.6-.8-4.6-2.8-5.4-5.4-.2-.7 0-1.5.2-2z" fill="currentColor"/></svg><span class="pi-red-t"><b>WhatsApp</b><small>+56 9 8355 4676</small></span></a><a class="pi-red" href="mailto:contacto@pulsoinversor.cl" aria-label="Correo de Pulso Inversor"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 7l8 6 8-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg><span class="pi-red-t"><b>Correo</b><small>contacto@pulsoinversor.cl</small></span></a></div>
+  </div>
+</footer>
+
+<div class="cta-movil"><a class="btn btn-lima" href="#agenda">Agenda tu conversación</a></div>
+
+<script>
+(function(){
+  // CONECTAR: número de WhatsApp de Pulso en formato internacional, sin "+" ni espacios (ej. 56912345678).
+  var WSP = "56983554676"; // [REQUIERE: número real]
+
+  var form = document.getElementById('form-lead');
+  var params = new URLSearchParams(location.search);
+  ['utm_source','utm_medium','utm_campaign','utm_content'].forEach(function(k){
+    var v = params.get(k); if (v && form.elements[k]) form.elements[k].value = v;
+  });
+
+  function show(id, on){ document.getElementById(id).style.display = on ? 'block' : 'none'; }
+  function radio(name){ var r = form.querySelector('input[name="'+name+'"]:checked'); return r ? r.value : ''; }
+
+  form.addEventListener('submit', function(ev){
+    ev.preventDefault();
+    var nombre = form.nombre.value.trim();
+    var tel = form.telefono.value.replace(/[^0-9+]/g,'');
+    var correo = form.correo.value.trim();
+    var monto = radio('monto'), exp = radio('experiencia');
+    var ok = true;
+    show('e-nombre', !nombre); ok = ok && !!nombre;
+    var telOk = tel.replace(/\D/g,'').length >= 8; show('e-telefono', !telOk); ok = ok && telOk;
+    var mailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo); show('e-correo', !mailOk); ok = ok && mailOk;
+    show('e-monto', !monto); ok = ok && !!monto;
+    show('e-experiencia', !exp); ok = ok && !!exp;
+    var cons = document.getElementById('consent').checked; show('e-consent', !cons); ok = ok && cons;
+    if (!ok) { var first = form.querySelector('.error[style*="block"]'); if (first) first.scrollIntoView({behavior:'smooth',block:'center'}); return; }
+
+    var data = Object.fromEntries(new FormData(form).entries());
+    data.consentimiento = 'Sí'; data.texto_consentimiento = 'Autorizo a Pulso Inversor a contactarme por WhatsApp, teléfono y correo para responder esta consulta';
+    data.acepta_publicidad = document.getElementById('publicidad').checked ? 'Sí' : 'No'; data.texto_publicidad = 'Quiero recibir novedades y publicidad de Pulso Inversor y de otras empresas de Grupo MatchMaking por correo y WhatsApp';
+    data.fecha_consentimiento = new Date().toISOString();
+    data.origen = 'landing_primera_inversion';
+    data.fecha = new Date().toISOString();
+
+    var endpoint = form.getAttribute('data-endpoint');
+    if (endpoint) {
+      fetch(endpoint, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(data)}).catch(function(){});
+    }
+
+    var primerNombre = nombre.split(' ')[0];
+    var msg = 'Hola, soy ' + nombre + '. Dejé mis datos en la web: quiero entender cómo funciona invertir con respaldo inmobiliario. Podría invertir ' + monto + ' y ' + (exp === 'No' ? 'sería mi primera vez fuera del banco.' : 'ya he invertido antes.') + (data && data.acepta_publicidad === 'Sí' ? ' Acepto recibir novedades y publicidad de Pulso y su grupo.' : ' Por ahora no quiero recibir publicidad.');
+    document.getElementById('g-wsp').href = 'https://wa.me/' + WSP + '?text=' + encodeURIComponent(msg);
+    document.getElementById('g-titulo').textContent = '¡Gracias, ' + primerNombre + '! Ya tenemos tus datos.';
+    if (monto === 'Menos de $5 MM') {
+      document.getElementById('g-texto').textContent = 'Hoy nuestras operaciones parten en $5 millones, así que no queremos hacerte perder tiempo con una reunión. Te vamos a enviar por correo contenido para que aprendas a evaluar cualquier inversión, y te avisamos cuando tenga sentido conversar. Si igual tienes una duda, escríbenos:';
+    }
+    form.style.display = 'none';
+    var g = document.getElementById('gracias'); g.style.display = 'block';
+    g.scrollIntoView({behavior:'smooth', block:'center'});
+  });
+})();
+</script>
+</body>
+</html>

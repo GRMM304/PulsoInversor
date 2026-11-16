@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Simuladores · Pulso Inversor</title>
+<meta name="description" content="Simula tu inversión en Proyecta un Hogar, Hipoteca Inteligente, Inversión Inmobiliaria Circular o Configuración Patrimonial. Simulación referencial: las condiciones finales están en el contrato.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<!--
+  SIMULADORES · Pulso Inversor (Campaña 2 de la Estrategia 360: tráfico a los simuladores)
+
+  CÓMO SE USA
+  - Página completa:            simulador.html
+  - Abrir un simulador directo: simulador.html#proyecta-un-hogar
+                                simulador.html#hipoteca-inteligente
+                                simulador.html#inversion-circular
+                                simulador.html#configuracion-patrimonial
+  - Insertar dentro de otra página (sin barra ni pie):
+      <iframe src="simulador.html?embed=1#hipoteca-inteligente" style="width:100%;border:0;min-height:1100px" title="Simulador Pulso"></iframe>
+    En modo embed la página avisa su alto a la página madre con postMessage({pulsoSimAltura: px}).
+
+  PARÁMETROS
+  - Todo lo editable está en el objeto CONFIG, al inicio del <script>. Buscar "REQUIERE".
+  - Ninguna fuente aprobada para publicación entrega tasas. Mientras tasaMensual sea null, la
+    página calcula con una TASA DE EJEMPLO (la del ejemplo del FFW BASE: $5 MM al 1% mensual)
+    y muestra un aviso amarillo de BORRADOR. No publicar en ese estado.
+  - CONFIG.mostrarMontos = false muestra solo la estructura (plazo, número de pagos, documento,
+    calendario) y deja los montos para el correo de "Obtener mi simulación".
+
+  Reglas de mensaje (Minuta): sin tasas en piezas públicas salvo decisión expresa de Pulso,
+  sin "seguro" ni "garantizado", con la línea legal. Se usa "dinero", nunca "plata".
+-->
+<style>
+:root{
+  --oscuro:#1f2a24;
+  --oscuro-2:#27392f;
+  --verde:#599675;
+  --verde-osc:#3f6f55;
+  --lima:#b4e04a;
+  --oliva:#8fa36b;
+  --dorado:#c2aa62;
+  --texto:#1f2a24;
+  --texto-2:#4d5a53;
+  --borde:#dfe4e0;
+  --fondo:#ffffff;
+  --fondo-2:#f4f6f2;
+  --radio:14px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:'Open Sans',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--texto);background:var(--fondo);line-height:1.6;font-size:17px;-webkit-font-smoothing:antialiased}
+a{color:var(--verde-osc)}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+h1,h2,h3{line-height:1.2;margin:0 0 .5em;letter-spacing:-.01em}
+h2{font-size:clamp(1.5rem,3.2vw,2.1rem);font-weight:800}
+h3{font-size:1.1rem;font-weight:700}
+p{margin:0 0 1em}
+.eyebrow{display:inline-block;font-size:.78rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--verde);margin-bottom:.6em}
+.ph{background:#fff3c4;color:#6b5200;border:1px dashed #d9b300;border-radius:4px;padding:0 4px;font-size:.92em;font-weight:600}
+.muted{color:var(--texto-2)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5em;padding:15px 26px;border-radius:999px;font-weight:700;font-size:1rem;text-decoration:none;border:2px solid transparent;cursor:pointer;font-family:inherit;text-align:center;transition:transform .15s ease, box-shadow .15s ease}
+.btn:hover{transform:translateY(-1px)}
+.btn-lima{background:var(--lima);color:var(--oscuro);box-shadow:0 6px 20px rgba(180,224,74,.25)}
+.btn-oscuro{background:var(--oscuro);color:#fff}
+.btn-wsp{background:#25d366;color:#0b2e17}
+.btn-borde{border-color:var(--verde);color:var(--verde-osc);background:#fff}
+
+/* Barra superior (se oculta en modo embed) */
+.top{position:sticky;top:0;z-index:20;background:rgba(31,42,36,.97);backdrop-filter:blur(6px);border-bottom:1px solid rgba(255,255,255,.06)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;height:64px;gap:12px}
+.logo{display:flex;flex-direction:column;line-height:1.1;text-decoration:none}
+.logo b{color:#fff;font-size:1.1rem;letter-spacing:.02em}
+.logo b span{color:var(--lima)}
+.logo small{color:#9fb0a5;font-size:.7rem}
+.top a.volver{color:#c9d3cc;text-decoration:none;font-size:.9rem;font-weight:600}
+.franja{height:5px;display:grid;grid-template-columns:repeat(4,1fr)}
+.franja i:nth-child(1){background:var(--verde)}.franja i:nth-child(2){background:var(--oliva)}.franja i:nth-child(3){background:var(--dorado)}.franja i:nth-child(4){background:var(--lima)}
+
+/* Encabezado */
+.hero{background:var(--oscuro);color:#fff;padding:56px 0 48px}
+.hero .eyebrow{color:var(--oliva)}
+.hero h1{font-size:clamp(1.9rem,4.4vw,2.8rem);font-weight:800;margin-bottom:.4em;max-width:18em}
+.hero h1 em{font-style:normal;color:var(--lima)}
+.hero .lead{color:#cfd9d2;font-size:1.12rem;max-width:40em;margin:0}
+
+/* Pestañas de estrategia */
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:-26px 0 0;position:relative;z-index:2}
+.tab{display:flex;flex-direction:column;gap:2px;text-align:left;background:#fff;border:2px solid var(--borde);border-radius:16px;padding:14px 16px;cursor:pointer;font-family:inherit;color:var(--texto);box-shadow:0 8px 24px rgba(31,42,36,.08);transition:border-color .15s ease, transform .15s ease}
+.tab:hover{border-color:var(--verde);transform:translateY(-1px)}
+.tab small{font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--verde)}
+.tab b{font-size:1rem;line-height:1.25}
+.tab span{font-size:.82rem;color:var(--texto-2)}
+.tab[aria-selected="true"]{border-color:var(--oscuro);background:var(--oscuro);color:#fff}
+.tab[aria-selected="true"] small{color:var(--lima)}
+.tab[aria-selected="true"] span{color:#c9d3cc}
+
+/* Paso 1: datos */
+.datos{padding:44px 0 64px}
+.datos-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:44px;align-items:start}
+.porque{list-style:none;padding:0;margin:18px 0 0}
+.porque li{padding:8px 0 8px 30px;position:relative;border-top:1px solid var(--borde)}
+.porque li:first-child{border-top:none}
+.porque li:before{content:"✓";position:absolute;left:4px;top:8px;color:var(--verde);font-weight:800}
+form.lead{background:var(--fondo-2);border:1px solid var(--borde);border-radius:18px;padding:26px}
+.campo{margin:0 0 16px;border:0;padding:0}
+.campo label,.campo legend{display:block;font-weight:700;font-size:.95rem;margin-bottom:6px;padding:0}
+.campo small{display:block;color:var(--texto-2);font-size:.82rem;margin:-2px 0 8px}
+.campo input[type=text],.campo input[type=tel],.campo input[type=email]{width:100%;padding:13px 14px;border:1.5px solid var(--borde);border-radius:10px;font-size:1rem;font-family:inherit;background:#fff}
+.campo input:focus{outline:none;border-color:var(--verde);box-shadow:0 0 0 3px rgba(89,150,117,.18)}
+.opciones{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.opciones label{display:flex;gap:8px;align-items:center;font-weight:600;font-size:.92rem;background:#fff;border:1.5px solid var(--borde);border-radius:10px;padding:10px 12px;cursor:pointer;margin:0}
+.opciones label:has(input:checked){border-color:var(--verde);background:#eef5f0}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:.86rem;color:var(--texto-2);margin:4px 0 16px}
+.check input{margin-top:4px}
+.error{display:none;color:#b3502f;font-size:.84rem;margin-top:6px;font-weight:600}
+form.lead .btn{width:100%}
+.bajo-btn{font-size:.8rem;color:var(--texto-2);margin:12px 0 0;text-align:center}
+.aviso-chico{background:#fff;border:1px solid var(--borde);border-left:4px solid var(--dorado);border-radius:10px;padding:12px 14px;font-size:.9rem;color:var(--texto-2);margin-top:18px}
+
+/* Simulador */
+.sim{padding:40px 0 70px;display:none}
+.sim.on{display:block}
+.panel{display:none}
+.panel.on{display:block}
+.panel-cab{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:22px}
+.panel-cab p{margin:0;max-width:44em;color:var(--texto-2)}
+.desde{display:inline-block;font-size:.85rem;font-weight:700;background:var(--fondo-2);border:1px solid var(--borde);border-radius:999px;padding:4px 12px;color:var(--verde-osc);white-space:nowrap}
+.sim-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:24px;align-items:start}
+.entradas{background:var(--fondo-2);border:1px solid var(--borde);border-radius:18px;padding:24px}
+.ctrl{margin-bottom:24px}
+.ctrl:last-child{margin-bottom:0}
+.ctrl .et{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-weight:700;font-size:.95rem;margin-bottom:8px}
+.ctrl .et output{font-size:1.35rem;font-weight:800;color:var(--verde-osc);white-space:nowrap}
+.ctrl small{display:block;color:var(--texto-2);font-size:.8rem;margin-top:6px}
+input[type=range]{width:100%;accent-color:var(--verde);height:28px}
+.lim{display:flex;justify-content:space-between;font-size:.78rem;color:var(--texto-2)}
+.plazos{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.plazos button{font-family:inherit;font-weight:700;font-size:.95rem;padding:11px 6px;border-radius:10px;border:1.5px solid var(--borde);background:#fff;cursor:pointer;color:var(--texto)}
+.plazos button[aria-pressed="true"]{background:var(--oscuro);border-color:var(--oscuro);color:#fff}
+.toggle{display:flex;gap:10px;align-items:center;font-weight:600;font-size:.92rem;cursor:pointer}
+.toggle input{width:18px;height:18px;accent-color:var(--verde)}
+
+.resultado{background:#fff;border:1px solid var(--borde);border-radius:18px;overflow:hidden;box-shadow:0 16px 40px rgba(31,42,36,.08)}
+.res-top{background:var(--oscuro);color:#fff;padding:22px 24px}
+.res-top small{display:block;color:#9fb0a5;font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.res-top .big{font-size:clamp(2rem,5vw,2.7rem);font-weight:800;color:var(--lima);line-height:1.15}
+.res-top .sub{color:#c9d3cc;font-size:.92rem;margin-top:4px}
+.res-body{padding:20px 24px 24px}
+.filas{margin:0 0 18px}
+.filas div{display:flex;justify-content:space-between;gap:16px;padding:9px 0;border-bottom:1px solid var(--borde);font-size:.95rem}
+.filas div:last-child{border-bottom:none}
+.filas dt{color:var(--texto-2)}
+.filas dd{margin:0;font-weight:700;text-align:right}
+.filas .total dd{color:var(--verde-osc);font-size:1.08rem}
+
+.calendario{margin:6px 0 18px}
+.calendario .tit{font-weight:700;font-size:.9rem;margin-bottom:8px;display:flex;justify-content:space-between;gap:8px}
+.calendario .tit span{font-weight:600;color:var(--texto-2);font-size:.8rem}
+.barras{display:flex;align-items:flex-end;gap:3px;height:74px;padding:0 0 4px;border-bottom:2px solid var(--oscuro)}
+.barras i{flex:1;background:var(--verde);border-radius:3px 3px 0 0;min-width:3px;height:22%}
+.barras i.cap{background:var(--lima);height:100%;border:1px solid var(--verde-osc)}
+.barras i.vacio{background:transparent}
+.eje{display:flex;justify-content:space-between;font-size:.75rem;color:var(--texto-2);margin-top:4px}
+.ley{display:flex;gap:16px;flex-wrap:wrap;font-size:.78rem;color:var(--texto-2);margin-top:6px}
+.ley b{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+
+.favor{background:var(--fondo-2);border-radius:12px;padding:14px 16px;margin-bottom:16px;font-size:.92rem}
+.favor b{display:block;margin-bottom:2px}
+.favor ul{margin:6px 0 0;padding-left:18px}
+.borrador{background:#fff3c4;border:1px dashed #d9b300;color:#6b5200;border-radius:10px;padding:10px 12px;font-size:.84rem;font-weight:600;margin-bottom:14px}
+.letra{font-size:.8rem;color:var(--texto-2);margin:14px 0 0;line-height:1.5}
+.res-body .btn{width:100%}
+
+/* Configuración patrimonial */
+.reparto{display:flex;height:34px;border-radius:10px;overflow:hidden;margin:8px 0 8px;border:1px solid var(--borde)}
+.reparto span{display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;transition:flex-basis .2s ease}
+.reparto .r1{background:var(--dorado);color:var(--oscuro)}
+.reparto .r2{background:var(--oliva)}
+.reparto .r3{background:var(--verde-osc)}
+.ley2{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;font-size:.8rem;margin-bottom:16px}
+.ley2 div{border-left:4px solid;padding:2px 0 2px 8px}
+.ley2 b{display:block;font-size:.95rem}
+.ciclos{width:100%;border-collapse:collapse;font-size:.88rem;margin-bottom:16px}
+.ciclos th,.ciclos td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--borde)}
+.ciclos th{font-size:.74rem;text-transform:uppercase;letter-spacing:.08em;color:var(--texto-2)}
+.ciclos td:last-child,.ciclos th:last-child{text-align:right}
+.pilares{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.pilares div{border:1px solid var(--borde);border-radius:12px;padding:12px;font-size:.85rem}
+.pilares b{display:block;font-size:.95rem;margin-bottom:2px;color:var(--verde-osc)}
+.ops{list-style:none;padding:0;margin:0 0 16px}
+.ops li{display:flex;justify-content:space-between;gap:10px;padding:10px 12px;border:1px solid var(--borde);border-radius:10px;margin-bottom:6px;font-size:.92rem}
+.ops li b{color:var(--verde-osc)}
+
+/* Cómo leer */
+.leer{background:var(--fondo-2);padding:56px 0}
+.leer .tres{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:18px}
+.leer .tres div{background:#fff;border:1px solid var(--borde);border-radius:var(--radio);padding:20px}
+.leer .tres b{display:block;margin-bottom:4px}
+.leer .tres span{font-size:.93rem;color:var(--texto-2)}
+
+/* Ventana de gracias */
+.modal{position:fixed;inset:0;background:rgba(15,22,18,.6);display:none;align-items:center;justify-content:center;padding:16px;z-index:50}
+.modal.on{display:flex}
+.modal .caja{background:#fff;border-radius:18px;max-width:460px;width:100%;padding:28px 26px;text-align:center}
+.modal .ico{width:56px;height:56px;border-radius:50%;background:var(--lima);display:grid;place-items:center;font-size:1.6rem;font-weight:800;margin:0 auto 12px}
+.modal .btn{width:100%;margin-top:6px}
+.modal .cerrar{background:none;border:0;color:var(--texto-2);font-family:inherit;font-size:.9rem;margin-top:12px;cursor:pointer;text-decoration:underline}
+
+footer{background:#161e1a;color:#9fb0a5;font-size:.88rem;padding:40px 0 48px}
+footer .legal{border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:16px 18px;color:#c9d3cc;margin-bottom:22px}
+footer a{color:#c9d3cc}
+
+/* Modo embed */
+body.embed .top,body.embed .franja,body.embed footer,body.embed .hero,body.embed .leer{display:none}
+body.embed .tabs{margin-top:16px}
+
+@media (max-width:900px){
+  .tabs{grid-template-columns:1fr 1fr}
+  .datos-grid,.sim-grid{grid-template-columns:1fr}
+  .leer .tres,.pilares{grid-template-columns:1fr}
+}
+@media (max-width:640px){
+  body{font-size:16px}
+  .wrap{padding:0 16px}
+  .hero{padding:40px 0 44px}
+  .tab{padding:12px}
+  .tab span{display:none}
+  .opciones{grid-template-columns:1fr}
+  form.lead,.entradas{padding:18px}
+  .res-top,.res-body{padding-left:18px;padding-right:18px}
+  .ley2{grid-template-columns:1fr}
+}
+</style>
+<link rel="icon" type="image/png" href="assets/img/favicon.png">
+<link rel="apple-touch-icon" href="assets/img/icono-180.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Pulso">
+<link rel="stylesheet" href="assets/css/menu.css">
+<link rel="stylesheet" href="assets/css/app-movil.css">
+<script src="assets/js/menu.js" defer></script>
+<script src="assets/js/app-movil.js" defer></script>
+<meta name="theme-color" content="#1f2a24">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Pulso Inversor">
+<meta property="og:title" content="Simuladores · Pulso Inversor">
+<meta property="og:description" content="Simula tu inversión en Proyecta un Hogar, Hipoteca Inteligente, Inversión Inmobiliaria Circular o Configuración Patrimonial. Simulación referencial: las condiciones finales están en el contrato.">
+<meta property="og:image" content="assets/img/compartir-pulso.jpg">
+<!-- [REQUIERE: al publicar, cambiar og:image por la URL completa del dominio] -->
+</head>
+<body>
+<a class="pi-saltar" href="#contenido">Saltar al contenido</a>
+
+<header class="pi-top">
+  <div class="pi-in">
+    <a class="pi-logo" href="index.html" aria-label="Pulso Inversor, inicio"><img src="assets/img/logo-pulso-blanco.png" alt="Pulso Inversor" width="134" height="40"></a>
+    <button class="pi-hamb" type="button" aria-expanded="false" aria-controls="pi-nav">Menú</button>
+    <nav class="pi-nav" id="pi-nav" aria-label="Principal"><a href="index.html">Inicio</a><details class="pi-g"><summary>Cómo invertir</summary><div class="pi-dd"><a href="como-funciona.html">Cómo funciona<small>El Modelo IGR en tres preguntas</small></a><a href="soluciones.html">Soluciones<small>Desde cuánto parte cada una</small></a><a href="simuladores.html">Simuladores<small>Elige monto y plazo</small></a><a href="operacion-abierta.html">Operación abierta<small>Una operación real, de punta a punta</small></a></div></details><details class="pi-g"><summary>Conócenos</summary><div class="pi-dd"><a href="nosotros.html">Quiénes somos<small>Misión, visión e historia</small></a><a href="equipo.html">Equipo<small>Las personas que vas a conocer</small></a><a href="verifica.html">Verifica a Pulso<small>Compruébalo tú mismo</small></a></div></details><details class="pi-g"><summary>Recursos</summary><div class="pi-dd"><a href="landing_primera_inversion_pulso.html">Primera inversión<small>Para dar el primer paso</small></a><a href="landing_inversionista_experiencia_pulso.html">Ya he invertido<small>Para revisar una operación</small></a><a href="preguntas.html">Preguntas frecuentes<small>Las dudas de siempre, en simple</small></a></div></details><a class="pi-cta" href="contacto.html">Conversemos</a></nav>
+  </div>
+</header>
+<div class="pi-franja" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+
+<main id="contenido">
+<section class="hero">
+  <div class="wrap">
+    <span class="eyebrow">Simuladores</span>
+    <h1>Haz los números <em>antes de conversar.</em></h1>
+    <p class="lead">Elige la estrategia, mueve el monto y el plazo, y mira cómo se vería el calendario de tu dinero y qué documento quedaría a tu favor. Es una referencia para que llegues a la conversación con tus propias cifras.</p>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="tabs" role="tablist" aria-label="Estrategias">
+    <button class="tab" role="tab" data-id="proyecta-un-hogar"><small>Renta de Capital</small><b>Proyecta un Hogar</b><span>Desde $5 millones</span></button>
+    <button class="tab" role="tab" data-id="hipoteca-inteligente"><small>Producción de Capital</small><b>Hipoteca Inteligente</b><span>Desde $25 millones</span></button>
+    <button class="tab" role="tab" data-id="inversion-circular"><small id="tab-circ-vision">Inversión circular</small><b id="tab-circ-nombre">Inversión Inmobiliaria Circular</b><span>Desde $100 millones</span></button>
+    <button class="tab" role="tab" data-id="configuracion-patrimonial"><small>Arquitectura de Capital</small><b>Configuración Patrimonial</b><span>Ordena tu patrimonio completo</span></button>
+  </div>
+</div>
+
+<!-- PASO 1 · Datos (Estrategia 360: el lead se registra aunque no termine de simular) -->
+<section class="datos" id="paso-datos">
+  <div class="wrap datos-grid">
+    <div>
+      <span class="eyebrow">Paso 1 de 2</span>
+      <h2>¿A quién le enviamos tu simulación?</h2>
+      <p class="muted">Con estos datos te llevamos al simulador que corresponde a tu monto y, si quieres, te enviamos el resultado a tu correo.</p>
+      <ul class="porque">
+        <li>Ves el simulador de inmediato, sin esperar una llamada.</li>
+        <li>Nadie te va a apurar: la simulación es tuya, para mirarla con calma.</li>
+        <li>Si quieres conversar, el asesor ya llega con tus números.</li>
+      </ul>
+      <div class="aviso-chico">Si el monto que podrías invertir sin tocar tu fondo de emergencia es menor a $5 millones, todavía no hay un simulador para ti. Te enviaremos material para preparar tu primera inversión.</div>
+    </div>
+    <div>
+      <!-- CONECTAR: data-endpoint = URL que registra el lead (CRM / Brevo / webhook). -->
+      <form class="lead" id="form-datos" novalidate data-endpoint="">
+        <div class="campo">
+          <label for="nombre">Tu nombre</label>
+          <input type="text" id="nombre" name="nombre" autocomplete="name" required>
+          <div class="error" id="e-nombre">Escribe tu nombre.</div>
+        </div>
+        <div class="campo">
+          <label for="telefono">Tu WhatsApp</label>
+          <input type="tel" id="telefono" name="telefono" autocomplete="tel" placeholder="+56 9 1234 5678" required>
+          <div class="error" id="e-telefono">Escribe un número de WhatsApp válido.</div>
+        </div>
+        <div class="campo">
+          <label for="correo">Tu correo</label>
+          <input type="email" id="correo" name="correo" autocomplete="email" required>
+          <div class="error" id="e-correo">Escribe un correo válido.</div>
+        </div>
+        <fieldset class="campo">
+          <legend>¿Cuánto podrías invertir sin tocar tu fondo de emergencia?</legend>
+          <div class="opciones">
+            <label><input type="radio" name="monto" value="menos5"> Menos de $5 MM</label>
+            <label><input type="radio" name="monto" value="5-25"> $5 a $25 MM</label>
+            <label><input type="radio" name="monto" value="25-100"> $25 a $100 MM</label>
+            <label><input type="radio" name="monto" value="100+"> Más de $100 MM</label>
+          </div>
+          <div class="error" id="e-monto">Elige una opción.</div>
+        </fieldset>
+        <fieldset class="campo">
+          <legend>¿Has invertido antes fuera del banco?</legend>
+          <div class="opciones">
+            <label><input type="radio" name="experiencia" value="No"> No, sería mi primera vez</label>
+            <label><input type="radio" name="experiencia" value="Sí"> Sí</label>
+          </div>
+          <div class="error" id="e-experiencia">Elige una opción.</div>
+        </fieldset>
+        <input type="hidden" name="utm_source"><input type="hidden" name="utm_medium"><input type="hidden" name="utm_campaign"><input type="hidden" name="utm_content">
+        <label class="check"><input type="checkbox" id="consent" name="consentimiento" value="Sí" required> <span>Autorizo a Pulso Inversor a contactarme por WhatsApp, teléfono y correo para responder esta consulta y enviarme mi simulación, según su <a href="privacidad.html">política de privacidad</a>. <b>(Obligatoria)</b></span></label>
+        <div class="error" id="e-consent" style="margin-top:-12px;margin-bottom:12px">Necesitamos tu autorización para contactarte. La casilla de publicidad es aparte y opcional.</div>
+        <label class="check"><input type="checkbox" id="publicidad" name="acepta_publicidad" value="Sí"> <span>Quiero recibir novedades y publicidad de Pulso Inversor y de otras empresas de Grupo MatchMaking por correo y WhatsApp. <b>(Opcional)</b> Puedo darme de baja cuando quiera. Si no la marco, igual me responden.</span></label>
+        <button class="btn btn-lima" type="submit">Ir a mi simulador</button>
+        <p class="bajo-btn">Operaciones bajo contratos civiles, no reguladas por la CMF. Toda inversión tiene riesgos.</p>
+      </form>
+      <div id="menos5" style="display:none" class="aviso-chico">
+        <b style="color:var(--texto)">Gracias, ya tenemos tus datos.</b><br>
+        Con menos de $5 millones, lo sensato hoy es cuidar tu colchón. Te enviaremos a tu correo una guía para preparar tu primera inversión, sin compromiso.
+        <br><br><a href="#" id="ver-igual">Quiero mirar los simuladores de todas formas</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PASO 2 · Simuladores -->
+<section class="sim" id="paso-sim">
+  <div class="wrap">
+
+    <!-- Las tres líneas comparten la misma estructura; el contenido lo arma el script desde CONFIG. -->
+    <div class="panel" id="p-linea">
+      <div class="panel-cab">
+        <div>
+          <span class="eyebrow" id="l-vision"></span>
+          <h2 id="l-nombre"></h2>
+          <p id="l-bajada"></p>
+        </div>
+        <span class="desde" id="l-desde"></span>
+      </div>
+      <div class="sim-grid">
+        <div class="entradas">
+          <div class="ctrl">
+            <div class="et"><label for="l-monto">¿Cuánto quieres simular?</label><output id="l-monto-out"></output></div>
+            <input type="range" id="l-monto">
+            <div class="lim"><span id="l-min"></span><span id="l-max"></span></div>
+          </div>
+          <div class="ctrl">
+            <div class="et"><span>Plazo</span></div>
+            <div class="plazos" id="l-plazos"></div>
+            <small>Tu dinero queda comprometido durante todo el plazo. La salida anticipada está sujeta a evaluación y disponibilidad <span class="ph">[REQUIERE: política de salida]</span>.</small>
+          </div>
+          <div class="ctrl favor" style="margin:0;background:#fff;border:1px solid var(--borde)">
+            <b>Qué queda a tu favor</b>
+            <span id="l-documento"></span>
+            <ul id="l-revisar"></ul>
+          </div>
+        </div>
+
+        <div class="resultado">
+          <div class="res-top">
+            <small id="l-big-et">Pago estimado</small>
+            <div class="big" id="l-big"></div>
+            <div class="sub" id="l-big-sub"></div>
+          </div>
+          <div class="res-body">
+            <div class="borrador" id="l-borrador"></div>
+            <dl class="filas" id="l-filas"></dl>
+            <div class="calendario">
+              <div class="tit">Así se vería tu calendario <span id="l-cal-nota"></span></div>
+              <div class="barras" id="l-barras" aria-hidden="true"></div>
+              <div class="eje"><span>Mes 1</span><span id="l-eje-fin"></span></div>
+              <div class="ley"><span><b style="background:var(--verde)"></b>Pagos de intereses</span><span><b style="background:var(--lima);border:1px solid var(--verde-osc)"></b>Devolución de tu capital</span></div>
+            </div>
+            <button class="btn btn-lima" type="button" data-obtener>Obtener mi simulación</button>
+            <p class="letra">Simulación referencial, antes de impuestos y costos. No es una promesa de rentabilidad. Las condiciones finales (tasa, fechas de pago y devolución del capital) están en el contrato de cada operación. Operaciones bajo contratos civiles, no reguladas por la CMF. Toda inversión tiene riesgos. Revisa los documentos con tu abogado antes de firmar.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Configuración Patrimonial -->
+    <div class="panel" id="p-patrimonial">
+      <div class="panel-cab">
+        <div>
+          <span class="eyebrow">Arquitectura de Capital</span>
+          <h2>Configuración Patrimonial</h2>
+          <p>No se trata de mover todo tu dinero. Primero apartamos tu colchón, luego vemos qué parte puede trabajar en operaciones con respaldo inmobiliario, y cómo darle continuidad, protección y legado.</p>
+        </div>
+        <span class="desde">Para patrimonios desde $25 millones <span class="ph">[REQUIERE]</span></span>
+      </div>
+      <div class="sim-grid">
+        <div class="entradas">
+          <div class="ctrl">
+            <div class="et"><label for="c-ahorro">Ahorros e inversiones que tienes hoy</label><output id="c-ahorro-out"></output></div>
+            <input type="range" id="c-ahorro" min="25" max="1000" step="5" value="150">
+            <div class="lim"><span>$25 MM</span><span>$1.000 MM</span></div>
+            <small>Depósitos, fondos, acciones, dólares. Sin contar tu casa.</small>
+          </div>
+          <div class="ctrl">
+            <div class="et"><label for="c-gasto">Gasto mensual de tu hogar</label><output id="c-gasto-out"></output></div>
+            <input type="range" id="c-gasto" min="0.5" max="15" step="0.5" value="3">
+            <div class="lim"><span>$500 mil</span><span>$15 MM</span></div>
+          </div>
+          <div class="ctrl">
+            <div class="et"><label for="c-meses">Meses de colchón que quieres tener</label><output id="c-meses-out"></output></div>
+            <input type="range" id="c-meses" min="3" max="24" step="1" value="6">
+            <div class="lim"><span>3 meses</span><span>24 meses</span></div>
+          </div>
+          <div class="ctrl">
+            <div class="et"><label for="c-pct">Parte de tu patrimonio para operaciones</label><output id="c-pct-out"></output></div>
+            <input type="range" id="c-pct" min="10" max="30" step="5" value="20">
+            <div class="lim"><span>10%</span><span>30%</span></div>
+            <small>Pulso recomienda una parte, no todo. El resto sigue en alternativas líquidas.</small>
+          </div>
+          <div class="ctrl">
+            <div class="et"><label for="c-ciclos">Continuidad: operaciones seguidas</label><output id="c-ciclos-out"></output></div>
+            <input type="range" id="c-ciclos" min="1" max="4" step="1" value="2">
+            <div class="lim"><span>1</span><span>4</span></div>
+            <small>Al cierre de cada operación recuperas tu capital y decides si reinviertes.</small>
+          </div>
+        </div>
+
+        <div class="resultado">
+          <div class="res-top">
+            <small>Podrías destinar a operaciones</small>
+            <div class="big" id="c-big"></div>
+            <div class="sub" id="c-big-sub"></div>
+          </div>
+          <div class="res-body">
+            <div class="borrador" id="c-borrador"></div>
+            <div style="font-weight:700;font-size:.9rem">Cómo quedaría ordenado tu patrimonio</div>
+            <div class="reparto" aria-hidden="true"><span class="r1" id="c-r1"></span><span class="r2" id="c-r2"></span><span class="r3" id="c-r3"></span></div>
+            <div class="ley2">
+              <div style="border-color:var(--dorado)">Colchón<b id="c-v1"></b></div>
+              <div style="border-color:var(--oliva)">Sigue líquido<b id="c-v2"></b></div>
+              <div style="border-color:var(--verde-osc)">Operaciones<b id="c-v3"></b></div>
+            </div>
+            <div style="font-weight:700;font-size:.9rem;margin-bottom:6px">Estrategias que calzan con ese monto</div>
+            <ul class="ops" id="c-ops"></ul>
+            <div style="font-weight:700;font-size:.9rem;margin-bottom:4px">Continuidad: si reinviertes al cierre</div>
+            <table class="ciclos"><thead><tr><th>Operación</th><th>Meses</th><th>Intereses estimados</th></tr></thead><tbody id="c-ciclos-tb"></tbody></table>
+            <div class="pilares">
+              <div><b>Continuidad</b>Te avisamos antes de cada vencimiento para decidir si reinviertes o retiras <span class="ph">[REQUIERE: días de aviso]</span>.</div>
+              <div><b>Protección</b>Cada operación deja un documento a tu favor: mutuo y pagaré, hipoteca inscrita o propiedad a tu nombre.</div>
+              <div><b>Legado</b>Revisamos qué pasa con tus operaciones en caso de herencia, con el equipo legal y tributario de Grupo MatchMaking <span class="ph">[REQUIERE: validar alcance]</span>.</div>
+            </div>
+            <button class="btn btn-lima" type="button" data-obtener>Obtener mi configuración</button>
+            <p class="letra">Simulación referencial, antes de impuestos y costos. No es una recomendación de inversión personalizada ni una promesa de rentabilidad: la configuración final se define en un diagnóstico 1 a 1 y cada operación tiene su propio contrato. Operaciones bajo contratos civiles, no reguladas por la CMF. Toda inversión tiene riesgos. Revisa los documentos con tu abogado antes de firmar.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="leer">
+  <div class="wrap">
+    <span class="eyebrow">Antes de mirar los números</span>
+    <h2>Cómo leer tu simulación</h2>
+    <div class="tres">
+      <div><b>Es una referencia, no un contrato</b><span>Cada operación está atada a una propiedad concreta y sus condiciones quedan escritas en el contrato. Te las mostramos en la reunión, con la ficha de la operación.</span></div>
+      <div><b>Mira el respaldo, no solo el pago</b><span>Lo importante es qué documento queda a tu favor y qué puedes hacer si algo no se cumple. Revísalo con tu abogado el tiempo que necesites.</span></div>
+      <div><b>Toda inversión tiene riesgos</b><span>Comprar bajo el valor comercial es un antecedente que revisas, no una promesa. Por eso recomendamos invertir una parte de tu patrimonio, no todo.</span></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="legal"><b>Información importante.</b> Las simulaciones son referenciales, antes de impuestos y costos, y no constituyen una promesa de rentabilidad. Operaciones bajo contratos civiles, no reguladas por la CMF. Toda inversión tiene riesgos. Resultados anteriores no aseguran resultados futuros. Revisa los documentos con tu abogado antes de firmar.</div>
+    <p><b style="color:#fff">Pulso Inversor</b>, una empresa de Grupo MatchMaking.<br>
+    <span class="ph">[REQUIERE: razón social · RUT · dirección]</span></p>
+    <p><a href="index.html">Inicio</a> · <a href="simuladores.html">Todos los simuladores</a> · <a href="landing_primera_inversion_pulso.html">Primera inversión</a> · <a href="landing_inversionista_experiencia_pulso.html">Ya he invertido</a> · <a href="privacidad.html">Política de privacidad</a></p>
+  <div class="pi-redes-cab">Síguenos y conversemos</div><div class="pi-redes pi-redes-pie"><a class="pi-red" href="https://instagram.com/pulsoinversorcl" target="_blank" rel="noopener" aria-label="Instagram de Pulso Inversor"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.4" cy="6.6" r="1.3" fill="currentColor"/></svg><span class="pi-red-t"><b>Instagram</b><small>@pulsoinversorcl</small></span></a><span class="pi-red pi-pend"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 10.5V17M8 7.4v.1M11.5 17v-6.5M11.5 13.2c0-1.6 1-2.8 2.5-2.8s2.5 1 2.5 2.8V17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="pi-red-t"><b>LinkedIn</b><small class=ph>[REQUIERE: crear la página de empresa]</small></span></span><span class="pi-red pi-pend"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 21v-7.5h2.6l.4-3H14V8.7c0-.9.3-1.5 1.6-1.5H17V4.5c-.3 0-1.2-.1-2.3-.1-2.3 0-3.8 1.4-3.8 3.9v2.2H8.3v3H11V21" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg><span class="pi-red-t"><b>Facebook</b><small class=ph>[REQUIERE: URL de la página]</small></span></span><span class="pi-red pi-pend"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.2-3.9A8 8 0 1 1 8 19z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9.2 8.6c.2-.4.5-.4.7-.4h.5c.2 0 .4 0 .5.4l.7 1.6c.1.2 0 .4-.1.6l-.5.6c.6 1.1 1.5 2 2.6 2.6l.6-.5c.2-.1.4-.2.6-.1l1.6.7c.3.1.4.3.4.5v.5c0 .3-.1.5-.4.7-.5.4-1.3.6-2 .4-2.6-.8-4.6-2.8-5.4-5.4-.2-.7 0-1.5.2-2z" fill="currentColor"/></svg><span class="pi-red-t"><b>WhatsApp</b><small class=ph>[REQUIERE: número]</small></span></span><span class="pi-red pi-pend"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 7l8 6 8-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg><span class="pi-red-t"><b>Correo</b><small class=ph>[REQUIERE: correo de contacto]</small></span></span></div>
+  </div>
+</footer>
+
+<!-- Ventana de gracias (Estrategia 360, paso 5) -->
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="m-tit">
+  <div class="caja">
+    <div class="ico">✓</div>
+    <h3 id="m-tit">Gracias, su simulación fue enviada a su correo electrónico.</h3>
+    <p class="muted" id="m-texto"></p>
+    <a class="btn btn-wsp" id="m-wsp" href="#" target="_blank" rel="noopener">Hablar ahora por WhatsApp</a>
+    <button class="cerrar" type="button" id="m-cerrar">Seguir simulando</button>
+  </div>
+</div>
+
+<script>
+/* =====================================================================
+   CONFIG · Todo lo que Pulso debe confirmar está marcado [REQUIERE]
+   Fuentes: Plan de Negocios 2027 (portafolio), Genoma 4, FFW BASE,
+   Estrategia 360 (flujo de Campaña 2), Minuta (nombres y reglas).
+   ===================================================================== */
+var CONFIG = {
+  // ¿Se muestran montos en pantalla? true = pago estimado visible (equivale a publicar la tasa:
+  // requiere que Pulso cambie la regla de la Minuta). false = solo estructura en pantalla y los
+  // montos viajan en el correo de "Obtener mi simulación".  [REQUIERE: decisión de Pulso + legal]
+  mostrarMontos: false,
+
+  // Pedir datos antes de simular (flujo aprobado en la Estrategia 360). false = simulador abierto.
+  pedirDatosAntes: true,
+
+  // Tasa usada SOLO mientras una línea no tenga tasaMensual. Viene del ejemplo del FFW BASE
+  // ("$5 millones al 1% mensual equivalen a $50.000 mensuales"). Muestra aviso de BORRADOR.
+  tasaEjemploBorrador: 0.01,
+
+  whatsapp: "56900000000",          // [REQUIERE: número real, formato 569XXXXXXXX]
+  endpointLead: "",                 // [REQUIERE: webhook que registra el lead]
+  endpointSimulacion: "",           // [REQUIERE: webhook que envía el correo y la copia a simulacion@pulsoinversor.cl]
+
+  lineas: {
+    "proyecta-un-hogar": {
+      nombre: "Proyecta un Hogar",
+      vision: "Renta de Capital",
+      bajada: "Tu primera inversión fuera del banco: un mutuo y un pagaré firmados ante notario, respaldados por el patrimonio inmobiliario de Pulso, con pagos en fechas fijas.",
+      min: 5, max: 25, paso: 1, inicial: 10,           // MM. Tramo Estrategia 360: $5 a $25 MM
+      plazos: [12, 18, 24], plazoInicial: 12,           // Plan de Negocios 2027 / FFW
+      tasaMensual: null,                                // [REQUIERE: tasa o tasas por plazo]
+      frecuenciaMeses: 1,                               // Genoma 4: "pagos mensuales" [REQUIERE: confirmar]
+      documento: "Contrato de mutuo y pagaré ante notario. El respaldo es el patrimonio inmobiliario de Pulso más esos documentos.",
+      revisar: ["Quién se obliga a pagarte y en qué fechas.", "Qué pasa si hay atraso y cómo cobras el pagaré."]
+    },
+    "hipoteca-inteligente": {
+      nombre: "Hipoteca Inteligente",
+      vision: "Producción de Capital",
+      bajada: "Tu dinero financia una operación con una propiedad identificada, y queda una hipoteca inscrita a tu favor en el Conservador de Bienes Raíces.",
+      min: 25, max: 100, paso: 5, inicial: 50,          // Estrategia 360: $25 a $100 MM
+      plazos: [15, 21, 27], plazoInicial: 21,
+      tasaMensual: null,                                // [REQUIERE]
+      frecuenciaMeses: 1,                               // [REQUIERE: ¿mensual, trimestral o al vencimiento?]
+      documento: "Hipoteca inscrita a tu favor sobre la propiedad de la operación, firmada ante notario.",
+      revisar: ["El certificado de hipotecas y gravámenes: a favor de quién y en qué grado.", "La tasación y el precio de compra de la propiedad."]
+    },
+    "inversion-circular": {
+      nombre: "Inversión Inmobiliaria Circular",          // [REQUIERE: el cliente la llama "Hipoteca Circular"; la Minuta, "Inversión Inmobiliaria Circular"]
+      vision: "Inversión circular",                      // [REQUIERE: visión de inversión; no está en la matriz]
+      bajada: "Para montos mayores: la propiedad de la operación queda inscrita a tu nombre durante el plazo, y al cierre recuperas tu capital según el contrato.",
+      min: 100, max: 500, paso: 10, inicial: 150,       // Estrategia 360: más de $100 MM. Máximo [REQUIERE]
+      plazos: [15, 21, 27], plazoInicial: 21,
+      tasaMensual: null,                                // [REQUIERE]
+      frecuenciaMeses: 1,                               // [REQUIERE]
+      documento: "La propiedad inscrita a tu nombre en el Conservador de Bienes Raíces.",
+      revisar: ["El certificado de dominio vigente.", "La mecánica de cierre y recompra al vencimiento [REQUIERE: validada por abogado]."]
+    }
+  },
+
+  patrimonial: {
+    // FFW Perfil A: "personas como tú mueven entre un 20% y un 30% de su capital". [REQUIERE: validar como política]
+    pctMin: 10, pctMax: 30
+  },
+
+  // Asignación de asesor por monto (Minuta, "Lo que ya está definido").
+  asesores: [
+    { hasta: 25, nombre: "Renato Vargas" },
+    { hasta: 50, nombre: "Pamela Herrera o Gloria Cepeda" },
+    { hasta: Infinity, nombre: "Felipe Rojas o Iván Barboza" }
+  ]
+};
+/* ===================================================================== */
+
+(function(){
+  var qs = new URLSearchParams(location.search);
+  if (qs.get('embed') === '1') document.body.classList.add('embed');
+
+  var $ = function(id){ return document.getElementById(id); };
+  var fmt = function(n){ return '$' + Math.round(n).toLocaleString('es-CL'); };
+  var fmtMM = function(mm){
+    if (mm >= 1) return '$' + (Math.round(mm*10)/10).toLocaleString('es-CL') + ' MM';
+    return '$' + Math.round(mm*1000).toLocaleString('es-CL') + ' mil';
+  };
+  var store = { get:function(k){ try{return sessionStorage.getItem(k);}catch(e){return null;} },
+                set:function(k,v){ try{sessionStorage.setItem(k,v);}catch(e){} } };
+  window.dataLayer = window.dataLayer || [];
+  function evento(nombre, datos){ var o = {event: nombre}; for (var k in datos) o[k] = datos[k]; window.dataLayer.push(o); }
+
+  var lead = null;
+  try { lead = JSON.parse(store.get('pulsoLead') || 'null'); } catch(e){}
+  var actual = null, plazoSel = {};
+
+  /* ---------- Paso 1 ---------- */
+  var form = $('form-datos');
+  ['utm_source','utm_medium','utm_campaign','utm_content'].forEach(function(k){ var v = qs.get(k); if (v) form.elements[k].value = v; });
+  function show(id, on){ $(id).style.display = on ? 'block' : 'none'; }
+  function radio(n){ var r = form.querySelector('input[name="'+n+'"]:checked'); return r ? r.value : ''; }
+  var lineaPorMonto = { '5-25':'proyecta-un-hogar', '25-100':'hipoteca-inteligente', '100+':'inversion-circular' };
+
+  form.addEventListener('submit', function(ev){
+    ev.preventDefault();
+    var nombre = form.nombre.value.trim(), tel = form.telefono.value.replace(/[^0-9+]/g,''), correo = form.correo.value.trim();
+    var monto = radio('monto'), exp = radio('experiencia'), ok = true;
+    show('e-nombre', !nombre); ok = ok && !!nombre;
+    var telOk = tel.replace(/\D/g,'').length >= 8; show('e-telefono', !telOk); ok = ok && telOk;
+    var mailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo); show('e-correo', !mailOk); ok = ok && mailOk;
+    show('e-monto', !monto); ok = ok && !!monto;
+    show('e-experiencia', !exp); ok = ok && !!exp;
+    var cons = $('consent').checked; show('e-consent', !cons); ok = ok && cons;
+    if (!ok) return;
+    lead = Object.fromEntries(new FormData(form).entries());
+    lead.consentimiento = 'Sí'; lead.texto_consentimiento = 'Autorizo a Pulso Inversor a contactarme por WhatsApp, teléfono y correo para responder esta consulta';
+    lead.acepta_publicidad = document.getElementById('publicidad').checked ? 'Sí' : 'No'; lead.texto_publicidad = 'Quiero recibir novedades y publicidad de Pulso Inversor y de otras empresas de Grupo MatchMaking por correo y WhatsApp';
+    lead.fecha_consentimiento = new Date().toISOString();
+    lead.origen = 'simuladores'; lead.fecha = new Date().toISOString();
+    store.set('pulsoLead', JSON.stringify(lead));
+    if (CONFIG.endpointLead) fetch(CONFIG.endpointLead, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(lead)}).catch(function(){});
+    evento('Lead', {monto_declarado: monto, experiencia: exp});
+    if (monto === 'menos5') { form.style.display = 'none'; show('menos5', true); return; }
+    abrirSim(location.hash.slice(1) && validos.indexOf(location.hash.slice(1)) > -1 ? location.hash.slice(1) : lineaPorMonto[monto]);
+  });
+  $('ver-igual').addEventListener('click', function(e){ e.preventDefault(); abrirSim('proyecta-un-hogar'); });
+
+  /* ---------- Pestañas ---------- */
+  var validos = ['proyecta-un-hogar','hipoteca-inteligente','inversion-circular','configuracion-patrimonial'];
+  var circ = CONFIG.lineas['inversion-circular'];
+  $('tab-circ-nombre').textContent = circ.nombre; $('tab-circ-vision').textContent = circ.vision;
+  document.querySelectorAll('.tab').forEach(function(t){
+    t.addEventListener('click', function(){
+      if (CONFIG.pedirDatosAntes && !lead) { history.replaceState(null,'','#'+t.dataset.id); marcarTab(t.dataset.id); $('nombre').focus(); return; }
+      abrirSim(t.dataset.id);
+    });
+  });
+  function marcarTab(id){ document.querySelectorAll('.tab').forEach(function(t){ t.setAttribute('aria-selected', t.dataset.id === id ? 'true' : 'false'); }); }
+
+  function abrirSim(id){
+    if (validos.indexOf(id) < 0) id = 'proyecta-un-hogar';
+    actual = id; marcarTab(id);
+    history.replaceState(null,'','#'+id);
+    $('paso-datos').style.display = 'none';
+    $('paso-sim').classList.add('on');
+    $('p-linea').classList.toggle('on', id !== 'configuracion-patrimonial');
+    $('p-patrimonial').classList.toggle('on', id === 'configuracion-patrimonial');
+    if (id === 'configuracion-patrimonial') calcPatrimonial(); else armarLinea(id);
+    evento('ViewContent', {simulador: id});
+    altura();
+  }
+
+  /* ---------- Simulador por línea ---------- */
+  var mInput = $('l-monto');
+  function tasaDe(L){ return L.tasaMensual != null ? L.tasaMensual : CONFIG.tasaEjemploBorrador; }
+  function armarLinea(id){
+    var L = CONFIG.lineas[id];
+    $('l-vision').textContent = L.vision; $('l-nombre').textContent = L.nombre; $('l-bajada').textContent = L.bajada;
+    $('l-desde').textContent = 'Desde ' + fmtMM(L.min).replace(' MM',' millones');
+    mInput.min = L.min; mInput.max = L.max; mInput.step = L.paso;
+    var montoPrevio = +(store.get('monto-'+id) || L.inicial); mInput.value = montoPrevio;
+    $('l-min').textContent = fmtMM(L.min); $('l-max').textContent = fmtMM(L.max) + (id === 'inversion-circular' ? ' o más' : '');
+    if (!plazoSel[id]) plazoSel[id] = L.plazoInicial;
+    var cont = $('l-plazos'); cont.innerHTML = '';
+    L.plazos.forEach(function(p){
+      var b = document.createElement('button'); b.type = 'button'; b.textContent = p + ' meses';
+      b.setAttribute('aria-pressed', p === plazoSel[id] ? 'true' : 'false');
+      b.addEventListener('click', function(){ plazoSel[id] = p; armarLinea(id); });
+      cont.appendChild(b);
+    });
+    $('l-documento').textContent = L.documento;
+    $('l-revisar').innerHTML = L.revisar.map(function(r){ return '<li>' + r.replace(/\[REQUIERE:([^\]]+)\]/, '<span class="ph">[REQUIERE:$1]</span>') + '</li>'; }).join('');
+    calcLinea();
+  }
+  mInput.addEventListener('input', function(){ store.set('monto-'+actual, mInput.value); calcLinea(); });
+
+  function calcLinea(){
+    var L = CONFIG.lineas[actual]; if (!L) return;
+    var M = +mInput.value, n = plazoSel[actual], t = tasaDe(L), f = L.frecuenciaMeses || 1;
+    var cap = M * 1e6, nPagos = Math.floor(n / f), pago = cap * t * f, intereses = pago * nPagos;
+    $('l-monto-out').textContent = fmtMM(M);
+    var frecTxt = f === 1 ? 'mensual' : (f === 3 ? 'trimestral' : 'cada ' + f + ' meses');
+    var borr = L.tasaMensual == null;
+    $('l-borrador').style.display = (borr && CONFIG.mostrarMontos) ? 'block' : 'none';
+    $('l-borrador').textContent = 'BORRADOR · Calculado con una tasa de ejemplo (la del FFW: $5 MM al 1% mensual). No publicar hasta que Pulso confirme la tasa de ' + L.nombre + '.';
+    if (CONFIG.mostrarMontos) {
+      $('l-big-et').textContent = 'Pago ' + frecTxt + ' estimado';
+      $('l-big').textContent = fmt(pago);
+      $('l-big-sub').textContent = 'Durante ' + n + ' meses, y al cierre recuperas tus ' + fmtMM(M) + ' según el contrato.';
+      $('l-filas').innerHTML =
+        fila('Capital que inviertes', fmt(cap)) + fila('Plazo', n + ' meses') + fila('Número de pagos', nPagos) +
+        fila('Intereses estimados en el plazo', fmt(intereses)) + fila('Devolución de tu capital al cierre', fmt(cap)) +
+        '<div class="total"><dt>Total estimado a recibir</dt><dd>' + fmt(cap + intereses) + '</dd></div>';
+    } else {
+      $('l-big-et').textContent = 'Tu calendario';
+      $('l-big').textContent = nPagos + ' pagos + tu capital';
+      $('l-big-sub').textContent = 'El monto de cada pago te lo enviamos a tu correo con "Obtener mi simulación".';
+      $('l-filas').innerHTML = fila('Capital que inviertes', fmt(cap)) + fila('Plazo', n + ' meses') + fila('Pagos', nPagos + ' (' + frecTxt + ')') + fila('Devolución de tu capital', 'Al cierre, mes ' + n);
+    }
+    var barras = '';
+    for (var i = 1; i <= n; i++) barras += (i === n) ? '<i class="cap" title="Mes ' + n + '"></i>' : (i % f === 0 ? '<i></i>' : '<i class="vacio"></i>');
+    $('l-barras').innerHTML = barras;
+    $('l-eje-fin').textContent = 'Mes ' + n;
+    $('l-cal-nota').textContent = 'Fechas exactas en el contrato';
+    altura();
+  }
+  function fila(a, b){ return '<div><dt>' + a + '</dt><dd>' + b + '</dd></div>'; }
+
+  /* ---------- Configuración Patrimonial ---------- */
+  ['c-ahorro','c-gasto','c-meses','c-pct','c-ciclos'].forEach(function(id){ $(id).addEventListener('input', calcPatrimonial); });
+  function lineaPara(mm){
+    var L = CONFIG.lineas, best = null;
+    Object.keys(L).forEach(function(k){ if (mm >= L[k].min && (!best || L[k].min > L[best].min)) best = k; });
+    return best;
+  }
+  function calcPatrimonial(){
+    var A = +$('c-ahorro').value, g = +$('c-gasto').value, m = +$('c-meses').value, pct = +$('c-pct').value, ciclos = +$('c-ciclos').value;
+    $('c-ahorro-out').textContent = fmtMM(A); $('c-gasto-out').textContent = fmtMM(g);
+    $('c-meses-out').textContent = m + ' meses'; $('c-pct-out').textContent = pct + '%'; $('c-ciclos-out').textContent = ciclos;
+    var colchon = Math.min(A, g * m);
+    var ops = Math.max(0, Math.min(A * pct / 100, A - colchon));
+    ops = Math.floor(ops);                           // en millones enteros
+    var liquido = Math.max(0, A - colchon - ops);
+    $('c-big').textContent = ops >= 5 ? fmtMM(ops) : 'Todavía no';
+    $('c-big-sub').textContent = ops >= 5
+      ? 'Es el ' + Math.round(ops / A * 100) + '% de tu patrimonio. Tu colchón de ' + m + ' meses queda intacto.'
+      : 'Con estos números, lo sensato es fortalecer primero tu colchón.';
+    [['c-r1', colchon, 'c-v1'], ['c-r2', liquido, 'c-v2'], ['c-r3', ops, 'c-v3']].forEach(function(r){
+      var p = A ? r[1] / A * 100 : 0; $(r[0]).style.flexBasis = p + '%'; $(r[0]).textContent = p >= 12 ? Math.round(p) + '%' : ''; $(r[2]).textContent = fmtMM(r[1]);
+    });
+    // Reparto ilustrativo: la línea mayor que calza (hasta su máximo) y el resto en la siguiente que calce.
+    var resto = ops, partes = [];
+    while (resto >= 5 && partes.length < 2) {
+      var k = lineaPara(resto); if (!k) break;
+      var L = CONFIG.lineas[k], monto = Math.min(resto, L.max);
+      partes.push({k: k, monto: monto}); resto -= monto;
+    }
+    $('c-ops').innerHTML = partes.length ? partes.map(function(p){
+      return '<li><span>' + CONFIG.lineas[p.k].nombre + '</span><b>' + fmtMM(p.monto) + '</b></li>';
+    }).join('') : '<li><span>Ninguna por ahora: el mínimo es $5 MM</span><b>—</b></li>';
+    var borr = partes.some(function(p){ return CONFIG.lineas[p.k].tasaMensual == null; });
+    $('c-borrador').style.display = (borr && CONFIG.mostrarMontos) ? 'block' : 'none';
+    $('c-borrador').textContent = 'BORRADOR · Intereses calculados con una tasa de ejemplo (FFW: 1% mensual). No publicar hasta que Pulso confirme las tasas.';
+    var tb = '', mes = 0;
+    for (var c = 1; c <= ciclos; c++) {
+      var meses = 0, int = 0;
+      partes.forEach(function(p){ var L = CONFIG.lineas[p.k], pl = L.plazoInicial; meses = Math.max(meses, pl); int += p.monto * 1e6 * tasaDe(L) * pl; });
+      tb += '<tr><td>' + c + 'ª operación</td><td>' + (mes + 1) + ' a ' + (mes + meses) + '</td><td>' + (CONFIG.mostrarMontos ? fmt(int) : 'En tu correo') + '</td></tr>';
+      mes += meses;
+    }
+    $('c-ciclos-tb').innerHTML = partes.length ? tb : '<tr><td colspan="3">Sin operaciones con estos números.</td></tr>';
+    altura();
+  }
+
+  /* ---------- Obtener mi simulación ---------- */
+  document.querySelectorAll('[data-obtener]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var sim = { simulador: actual };
+      if (actual === 'configuracion-patrimonial') {
+        sim.linea = 'Configuración Patrimonial'; sim.monto_mm = +$('c-ahorro').value; sim.operaciones_mm = parseFloat(($('c-v3').textContent || '').replace(/[^\d,]/g,'').replace(',','.')) || 0;
+        sim.porcentaje = +$('c-pct').value; sim.ciclos = +$('c-ciclos').value;
+      } else {
+        sim.linea = CONFIG.lineas[actual].nombre; sim.monto_mm = +mInput.value; sim.plazo_meses = plazoSel[actual];
+      }
+      var payload = Object.assign({}, lead || {}, sim, { fecha_simulacion: new Date().toISOString(), copia: 'simulacion@pulsoinversor.cl' });
+      if (CONFIG.endpointSimulacion) fetch(CONFIG.endpointSimulacion, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)}).catch(function(){});
+      evento('simulacion_obtenida', {simulador: actual, monto_mm: sim.monto_mm});
+      var montoAsesor = sim.operaciones_mm || sim.monto_mm, asesor = CONFIG.asesores.filter(function(a){ return montoAsesor <= a.hasta; })[0];
+      $('m-texto').textContent = 'Si quieres revisarla con alguien, ' + asesor.nombre + ' puede conversar contigo. Sin compromiso y sin apuro.';
+      var msg = 'Hola, simulé ' + sim.linea + ' por ' + fmtMM(sim.monto_mm) + ' y quiero hablar con un asesor' + '.' + (lead && lead.acepta_publicidad === 'Sí' ? ' Acepto recibir novedades y publicidad de Pulso y su grupo.' : ' Por ahora no quiero recibir publicidad.');
+      $('m-wsp').href = 'https://wa.me/' + CONFIG.whatsapp + '?text=' + encodeURIComponent(msg);
+      $('modal').classList.add('on');
+    });
+  });
+  $('m-wsp').addEventListener('click', function(){ evento('Contact', {simulador: actual}); });
+  $('m-cerrar').addEventListener('click', function(){ $('modal').classList.remove('on'); });
+  $('modal').addEventListener('click', function(e){ if (e.target.id === 'modal') $('modal').classList.remove('on'); });
+
+  /* ---------- Modo embed: avisar alto a la página madre ---------- */
+  function altura(){ if (document.body.classList.contains('embed') && window.parent !== window) window.parent.postMessage({pulsoSimAltura: document.documentElement.scrollHeight}, '*'); }
+  window.addEventListener('resize', altura);
+
+  /* ---------- Inicio ---------- */
+  var h = location.hash.slice(1);
+  if (!CONFIG.pedirDatosAntes || lead) abrirSim(validos.indexOf(h) > -1 ? h : (lead && lineaPorMonto[lead.monto]) || 'proyecta-un-hogar');
+  else if (validos.indexOf(h) > -1) marcarTab(h);
+})();
+</script>
+</body>
+</html>

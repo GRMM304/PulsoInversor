@@ -1,0 +1,40 @@
+/* Menú unificado V4.1 (Inicio / Cómo invertir / Conócenos / Recursos / Conversemos) con la marca Pulso */
+.pi-top{position:sticky;top:0;z-index:60;background:rgba(31,42,36,.98);border-bottom:1px solid rgba(255,255,255,.07);font-family:'Open Sans',system-ui,sans-serif}
+.pi-top .pi-in{max-width:1240px;margin:0 auto;padding:0 20px;height:70px;display:flex;align-items:center;gap:20px}
+.pi-logo{display:flex;align-items:center;flex-shrink:0;text-decoration:none}
+.pi-logo img{height:38px;width:auto;display:block}
+.pi-nav{margin-left:auto;display:flex;align-items:center;gap:4px}
+.pi-nav>a,.pi-g>summary{color:#dfe7e1;text-decoration:none;font-size:.92rem;font-weight:600;padding:10px 12px;border-radius:8px;white-space:nowrap;cursor:pointer;list-style:none;display:block}
+.pi-g>summary::-webkit-details-marker{display:none}
+.pi-g>summary:after{content:"";display:inline-block;width:6px;height:6px;border-right:2px solid #b4e04a;border-bottom:2px solid #b4e04a;transform:rotate(45deg);margin:0 0 3px 8px;transition:transform .15s}
+.pi-g[open]>summary:after{transform:rotate(-135deg);margin-bottom:-1px}
+.pi-nav>a:hover,.pi-g>summary:hover,.pi-nav .pi-act>summary,.pi-nav>a.pi-act{color:#b4e04a}
+.pi-g{position:relative}
+.pi-dd{position:absolute;top:calc(100% + 10px);left:0;min-width:250px;background:#27392f;border:1px solid rgba(255,255,255,.09);border-radius:12px;padding:8px;box-shadow:0 18px 40px rgba(0,0,0,.3)}
+.pi-dd a{display:block;color:#dfe7e1;text-decoration:none;padding:9px 11px;border-radius:8px;font-size:.92rem;font-weight:600}
+.pi-dd a small{display:block;color:#9fb0a5;font-size:.76rem;font-weight:400}
+.pi-dd a:hover,.pi-dd a.pi-act{background:rgba(255,255,255,.06);color:#b4e04a}
+.pi-cta{margin-left:10px;background:#b4e04a;color:#1f2a24!important;font-weight:700;border-radius:999px;padding:11px 20px!important;box-shadow:0 6px 20px rgba(180,224,74,.22)}
+.pi-cta:hover{background:#c6ea6e}
+.pi-hamb{display:none;margin-left:auto;background:none;border:1px solid rgba(255,255,255,.22);color:#fff;border-radius:10px;padding:8px 13px;font:700 .9rem 'Open Sans',sans-serif;cursor:pointer}
+.pi-franja{height:5px;display:grid;grid-template-columns:repeat(4,1fr)}
+.pi-franja i:nth-child(1){background:#599675}.pi-franja i:nth-child(2){background:#8fa36b}.pi-franja i:nth-child(3){background:#c2aa62}.pi-franja i:nth-child(4){background:#b4e04a}
+body.embed .pi-top,body.embed .pi-franja{display:none}
+@media (max-width:1000px){
+  .pi-hamb{display:block}
+  .pi-nav{display:none;position:absolute;top:70px;left:0;right:0;background:#1f2a24;flex-direction:column;align-items:stretch;gap:0;padding:8px 16px 20px;max-height:calc(100vh - 70px);overflow:auto;border-top:1px solid rgba(255,255,255,.08)}
+  .pi-nav.pi-abierto{display:flex}
+  .pi-nav>a,.pi-g>summary{font-size:1rem;padding:13px 6px}
+  .pi-dd{position:static;box-shadow:none;border:0;background:rgba(255,255,255,.04);margin:0 0 8px;min-width:0}
+  .pi-cta{margin:12px 0 0;text-align:center}
+  .pi-logo img{height:32px}
+}
+.pi-saltar{position:absolute;left:-9999px;top:8px;z-index:100;background:#b4e04a;color:#1f2a24;padding:10px 16px;border-radius:8px;font:700 .9rem 'Open Sans',sans-serif}
+.pi-saltar:focus{left:12px}
+/* Aísla el menú de los estilos de preguntas frecuentes (details) de cada página */
+.pi-top details.pi-g{background:none;border:0;border-radius:0;padding:0;margin:0;box-shadow:none}
+.pi-top details.pi-g>summary{padding:10px 12px;position:static;font-weight:600;color:#dfe7e1}
+.pi-top details.pi-g>summary:hover,.pi-top details.pi-g.pi-act>summary{color:#b4e04a}
+.pi-top details.pi-g>summary:after{content:"";position:static;font-size:0;width:6px;height:6px;border-right:2px solid #b4e04a;border-bottom:2px solid #b4e04a;transform:rotate(45deg);margin:0 0 3px 8px;display:inline-block}
+.pi-top details.pi-g[open]>summary:after{content:"";transform:rotate(-135deg);margin-bottom:-1px}
+@media (max-width:1000px){.pi-top details.pi-g>summary{padding:13px 6px;font-size:1rem}}

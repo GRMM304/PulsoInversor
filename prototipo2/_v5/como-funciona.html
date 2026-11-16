@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cómo funciona · Pulso Inversor</title>
+<meta name="description" content="El Modelo IGR en tres pilares: qué respalda tu dinero, qué queda a tu favor y cómo lo recuperas.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<!--
+  SITIO PULSO INVERSOR · como-funciona.html
+  Reglas (Minuta de definiciones): "dinero", nunca "plata"; sin tasas publicadas; sin "seguro" ni
+  "garantizado"; línea legal en cada página. Lo marcado [REQUIERE: ...] falta confirmarlo antes de publicar.
+-->
+<style>
+:root{--oscuro:#1f2a24;--oscuro-2:#27392f;--verde:#599675;--verde-osc:#3f6f55;--lima:#b4e04a;--oliva:#8fa36b;--dorado:#c2aa62;--texto:#1f2a24;--texto-2:#4d5a53;--borde:#dfe4e0;--fondo:#fff;--fondo-2:#f4f6f2;--radio:14px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;font-family:'Open Sans',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--texto);background:var(--fondo);line-height:1.6;font-size:17px;-webkit-font-smoothing:antialiased}
+a{color:var(--verde-osc)}img{max-width:100%}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}.angosto{max-width:820px}
+h1,h2,h3{line-height:1.2;margin:0 0 .5em;letter-spacing:-.01em}
+h2{font-size:clamp(1.6rem,3.6vw,2.3rem);font-weight:800}h3{font-size:1.15rem;font-weight:700}
+p{margin:0 0 1em}
+.eyebrow{display:inline-block;font-size:.78rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--verde);margin-bottom:.8em}
+.ph{background:#fff3c4;color:#6b5200;border:1px dashed #d9b300;border-radius:4px;padding:0 4px;font-size:.88em;font-weight:600;font-style:normal}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5em;padding:15px 26px;border-radius:999px;font-weight:700;font-size:1rem;text-decoration:none;border:2px solid transparent;cursor:pointer;font-family:inherit;text-align:center;transition:transform .15s ease,box-shadow .15s ease}
+.btn:hover{transform:translateY(-1px)}
+.btn-lima{background:var(--lima);color:var(--oscuro);box-shadow:0 6px 20px rgba(180,224,74,.25)}
+.btn-oscuro{background:var(--oscuro);color:#fff}
+.btn-borde{border-color:currentColor;color:inherit;background:transparent}
+.btns{display:flex;gap:12px;flex-wrap:wrap}
+.centro{text-align:center}.centro .btns{justify-content:center}
+/* Barra */
+.top{position:sticky;top:0;z-index:30;background:rgba(31,42,36,.97);backdrop-filter:blur(6px);border-bottom:1px solid rgba(255,255,255,.06)}
+.top .wrap{max-width:1240px;display:flex;align-items:center;justify-content:space-between;height:66px;gap:16px}
+.logo{display:flex;flex-direction:column;line-height:1.1;text-decoration:none;flex-shrink:0}
+.logo b{color:#fff;font-size:1.1rem;letter-spacing:.02em}.logo b span{color:var(--lima)}
+.logo small{color:#9fb0a5;font-size:.7rem}
+.menu{display:flex;align-items:center;gap:2px;list-style:none;margin:0;padding:0}
+.menu>li{position:relative}
+.menu a.it,.menu button.it{display:block;white-space:nowrap;color:#dfe7e1;text-decoration:none;font-size:.88rem;font-weight:600;padding:9px 10px;border-radius:8px;background:none;border:0;font-family:inherit;cursor:pointer}
+.menu a.it:hover,.menu button.it:hover,.menu .act>.it{color:var(--lima)}
+.menu .sub{display:none;position:absolute;top:100%;left:0;min-width:220px;background:var(--oscuro-2);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:8px;list-style:none;margin:0;box-shadow:0 14px 30px rgba(0,0,0,.25)}
+.menu li:hover>.sub,.menu li:focus-within>.sub{display:block}
+.menu .sub a{display:block;color:#dfe7e1;text-decoration:none;padding:8px 10px;border-radius:8px;font-size:.9rem}
+.menu .sub a:hover{background:rgba(255,255,255,.06);color:var(--lima)}
+.menu .sub small{display:block;color:#9fb0a5;font-size:.76rem}
+.top .cta{padding:10px 18px;font-size:.9rem;margin-left:8px;white-space:nowrap}
+.hamb{display:none;background:none;border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:10px;padding:8px 12px;font-family:inherit;font-weight:700;font-size:.9rem;cursor:pointer}
+.franja{height:5px;display:grid;grid-template-columns:repeat(4,1fr)}
+.franja i:nth-child(1){background:var(--verde)}.franja i:nth-child(2){background:var(--oliva)}.franja i:nth-child(3){background:var(--dorado)}.franja i:nth-child(4){background:var(--lima)}
+/* Migas y recorrido */
+.migas{font-size:.82rem;color:#9fb0a5;margin-bottom:18px}.migas a{color:#c9d3cc}
+.recorrido{background:var(--fondo-2);border-top:1px solid var(--borde);padding:40px 0}
+.recorrido .wrap{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.recorrido a{display:block;text-decoration:none;color:var(--texto);background:#fff;border:1px solid var(--borde);border-radius:var(--radio);padding:18px 20px}
+.recorrido a:hover{border-color:var(--verde)}
+.recorrido small{display:block;color:var(--texto-2);font-size:.8rem;text-transform:uppercase;letter-spacing:.1em;font-weight:700}
+.recorrido b{font-size:1.05rem}.recorrido .sig{text-align:right}
+/* Hero */
+.hero{background:var(--oscuro);color:#fff;padding:80px 0 72px;position:relative;overflow:hidden}
+.hero:before{content:"";position:absolute;inset:auto -10% -55% -10%;height:80%;background:radial-gradient(ellipse at center,rgba(89,150,117,.28),transparent 65%);pointer-events:none}
+.hero .wrap{position:relative}
+.hero .eyebrow{color:var(--oliva)}
+.hero h1{font-size:clamp(2rem,5vw,3.1rem);font-weight:800;margin-bottom:.45em}
+.hero h1 em{font-style:normal;color:var(--lima)}
+.hero .lead{color:#cfd9d2;font-size:1.15rem;max-width:36em}
+.hero.centro .lead{margin:0 auto 30px}
+.hero .bajada{color:#9fb0a5;font-size:.9rem;margin-top:16px}
+.hero-pag{padding:56px 0 52px}
+/* Secciones */
+section.s{padding:68px 0;scroll-margin-top:70px}
+section.alt{background:var(--fondo-2)}
+section.dark{background:var(--oscuro);color:#e9eee9}
+section.dark h2,section.dark h3{color:#fff}
+section.dark .sub,section.dark p{color:#c9d3cc}
+.cab{max-width:700px;margin:0 0 30px}.centro .cab,.cab.centro{margin:0 auto 34px;text-align:center}
+.cab p{color:var(--texto-2);font-size:1.06rem}
+section.dark .cab p{color:#c9d3cc}
+.grid{display:grid;gap:18px}.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
+.card{background:#fff;border:1px solid var(--borde);border-radius:var(--radio);padding:22px}
+section.dark .card{background:var(--oscuro-2);border-color:rgba(255,255,255,.08)}
+.card p:last-child{margin-bottom:0}
+.card .n{width:34px;height:34px;border-radius:50%;background:var(--lima);color:var(--oscuro);display:grid;place-items:center;font-weight:800;margin-bottom:12px}
+.card.link{text-decoration:none;color:var(--texto);display:flex;flex-direction:column;transition:border-color .15s,box-shadow .15s,transform .15s}
+.card.link:hover{border-color:var(--verde);box-shadow:0 14px 40px rgba(31,42,36,.10);transform:translateY(-2px)}
+.card .mas{margin-top:auto;padding-top:12px;font-weight:700;color:var(--verde-osc)}
+.chip{display:inline-block;background:var(--fondo-2);border:1px solid var(--borde);border-radius:999px;padding:2px 10px;font-size:.78rem;font-weight:700;color:var(--verde-osc);margin-bottom:10px}
+section.dark .chip{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.12);color:var(--lima)}
+.remate{font-size:1.15rem;font-weight:700;border-left:5px solid var(--lima);padding:4px 0 4px 18px;margin:24px 0 0}
+.nota{font-size:.9rem;color:var(--texto-2)}
+section.dark .nota{color:#9fb0a5}
+.cita{font-style:italic;font-size:1.05rem}
+.quien{display:flex;gap:12px;align-items:center;margin-top:14px;font-style:normal}
+.avatar{width:44px;height:44px;border-radius:50%;background:var(--verde);color:#fff;display:grid;place-items:center;font-weight:800;flex-shrink:0}
+.quien b{display:block}.quien span{font-size:.88rem;color:var(--texto-2)}
+section.dark .quien span{color:#9fb0a5}
+/* Pasos */
+.pasos{list-style:none;padding:0;margin:0;counter-reset:p;display:grid;gap:14px}
+.pasos li{counter-increment:p;position:relative;padding:16px 18px 16px 64px;background:#fff;border:1px solid var(--borde);border-radius:var(--radio)}
+.pasos li:before{content:counter(p);position:absolute;left:18px;top:16px;width:32px;height:32px;border-radius:50%;background:var(--oscuro);color:var(--lima);display:grid;place-items:center;font-weight:800}
+.pasos b{display:block}.pasos span{color:var(--texto-2);font-size:.95rem}
+.pasos.h{grid-template-columns:repeat(3,1fr)}
+/* Tablas */
+.tabla{width:100%;border-collapse:collapse;background:#fff;border-radius:var(--radio);overflow:hidden;border:1px solid var(--borde);font-size:.95rem}
+.tabla th,.tabla td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--borde);vertical-align:top}
+.tabla th{background:var(--oscuro);color:#fff;font-weight:700;font-size:.85rem}
+.tabla tr:last-child td{border-bottom:0}
+.scroll{overflow-x:auto}
+/* Personas */
+.persona{text-align:center}
+.foto{width:120px;height:120px;border-radius:50%;margin:0 auto 14px;background:var(--fondo-2);border:2px dashed var(--borde);display:grid;place-items:center;font-size:.72rem;color:#6b5200;padding:10px}
+.persona b{display:block;font-size:1.08rem}.persona span{display:block;color:var(--texto-2);font-size:.92rem}
+/* Soluciones */
+.sol h3{font-size:1.3rem;margin-bottom:4px}
+.sol dl{margin:12px 0 18px;display:grid;gap:8px}
+.sol dt{font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;font-weight:700;color:var(--texto-2)}
+.sol dd{margin:0;font-size:.95rem}
+.sol .btns{margin-top:auto}
+.sol .btn{padding:11px 18px;font-size:.92rem}
+/* Preguntas */
+details{background:#fff;border:1px solid var(--borde);border-radius:var(--radio);padding:0 20px;margin-bottom:10px}
+details summary{cursor:pointer;font-weight:700;padding:16px 0;list-style:none;position:relative;padding-right:30px}
+details summary::-webkit-details-marker{display:none}
+details summary:after{content:"+";position:absolute;right:0;top:12px;font-size:1.4rem;color:var(--verde)}
+details[open] summary:after{content:"–"}
+details p{color:var(--texto-2)}
+/* Camino (pregunta) */
+.caminos{display:grid;grid-template-columns:1fr 1fr;gap:22px;max-width:940px;margin:0 auto}
+.camino{display:flex;flex-direction:column;text-decoration:none;color:var(--texto);border:2px solid var(--borde);border-radius:20px;padding:30px 28px 26px;background:#fff;transition:border-color .15s,box-shadow .15s,transform .15s}
+.camino:hover,.camino:focus-visible{border-color:var(--verde);box-shadow:0 14px 40px rgba(31,42,36,.10);transform:translateY(-2px);outline:none}
+.camino .resp{font-size:1.5rem;font-weight:800;line-height:1.2;margin-bottom:6px}
+.camino .resp span{display:inline-block;background:var(--lima);color:var(--oscuro);border-radius:8px;padding:0 10px;margin-right:6px}
+.camino.exp .resp span{background:var(--oscuro);color:var(--lima)}
+.camino .quien2{color:var(--texto-2);margin-bottom:18px}
+.camino ul{list-style:none;padding:0;margin:0 0 24px;flex:1}
+.camino li{padding:7px 0 7px 28px;position:relative;border-top:1px solid var(--borde);font-size:.98rem}
+.camino li:first-child{border-top:none}
+.camino li:before{content:"✓";position:absolute;left:4px;top:7px;color:var(--verde);font-weight:800}
+.camino .btn{align-self:stretch}.camino.exp .btn{background:var(--oscuro);color:#fff}
+.nosabe{text-align:center;color:var(--texto-2);font-size:.95rem;margin:26px auto 0;max-width:600px}
+.frases{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:26px 0 0}
+.frase{background:#fff;border:1px solid var(--borde);border-radius:var(--radio);padding:22px 20px 18px;position:relative;font-style:italic}
+.frase:before{content:"“";position:absolute;top:-4px;left:14px;font-size:2.4rem;color:var(--lima);font-weight:800;line-height:1;font-style:normal}
+.frase p{margin:8px 0 0}
+.check{list-style:none;padding:0;margin:0}
+.check li{padding:6px 0 6px 28px;position:relative}
+.check li:before{content:"✓";position:absolute;left:4px;top:6px;color:var(--verde);font-weight:800}
+.x li:before{content:"✕";color:#b0563f}
+.linea{border-left:3px solid var(--lima);padding-left:22px;display:grid;gap:22px}
+.linea div{position:relative}
+.linea div:before{content:"";position:absolute;left:-30px;top:6px;width:13px;height:13px;border-radius:50%;background:var(--oscuro);border:3px solid var(--lima)}
+.linea b{display:block}
+/* Imágenes y video */
+.foto-esc{margin:0;border-radius:var(--radio);overflow:hidden;background:var(--fondo-2);border:1px solid var(--borde)}
+.foto-esc img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover}
+.foto-esc figcaption{font-size:.82rem;color:var(--texto-2);padding:8px 12px}
+section.dark .foto-esc{border-color:rgba(255,255,255,.1);background:var(--oscuro-2)}
+section.dark .foto-esc figcaption{color:#9fb0a5}
+.video-v{display:grid;grid-template-columns:minmax(0,300px) 1fr;gap:32px;align-items:center}
+.video-v video{width:100%;aspect-ratio:9/16;border-radius:16px;background:#000;display:block;box-shadow:0 18px 40px rgba(31,42,36,.18)}
+.retrato{width:140px;height:140px;border-radius:50%;object-fit:cover;display:block;margin:0 auto 14px;border:3px solid var(--lima)}
+.avatar-foto{width:48px;height:48px;border-radius:50%;object-fit:cover;flex-shrink:0}
+.ico{width:46px;height:46px;margin-bottom:12px;display:block}
+.hero:after{content:"";position:absolute;inset:0;pointer-events:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1640 720' fill='none' stroke='%232c3d33' stroke-width='5'%3E%3Crect x='20' y='200' width='320' height='420' rx='16'/%3E%3Cpath d='M80 300h200M80 360h200M80 420h140'/%3E%3Ccircle cx='250' cy='530' r='44'/%3E%3Cpath d='M228 530l16 16 30-30'/%3E%3Cpath d='M1080 380L1360 140 1640 380'/%3E%3Cpath d='M1140 340V660H1580V340'/%3E%3Crect x='1300' y='480' width='120' height='180'/%3E%3Crect x='1190' y='400' width='80' height='80'/%3E%3Crect x='1450' y='400' width='80' height='80'/%3E%3C/svg%3E") center/cover no-repeat;opacity:.9}
+.hero .wrap{z-index:1}
+/* Pie */
+footer{background:#161e1a;color:#9fb0a5;font-size:.88rem;padding:44px 0 48px}
+footer .legal{border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:16px 18px;color:#c9d3cc;margin-bottom:28px}
+footer a{color:#c9d3cc;text-decoration:none}footer a:hover{color:var(--lima)}
+.mapa{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:24px;margin-bottom:24px}
+.mapa h4{color:#fff;margin:0 0 10px;font-size:.85rem;text-transform:uppercase;letter-spacing:.1em}
+.mapa ul{list-style:none;padding:0;margin:0}.mapa li{padding:3px 0}
+@media (max-width:1140px){
+  .hamb{display:block}
+  .nav{display:none;position:absolute;top:66px;left:0;right:0;background:var(--oscuro);border-top:1px solid rgba(255,255,255,.08);padding:10px 16px 18px;max-height:calc(100vh - 66px);overflow:auto}
+  .nav.abierto{display:block}
+  .menu{flex-direction:column;align-items:stretch}
+  .menu .sub{display:block;position:static;box-shadow:none;background:none;border:0;padding:0 0 0 12px}
+  .menu a.it,.menu button.it{font-size:1rem;padding:10px 6px;text-align:left;width:100%}
+  .top .cta{margin:10px 0 0;width:100%}
+}
+@media (max-width:860px){
+  .video-v{grid-template-columns:1fr}.video-v video{max-width:300px;margin:0 auto}
+  .g3,.g4,.frases,.pasos.h{grid-template-columns:1fr 1fr}
+  .caminos,.g2,.mapa{grid-template-columns:1fr}
+}
+@media (max-width:640px){
+  body{font-size:16px}.wrap{padding:0 16px}
+  .g3,.g4,.frases,.pasos.h,.recorrido .wrap{grid-template-columns:1fr}
+  .hero{padding:56px 0 52px}section.s{padding:52px 0}
+  .camino{padding:24px 20px 22px}.camino .resp{font-size:1.3rem}
+  .recorrido .sig{text-align:left}
+  .btns .btn{width:100%}
+}
+</style>
+<link rel="icon" type="image/png" href="assets/img/favicon.png">
+<link rel="apple-touch-icon" href="assets/img/icono-180.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Pulso">
+<link rel="stylesheet" href="assets/css/menu.css">
+<link rel="stylesheet" href="assets/css/app-movil.css">
+<script src="assets/js/menu.js" defer></script>
+<script src="assets/js/app-movil.js" defer></script>
+<meta name="theme-color" content="#1f2a24">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Pulso Inversor">
+<meta property="og:title" content="Cómo funciona · Pulso Inversor">
+<meta property="og:description" content="El Modelo IGR en tres pilares: qué respalda tu dinero, qué queda a tu favor y cómo lo recuperas.">
+<meta property="og:image" content="assets/img/compartir-pulso.jpg">
+<!-- [REQUIERE: al publicar, cambiar og:image por la URL completa del dominio] -->
+</head>
+<body>
+<a class="pi-saltar" href="#contenido">Saltar al contenido</a>
+<header class="pi-top">
+  <div class="pi-in">
+    <a class="pi-logo" href="index.html" aria-label="Pulso Inversor, inicio"><img src="assets/img/logo-pulso-blanco.png" alt="Pulso Inversor" width="134" height="40"></a>
+    <button class="pi-hamb" type="button" aria-expanded="false" aria-controls="pi-nav">Menú</button>
+    <nav class="pi-nav" id="pi-nav" aria-label="Principal"><a href="index.html">Inicio</a><details class="pi-g pi-act"><summary>Cómo invertir</summary><div class="pi-dd"><a href="como-funciona.html" class="pi-act">Cómo funciona<small>El Modelo IGR en tres preguntas</small></a><a href="soluciones.html">Soluciones<small>Desde cuánto parte cada una</small></a><a href="simuladores.html">Simuladores<small>Elige monto y plazo</small></a><a href="operacion-abierta.html">Operación abierta<small>Una operación real, de punta a punta</small></a></div></details><details class="pi-g"><summary>Conócenos</summary><div class="pi-dd"><a href="nosotros.html">Quiénes somos<small>Misión, visión e historia</small></a><a href="equipo.html">Equipo<small>Las personas que vas a conocer</small></a><a href="verifica.html">Verifica a Pulso<small>Compruébalo tú mismo</small></a></div></details><details class="pi-g"><summary>Recursos</summary><div class="pi-dd"><a href="landing_primera_inversion_pulso.html">Primera inversión<small>Para dar el primer paso</small></a><a href="landing_inversionista_experiencia_pulso.html">Ya he invertido<small>Para revisar una operación</small></a><a href="preguntas.html">Preguntas frecuentes<small>Las dudas de siempre, en simple</small></a></div></details><a class="pi-cta" href="contacto.html">Conversemos</a></nav>
+  </div>
+</header>
+<div class="pi-franja" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+<main id="contenido">
+<section class="hero hero-pag"><div class="wrap">
+  <div class="migas"><a href="index.html">Inicio</a> › Cómo funciona</div>
+  <span class="eyebrow">El Modelo IGR</span>
+  <h1>El respaldo no se promete, <em>se muestra.</em></h1>
+  <p class="lead">Muchas alternativas piden confiar en la empresa, ofrecen una tasa atractiva y dicen «respaldo inmobiliario» sin explicar la operación. Nosotros trabajamos al revés: antes de que inviertas, puedes revisar tres cosas.</p>
+</div></section>
+<section class="s alt"><div class="wrap"><div class="grid g2" style="align-items:center"><div>
+  <span class="eyebrow">Por qué lo hacemos así</span>
+  <h2>Tus ahorros no están quietos por falta de ganas. Están quietos por falta de claridad.</h2>
+  <p>Las personas quieren hacer crecer sus ahorros. Van al banco, después prueban fondos o siguen el consejo de un conocido, y vuelven al mismo punto, porque no entienden qué hay detrás.</p>
+  <p class="remate">El problema no era solo encontrar alternativas inmobiliarias. Era entender qué se firma, qué respaldo existe y qué hacer si algo no se cumple. Por eso diseñamos el Modelo IGR.</p>
+</div><figure class="foto-esc"><img src="assets/img/revision-de-documentos.jpg" alt="Un asesor de Pulso revisa documentos con dos clientas" loading="lazy" width="1200" height="900"></figure></div></div></section>
+
+<section class="s" id="pilares"><div class="wrap">
+  <div class="cab"><span class="eyebrow">Los tres pilares</span><h2>Lo que conoces antes de invertir un peso</h2></div>
+  <div class="grid g3">
+    <div class="card"><span style="color:var(--verde)"><svg class="ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round" aria-hidden="true"><path d="M6 22L24 7l18 15"/><path d="M10 19v22h28V19"/><path d="M20 41V29h8v12"/></svg></span><h3>Conoce qué respalda tu dinero</h3>
+      <p>Pulso identifica propiedades en oportunidad, compradas entre 35% y 50% bajo su valor comercial estimado. Te mostramos la propiedad, su tasación y su precio de compra, y te entregamos los antecedentes para que los revise tu abogado.</p>
+      <p class="nota"><b>En simple:</b> no confías a ciegas. Ves el activo y decides con información.</p></div>
+    <div class="card"><span style="color:var(--verde)"><svg class="ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="5" width="30" height="38" rx="3"/><path d="M16 15h16M16 22h16M16 29h8"/><circle cx="31" cy="34" r="6"/><path d="M28.5 34l2 2 3.5-3.5"/></svg></span><h3>Entiende qué queda a tu favor</h3>
+      <p>Sabes quién te debe pagar, qué documento tienes y qué puedes hacer si algo no se cumple: mutuo y pagaré, hipoteca inscrita o la propiedad a tu nombre, según la solución. Todo se firma ante notario.</p>
+      <p class="nota"><b>En simple:</b> es como un préstamo con un documento que te permite cobrar si no te pagan.</p></div>
+    <div class="card"><span style="color:var(--verde)"><svg class="ico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="9" width="36" height="33" rx="3"/><path d="M6 18h36M15 5v8M33 5v8"/><path d="M14 26h4M22 26h4M30 26h4M14 33h4M22 33h4"/></svg></span><h3>Ten claro cómo recuperas tu dinero</h3>
+      <p>El contrato define el plazo, las fechas de pago y la devolución de tu capital. Durante la inversión recibes reportes. Antes de firmar revisamos contigo salida anticipada, atrasos, herencia y cierre.</p>
+      <p class="nota"><b>En simple:</b> sabes qué día te llega cada pago y cuándo vuelve tu dinero.</p></div>
+  </div>
+  <p class="nota" style="margin-top:20px">Comprar bajo el valor comercial es un antecedente que revisas, no una promesa: ese margen no elimina el riesgo.</p>
+  <div class="video-v" style="margin-top:36px"><video controls preload="none" playsinline poster="assets/video/poster-video-felipe.jpg" aria-label="Felipe Rojas explica el Modelo IGR"><source src="assets/video/felipe-que-es-igr.mp4" type="video/mp4"></video>
+    <div><span class="chip">Video · 31 segundos</span><h3 style="font-size:1.4rem">Felipe Rojas te lo explica en tres pasos</h3><p>Cómo buscamos la oportunidad, qué documentos firmas y qué queda a tu favor.</p><p class="nota"><span class="ph">[REQUIERE: confirmar uso; el video dice «doble garantía real»]</span></p></div></div>
+</div></section>
+
+<section class="s alt" id="paso-a-paso"><div class="wrap">
+  <div class="cab"><span class="eyebrow">De la primera duda al cierre</span><h2>Cada paso resuelve una duda concreta</h2></div>
+  <div class="scroll"><table class="tabla">
+    <tr><th>Paso</th><th>Qué pasa</th><th>La duda que resuelve</th></tr>
+    <tr><td><b>Simulación</b></td><td>Eliges solución, monto y plazo y ves una estimación.</td><td>«No sé cuánto recibiría.»</td></tr>
+    <tr><td><b>Clase gratuita</b></td><td>Una clase de 15 minutos con los tres pilares. <span class="ph">[REQUIERE: enlace al video]</span></td><td>«No entiendo cómo funciona.»</td></tr>
+    <tr><td><b>Reunión con un asesor</b></td><td>Conversamos de lo que buscas. Puedes venir con tu pareja, un socio o tu abogado.</td><td>«Quiero hablar con una persona.»</td></tr>
+    <tr><td><b>Ficha de la operación</b></td><td>Propiedad, tasación, precio de compra, solución y calendario.</td><td>«No sé qué respalda mi dinero.»</td></tr>
+    <tr><td><b>Documentos antes de firmar</b></td><td>Contrato y antecedentes para tu abogado, el tiempo que necesites.</td><td>«Tengo miedo de firmar algo que no entiendo.»</td></tr>
+    <tr><td><b>Firma ante notario</b></td><td>Se formaliza el mutuo, la hipoteca o el título.</td><td>«¿Qué queda a mi favor?»</td></tr>
+    <tr><td><b>Pagos en fecha y reportes</b></td><td>Pagos según contrato y reportes del estado de tu operación.</td><td>«Quiero ver el ingreso en mi cuenta.»</td></tr>
+    <tr><td><b>Acceso a tu asesor</b></td><td>Te responde directo, con nombre y teléfono.</td><td>«Si pasa algo, no tengo a quién llamar.»</td></tr>
+    <tr><td><b>Cierre y reinversión</b></td><td>Devolución de tu capital y, si quieres, una nueva operación.</td><td>«¿Y al final qué pasa?»</td></tr>
+    <tr><td><b>Ecosistema Grupo MatchMaking</b></td><td>Apoyo legal, tributario y patrimonial si quieres ordenar el resto.</td><td>«Necesito ordenar todo mi patrimonio.»</td></tr>
+  </table></div>
+</div></section>
+
+<section class="s"><div class="wrap">
+  <div class="grid g2">
+    <div><span class="eyebrow">Lo que sí hacemos</span><h2>Hechos que puedes revisar</h2>
+      <ul class="check"><li>Te mostramos una operación concreta, con nombre y apellido</li><li>Te entregamos los documentos antes de firmar</li><li>Te explicamos los riesgos, incluido el peor escenario</li><li>Firmamos ante notario</li><li>Te acompaña una persona con nombre y cara</li></ul></div>
+    <div><figure class="foto-esc"><img src="assets/img/firma-ante-notario.jpg" alt="Firma de documentos sobre la mesa de reuniones" loading="lazy" width="1200" height="900"></figure><span class="eyebrow" style="margin-top:22px">Lo que no hacemos</span><h2>Lo que no vas a ver aquí</h2>
+      <ul class="check x"><li>Usar la rentabilidad como anzuelo: las condiciones quedan escritas en tu contrato</li><li>Mezclar tu dinero en un pozo sin decirte qué hay detrás</li><li>Apurarte para firmar en la reunión</li><li>Pedirte que pongas todo tu ahorro</li></ul></div>
+  </div>
+</div></section>
+
+<section class="s alt"><div class="wrap angosto">
+  <span class="eyebrow">Con honestidad</span>
+  <h2>Toda inversión tiene riesgos, y esta también</h2>
+  <p>Preferimos que los conozcas aquí y no al vencimiento: que la propiedad baje de valor, que un pago se atrase, que necesites el dinero antes o que Pulso deje de funcionar. Para cada uno te explicamos qué lo acota y qué sigue siendo riesgo.</p>
+  <div class="btns"><a class="btn btn-oscuro" href="landing_inversionista_experiencia_pulso.html#riesgos">Ver los riesgos en detalle</a><a class="btn btn-borde" href="preguntas.html">Preguntas frecuentes</a></div>
+</div></section>
+<section class="s dark centro"><div class="wrap angosto">
+  <h2>Ahora que sabes cómo funciona, mira tus números</h2>
+  <p class="sub" style="margin-bottom:26px">Simula tu inversión o cuéntanos si es tu primera vez y te llevamos a lo que te sirve.</p>
+  <div class="btns"><a class="btn btn-lima" href="simuladores.html">Simular mi inversión</a><a class="btn btn-borde" style="color:#fff" href="landing_primera_inversion_pulso.html">Es mi primera vez</a><a class="btn btn-borde" style="color:#fff" href="landing_inversionista_experiencia_pulso.html">Ya he invertido</a></div>
+  <p class="nota" style="margin-top:18px">No te pedimos decidir en la reunión. Puedes venir con tu pareja, un socio o tu abogado.</p>
+</div></section>
+</main>
+<nav class="recorrido" aria-label="Recorrido del sitio"><div class="wrap"><a href="index.html"><small>← Antes</small><b>Inicio</b></a><a class="sig" href="soluciones.html"><small>Sigue →</small><b>Soluciones</b></a></div></nav>
+<footer>
+  <div class="wrap">
+    <div class="legal"><b>Información importante.</b> Operaciones bajo contratos civiles, no reguladas por la CMF. Toda inversión tiene riesgos. Resultados anteriores no aseguran resultados futuros. Revisa los documentos con tu abogado antes de firmar.</div>
+    <div class="mapa">
+      <div><p><img src="assets/img/logo-pulso-blanco.png" alt="Pulso Inversor" width="150" height="45" style="height:45px;width:auto;margin-bottom:8px"><br>Una empresa de Grupo MatchMaking.</p>
+        <p><span class="ph">[REQUIERE: razón social · RUT · dirección]</span><br>WhatsApp: <span class="ph">[REQUIERE: número]</span><br>Correo: <span class="ph">[REQUIERE: correo de contacto]</span></p></div>
+      <div><h4>Cómo invertir</h4><ul><li><a href="como-funciona.html">Cómo funciona</a></li><li><a href="soluciones.html">Soluciones</a></li><li><a href="simuladores.html">Simuladores</a></li><li><a href="operacion-abierta.html">Operación abierta</a></li></ul></div>
+      <div><h4>Conócenos</h4><ul><li><a href="nosotros.html">Quiénes somos</a></li><li><a href="nosotros.html#mision">Misión y visión</a></li><li><a href="nosotros.html#historia">Nuestra historia</a></li><li><a href="equipo.html">Equipo</a></li><li><a href="verifica.html">Verifica a Pulso</a></li></ul></div>
+      <div><h4>Recursos</h4><ul><li><a href="landing_primera_inversion_pulso.html">Primera inversión</a></li><li><a href="landing_inversionista_experiencia_pulso.html">Ya he invertido</a></li><li><a href="preguntas.html">Preguntas frecuentes</a></li><li><a href="contacto.html">Conversemos</a></li><li><a href="privacidad.html">Política de privacidad</a></li></ul></div>
+    </div>
+    <div class="pi-redes-cab">Síguenos y conversemos</div>
+    <div class="pi-redes pi-redes-pie"><a class="pi-red" href="https://instagram.com/pulsoinversorcl" target="_blank" rel="noopener" aria-label="Instagram de Pulso Inversor"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.4" cy="6.6" r="1.3" fill="currentColor"/></svg><span class="pi-red-t"><b>Instagram</b><small>@pulsoinversorcl</small></span></a><span class="pi-red pi-pend"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 10.5V17M8 7.4v.1M11.5 17v-6.5M11.5 13.2c0-1.6 1-2.8 2.5-2.8s2.5 1 2.5 2.8V17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="pi-red-t"><b>LinkedIn</b><small class=ph>[REQUIERE: crear la página de empresa]</small></span></span><span class="pi-red pi-pend"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 21v-7.5h2.6l.4-3H14V8.7c0-.9.3-1.5 1.6-1.5H17V4.5c-.3 0-1.2-.1-2.3-.1-2.3 0-3.8 1.4-3.8 3.9v2.2H8.3v3H11V21" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg><span class="pi-red-t"><b>Facebook</b><small class=ph>[REQUIERE: URL de la página]</small></span></span><span class="pi-red pi-pend"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.2-3.9A8 8 0 1 1 8 19z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9.2 8.6c.2-.4.5-.4.7-.4h.5c.2 0 .4 0 .5.4l.7 1.6c.1.2 0 .4-.1.6l-.5.6c.6 1.1 1.5 2 2.6 2.6l.6-.5c.2-.1.4-.2.6-.1l1.6.7c.3.1.4.3.4.5v.5c0 .3-.1.5-.4.7-.5.4-1.3.6-2 .4-2.6-.8-4.6-2.8-5.4-5.4-.2-.7 0-1.5.2-2z" fill="currentColor"/></svg><span class="pi-red-t"><b>WhatsApp</b><small class=ph>[REQUIERE: número]</small></span></span><span class="pi-red pi-pend"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 7l8 6 8-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg><span class="pi-red-t"><b>Correo</b><small class=ph>[REQUIERE: correo de contacto]</small></span></span></div>
+  </div>
+</footer>
+</body>
+</html>
