@@ -67,6 +67,22 @@ def footer():
   </div>
 </footer>'''
 
+import re as _re
+def _etiquetar_tablas(html):
+    """Agrega data-label a cada celda con el encabezado de su columna (para apilar tablas en celular)."""
+    def una(m):
+        t = m.group(0)
+        heads = [_re.sub(r'<[^>]+>', '', h).strip() for h in _re.findall(r'<th[^>]*>(.*?)</th>', t, _re.S)]
+        def fila(r):
+            i = [0]
+            def celda(c):
+                k = i[0]; i[0] += 1
+                lab = heads[k] if k < len(heads) else ''
+                return f'<td data-label="{lab}"'
+            return _re.sub(r'<td(?=[ >])', celda, r.group(0))
+        return _re.sub(r'<tr>.*?</tr>', fila, t, flags=_re.S)
+    return _re.sub(r'<table>.*?</table>', una, html, flags=_re.S)
+
 def page(slug, title, desc, body):
     full = 'Pulso Inversor · Inversiones con garantía real' if slug == 'index.html' else f'{title} · Pulso Inversor'
     html = f'''<!doctype html>
@@ -97,6 +113,7 @@ def page(slug, title, desc, body):
 </html>
 '''
     html = html.replace(' hidden-desktop', ' data-mobile-only')
+    html = _etiquetar_tablas(html)
     open(os.path.join(R, slug), 'w').write(html)
 
 def hero(crumb, h1, p, eyebrow=None):
@@ -190,13 +207,20 @@ cards = ''.join(f'''<a class="camino{' is-open' if i == 0 else ''}" href="invers
 def bullets(items):
     return '<ul class="choice-list">' + ''.join(f'<li>{x}</li>' for x in items) + '</ul>'
 
-def review_slot(n):
-    return f'''<article class="review-slot">
+TESTIMONIOS = [
+    ('Fadi Layous', 'Socio en Pitahouse', 'FL',
+     ['Al principio partí con una inversión en Leaseback para conocer cómo funcionaba. Con el tiempo fui tomando más confianza en Pulso Inversor y me animé a seguir invirtiendo.',
+      'No fue algo de un día para otro. Empecé con un monto y después fui aumentando lo que invertía, porque me fui sintiendo más cómodo con el modelo. Hoy veo que esa confianza se fue construyendo con la experiencia. Por eso he seguido participando en nuevas operaciones.']),
+    ('Juan Manuel Silva', 'Inversionista', 'JS',
+     ['Buscando otras opciones para invertir encontré Pulso Inversor. Me interesaban los activos alternativos, pero no conocía la estrategia Acción. Pregunté cómo funcionaba y fui aclarando mis dudas antes de invertir. Eso me dio confianza para empezar. Hasta ahora estoy contento con la experiencia; para mí es importante poder preguntar cuando hay algo que no entiendo.']),
+]
+def testimonio(nombre, cargo, ini, parrafos):
+    cuerpo = ''.join(f'<p>{x}</p>' for x in parrafos)
+    return f'''<figure class="testimonio">
       <div class="review-quote" aria-hidden="true">“</div>
-      <div class="review-lines" aria-hidden="true"><span></span><span></span><span style="width:60%"></span></div>
-      <div class="review-author"><div class="review-avatar" aria-hidden="true"></div><div class="review-lines small" aria-hidden="true"><span style="width:110px"></span><span style="width:80px"></span></div></div>
-      {P(f"RESEÑA {n}: texto original, autor, fecha y enlace (reseña auténtica de Google).")}
-    </article>'''
+      <blockquote>{cuerpo}</blockquote>
+      <figcaption><span class="testimonio-avatar" aria-hidden="true">{ini}</span><span><strong>{nombre}</strong><small>{cargo}</small></span></figcaption>
+    </figure>'''
 
 page('index.html', 'Inicio',
      'Explora alternativas de inversión vinculadas al mercado inmobiliario y encuentra un punto de partida para tus objetivos. Agenda una conversación con un asesor.', f'''
@@ -263,9 +287,9 @@ page('index.html', 'Inicio',
         <article class="igr-item">{icon('doc-check')}<div><h3>¿Qué queda a mi favor?</h3><p>Un documento firmado ante notario que puedes revisar con tu abogado.</p></div></article>
         <article class="igr-item">{icon('calendario')}<div><h3>¿Cómo recupero mi dinero?</h3><p>Un calendario de pagos por escrito, antes de firmar.</p></div></article>
       </div>
-      <div class="actions"><a class="btn btn-dark" href="como-funciona.html">Cómo funciona</a></div>
     </div>
   </div>
+  <div class="actions" style="justify-content:center"><a class="btn btn-dark" href="como-funciona.html">Cómo funciona</a></div>
   <p class="disclaimer">Comparación general y referencial. Toda inversión, incluidas las nuestras, tiene riesgos.</p>
 </div></section>
 
@@ -273,7 +297,6 @@ page('index.html', 'Inicio',
   <div class="title center"><span class="eyebrow">Formas de invertir</span><h2>Tres caminos, según lo que quieres construir</h2></div>
   <div class="caminos-acc">{cards}</div>
   <p class="center-note">¿Quieres ordenar todo tu patrimonio? <a href="inversiones.html#configuracion-patrimonial">Conoce Configuración Patrimonial</a></p>
-  <div class="actions" style="justify-content:center"><a class="btn btn-outline" href="inversiones.html#comparar">Compararlas lado a lado</a></div>
 </div></section>
 
 <section class="section section-soft"><div class="container">
@@ -285,9 +308,8 @@ page('index.html', 'Inicio',
       <figcaption><strong>Gonzalo</strong>, kinesiólogo. Tenía sus ahorros quietos en el banco y aquí cuenta cómo fue su primera inversión con Pulso.</figcaption>
     </figure>
     <div class="review-list">
-      {review_slot(1)}
-      {review_slot(2)}
-      {review_slot(3)}
+      {''.join(testimonio(*t) for t in TESTIMONIOS)}
+      {P("Espacio para un tercer testimonio o reseña de Google (texto, autor y cargo).")}
     </div>
   </div>
   {P("INCORPORAR enlace al perfil oficial de Pulso en Google: botón 'Ver opiniones en Google'.")}

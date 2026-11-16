@@ -379,3 +379,52 @@ details.camino[open] .camino-toggle::after{content:"–"}
 @media (max-width:620px){.cta-final{padding:84px 0}.cta-final .btn-xl{width:100%}}
 @media (prefers-reduced-motion:reduce){.cta-final .btn-xl{animation:none}}
 .nav-cta{white-space:nowrap}
+
+/* ¿Por qué Pulso?: comparación a la misma altura que la columna derecha */
+.why{align-items:stretch}
+.why-compare{height:100%}
+.why-col{display:flex;flex-direction:column}
+.why-col p{flex:1;display:flex;align-items:center}
+.why-igr{display:flex;flex-direction:column;justify-content:space-between}
+.why-igr .igr-list{flex:1;grid-auto-rows:1fr}
+#por-que-pulso .actions{margin-top:36px}
+@media (max-width:1020px){.why-compare{height:auto}.why-col p{flex:none}}
+
+/* Testimonios */
+.review-list{align-content:stretch;gap:20px}
+.testimonio{position:relative;margin:0;background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:26px 28px 24px 70px;box-shadow:var(--shadow-soft);display:flex;flex-direction:column;justify-content:space-between}
+.testimonio .review-quote{left:24px;top:16px;font-size:56px}
+.testimonio blockquote{margin:0;color:var(--gray-900);font-size:16px;line-height:1.6}
+.testimonio blockquote p{margin:0 0 10px}
+.testimonio figcaption{display:flex;align-items:center;gap:12px;margin-top:14px}
+.testimonio figcaption strong{display:block;color:var(--green-900)}
+.testimonio figcaption small{display:block;color:var(--gray-500);font-size:13px}
+.testimonio-avatar{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:14px;color:var(--green-900);background:linear-gradient(135deg,var(--lime),var(--gold))}
+@media (max-width:620px){.testimonio{padding:56px 20px 20px}.testimonio .review-quote{left:20px;top:10px}}
+
+/* Tablas: en celular cada fila se vuelve una ficha */
+@media (max-width:620px){
+  .table-wrap{overflow:visible;border:0;box-shadow:none;background:transparent}
+  .table-wrap table,.compare table{min-width:0}
+  .table-wrap thead{display:none}
+  .table-wrap tbody,.table-wrap tr,.table-wrap td{display:block;width:100%}
+  .table-wrap tr{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius-md);margin-bottom:12px;box-shadow:var(--shadow-soft);overflow:hidden}
+  .table-wrap tbody tr:nth-child(even) td{background:#fff}
+  .table-wrap td{border-bottom:1px solid var(--gray-100);padding:12px 16px}
+  .table-wrap td:last-child{border-bottom:0}
+  .table-wrap td:first-child{background:var(--green-900)!important;color:#fff;font-size:16px}
+  .table-wrap td:not(:first-child)::before{content:attr(data-label);display:block;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--gray-500);margin-bottom:4px}
+  .table-wrap td:first-child a{color:var(--lime)}
+}
+
+/* Encabezado en tablets horizontales y laptops chicos */
+@media (min-width:901px) and (max-width:1180px){
+  .logo img{height:32px}
+  .menu>li>a,.menu>li>button{padding:10px 8px;font-size:13.5px}
+  .nav-actions .btn{padding:10px 16px;font-size:14px;min-height:42px}
+  .nav{gap:12px}
+}
+/* Tres caminos en tablets horizontales */
+@media (min-width:901px) and (max-width:1100px){.caminos-acc{height:500px}.camino{padding:22px}.camino-rows{grid-template-columns:1fr}}
+.review-list{align-content:center}
+.testimonio{justify-content:flex-start}
