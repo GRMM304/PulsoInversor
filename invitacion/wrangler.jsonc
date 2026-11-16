@@ -28,7 +28,8 @@
     "REMITENTE_NOMBRE": "Pulso Inversor",
     "REMITENTE_EMAIL": "contacto@pulsoinversor.cl",
     "RESPONDER_A": "contacto@pulsoinversor.cl",
-    "AVISO_EQUIPO_EMAIL": "contacto@pulsoinversor.cl",
+    // Avisos de confirmaciones y cancelaciones al equipo (separar con coma).
+    "AVISO_EQUIPO_EMAIL": "ibarboza@pulsoinversor.cl, frojas@pulsoinversor.cl",
     // 0 = sin límite. Cuenta personas (cada acompañante suma 1).
     "CUPOS": "0"
   },

@@ -34,9 +34,10 @@ function base64Utf8(texto) {
 
 async function enviarCorreo(env, { para, nombre, asunto, html, etiqueta, adjuntarIcs }) {
   if (!env.BREVO_API_KEY) return { ok: false, error: 'Falta BREVO_API_KEY' };
+  const destinatarios = Array.isArray(para) ? para.map((email) => ({ email })) : [{ email: para, name: nombre || undefined }];
   const body = {
     sender: { name: env.REMITENTE_NOMBRE || 'Pulso Inversor', email: env.REMITENTE_EMAIL },
-    to: [{ email: para, name: nombre || undefined }],
+    to: destinatarios,
     replyTo: { email: env.RESPONDER_A || env.REMITENTE_EMAIL, name: 'Pulso Inversor' },
     subject: asunto,
     htmlContent: html,
@@ -57,9 +58,11 @@ async function enviarCorreo(env, { para, nombre, asunto, html, etiqueta, adjunta
 }
 
 async function avisarEquipo(env, evento, a) {
-  if (!env.AVISO_EQUIPO_EMAIL) return;
+  // AVISO_EQUIPO_EMAIL acepta varios correos separados por coma.
+  const equipo = String(env.AVISO_EQUIPO_EMAIL || '').split(',').map((s) => s.trim()).filter(Boolean);
+  if (!equipo.length) return;
   const c = correoEquipo(evento, a, urlsAsistente(env, a.token));
-  await enviarCorreo(env, { para: env.AVISO_EQUIPO_EMAIL, asunto: c.asunto, html: c.html, etiqueta: 'aviso-equipo' });
+  await enviarCorreo(env, { para: equipo, asunto: c.asunto, html: c.html, etiqueta: 'aviso-equipo' });
 }
 
 async function cuposOcupados(env, excluirEmail) {
