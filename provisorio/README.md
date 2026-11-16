@@ -2,6 +2,14 @@
 
 Versión corregida de la página que hoy está en pulsoinversor.cl, para usar mientras se termina el sitio nuevo (raíz de este repo). Es independiente: todo lo que necesita está en esta carpeta.
 
+## Estado (16-11-2026)
+
+Publicado en la cuenta de Cloudflare de Grupo MM como Worker `pulsoinversor-provisorio`, servido en **pulsoinversor.cl** y **www.pulsoinversor.cl** mediante rutas (ver `routes` en `wrangler.jsonc`). Los registros DNS de la raíz y www siguen apuntando a HostGator con proxy: el Worker responde antes de llegar ahí.
+
+Volver al sitio de HostGator: borrar las dos rutas en Cloudflare → pulsoinversor.cl → Workers Routes.
+
+Actualizar el sitio: `npx wrangler deploy` dentro de esta carpeta (o conectar el repo como se indica abajo).
+
 ## Publicar en Cloudflare (proyecto aparte del sitio nuevo)
 
 En la cuenta de Cloudflare de Pulso: **Workers & Pages → Create → Import a repository**.

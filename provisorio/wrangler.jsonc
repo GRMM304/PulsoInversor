@@ -5,6 +5,11 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "pulsoinversor-provisorio",
   "compatibility_date": "2025-09-01",
+  // pulsoinversor.cl y www (registros proxied en Cloudflare) se sirven con este Worker.
+  "routes": [
+    { "pattern": "pulsoinversor.cl/*", "zone_name": "pulsoinversor.cl" },
+    { "pattern": "www.pulsoinversor.cl/*", "zone_name": "pulsoinversor.cl" }
+  ],
   "assets": {
     "directory": "./",
     "html_handling": "auto-trailing-slash",
