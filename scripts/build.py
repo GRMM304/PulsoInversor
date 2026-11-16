@@ -225,7 +225,7 @@ def testimonio(nombre, cargo, ini, parrafos):
 page('index.html', 'Inicio',
      'Explora alternativas de inversión vinculadas al mercado inmobiliario y encuentra un punto de partida para tus objetivos. Agenda una conversación con un asesor.', f'''
 <section class="hero">
-  <video autoplay muted loop playsinline poster="assets/media/hero-poster.jpg" aria-hidden="true"><source src="assets/media/hero-loop.mp4" type="video/mp4"></video>
+  <img class="hero-bg" src="assets/media/hero-santiago.jpg" srcset="assets/media/hero-santiago-movil.jpg 1000w, assets/media/hero-santiago.jpg 1920w" sizes="100vw" alt="" fetchpriority="high" decoding="async">
   <div class="container"><div class="hero-content">
     <span class="eyebrow dark">Inversión con Garantía Real</span>
     <h1>Tu próxima inversión <span class="accent">comienza con claridad</span></h1>
