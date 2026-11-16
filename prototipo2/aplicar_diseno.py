@@ -95,7 +95,12 @@ def pagina(nombre, s):
         i = s.find('Según cuánto quieres mover')
         a, b = s.rfind('<section', 0, i), s.find('</section>', i) + len('</section>')
         assert i > 0 and a > 0, 'no se encontró la sección de soluciones'
-        s = s[:a] + open(os.path.join(DIS, 'formas-de-invertir.html'), encoding='utf-8').read().strip() + s[b:]
+        s = s[:a] + s[b:]  # se quita de su lugar original...
+        # ...y va justo antes de la sección del video (testimonios)
+        j = s.find('Personas reales, con nombre')
+        c = s.rfind('<section', 0, j)
+        assert j > 0 and c > 0, 'no se encontró la sección de testimonios'
+        s = s[:c] + open(os.path.join(DIS, 'formas-de-invertir.html'), encoding='utf-8').read().strip() + '\n\n' + s[c:]
 
     # Inicio: «Personas reales, con nombre» del Prototipo 1 reemplaza a la prueba social del V5
     if nombre == 'index.html':
