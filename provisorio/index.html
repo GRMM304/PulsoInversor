@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="es-CL" ng-app="cotizadorApp">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pulso Inversor | Activos alternativos con respaldo real</title>
+  <meta name="description" content="Activos alternativos con respaldo real, inversión privada 1 a 1 y estrategias IGR personalizadas." />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Pulso Inversor | Activos alternativos con respaldo real" />
+  <meta property="og:description" content="Inversión privada 1 a 1, respaldada por pagaré, hipoteca o título de propiedad." />
+  <meta property="og:image" content="https://pulsoinversor.cl/assets/img/logo-pulso-gmm.png" />
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <!-- MEDICIÓN: pegar aquí Google Tag Manager / Analytics y el píxel de Meta cuando estén los IDs. -->
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.3/angular.min.js"></script>
+  <style>
+    [ng-cloak]{display:none!important}
+    :root {
+      --green-900:#0E2C28; --green-800:#123D35; --green-700:#1E5746;
+      --lime:#C7D95D; --gold:#ffc33f; --dark:#111514;
+      --gray-900:#1F2523; --gray-700:#4E5A56; --gray-500:#7B8783; --gray-100:#F3F5F2; --white:#fff;
+      --radius-xl:28px; --radius-lg:18px; --shadow:0 24px 70px rgba(0,0,0,.16); --shadow-soft:0 12px 40px rgba(0,0,0,.08);
+      --max:1160px;
+    }
+    *{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;font-family:Inter,Poppins,Arial,sans-serif;color:var(--gray-900);line-height:1.5;background:white} a{text-decoration:none;color:inherit}
+    .container{width:min(var(--max),calc(100% - 40px));margin:auto}.section{padding:78px 0;scroll-margin-top:74px}.section-soft{background:var(--gray-100)}
+    h1,h2,h3,p{margin-top:0} h1{font-size:clamp(42px,6vw,72px);line-height:.96;letter-spacing:-.06em;margin-bottom:22px} h2{font-size:clamp(30px,4vw,48px);line-height:1;letter-spacing:-.04em;margin-bottom:16px} h3{font-size:22px;line-height:1.1;margin-bottom:10px}.lead{font-size:clamp(17px,2vw,21px);color:var(--gray-700);max-width:760px}.muted{color:var(--gray-700)}
+    .eyebrow{display:inline-flex;padding:8px 13px;border-radius:999px;background:rgba(199,217,93,.18);color:var(--green-800);font-size:13px;font-weight:800;margin-bottom:16px}.eyebrow.dark{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:var(--lime)}
+    .btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:13px 20px;border-radius:999px;font-weight:850;font-size:15px;border:1px solid transparent;cursor:pointer;white-space:nowrap}.btn-primary{background:linear-gradient(135deg,var(--lime),var(--gold));color:var(--green-900);box-shadow:0 12px 32px rgba(199,217,93,.25)}.btn-secondary{color:white;border-color:rgba(255,255,255,.24);background:rgba(255,255,255,.08)}.btn-outline{background:white;color:var(--green-900);border-color:rgba(14,44,40,.18)}
+    .header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);border-bottom:none}.header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#599675,#F5B05E)}.nav{height:74px;display:flex;align-items:center;justify-content:space-between;gap:20px}.logo{display:flex;align-items:center;gap:10px;color:var(--green-900)}.logo-img{display:block;width:380px;height:52px;object-fit:cover;object-position:center center}.footer .logo-img{width:200px;height:auto;object-fit:contain;filter:none}.footer .logo-gmm{display:block;width:260px;height:70px;object-fit:cover;object-position:center center;margin-top:-8px;opacity:.7}.menu{display:flex;gap:22px;font-size:14px;font-weight:750;color:var(--gray-700)}.nav-actions{display:flex;gap:10px}.nav-actions .btn-primary{background:#C4D45B;color:var(--green-900);border-color:#C4D45B;box-shadow:none}.mobile-toggle{display:none}
+    .hero{min-height:calc(100vh - 74px);padding:64px 0;background:radial-gradient(circle at 20% 15%,rgba(199,217,93,.2),transparent 28%),linear-gradient(135deg,rgba(14,44,40,.98),rgba(17,21,20,.96)),url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1800&q=80') center/cover;color:white;display:flex;align-items:center}.hero-grid{display:grid;grid-template-columns:1.1fr .72fr;gap:48px;align-items:center}.hero p{font-size:19px;color:rgba(255,255,255,.78);max-width:650px}.actions{display:flex;gap:12px;flex-wrap:wrap;margin:26px 0}.hero .actions .btn{animation:btnPulse 2.5s ease-in-out infinite;font-size:16px;padding:16px 28px;min-height:54px}.hero .actions .btn:nth-child(2){animation-delay:.3s}@keyframes btnPulse{0%,100%{box-shadow:0 0 0 0 rgba(199,217,93,.4)}50%{box-shadow:0 0 0 10px rgba(199,217,93,0)}}@media(prefers-reduced-motion:reduce){.hero .actions .btn{animation:none}}.badges{display:flex;gap:10px;flex-wrap:wrap}.badge{display:inline-flex;padding:9px 12px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);font-size:13px;font-weight:750;color:rgba(255,255,255,.85)}
+    .quick-card{background:rgba(255,255,255,.98);color:var(--green-900);border-radius:var(--radius-xl);padding:28px;box-shadow:var(--shadow)}.quick-card p{color:var(--gray-700)} label{display:block;font-size:13px;font-weight:850;margin-bottom:6px;color:var(--green-900)} input,select,textarea{width:100%;min-height:48px;border-radius:14px;border:1px solid rgba(14,44,40,.14);padding:12px 14px;font:inherit;background:white;outline:none} input:focus,select:focus{border-color:var(--green-700);box-shadow:0 0 0 3px rgba(199,217,93,.35)}.form-grid{display:grid;gap:14px}.helper{font-size:12px;color:var(--gray-700);margin:8px 0 0}.warn{font-size:12px;font-weight:700;color:#8a5a00;margin:6px 0 0}
+    .check{display:grid;grid-template-columns:20px 1fr;gap:10px;align-items:start;font-size:13px;font-weight:500;color:var(--gray-700);margin:0;cursor:pointer}.check input{width:18px;height:18px;min-height:0;margin:2px 0 0;padding:0;accent-color:var(--green-700)}.check a{color:var(--green-800);text-decoration:underline}
+    .title{text-align:center;max-width:880px;margin:0 auto 38px}.title .lead{margin:auto}.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.card{background:white;border:1px solid rgba(14,44,40,.08);border-radius:var(--radius-lg);padding:24px;box-shadow:var(--shadow-soft)}.card p{color:var(--gray-700)}
+    .differential-panel{position:relative;overflow:hidden;background:linear-gradient(180deg,#ffffff 0%,#f6f8f3 100%);color:var(--gray-900);border:1px solid rgba(14,44,40,.08);border-radius:var(--radius-xl);padding:46px;box-shadow:var(--shadow-soft)}.differential-panel:before{content:'';position:absolute;right:-110px;top:-130px;width:360px;height:360px;border-radius:999px;background:radial-gradient(circle,rgba(199,217,93,.35),rgba(255,195,63,.08) 48%,transparent 70%)}.differential-panel:after{content:'';position:absolute;left:-120px;bottom:-150px;width:330px;height:330px;border-radius:999px;background:radial-gradient(circle,rgba(255,195,63,.22),rgba(255,195,63,.06) 50%,transparent 72%)}.differential-content{position:relative;z-index:2;display:grid;grid-template-columns:.88fr 1.12fr;gap:34px;align-items:center}.differential-copy{max-width:430px}.differential-copy p{color:var(--gray-700)}.differential-map{display:grid;gap:14px}.diff-step{display:grid;grid-template-columns:56px 1fr;gap:16px;align-items:start;background:white;border:1px solid rgba(14,44,40,.08);border-radius:20px;padding:18px;box-shadow:var(--shadow-soft)}.diff-step strong{display:block;color:var(--green-900);font-size:18px;margin-bottom:4px}.diff-step p{margin:0;color:var(--gray-700);font-size:15px}.diff-number{width:56px;height:56px;border-radius:18px;background:linear-gradient(135deg,var(--green-900),var(--green-700));display:grid;place-items:center;color:var(--lime);font-weight:950;font-size:20px}.diff-step.highlight{background:linear-gradient(135deg,var(--green-900),#1f2a20);color:white}.diff-step.highlight strong{color:white}.diff-step.highlight p{color:rgba(255,255,255,.76)}.diff-step.highlight .diff-number{background:linear-gradient(135deg,var(--lime),var(--gold));color:var(--green-900)}.diff-badges{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}.diff-badge{display:inline-flex;align-items:center;padding:9px 12px;border-radius:999px;background:rgba(14,44,40,.06);border:1px solid rgba(14,44,40,.08);font-size:13px;font-weight:850;color:var(--green-900)}
+    .strategy-card{position:relative;overflow:hidden;display:flex;flex-direction:column;min-height:330px}.strategy-card:before{content:'';position:absolute;inset:0 0 auto;height:7px;background:linear-gradient(90deg,var(--green-700),var(--lime),var(--gold))}.strategy-card .btn{margin-top:auto}.strategy-note{margin-top:22px;padding:22px;border-radius:var(--radius-lg);background:white;border:1px solid rgba(14,44,40,.08);box-shadow:var(--shadow-soft);display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center}.strategy-note p{margin:0;color:var(--gray-700)}.letter{width:54px;height:54px;display:grid;place-items:center;background:var(--green-900);color:var(--lime);border-radius:18px;font-size:28px;font-weight:900;margin-bottom:18px}.pills{display:flex;gap:8px;flex-wrap:wrap;margin:15px 0}.pill{padding:7px 10px;border-radius:999px;background:var(--gray-100);font-size:12px;font-weight:850;color:var(--green-900)}
+    .simulator{display:grid;grid-template-columns:1fr .8fr;gap:24px;align-items:start}.quick-buttons{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.quick-buttons button{border:1px solid rgba(14,44,40,.12);background:white;border-radius:999px;padding:8px 12px;cursor:pointer;font-weight:800;color:var(--green-900);font:inherit;font-weight:800}.result{background:var(--green-900);color:white;border-radius:var(--radius-xl);padding:30px;box-shadow:var(--shadow);position:sticky;top:96px}.result ul{padding:0;margin:20px 0;list-style:none;display:grid;gap:8px}.result li{display:flex;justify-content:space-between;gap:14px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.74)}.result strong{color:white;text-align:right}.sent{display:grid;gap:10px;padding:16px;border-radius:14px;background:rgba(199,217,93,.16);border:1px solid rgba(30,87,70,.18)}.sent p{margin:0;font-weight:800;color:var(--green-800)}.sent .helper{font-weight:500;margin:0}.form-error{font-weight:700;color:#b3261e;margin:0}
+    .advisor{display:grid;grid-template-columns:.85fr 1.15fr;gap:24px;align-items:center}.advisor-visual{display:flex;flex-direction:column;align-items:center;gap:18px;padding:22px}.advisor-avatars{display:flex;justify-content:center}.advisor-avatar{width:240px;height:240px;border-radius:50%;object-fit:cover;object-position:top;border:2px solid white;box-shadow:0 8px 24px rgba(0,0,0,.12);margin-left:-84px;position:relative;background:white}.advisor-avatar:first-child{margin-left:0;z-index:1}.advisor-avatar:nth-child(2){z-index:2}.advisor-avatar:nth-child(3){z-index:3}.advisor-visual p{color:var(--gray-700);font-weight:700;font-size:15px;margin:0}
+    details{background:white;border:1px solid rgba(14,44,40,.08);border-radius:16px;padding:18px 20px;box-shadow:var(--shadow-soft)}summary{cursor:pointer;font-weight:900;color:var(--green-900)}details p{margin:12px 0 0;color:var(--gray-700)}.faq{display:grid;gap:12px;max-width:880px;margin:auto}
+    .footer{background:var(--dark);color:rgba(255,255,255,.78);padding:44px 0 26px}.footer-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:30px}.footer h4{color:white;margin:0 0 12px}.footer ul{list-style:none;padding:0;margin:0;display:grid;gap:8px}.footer a:hover{color:white;text-decoration:underline}.disclaimer{border-top:1px solid rgba(255,255,255,.1);padding-top:18px;font-size:12px;color:rgba(255,255,255,.66);margin-top:28px}
+    .float-wa{position:fixed;right:22px;bottom:22px;z-index:60;background:#25D366;height:58px;width:58px;padding:0;display:inline-flex;align-items:center;justify-content:center;border-radius:999px;box-shadow:0 18px 38px rgba(0,0,0,.25);transition:transform .2s ease,box-shadow .2s ease}.float-wa:hover{transform:scale(1.08);box-shadow:0 22px 44px rgba(0,0,0,.3)}.float-wa svg{width:30px;height:30px;fill:white}.float-social{position:fixed;left:22px;bottom:22px;z-index:60;display:flex;flex-direction:column;gap:10px}.float-social a{width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;background:white;border:1px solid rgba(14,44,40,.1);box-shadow:0 8px 24px rgba(0,0,0,.12);transition:transform .2s ease,box-shadow .2s ease}.float-social a:hover{transform:scale(1.1);box-shadow:0 12px 32px rgba(0,0,0,.18)}.float-social svg{width:20px;height:20px}.mobile-bar{display:none}
+    @media(max-width:980px){
+      .logo-img{width:260px;height:40px}.nav-actions{display:none}
+      .mobile-toggle{display:inline-flex;width:42px;height:42px;border-radius:12px;border:1px solid rgba(14,44,40,.12);background:white;align-items:center;justify-content:center;font-weight:900;font-size:18px;cursor:pointer;color:var(--green-900)}
+      .menu{display:none;position:absolute;top:74px;left:0;right:0;flex-direction:column;gap:0;background:white;border-bottom:1px solid rgba(14,44,40,.1);box-shadow:0 18px 30px rgba(0,0,0,.08);padding:8px 20px 16px}
+      .menu.open{display:flex}.menu a{padding:14px 0;border-bottom:1px solid rgba(14,44,40,.06);font-size:16px}.menu a:last-child{border-bottom:none}
+      .hero-grid,.simulator,.advisor,.footer-grid,.differential-content{grid-template-columns:1fr}.grid-3{grid-template-columns:repeat(2,1fr)}.result{position:static}
+    }
+    @media(max-width:640px){.advisor-avatar{width:120px;height:120px;margin-left:-18px}.advisor-avatar:first-child{margin-left:0}.container{width:min(100% - 28px,var(--max))}.section{padding:60px 0}.hero{padding:46px 0 70px}.grid-3{grid-template-columns:1fr}.strategy-note{grid-template-columns:1fr}.differential-panel{padding:24px}.quick-card,.card,.result{padding:22px}.float-wa{display:none}.float-social{display:none}.mobile-bar{position:fixed;left:0;right:0;bottom:0;z-index:70;display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px;background:rgba(255,255,255,.94);border-top:1px solid rgba(14,44,40,.1);backdrop-filter:blur(12px)}.mobile-bar .btn{min-height:44px;padding:10px;font-size:13px}body{padding-bottom:66px}.btn{white-space:normal;text-align:center}}
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="container nav">
+      <a href="#inicio" class="logo" aria-label="Pulso Inversor - Grupo Matchmaking"><img class="logo-img" src="assets/img/logo-pulso-gmm.png" alt="Pulso Inversor - Una empresa de Grupo Matchmaking"></a>
+      <nav class="menu" id="menu" aria-label="Principal"><a href="#inicio">Inicio</a><a href="#modelo">Modelo IGR</a><a href="#estrategias">Estrategias</a><a href="#simulador">Simulador</a><a href="#contacto">Contacto</a></nav>
+      <div class="nav-actions"><a class="btn btn-outline" href="#simulador">Simular</a><a class="btn btn-primary" href="https://api.whatsapp.com/send?phone=56983554676&text=Hola%20%F0%9F%91%8B%20quisiera%20contactar%20con%20un%20asesor%20financiero" target="_blank" rel="noopener">WhatsApp</a></div>
+      <button class="mobile-toggle" type="button" aria-controls="menu" aria-expanded="false" aria-label="Abrir menú">☰</button>
+    </div>
+  </header>
+
+  <main ng-controller="CotizadorController">
+    <section id="inicio" class="hero">
+      <div class="container hero-grid">
+        <div>
+          <span class="eyebrow dark">Activos alternativos con garantía real</span>
+          <h1>Invierte con sentido y respaldo real</h1>
+          <p>Pulso Inversor estructura oportunidades privadas 1 a 1 en activos alternativos, respaldadas por garantías reales, contratos notariales y activos inmobiliarios identificables.</p>
+          <p><strong>No es crowdfunding. No es un fondo colectivo.</strong></p>
+          <div class="actions"><a class="btn btn-primary" href="#simulador">Simular mi inversión</a><a class="btn btn-secondary" href="https://api.whatsapp.com/send?phone=56983554676&text=Hola%20%F0%9F%91%8B%20quisiera%20contactar%20con%20un%20asesor%20financiero" target="_blank" rel="noopener">Hablar con un asesor</a></div>
+          <div class="badges"><span class="badge">Inversión 1 a 1</span><span class="badge">Garantía real</span><span class="badge">Contratos notariales</span><span class="badge">No crowdfunding</span></div>
+        </div>
+        <aside class="quick-card">
+          <h3>Simula rápido</h3>
+          <p class="muted">Ingresa un monto y una estrategia para iniciar.</p>
+          <form class="form-grid" ng-submit="aplicarHero()">
+            <div><label for="hero-monto">¿Cuánto quieres invertir?</label><input id="hero-monto" type="text" inputmode="numeric" ng-model="heroAmount" placeholder="$10.000.000"></div>
+            <div><label for="hero-estrategia">Estrategia</label><select id="hero-estrategia" ng-model="heroSerie"><option value="auto">No sé cuál elegir</option><option value="A">A — Acción</option><option value="H">H — Hipoteca</option><option value="T">T — Título</option></select></div>
+            <button class="btn btn-primary" type="submit">Simular ahora</button>
+            <p class="helper">Simulación referencial. No constituye oferta final.</p>
+          </form>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="modelo">
+      <div class="container differential-panel">
+        <div class="differential-content">
+          <div class="differential-copy">
+            <span class="eyebrow">Diferencial Pulso Inversor</span>
+            <h2>Un modelo privado, trazable y respaldado por activos reales</h2>
+            <p>El Modelo IGR permite invertir en activos alternativos mediante estructuras privadas 1 a 1. Antes de avanzar, el inversionista conoce el tipo de respaldo, la documentación, el plazo y las condiciones de salida.</p>
+            <div class="diff-badges">
+              <span class="diff-badge">No crowdfunding</span>
+              <span class="diff-badge">No fondo colectivo</span>
+              <span class="diff-badge">Inversión 1 a 1</span>
+              <span class="diff-badge">Garantía real</span>
+            </div>
+          </div>
+
+          <div class="differential-map" aria-label="Diferenciales del Modelo IGR">
+            <article class="diff-step">
+              <div class="diff-number">01</div>
+              <div>
+                <strong>Estructura privada</strong>
+                <p>Cada operación se trabaja de forma personalizada, según estrategia, monto y perfil del inversionista.</p>
+              </div>
+            </article>
+            <article class="diff-step highlight">
+              <div class="diff-number">02</div>
+              <div>
+                <strong>Respaldo verificable</strong>
+                <p>La inversión se asocia a garantías reales o instrumentos documentados: pagaré, hipoteca o título de propiedad.</p>
+              </div>
+            </article>
+            <article class="diff-step">
+              <div class="diff-number">03</div>
+              <div>
+                <strong>Claridad de salida</strong>
+                <p>Desde el inicio se definen plazo, condiciones y mecanismo de salida según la estructura contractual correspondiente.</p>
+              </div>
+            </article>
+            <article class="diff-step">
+              <div class="diff-number">04</div>
+              <div>
+                <strong>Transparencia contractual</strong>
+                <p>Toda operación queda respaldada mediante documentación formal, asegurando trazabilidad y claridad en cada etapa del proceso.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-soft" id="estrategias">
+      <div class="container">
+        <div class="title"><span class="eyebrow">Estrategias IGR</span><h2>Tres formas de invertir con respaldo real</h2><p class="lead">Tres estrategias según tu monto y el respaldo que buscas, presentadas en una misma vista para comparar rápidamente.</p></div>
+        <div class="grid-3">
+          <article class="card strategy-card">
+            <div class="letter">A</div>
+            <h3>Acción</h3>
+            <p><strong>Acceso flexible con respaldo notarial.</strong></p>
+            <div class="pills"><span class="pill">Desde $5 millones</span><span class="pill">Pagaré</span></div>
+            <p>Para inversionistas que buscan menor ticket de entrada y una estructura documentada.</p>
+            <a class="btn btn-outline" href="#simulador" ng-click="elegirSerie('A')">Simular Acción</a>
+          </article>
+
+          <article class="card strategy-card">
+            <div class="letter">H</div>
+            <h3>Hipoteca</h3>
+            <p><strong>Inversión respaldada por garantía hipotecaria.</strong></p>
+            <div class="pills"><span class="pill">Desde $25 millones</span><span class="pill">Hipoteca</span></div>
+            <p>Para inversionistas que priorizan respaldo inmobiliario mediante hipoteca.</p>
+            <a class="btn btn-outline" href="#simulador" ng-click="elegirSerie('H')">Simular Hipoteca</a>
+          </article>
+
+          <article class="card strategy-card">
+            <div class="letter">T</div>
+            <h3>Título</h3>
+            <p><strong>Máximo respaldo mediante título de propiedad.</strong></p>
+            <div class="pills"><span class="pill">Desde $150 millones</span><span class="pill">Título</span></div>
+            <p>Para inversionistas que buscan una estructura de mayor resguardo.</p>
+            <a class="btn btn-outline" href="#simulador" ng-click="elegirSerie('T')">Simular Título</a>
+          </article>
+        </div>
+
+        <div class="strategy-note">
+          <p><strong>¿No sabes cuál elegir?</strong> Un asesor te orienta según tu monto, plazo y perfil de inversionista.</p>
+          <a class="btn btn-primary" href="#contacto">Hablar con un asesor</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="simulador">
+      <div class="container">
+        <div class="title"><span class="eyebrow">Simulador</span><h2>Simula tu inversión en activos alternativos</h2><p class="lead">Calcula una estimación referencial y envíala directamente a un asesor comercial.</p></div>
+        <div class="simulator">
+          <form class="card form-grid" ng-submit="enviarCorreo()" novalidate>
+            <div>
+              <label for="sim-monto">Monto a invertir</label>
+              <input id="sim-monto" type="text" inputmode="numeric" ng-model="displayAmount" ng-change="onDisplayAmountChange()" ng-blur="onAmountBlur()" placeholder="$5.000.000">
+              <div class="quick-buttons"><button type="button" ng-show="5000000 >= modelMin" ng-click="setAmount(5000000)">$5 millones</button><button type="button" ng-show="10000000 >= modelMin" ng-click="setAmount(10000000)">$10 millones</button><button type="button" ng-show="25000000 >= modelMin" ng-click="setAmount(25000000)">$25 millones</button><button type="button" ng-show="150000000 >= modelMin" ng-click="setAmount(150000000)">$150 millones</button></div>
+              <p class="helper" ng-cloak>Mínimo para esta estrategia: {{modelMin | clp}}</p>
+              <p class="warn" ng-cloak ng-show="modelAmount < modelMin">El monto está bajo el mínimo; al salir del campo se ajusta a {{modelMin | clp}}.</p>
+            </div>
+            <div><label for="sim-estrategia">Estrategia</label><select id="sim-estrategia" ng-model="modelSerie"><option value="A">A — Acción</option><option value="H">H — Hipoteca</option><option value="T">T — Título</option></select></div>
+            <div><label for="sim-plazo">Plazo</label><select id="sim-plazo" ng-model="modelPeriod" ng-options="p as (p + ' meses') for p in periodos"></select></div>
+            <div ng-show="modelRetiro"><label for="sim-retiro">Retiro anticipado</label><select id="sim-retiro" ng-model="retirocheck" ng-change="changeRetiro()"><option value="0">No</option><option value="1">Sí (tasa reducida)</option></select></div>
+            <div><label for="sim-nombre">Datos de contacto</label><input id="sim-nombre" type="text" ng-model="mail.nombre" placeholder="Nombre" autocomplete="given-name"></div>
+            <input type="text" ng-model="mail.apellidos" placeholder="Apellidos" aria-label="Apellidos" autocomplete="family-name">
+            <input type="email" ng-model="mail.email" placeholder="Email" aria-label="Email" autocomplete="email">
+            <div style="display:flex;gap:8px"><span style="display:inline-flex;align-items:center;min-height:48px;padding:0 14px;border-radius:14px;border:1px solid rgba(14,44,40,.14);background:var(--gray-100);color:var(--gray-700);font-weight:700;white-space:nowrap;flex-shrink:0">+56</span><input type="tel" ng-model="mail.telefono" placeholder="Teléfono / WhatsApp" aria-label="Teléfono o WhatsApp" autocomplete="tel-national" style="flex:1;width:auto"></div>
+            <input type="text" ng-model="mail.mensaje" placeholder="Compártenos un mensaje aquí (opcional)" aria-label="Mensaje">
+            <label class="check"><input type="checkbox" ng-model="mail.consentimiento"><span>He leído y acepto la <a href="privacidad.html" target="_blank">Política de privacidad</a>. Pulso Inversor usará mis datos para responder esta simulación.</span></label>
+            <label class="check"><input type="checkbox" ng-model="mail.publicidad"><span>Quiero recibir novedades y oportunidades de inversión de Pulso Inversor por email y WhatsApp (opcional).</span></label>
+            <p class="form-error" ng-cloak ng-show="formError">{{formError}}</p>
+            <button type="submit" class="btn btn-primary" ng-hide="mailSent" ng-disabled="sending">{{ sending ? 'Enviando…' : 'Enviar simulación' }}</button>
+            <div class="sent" ng-cloak ng-show="mailSent">
+              <p>✓ Simulación enviada. Te contactaremos pronto.</p>
+              <p class="helper">¿Prefieres avanzar ahora? Envía tu simulación por WhatsApp a un asesor.</p>
+              <a class="btn btn-outline" ng-href="{{getWhatsAppLink()}}" target="_blank" rel="noopener">Enviar por WhatsApp</a>
+            </div>
+          </form>
+          <aside class="result" ng-cloak><span class="eyebrow dark">Resultado referencial</span><h3>Tu simulación</h3><ul><li><span>Estrategia</span><strong>{{modelSerie}} — {{getGarantia()}}</strong></li><li><span>Monto</span><strong>{{getMontoEfectivo() | clp}}</strong></li><li><span>Plazo</span><strong>{{modelPeriod}} meses</strong></li><li><span>Tasa mensual</span><strong>{{modelInterest | pct}}</strong></li><li><span>Total a recibir</span><strong>{{getTotal() | clp}}</strong></li></ul><p class="helper" style="color:rgba(255,255,255,.55)">Referencial. Las condiciones finales dependen de evaluación y disponibilidad.</p></aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-soft" id="contacto">
+      <div class="container advisor">
+        <div class="advisor-visual"><div class="advisor-avatars"><img class="advisor-avatar" src="assets/img/equipo/felipe.jpg" alt="Felipe, asesor comercial de Pulso Inversor" loading="lazy" width="240" height="240"><img class="advisor-avatar" src="assets/img/equipo/gloria.jpg" alt="Gloria, asesora comercial de Pulso Inversor" loading="lazy" width="240" height="240"><img class="advisor-avatar" src="assets/img/equipo/pamela.jpg" alt="Pamela, asesora comercial de Pulso Inversor" loading="lazy" width="240" height="240"></div><p>Especialistas comerciales en estrategias IGR</p></div>
+        <div>
+          <span class="eyebrow">Contacto directo</span>
+          <h2>Obtén asesoría experta</h2>
+          <p class="lead">Resuelve dudas, revisa tu simulación y recibe orientación para elegir la estrategia más adecuada según tu perfil.</p>
+          <div class="actions"><a class="btn btn-primary" href="https://api.whatsapp.com/send?phone=56983554676&text=Hola%20%F0%9F%91%8B%20quisiera%20contactar%20con%20un%20asesor%20financiero" target="_blank" rel="noopener">Hablar por WhatsApp</a><a class="btn btn-outline" href="tel:+56233655239">Llamar</a><a class="btn btn-outline" href="mailto:contacto@pulsoinversor.cl">Enviar email</a></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="faq">
+      <div class="container">
+        <div class="title"><span class="eyebrow">Preguntas frecuentes</span><h2>Antes de invertir</h2></div>
+        <div class="faq">
+          <details open><summary>¿Pulso Inversor es crowdfunding?</summary><p>No. El Modelo IGR se estructura mediante operaciones privadas, personalizadas y documentadas.</p></details>
+          <details><summary>¿Qué significa inversión 1 a 1?</summary><p>Es una estructura privada con condiciones, respaldo y documentación definida para cada operación.</p></details>
+          <details><summary>¿Qué respaldo tiene mi inversión?</summary><p>Depende de la estrategia: pagaré notarial, hipoteca o título de propiedad.</p></details>
+          <details><summary>¿Pulso Inversor requiere certificación CMF?</summary><p>No bajo esta estructura privada, contractual y personalizada. No opera como banco, corredora, administradora de fondos ni plataforma de financiamiento colectivo regulada.</p></details>
+        </div>
+      </div>
+    </section>
+
+    <div style="height:5px;background:linear-gradient(90deg,#599675,#F5B05E)"></div>
+    <section class="section" style="background:linear-gradient(135deg,var(--green-900),var(--dark));color:white;text-align:center">
+      <div class="container"><h2>Da el siguiente paso hacia una inversión con respaldo real</h2><p style="color:rgba(255,255,255,.76);max-width:720px;margin:0 auto 26px">Simula tu inversión y conversa con un asesor comercial para recibir orientación personalizada.</p><a class="btn btn-primary" href="#simulador">Simular inversión</a> <a class="btn btn-secondary" href="https://api.whatsapp.com/send?phone=56983554676&text=Hola%20%F0%9F%91%8B%20quisiera%20contactar%20con%20un%20asesor%20financiero" target="_blank" rel="noopener">Hablar con un asesor</a></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div><a href="#inicio" class="logo" style="color:white" aria-label="Pulso Inversor"><img class="logo-img" src="assets/img/logo-pulso-vertical-blanco.png" alt="Pulso Inversor"></a><img class="logo-gmm" src="assets/img/logo-gmm-blanco.png" alt="Grupo Matchmaking"></div>
+        <div><h4>Navegación</h4><ul><li><a href="#modelo">Modelo IGR</a></li><li><a href="#estrategias">Estrategias</a></li><li><a href="#simulador">Simulador</a></li><li><a href="#contacto">Contacto</a></li><li><a href="privacidad.html">Política de privacidad</a></li></ul></div>
+        <div><h4>Contacto</h4><ul><li><a href="mailto:contacto@pulsoinversor.cl">contacto@pulsoinversor.cl</a></li><li><a href="tel:+56233655239">+56 2 3365 5239</a></li><li><a href="https://api.whatsapp.com/send?phone=56983554676&text=Hola%20%F0%9F%91%8B%20quisiera%20contactar%20con%20un%20asesor%20financiero" target="_blank" rel="noopener">WhatsApp +56 9 8355 4676</a></li><li><a href="https://www.instagram.com/grupomm.cl" target="_blank" rel="noopener">Instagram</a> | <a href="https://www.linkedin.com/company/grupo-matchmaking/" target="_blank" rel="noopener">LinkedIn</a></li></ul></div>
+      </div>
+      <p class="disclaimer">La información contenida en este sitio es referencial e informativa. Las condiciones de inversión, rentabilidad, plazos y garantías pueden variar según disponibilidad, evaluación de antecedentes y documentación contractual correspondiente.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Menú móvil
+    (function () {
+      var btn = document.querySelector('.mobile-toggle');
+      var menu = document.getElementById('menu');
+      if (!btn || !menu) return;
+      function cerrar() { menu.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); btn.textContent = '☰'; btn.setAttribute('aria-label', 'Abrir menú'); }
+      btn.addEventListener('click', function () {
+        var abierto = menu.classList.toggle('open');
+        btn.setAttribute('aria-expanded', abierto ? 'true' : 'false');
+        btn.textContent = abierto ? '✕' : '☰';
+        btn.setAttribute('aria-label', abierto ? 'Cerrar menú' : 'Abrir menú');
+      });
+      menu.addEventListener('click', function (e) { if (e.target.tagName === 'A') cerrar(); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') cerrar(); });
+    })();
+  </script>
+
+  <script>
+    angular.module('cotizadorApp', [])
+      .filter('clp', function () { return function (n) { return '$' + Math.round(n || 0).toLocaleString('es-CL'); }; })
+      .filter('pct', function () { return function (n) { return (n || 0).toLocaleString('es-CL', { maximumFractionDigits: 2 }) + '%'; }; })
+      .controller('CotizadorController', ['$scope', '$http', '$timeout', function ($scope, $http, $timeout) {
+
+        // Valores de respaldo si no responde el servicio de indicadores.
+        var uf = 39100;   // CLP por UF
+        var ipc = 4.50;   // % anual
+
+        $scope.ipc = ipc;
+        $scope.uf = uf;
+
+        // Indicadores del servidor actual (si existe en este hosting).
+        // Solo se usa el IPC si parece anual (> 1,5 %): un valor mensual subestimaría el total.
+        $http.get('/ws/', { timeout: 5000 })
+          .then(function (response) {
+            if (!Array.isArray(response.data)) return;
+            var ufItem = response.data.find(function (item) { return item.code === 'UF'; });
+            var ipcItem = response.data.find(function (item) { return item.code === 'IPC'; });
+            if (ufItem && ufItem.data && Number(ufItem.data.value) > 0) {
+              $scope.uf = Number(ufItem.data.value);
+            }
+            if (ipcItem && ipcItem.data && Number(ipcItem.data.value) > 1.5) {
+              $scope.ipc = Number(ipcItem.data.value);
+            }
+          }, function () {});
+
+        var series = {
+          'T': { garantia: 'TÍTULO',   plazos: [15, 21, 27], retiro: false, minimo: 150000000, interes: [0.4, 0.5, 0.6] },
+          'H': { garantia: 'HIPOTECA', plazos: [15, 21, 27], retiro: false, minimo: 25000000,  interes: [0.3, 0.4, 0.5] },
+          'A': { garantia: 'PAGARÉ',   plazos: [12, 18, 24], retiro: true,  minimo: 5000000,   interes: [1, 1.1, 1.2] }
+        };
+
+        var roundToDecimals = function (num, decimals) {
+          var factor = Math.pow(10, decimals);
+          return Math.round(num * factor) / factor;
+        };
+        var pct = function (p) { return p / 100; };
+
+        var getInterestByPeriod = function (serie, periodo) {
+          var i = series[serie].plazos.indexOf(periodo);
+          return series[serie].interes[i < 0 ? 0 : i];
+        };
+
+        // Monto que usa el cálculo: nunca bajo el mínimo de la estrategia.
+        $scope.getMontoEfectivo = function () {
+          return Math.max($scope.modelAmount || 0, $scope.modelMin);
+        };
+
+        $scope.getInversion = function () {
+          var monto = $scope.getMontoEfectivo();
+          return ($scope.modelSerie === 'A') ? monto : roundToDecimals(monto / $scope.uf, 5);
+        };
+
+        $scope.getInterest = function () {
+          var tasa = pct($scope.modelInterest);
+          if ($scope.modelSerie === 'A') return Math.round($scope.getInversion() * $scope.modelPeriod * tasa);
+          return roundToDecimals($scope.getInversion() * $scope.modelPeriod * tasa, 5);
+        };
+
+        $scope.getTotal = function () {
+          if ($scope.modelSerie === 'A') return Math.round($scope.getInversion() + $scope.getInterest());
+          var ufProyectada = $scope.uf * pct($scope.ipc) * $scope.modelPeriod / 12 + $scope.uf;
+          return roundToDecimals(($scope.getInversion() + $scope.getInterest()) * ufProyectada, 0);
+        };
+
+        $scope.getGarantia = function () { return series[$scope.modelSerie].garantia; };
+
+        $scope.changeRetiro = function () {
+          var base = getInterestByPeriod($scope.modelSerie, $scope.modelPeriod);
+          if ($scope.modelSerie === 'A' && $scope.retirocheck == '1') {
+            $scope.modelInterest = roundToDecimals(base - 0.1, 1);
+          } else {
+            $scope.retirocheck = ($scope.modelSerie === 'A') ? $scope.retirocheck : '0';
+            $scope.modelInterest = base;
+          }
+        };
+
+        var formatNumber = function (n) { return n ? Math.round(n).toLocaleString('es-CL') : ''; };
+
+        $scope.syncDisplay = function () {
+          $scope.displayAmount = $scope.modelAmount ? '$' + formatNumber($scope.modelAmount) : '';
+        };
+
+        // Mientras escribe: solo se lee el número, sin forzar el mínimo.
+        $scope.onDisplayAmountChange = function () {
+          var raw = ($scope.displayAmount || '').replace(/\D/g, '');
+          $scope.modelAmount = parseInt(raw, 10) || 0;
+          $scope.syncDisplay();
+        };
+
+        // Al salir del campo: se ajusta al mínimo de la estrategia.
+        $scope.onAmountBlur = function () {
+          $scope.clampAmount();
+          $scope.syncDisplay();
+        };
+
+        $scope.clampAmount = function () {
+          if ($scope.modelAmount < $scope.modelMin) $scope.modelAmount = $scope.modelMin;
+        };
+
+        $scope.setAmount = function (val) {
+          $scope.modelAmount = val;
+          $scope.syncDisplay();
+        };
+
+        var aplicarSerie = function () {
+          var s = series[$scope.modelSerie];
+          $scope.modelAmount = s.minimo;
+          $scope.modelPeriod = s.plazos[0];
+          $scope.periodos = s.plazos;
+          $scope.modelMin = s.minimo;
+          $scope.modelRetiro = s.retiro;
+          $scope.retirocheck = '0';
+          $scope.modelInterest = getInterestByPeriod($scope.modelSerie, $scope.modelPeriod);
+          $scope.syncDisplay();
+        };
+
+        $scope.modelSerie = 'A';
+        aplicarSerie();
+
+        $scope.$watch('modelSerie', function (nuevo, anterior) { if (nuevo !== anterior) aplicarSerie(); });
+        $scope.$watch('modelPeriod', function () { $scope.changeRetiro(); });
+
+        $scope.elegirSerie = function (serie) { $scope.modelSerie = serie; };
+
+        $scope.heroAmount = '';
+        $scope.heroSerie = 'auto';
+
+        $scope.aplicarHero = function () {
+          var raw = ($scope.heroAmount || '').toString().replace(/\D/g, '');
+          var amount = parseInt(raw, 10);
+          if (isNaN(amount) || amount <= 0) amount = 10000000;
+
+          var serie = $scope.heroSerie || 'auto';
+          if (serie === 'auto') {
+            if (amount < 25000000) serie = 'A';
+            else if (amount < 150000000) serie = 'H';
+            else serie = 'T';
+          }
+
+          $scope.modelSerie = serie;
+
+          // Después de que el cambio de estrategia aplique su mínimo, se pone el monto elegido.
+          $timeout(function () {
+            $scope.modelAmount = Math.max(amount, series[serie].minimo);
+            $scope.syncDisplay();
+          });
+
+          var els = document.getElementById('simulador');
+          if (els) els.scrollIntoView({ behavior: 'smooth' });
+        };
+
+        var fmt = function (n) { return '$' + Math.round(n || 0).toLocaleString('es-CL'); };
+
+        var resumenSimulacion = function () {
+          return 'Estrategia: ' + $scope.modelSerie + ' — ' + $scope.getGarantia() + '\n' +
+            'Monto a invertir: ' + fmt($scope.getMontoEfectivo()) + '\n' +
+            'Plazo: ' + $scope.modelPeriod + ' meses\n' +
+            ($scope.modelRetiro ? 'Retiro anticipado: ' + ($scope.retirocheck == '1' ? 'Sí' : 'No') + '\n' : '') +
+            'Tasa mensual: ' + ($scope.modelInterest || 0).toLocaleString('es-CL', { maximumFractionDigits: 2 }) + '%\n' +
+            'Total a recibir (referencial): ' + fmt($scope.getTotal());
+        };
+
+        $scope.getWhatsAppLink = function () {
+          var msg = 'Hola, quiero enviar mi simulación de Pulso Inversor:\n\n' + resumenSimulacion();
+          return 'https://api.whatsapp.com/send?phone=56983554676&text=' + encodeURIComponent(msg);
+        };
+
+        $scope.getMontoBrevo = function () {
+          var a = $scope.getMontoEfectivo();
+          if (a < 25000000) return 1;
+          if (a < 50000000) return 2;
+          if (a < 100000000) return 3;
+          return 4;
+        };
+
+        $scope.mailSent = false;
+        $scope.sending = false;
+        $scope.formError = '';
+        $scope.mail = { nombre: '', apellidos: '', email: '', telefono: '', mensaje: '', consentimiento: false, publicidad: false };
+
+        $scope.enviarCorreo = function () {
+          $scope.formError = '';
+          $scope.clampAmount();
+          $scope.syncDisplay();
+
+          var nombre = ($scope.mail.nombre || '').trim();
+          var apellidos = ($scope.mail.apellidos || '').trim();
+          var email = ($scope.mail.email || '').trim();
+          var telefono = ($scope.mail.telefono || '').replace(/\D/g, '');
+          var emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+          if (!nombre) { $scope.formError = 'Ingresa tu nombre.'; return; }
+          if (!apellidos) { $scope.formError = 'Ingresa tus apellidos.'; return; }
+          if (!emailRe.test(email)) { $scope.formError = 'Ingresa un email válido.'; return; }
+          if (telefono.length < 8) { $scope.formError = 'Ingresa un teléfono válido (mínimo 8 dígitos).'; return; }
+          if (!$scope.mail.consentimiento) { $scope.formError = 'Para enviar tu simulación, acepta la Política de privacidad.'; return; }
+
+          // La simulación completa va en el mensaje para que el asesor la vea en Brevo.
+          var mensaje = (($scope.mail.mensaje || '').trim() ? $scope.mail.mensaje.trim() + '\n\n' : '') +
+            '--- Simulación ---\n' + resumenSimulacion() + '\n\n' +
+            'Acepta recibir publicidad: ' + ($scope.mail.publicidad ? 'Sí' : 'No');
+
+          var data = [
+            'NOMBRE=' + encodeURIComponent(nombre),
+            'APELLIDOS=' + encodeURIComponent(apellidos),
+            'EMAIL=' + encodeURIComponent(email),
+            'SMS__COUNTRY_CODE=%2B56',
+            'SMS=' + encodeURIComponent(telefono),
+            'MONTO_DE_INVERSION=' + $scope.getMontoBrevo(),
+            'MENSAJE=' + encodeURIComponent(mensaje),
+            'email_address_check=',
+            'locale=es'
+          ];
+          if ($scope.mail.publicidad) data.push('OPT_IN=1');
+
+          $scope.sending = true;
+
+          // Brevo no permite leer la respuesta desde otro dominio (no-cors): se asume éxito
+          // salvo error de red. Por eso, al terminar, se ofrece también enviar la simulación por WhatsApp.
+          fetch('https://6912d61f.sibforms.com/serve/MUIFAMdok-hweDUSCZKpYN85FoRmXiamVuJvU9LoD_8cT7tPPR4f4D_cIBVel0WmV42FLrrNepn04zmJoPb-p8YiswC6nVPxB56-JJzv_ily2_zCHb09WHkCel7uooE4Vg4xV3kCdLQg12ccnDGOd6gKnb6UbcOEVeHklU1PAxBvDUr808wAe3lY2odjjt_vcAdAg_Nrj-eHtltp', {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: data.join('&')
+          }).then(function () {
+            $timeout(function () { $scope.sending = false; $scope.mailSent = true; });
+          }).catch(function () {
+            $timeout(function () {
+              $scope.sending = false;
+              $scope.formError = 'No pudimos enviar tu simulación. Revisa tu conexión o envíala por WhatsApp.';
+            });
+          });
+        };
+
+      }]);
+  </script>
+
+  <a class="float-wa" href="https://api.whatsapp.com/send?phone=56983554676&text=Hola%20%F0%9F%91%8B%20quisiera%20contactar%20con%20un%20asesor%20financiero" target="_blank" rel="noopener" aria-label="Contactar por WhatsApp"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
+  <div class="float-social"><a href="https://www.instagram.com/grupomm.cl" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" fill="var(--green-900)"/></svg></a><a href="https://www.linkedin.com/company/grupo-matchmaking/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" fill="var(--green-900)"/></svg></a></div>
+  <div class="mobile-bar"><a class="btn btn-primary" href="#simulador">Simular</a><a class="btn btn-outline" href="https://api.whatsapp.com/send?phone=56983554676&text=Hola%20%F0%9F%91%8B%20quisiera%20contactar%20con%20un%20asesor%20financiero" target="_blank" rel="noopener">WhatsApp</a></div>
+</body>
+</html>
