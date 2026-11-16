@@ -102,345 +102,357 @@ def cta(h, p, label, subject):
 <div><h2>{h}</h2><p>{p}</p></div>
 <a class="btn btn-primary" href="{mail(subject)}">{label}</a></div></div></section>'''
 
+
+# ---------------- Íconos (trazo simple, heredan el color del texto) ----------------
+_ICONS = {
+    'brote': '<path d="M12 21v-9"/><path d="M12 12c0-4 3-7 8-7 0 4-3 7-8 7z"/><path d="M12 14c0-3-2.5-5.5-7-5.5 0 3 2.5 5.5 7 5.5z"/>',
+    'camino': '<path d="M4 19l5-14"/><path d="M20 19l-5-14"/><path d="M12 6v2"/><path d="M12 11v2"/><path d="M12 16v3"/>',
+    'escudo': '<path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/>',
+    'billetera': '<rect x="3" y="6" width="18" height="13" rx="3"/><path d="M3 10h18"/><circle cx="16" cy="14.5" r="1"/>',
+    'reloj': '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+    'casa': '<path d="M4 11l8-6 8 6"/><path d="M6 10v9h12v-9"/><path d="M10 19v-5h4v5"/>',
+    'manos': '<path d="M3 12l4-4 4 3 3-3 4 4"/><path d="M7 8l-2 9h14l-2-9"/>',
+    'documento': '<path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/><path d="M10 12h5M10 16h5"/>',
+    'grafico': '<path d="M4 20V4"/><path d="M4 20h16"/><path d="M8 15l3-4 3 2 5-6"/>',
+}
+def icon(name):
+    return f'<div class="card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">{_ICONS[name]}</svg></div>'
+
+PASOS = '''<li><strong>Nos cuentas qué buscas</strong><span>Partimos por escucharte: qué quieres lograr y qué te preocupa.</span></li>
+    <li><strong>Conoces tu alternativa</strong><span>Revisamos juntos una propuesta y sus condiciones.</span></li>
+    <li><strong>Decides con calma</strong><span>Te llevas los documentos y resolvemos cada pregunta, las veces que haga falta.</span></li>
+    <li><strong>Inviertes acompañado</strong><span>Formalizas tu inversión y sigues en contacto directo con el equipo.</span></li>'''
+
+CTA_GENERAL = ('Cuéntanos qué quieres construir', 'Una conversación para conocernos y ver por dónde partir. Sin apuro.', 'Conversemos', 'Quiero conversar con el equipo')
+
 PRODUCTS = [
-    ('Proyecta un Hogar', 'Invierte con sentido y contribuye a dar una nueva oportunidad a familias que enfrentan un remate.', 'proyecta-un-hogar'),
-    ('Hipoteca Inteligente', 'Activa tu capacidad de financiamiento para generar retorno y construir patrimonio inmobiliario.', 'hipoteca-inteligente'),
-    ('Configuración Patrimonial', 'Organiza tus recursos, activos y estructuras en torno a tus objetivos de patrimonio y legado.', 'configuracion-patrimonial'),
-    ('Inversión Inmobiliaria Circular', 'Transforma el capital de tu propiedad en nuevas oportunidades de inversión.', 'inversion-circular'),
+    ('Proyecta un Hogar', 'Haz crecer tu capital y ayuda a que una familia que enfrenta un remate tenga una nueva oportunidad.', 'proyecta-un-hogar'),
+    ('Hipoteca Inteligente', 'Usa tu capacidad de crédito para empezar a construir tu patrimonio inmobiliario.', 'hipoteca-inteligente'),
+    ('Configuración Patrimonial', 'Ordena lo que has construido pensando en tu familia y en lo que quieres dejar.', 'configuracion-patrimonial'),
+    ('Inversión Inmobiliaria Circular', 'Dale una nueva vida al capital de tu propiedad, con menos preocupaciones de arriendo.', 'inversion-circular'),
 ]
 
 # ---------------- 1. Inicio ----------------
 cards = ''.join(f'''<article class="card product-card"><div class="card-num">0{i+1}</div><h3>{t}</h3><p>{d}</p>
-<a class="link-arrow" href="inversiones.html#{a}">Conocer alternativa</a></article>''' for i, (t, d, a) in enumerate(PRODUCTS))
+<a class="link-arrow" href="inversiones.html#{a}">Conocer más</a></article>''' for i, (t, d, a) in enumerate(PRODUCTS))
 page('index.html', 'Inicio',
-     'Explora alternativas de inversión vinculadas al mercado inmobiliario y encuentra un punto de partida para tus objetivos.', f'''
+     'Tus ahorros merecen una inversión que puedas entender. Alternativas con respaldo inmobiliario, explicadas con calma y con los documentos sobre la mesa.', f'''
 <section class="hero">
   <video autoplay muted loop playsinline poster="assets/media/hero-poster.jpg" aria-hidden="true"><source src="assets/media/hero-loop.mp4" type="video/mp4"></video>
   <div class="container"><div class="hero-content">
     <span class="eyebrow dark">Inversión con Garantía Real</span>
-    <h1>Tu próxima inversión comienza con claridad</h1>
-    <p>Explora alternativas vinculadas al mercado inmobiliario y encuentra un punto de partida para tus objetivos.</p>
+    <h1>Tus ahorros merecen una inversión que puedas entender</h1>
+    <p>Sabemos lo que cuesta juntar ese dinero. Por eso te mostramos qué hay detrás de cada alternativa, con calma y con los documentos sobre la mesa, para que decidas cuando todo te haga sentido.</p>
     <div class="actions">
-      <a class="btn btn-primary" href="inversiones.html">Encuentra tu alternativa</a>
-      <a class="btn btn-secondary" href="como-funciona.html">Conoce cómo funciona</a>
+      <a class="btn btn-primary" href="inversiones.html">Ver las alternativas</a>
+      <a class="btn btn-secondary" href="como-funciona.html">Cómo trabajamos</a>
     </div>
+    <p style="font-size:14px;color:rgba(255,255,255,.65);margin-top:4px">Sin apuro. Si quieres, revisa todo con tu abogado.</p>
   </div></div>
 </section>
 
 <section class="section"><div class="container">
-  <div class="title center"><span class="eyebrow">Tu punto de partida</span><h2>¿Desde dónde quieres comenzar?</h2></div>
+  <div class="title center"><span class="eyebrow">Cada historia parte distinto</span><h2>¿En qué momento estás?</h2></div>
   <div class="grid-2">
-    <article class="card profile-card"><div class="card-icon">🌱</div><h3>Estoy pensando en mi primera inversión</h3>
-      <p>Quiero conocer los conceptos y dar mi primer paso con orientación.</p>
+    <article class="card profile-card">{icon('brote')}<h3>Estoy pensando en mi primera inversión</h3>
+      <p>Tienes ahorros y ganas de que crezcan, pero también dudas. Es normal. Partimos por lo básico y vamos a tu ritmo.</p>
       <a class="btn btn-dark" href="mi-primera-inversion.html">Quiero empezar</a></article>
-    <article class="card profile-card"><div class="card-icon">📈</div><h3>Ya tengo experiencia invirtiendo</h3>
-      <p>Busco nuevas alternativas para diversificar mi patrimonio.</p>
+    <article class="card profile-card">{icon('camino')}<h3>Ya tengo experiencia invirtiendo</h3>
+      <p>Conoces otras alternativas y quieres sumar algo distinto a tu patrimonio. Te mostramos la estructura completa para que la evalúes a fondo.</p>
       <a class="btn btn-dark" href="ya-tengo-experiencia.html">Quiero profundizar</a></article>
   </div>
 </div></section>
 
 <section class="section section-dark"><div class="container split">
-  <div><span class="eyebrow dark">El modelo</span><h2>Conoce qué hay detrás de tu inversión</h2>
-    <p class="lead">Descubre cómo te acompañamos y qué información tendrás para evaluar tu alternativa.</p>
-    <div class="actions"><a class="btn btn-primary" href="como-funciona.html">Así funciona Pulso</a></div></div>
+  <div><span class="eyebrow dark">Cómo trabajamos</span><h2>Antes de invertir, mereces saber qué hay detrás</h2>
+    <p class="lead">Te acompañamos en cada paso y te damos la información para que evalúes tranquilo. Nadie te va a pedir que decidas en la primera reunión.</p>
+    <div class="actions"><a class="btn btn-primary" href="como-funciona.html">Así trabajamos</a></div></div>
   <ol class="steps two">
-    <li><strong>Cuéntanos qué buscas</strong><span>Conversemos sobre tus objetivos.</span></li>
-    <li><strong>Conoce tu alternativa</strong><span>Revisa una propuesta y sus condiciones.</span></li>
-    <li><strong>Decide con claridad</strong><span>Evalúa tus documentos y resuelve tus preguntas.</span></li>
-    <li><strong>Invierte acompañado</strong><span>Formaliza tu inversión y mantén el contacto con el equipo.</span></li>
+    {PASOS}
   </ol>
 </div></section>
 
-<section class="section section-soft"><div class="container">
-  <div class="title center"><span class="eyebrow">Experiencias</span><h2>Conoce la experiencia de quienes ya dieron el paso</h2>
-    <p class="lead">Escucha sus historias y revisa sus opiniones sobre Pulso.</p></div>
-  {P("INCORPORAR hasta tres reseñas auténticas de Google (texto original, autor, fecha y enlace) y el enlace al perfil oficial de Pulso. Botón: Ver opiniones en Google.")}
-  {P("INCORPORAR video autorizado de un cliente, nombre y una frase breve, sin atribuirle resultados no verificados. Botón: Ver testimonio.")}
-  <p class="disclaimer" style="text-align:center">Las experiencias corresponden a casos particulares y no aseguran resultados futuros.</p>
-</div></section>
+{P("SECCIÓN EXPERIENCIAS OCULTA hasta tener contenido. Título propuesto: 'Personas que un día tuvieron tus mismas dudas'. INCORPORAR hasta tres reseñas auténticas de Google (texto, autor, fecha, enlace), el enlace al perfil oficial, y un video autorizado de un cliente con nombre y frase breve, sin atribuirle resultados no verificados. Aviso: 'Las experiencias corresponden a casos particulares y no aseguran resultados futuros.'")}
 
-<section class="section"><div class="container">
-  <div class="title center"><span class="eyebrow">Formas de invertir</span><h2>Explora nuestras alternativas</h2></div>
+<section class="section section-soft"><div class="container">
+  <div class="title center"><span class="eyebrow">Formas de invertir</span><h2>Cuatro caminos, según lo que quieres construir</h2></div>
   <div class="grid-4">{cards}</div>
-  <div class="actions" style="justify-content:center"><a class="btn btn-outline" href="inversiones.html#comparar">Comparar alternativas</a></div>
+  <div class="actions" style="justify-content:center"><a class="btn btn-outline" href="inversiones.html#comparar">Compararlas lado a lado</a></div>
 </div></section>
-''' + cta('Conversemos sobre lo que quieres construir', 'Cuéntanos tus objetivos y revisemos por dónde comenzar.', 'Conversar con el equipo', 'Quiero conversar con el equipo'))
+''' + cta(*CTA_GENERAL))
 
 # ---------------- 2.1 Cómo funciona ----------------
 page('como-funciona.html', 'Cómo funciona',
-     'Estructuramos inversiones privadas vinculadas a bienes raíces mediante el modelo IGR, Inversión con Garantía Real.',
-     hero('Cómo invertir / Cómo funciona', 'Porque invertir también puede generar impacto',
-          'Estructuramos inversiones privadas vinculadas a bienes raíces mediante el modelo IGR, Inversión con Garantía Real. Conectamos objetivos de inversión con soluciones de liquidez para propietarios, a través de una relación directa con cada inversionista.', 'Modelo IGR') + f'''
+     'Inversiones privadas vinculadas a bienes raíces con el modelo IGR. Te mostramos el respaldo, los números y los riesgos antes de que decidas.',
+     hero('Cómo invertir / Cómo funciona', 'Invertir también puede cambiarle la historia a alguien',
+          'Estructuramos inversiones privadas vinculadas a bienes raíces con el modelo IGR, Inversión con Garantía Real. Tu inversión se conecta con propietarios que necesitan liquidez, y tú tienes una relación directa con nosotros.', 'Modelo IGR') + f'''
 {P("VALIDAR INTERNAMENTE: compromisos de entrega de documentos antes de firmar, acompañamiento y atención expresados en esta página; confirmar que coinciden con la práctica real.")}
 <section class="section"><div class="container">
-  <div class="title"><span class="eyebrow">Antes de invertir</span><h2>Lo que debes conocer antes de invertir</h2></div>
+  <div class="title"><span class="eyebrow">Antes de invertir</span><h2>Lo que vas a conocer antes de dar el paso</h2></div>
   <div class="grid-3">
-    <article class="card"><div class="card-icon">🛡️</div><h3>Tu respaldo</h3><p>Conoce qué documentos corresponden a tu inversión y qué derechos establecen a tu favor.</p></article>
-    <article class="card"><div class="card-icon">💼</div><h3>Tus condiciones económicas</h3><p>Revisa el aporte, los pagos previstos y los costos para planificar con una visión completa.</p></article>
-    <article class="card"><div class="card-icon">⏳</div><h3>Tu plazo</h3><p>Elige un horizonte compatible con tus planes y conoce las condiciones para recuperar tus recursos.</p></article>
+    <article class="card">{icon('escudo')}<h3>Tu respaldo</h3><p>Qué documentos corresponden a tu inversión y qué derechos te dan.</p></article>
+    <article class="card">{icon('billetera')}<h3>Tus números</h3><p>Cuánto aportas, qué pagos están previstos y qué costos hay, para que planifiques sin sorpresas.</p></article>
+    <article class="card">{icon('reloj')}<h3>Tu plazo</h3><p>Un horizonte que calce con tus planes y las condiciones para recuperar tu dinero.</p></article>
   </div>
-  <p class="note" style="margin-top:24px">También te explicamos los riesgos de la alternativa y las medidas aplicables para abordarlos. <a href="verifica-a-pulso.html#riesgos">Conoce cómo se gestionan los riesgos</a></p>
+  <p class="note" style="margin-top:24px">También hablamos de los riesgos. Preferimos que los conozcas antes de firmar, junto con las medidas que existen para abordarlos. <a href="verifica-a-pulso.html#riesgos">Ver cómo se gestionan los riesgos</a></p>
 </div></section>
 
 <section class="section section-soft"><div class="container">
-  <div class="title"><span class="eyebrow">Paso a paso</span><h2>Así es tu camino con Pulso</h2></div>
+  <div class="title"><span class="eyebrow">Paso a paso</span><h2>Tu camino con nosotros, a tu ritmo</h2></div>
   <ol class="steps">
-    <li><strong>Cuéntanos qué buscas</strong><span>Conversemos sobre tus objetivos.</span></li>
-    <li><strong>Conoce tu alternativa</strong><span>Revisa una propuesta y sus condiciones.</span></li>
-    <li><strong>Decide con claridad</strong><span>Evalúa tus documentos y resuelve tus preguntas.</span></li>
-    <li><strong>Invierte acompañado</strong><span>Formaliza tu inversión y mantén el contacto con el equipo.</span></li>
+    {PASOS}
   </ol>
 </div></section>
 
 <section class="section"><div class="container">
-  <div class="title"><span class="eyebrow">Nuestro compromiso</span><h2>Lo que sí hacemos y lo que no hacemos</h2></div>
+  <div class="title"><span class="eyebrow">Nuestra palabra</span><h2>Lo que puedes esperar de nosotros</h2></div>
   <div class="yesno">
     <div class="card"><h3>Lo que sí hacemos</h3><ul class="yes">
-      <li>Te entregamos antecedentes y documentos antes de firmar.</li>
-      <li>Te explicamos las condiciones, el respaldo y los riesgos.</li>
-      <li>Mantenemos una relación directa con cada inversionista.</li></ul></div>
-    <div class="card"><h3>Lo que no hacemos</h3><ul class="no">
+      <li>Te entregamos los antecedentes y documentos antes de firmar.</li>
+      <li>Te explicamos con calma las condiciones, el respaldo y los riesgos.</li>
+      <li>Mantenemos una relación directa contigo.</li></ul></div>
+    <div class="card"><h3>Lo que nunca vamos a hacer</h3><ul class="no">
       <li>Pedirte que decidas en la primera reunión.</li>
-      <li>Ofrecerte una rentabilidad sin explicarte qué hay detrás.</li>
+      <li>Hablarte de rentabilidad sin mostrarte qué hay detrás.</li>
       <li>Operar como una plataforma de crowdfunding o financiamiento colectivo.</li></ul></div>
   </div>
-  <div class="actions"><a class="btn btn-dark" href="inversiones.html#comparar">Comparar inversiones</a></div>
+  <div class="actions"><a class="btn btn-dark" href="inversiones.html#comparar">Comparar las alternativas</a></div>
 </div></section>
-''' + cta('Conversemos sobre lo que quieres construir', 'Cuéntanos tus objetivos y revisemos por dónde comenzar.', 'Conversar con el equipo', 'Quiero conversar con el equipo'))
+''' + cta(*CTA_GENERAL))
 
 # ---------------- 2.2 Inversiones ----------------
-def product(anchor, num, title, text, extra=''):
-    return f'''<article class="card product-card" id="{anchor}"><div class="card-num">{num}</div><h3>{title}</h3><p>{text}</p>{extra}
-<a class="btn btn-outline" href="{mail('Consulta: ' + title)}">Consultar esta alternativa</a></article>'''
+def product(anchor, num, title, text):
+    return f'''<article class="card product-card" id="{anchor}"><div class="card-num">{num}</div><h3>{title}</h3><p>{text}</p>
+<a class="btn btn-outline" href="{mail('Quiero saber más: ' + title)}">Quiero saber más</a></article>'''
 
 page('inversiones.html', 'Inversiones',
-     'Conoce a quién se dirige cada alternativa de Pulso Inversor y compara sus condiciones principales.',
-     hero('Cómo invertir / Inversiones', 'Encuentra una alternativa para tus objetivos',
-          'Conoce a quién se dirige cada opción y compara sus condiciones principales.', 'Inversiones') + f'''
+     'Cuatro alternativas de inversión con respaldo inmobiliario. Mira para quién es cada una y compara sus condiciones con calma.',
+     hero('Cómo invertir / Inversiones', 'Encuentra la alternativa que va contigo',
+          'Cada una responde a un momento distinto. Mira para quién es y compara sus condiciones con calma.', 'Inversiones') + f'''
 <section class="section"><div class="container"><div class="grid-2">
-{product('proyecta-un-hogar', '01', 'Proyecta un Hogar', 'Para quienes quieren rentabilizar capital disponible con un propósito social. En alianza con Plan de Salida, el modelo busca contribuir a soluciones que permitan a familias enfrentar el riesgo de remate y dar continuidad a su hogar.')}
-{product('hipoteca-inteligente', '02', 'Hipoteca Inteligente', 'Para quienes cuentan con capacidad de crédito hipotecario y quieren utilizarla para generar retorno y construir patrimonio. La alternativa contempla adquirir una propiedad mediante financiamiento bancario, sujeto a evaluación y aprobación del crédito.')}
-{product('configuracion-patrimonial', '03', 'Configuración Patrimonial', 'Una estrategia integral para quienes buscan ordenar, invertir y proyectar su patrimonio. Combina recursos, activos, financiamiento y estructuras jurídicas según objetivos de protección, eficiencia, continuidad y legado.')}
-{product('inversion-circular', '04', 'Inversión Inmobiliaria Circular', 'Para propietarios que quieren transformar el capital de su inmueble en nuevas oportunidades de inversión y reducir la gestión cotidiana de un arriendo. Permite evaluar la venta, destinar el capital neto a una alternativa de Pulso y, de manera opcional, explorar otra propiedad según disponibilidad y capacidad de financiamiento.')}
+{product('proyecta-un-hogar', '01', 'Proyecta un Hogar', 'Para quienes quieren que su capital crezca y, a la vez, haga una diferencia. Junto a Plan de Salida, buscamos soluciones para que familias en riesgo de remate puedan seguir en su hogar.')}
+{product('hipoteca-inteligente', '02', 'Hipoteca Inteligente', 'Para quienes tienen capacidad de crédito hipotecario y quieren usarla para construir patrimonio y generar retorno. Contempla comprar una propiedad con financiamiento bancario, sujeto a la evaluación y aprobación del crédito.')}
+{product('configuracion-patrimonial', '03', 'Configuración Patrimonial', 'Para quienes quieren ordenar lo que han construido y proyectarlo hacia adelante. Combinamos recursos, activos, financiamiento y estructuras jurídicas según lo que te importa: proteger, ganar eficiencia, dar continuidad o dejar un legado.')}
+{product('inversion-circular', '04', 'Inversión Inmobiliaria Circular', 'Para propietarios que quieren transformar el capital de su inmueble en nuevas oportunidades y aliviar la gestión diaria de un arriendo. Evaluamos la venta, el capital neto se invierte en una alternativa de Pulso y, si quieres, exploramos otra propiedad según disponibilidad y tu capacidad de financiamiento.')}
 </div></div></section>
 
 <section class="section section-soft" id="comparar"><div class="container">
-  <div class="title"><span class="eyebrow">Tabla comparativa</span><h2>Compáralas de un vistazo</h2></div>
+  <div class="title"><span class="eyebrow">Tabla comparativa</span><h2>Compáralas lado a lado</h2></div>
   <div class="table-wrap compare"><table>
-    <thead><tr><th>Solución</th><th>Desde</th><th>Qué queda a tu favor</th><th>Plazos</th></tr></thead>
+    <thead><tr><th>Alternativa</th><th>Desde</th><th>Qué queda a tu favor</th><th>Plazos</th></tr></thead>
     <tbody>
       <tr><td>Proyecta un Hogar</td>
-        <td>Según la modalidad contractual elegida. {P("CONFIRMAR cuáles modalidades de Renta de Capital se ofrecen bajo este nombre. Mínimos confirmados: pagaré $5 millones; hipoteca $25 millones; título $100 millones.")}</td>
+        <td>Según la modalidad contractual que elijas. {P("CONFIRMAR cuáles modalidades de Renta de Capital se ofrecen bajo este nombre. Mínimos confirmados: pagaré $5 millones; hipoteca $25 millones; título $100 millones.")}</td>
         <td>Documentación según la modalidad elegida. {P("CONFIRMAR si incluye pagaré/mutuo, hipoteca y título, o solo alguna.")}</td>
         <td>Según la modalidad elegida. {P("ASIGNAR: 12, 18 o 24 meses en pagaré; 15, 21 o 27 en hipoteca/título, si pertenecen a Proyecta un Hogar.")}</td></tr>
       <tr><td>Hipoteca Inteligente</td><td>Capacidad de crédito hipotecario desde 2.000 UF, sujeta a aprobación bancaria.</td>
-        <td>Propiedad adquirida mediante crédito; hipoteca a favor del banco y condiciones contractuales de la operación.</td><td>2 a 5 años, según la operación.</td></tr>
-      <tr><td>Configuración Patrimonial</td><td>Recursos disponibles: capital, financiamiento, activos y estructuras existentes.</td>
-        <td>Estructura y documentación diseñadas según los objetivos patrimoniales.</td><td>Según el diseño personalizado.</td></tr>
-      <tr><td>Inversión Inmobiliaria Circular</td><td>Capital neto disponible tras vender la propiedad y resolver la deuda, si existe; sujeto al mínimo de la modalidad elegida.</td>
-        <td>Documentos de la venta y de la inversión posterior, según la estructura contratada. {P("COMPLETAR instrumentos específicos que se formalizan.")}</td>
+        <td>La propiedad que compras con el crédito (con hipoteca a favor del banco) y las condiciones del contrato de la operación.</td><td>2 a 5 años, según la operación.</td></tr>
+      <tr><td>Configuración Patrimonial</td><td>Lo que ya tienes: capital, financiamiento, activos y estructuras existentes.</td>
+        <td>Una estructura y documentación diseñadas para tus objetivos patrimoniales.</td><td>Según el diseño que hagamos contigo.</td></tr>
+      <tr><td>Inversión Inmobiliaria Circular</td><td>El capital neto que queda tras vender tu propiedad y resolver la deuda, si existe; sujeto al mínimo de la modalidad elegida.</td>
+        <td>Los documentos de la venta y de la inversión posterior, según la estructura contratada. {P("COMPLETAR instrumentos específicos que se formalizan.")}</td>
         <td>Según la venta y el plazo contratado para la inversión posterior. {P("COMPLETAR plazo comercial aplicable.")}</td></tr>
     </tbody></table></div>
 </div></section>
 
 <section class="section"><div class="container">
-  <div class="title"><span class="eyebrow">En detalle</span><h2>Condiciones de cada alternativa</h2></div>
+  <div class="title"><span class="eyebrow">En detalle</span><h2>Las condiciones de cada una</h2></div>
   <details><summary>Proyecta un Hogar</summary><div class="details-body">
-    <p>El documento y los pagos dependen de la modalidad contractual.</p>
+    <p>El documento que te respalda y los pagos dependen de la modalidad contractual que elijas.</p>
     {P("COMPLETAR correspondencia con modalidades A/H/T, costos y requisitos. Precisar si 'retiros trimestrales' es pago de intereses, retiro de capital o ambos.")}
   </div></details>
   <details><summary>Hipoteca Inteligente</summary><div class="details-body">
-    <p>Requiere capacidad de financiamiento y aprobación bancaria. La adquisición contempla una deuda hipotecaria a nombre del comprador; la operación debe detallar los pagos a cargo de cada parte y las condiciones de cierre.</p>
-    <p>La proyección considera ingresos, dividendos, administración y otros costos de la configuración elegida. El resultado depende de la propiedad, el financiamiento y la opción de cierre.</p>
+    <p>Necesitas capacidad de financiamiento y la aprobación del banco. La compra contempla una deuda hipotecaria a tu nombre, y la operación detalla qué pagos le corresponden a cada parte y cómo se cierra.</p>
+    <p>La proyección considera ingresos, dividendos, administración y otros costos de la configuración que elijas. El resultado depende de la propiedad, el financiamiento y la opción de cierre.</p>
     {P("COMPLETAR obligaciones contractuales de cada parte, costos de entrada y condiciones de recompra o conservación. No incorporar la promesa general de que Pulso paga todos los dividendos.")}
   </div></details>
   <details><summary>Configuración Patrimonial</summary><div class="details-body">
-    <p>Contempla diseño societario, coordinación jurídica y financiera, administración y planificación de continuidad o legado, según la situación del cliente.</p>
+    <p>Según tu situación, puede incluir diseño societario, coordinación jurídica y financiera, administración y planificación de continuidad o legado.</p>
     {P("COMPLETAR alcance contratado, honorarios, entregables y condiciones del acompañamiento.")}
   </div></details>
   <details><summary>Inversión Inmobiliaria Circular</summary><div class="details-body">
-    <p>La propuesta se adapta al punto de partida del propietario:</p>
-    <ul><li><strong>Con deuda:</strong> se considera el prepago del crédito para determinar el capital neto disponible.</li>
-      <li><strong>Sin deuda:</strong> se evalúa el capital disponible después de la venta y sus gastos.</li>
-      <li><strong>Nueva propiedad, opcional:</strong> se puede evaluar una adquisición adicional según disponibilidad y aprobación bancaria.</li></ul>
-    <p>Las condiciones de venta, inversión y eventuales retiros se establecen en la propuesta y el contrato de cada cliente.</p>
+    <p>La propuesta se adapta a tu punto de partida:</p>
+    <ul><li><strong>Si tu propiedad tiene deuda:</strong> consideramos el prepago del crédito para calcular el capital neto disponible.</li>
+      <li><strong>Si está pagada:</strong> evaluamos el capital disponible después de la venta y sus gastos.</li>
+      <li><strong>Si quieres otra propiedad:</strong> podemos evaluar una compra adicional, según disponibilidad y aprobación bancaria.</li></ul>
+    <p>Las condiciones de venta, inversión y eventuales retiros quedan en tu propuesta y en tu contrato.</p>
     {P("COMPLETAR costos de venta, prepago y gestión; política de retiros y plazos de aviso.")}
   </div></details>
 </div></section>
 
 <section class="section section-soft"><div class="container">
-  <div class="title"><span class="eyebrow">Orientación</span><h2>¿Cuál me conviene más?</h2>
-    <p class="lead">Identifica el momento en el que estás y encuentra una opción para comenzar a explorar.</p></div>
+  <div class="title"><span class="eyebrow">Para orientarte</span><h2>¿Cuál es para ti?</h2>
+    <p class="lead">Busca la frase que más se parezca a lo que estás viviendo hoy.</p></div>
   <div class="table-wrap"><table>
-    <thead><tr><th>Me identifico con…</th><th>Punto de partida</th></tr></thead>
+    <thead><tr><th>Me identifico con…</th><th>Por dónde partir</th></tr></thead>
     <tbody>
-      <tr><td>Tengo capital disponible y busco invertir con sentido</td><td>Conoce <a href="#proyecta-un-hogar">Proyecta un Hogar</a> y las condiciones de participación que se definan para tu caso.</td></tr>
+      <tr><td>Tengo capital disponible y quiero que, además de crecer, haga una diferencia</td><td>Conoce <a href="#proyecta-un-hogar">Proyecta un Hogar</a> y las condiciones de participación que definamos para tu caso.</td></tr>
       <tr><td>Tengo capacidad de crédito y quiero construir patrimonio</td><td>Explora <a href="#hipoteca-inteligente">Hipoteca Inteligente</a>.</td></tr>
-      <tr><td>Quiero organizar mis activos pensando en continuidad y legado</td><td>Conoce <a href="#configuracion-patrimonial">Configuración Patrimonial</a>.</td></tr>
-      <tr><td>Tengo una propiedad y quiero activar su capital con menos gestión cotidiana</td><td>Explora <a href="#inversion-circular">Inversión Inmobiliaria Circular</a>, tanto si tu inmueble tiene deuda como si está pagado.</td></tr>
+      <tr><td>Quiero ordenar lo que tengo pensando en mi familia y en el futuro</td><td>Conoce <a href="#configuracion-patrimonial">Configuración Patrimonial</a>.</td></tr>
+      <tr><td>Tengo una propiedad y quiero activar su capital sin la carga diaria del arriendo</td><td>Explora <a href="#inversion-circular">Inversión Inmobiliaria Circular</a>, tenga deuda o esté pagada.</td></tr>
     </tbody></table></div>
 </div></section>
-''' + cta('¿Te identificas con más de una opción?', 'Revisemos juntos tu situación.', 'Ayúdenme a encontrar mi alternativa', 'Ayúdenme a encontrar mi alternativa'))
+''' + cta('¿Te ves en más de una?', 'Pasa más de lo que crees. Revisémoslo juntos.', 'Ayúdenme a elegir', 'Ayúdenme a encontrar mi alternativa'))
 
 # ---------------- 2.3 Garantías ----------------
 page('garantias-y-documentos.html', 'Garantías y documentos',
-     'Conoce el respaldo que acompaña tu inversión: qué aporta cada documento y qué antecedentes puedes revisar.',
-     hero('Cómo invertir / Garantías y documentos', 'Conoce el respaldo que acompaña tu inversión',
-          'Cada documento cumple una función. Aquí puedes entender qué aporta y qué antecedentes revisar.', 'Respaldo') + f'''
+     'Qué aporta cada documento de tu inversión y qué puedes revisar por tu cuenta: mutuo, pagaré, hipoteca y título de dominio.',
+     hero('Cómo invertir / Garantías y documentos', 'Tu tranquilidad está en los documentos',
+          'Cada documento cumple una función. Aquí te contamos qué aporta cada uno y qué puedes revisar por tu cuenta.', 'Respaldo') + f'''
 <section class="section"><div class="container">
   <div class="table-wrap"><table>
-    <thead><tr><th>Documento</th><th>Qué aporta</th><th>Qué puedes comprobar</th></tr></thead>
+    <thead><tr><th>Documento</th><th>Qué aporta</th><th>Qué puedes revisar</th></tr></thead>
     <tbody>
-      <tr><td>Contrato de mutuo</td><td>Establece las obligaciones del préstamo y las condiciones de restitución acordadas.</td><td>Partes, monto, plazo y condiciones pactadas.</td></tr>
-      <tr><td>Pagaré</td><td>Documenta el compromiso de pago conforme a sus términos y requisitos legales.</td><td>Quién debe pagar, monto y vencimiento.</td></tr>
-      <tr><td>Hipoteca</td><td>Constituye una garantía real sobre un inmueble a favor del acreedor identificado en la inscripción.</td><td>Propiedad, beneficiario, inscripción y prioridad.</td></tr>
-      <tr><td>Título e inscripción de dominio</td><td>Permiten acreditar la adquisición y verificar la propiedad inscrita.</td><td>Titularidad y antecedentes registrales.</td></tr>
+      <tr><td>Contrato de mutuo</td><td>Fija las obligaciones del préstamo y cómo se te devuelve lo acordado.</td><td>Partes, monto, plazo y condiciones pactadas.</td></tr>
+      <tr><td>Pagaré</td><td>Deja por escrito el compromiso de pago, según sus términos y requisitos legales.</td><td>Quién debe pagar, cuánto y cuándo vence.</td></tr>
+      <tr><td>Hipoteca</td><td>Es una garantía real sobre un inmueble, a favor del acreedor que aparece en la inscripción.</td><td>La propiedad, el beneficiario, la inscripción y su prioridad.</td></tr>
+      <tr><td>Título e inscripción de dominio</td><td>Acreditan la compra y permiten verificar quién es el dueño inscrito.</td><td>Titularidad y antecedentes registrales.</td></tr>
     </tbody></table></div>
-  <p class="note" style="margin-top:24px">Los documentos aplicables y su alcance se especifican en cada alternativa. En una inversión con hipoteca a tu favor actúas como acreedor; en una compra con crédito hipotecario, la hipoteca se constituye a favor del banco. El pagaré documenta una deuda y no constituye por sí solo una garantía real sobre un inmueble.</p>
+  <p class="note" style="margin-top:24px">Cada alternativa indica qué documentos aplican y su alcance. Si tienes una hipoteca a tu favor, eres el acreedor; si compras con crédito hipotecario, la hipoteca queda a favor del banco. El pagaré deja constancia de una deuda, pero por sí solo no es una garantía real sobre un inmueble.</p>
 </div></section>
 
 <section class="section section-soft"><div class="container">
-  <details open><summary>Antecedentes que complementan el respaldo</summary><div class="details-body">
-    <ul><li><strong>Dominio vigente:</strong> permite revisar quién figura como propietario.</li>
-      <li><strong>Gravámenes y prohibiciones:</strong> informa cargas y restricciones del inmueble.</li>
-      <li><strong>Tasación:</strong> aporta una estimación de valor, con fecha y metodología.</li>
+  <details open><summary>Antecedentes que suman respaldo</summary><div class="details-body">
+    <ul><li><strong>Dominio vigente:</strong> muestra quién figura como dueño.</li>
+      <li><strong>Gravámenes y prohibiciones:</strong> informa si el inmueble tiene cargas o restricciones.</li>
+      <li><strong>Tasación:</strong> estima su valor, con fecha y metodología.</li>
       <li><strong>Estudio de títulos:</strong> reúne la revisión jurídica que corresponda a la operación.</li></ul>
-    <p style="margin-top:14px">El material comercial contempla fichas de propiedades y acceso a tasaciones.</p>
+    <p style="margin-top:14px">En nuestro material comercial también encontrarás fichas de las propiedades y acceso a sus tasaciones.</p>
   </div></details>
   {P("COMPLETAR listado definitivo de antecedentes entregables por modalidad y momento de entrega. Confirmar seguros contra incendio y sismo (pólizas, inmuebles, beneficiarios, vigencia, exclusiones) antes de incorporarlos.")}
-  <div class="actions"><a class="btn btn-dark" href="verifica-a-pulso.html#operacion-abierta">Ver una operación real</a></div>
+  <div class="actions"><a class="btn btn-dark" href="verifica-a-pulso.html#operacion-abierta">Ver cómo se documenta una operación real</a></div>
 </div></section>
-''' + cta('Si algo no está claro, conversemos', 'Pregúntanos por los antecedentes que necesitas para evaluar tu inversión.', 'Quiero resolver una duda', 'Consulta sobre garantías y documentos'))
+''' + cta('Si algo no queda claro, pregúntanos', 'Te ayudamos a conseguir los antecedentes que necesitas para evaluar tranquilo.', 'Tengo una duda', 'Consulta sobre garantías y documentos'))
 
 # ---------------- 2.4 Simuladores ----------------
 SOON = '<span class="pill soon">Próximamente</span>'
 page('simuladores.html', 'Simuladores',
-     'Explora los números de tu inversión con los simuladores de Pulso Inversor.',
-     hero('Cómo invertir / Simuladores', 'Explora los números de tu inversión',
-          'Elige una herramienta y despliega la información necesaria para comenzar.', 'Simuladores') + f'''
+     'Explora los números de tu inversión con calma y sin compromiso.',
+     hero('Cómo invertir / Simuladores', 'Mira tus números antes de decidir',
+          'Elige una herramienta y explora con calma. Es para ti, sin compromiso.', 'Simuladores') + f'''
 <section class="section"><div class="container"><div class="grid-3">
 
   <article class="card"><div class="card-num">01 · {SOON}</div><h3>Proyección de inversión de capital</h3>
     {P("CONFIRMAR nombre, alternativa asociada y enlace del simulador de capital.")}
-    <p><strong>Qué permite explorar:</strong> la relación entre capital, plazo y retorno estimado.</p>
+    <p>Para ver cómo se relacionan tu capital, el plazo y el retorno estimado.</p>
     <details><summary>Cómo leer tu simulación</summary><div class="details-body"><ul>
-      <li><strong>Capital:</strong> monto que aportas a la inversión.</li>
-      <li><strong>Retorno estimado:</strong> interés proyectado bajo las condiciones del cálculo; revisa si se expresa en pesos o con reajuste en UF.</li>
-      <li><strong>Total y pagos:</strong> distingue la devolución de capital del interés y revisa cuándo se prevé recibir cada uno.</li></ul></div></details>
+      <li><strong>Capital:</strong> lo que aportas a la inversión.</li>
+      <li><strong>Retorno estimado:</strong> el interés proyectado con las condiciones del cálculo. Fíjate si está en pesos o reajustado en UF.</li>
+      <li><strong>Total y pagos:</strong> separa la devolución de tu capital del interés, y mira cuándo recibirías cada uno.</li></ul></div></details>
     {P("COMPLETAR campos reales, costos incluidos y modalidad de pagos del simulador definitivo.")}
     <a class="btn btn-outline" href="#" aria-disabled="true">Abrir simulador</a></article>
 
   <article class="card"><div class="card-num">02 · {SOON}</div><h3>Hipoteca Inteligente</h3>
-    <p>Explora cómo tu capacidad de financiamiento puede relacionarse con retorno, costos y construcción de patrimonio.</p>
-    <p><strong>Datos de entrada:</strong> nombre, teléfono, correo y capacidad financiera declarada por crédito. Luego seleccionas propiedad, plazo y las opciones disponibles para la configuración.</p>
+    <p>Para ver cómo tu capacidad de financiamiento puede convertirse en retorno y patrimonio, con sus costos.</p>
+    <p>Te pediremos tu nombre, teléfono, correo y la capacidad de crédito que declares. Después eliges propiedad, plazo y las opciones disponibles.</p>
     <details><summary>Cómo leer tu simulación</summary><div class="details-body"><ul>
-      <li><strong>Capacidad financiera:</strong> es una referencia declarada para evaluar cada propiedad; no equivale a una aprobación bancaria.</li>
-      <li><strong>Retorno proyectado:</strong> identifica el resultado estimado de la propiedad seleccionada y el período del cálculo.</li>
-      <li><strong>Flujo y costos:</strong> revisa ingresos, dividendos, administración y gastos considerados. Un flujo negativo representa recursos que deben cubrirse en ese escenario.</li>
-      <li><strong>Patrimonio y cierre:</strong> distingue el retorno disponible de la amortización de deuda y compara las opciones de conservar o activar recompra, cuando correspondan.</li></ul>
-      <p style="margin-top:12px"><strong>Criterio de lectura:</strong> en un ejemplo de recompra, el resultado al cierre suma el retorno disponible y la amortización mostrada. Son componentes distintos y deben leerse según la configuración elegida.</p></div></details>
+      <li><strong>Capacidad financiera:</strong> es la referencia que declaras para evaluar cada propiedad. No equivale a la aprobación del banco.</li>
+      <li><strong>Retorno proyectado:</strong> el resultado estimado de la propiedad elegida y el período del cálculo.</li>
+      <li><strong>Flujo y costos:</strong> ingresos, dividendos, administración y gastos considerados. Si el flujo sale negativo, son recursos que tendrías que cubrir en ese escenario.</li>
+      <li><strong>Patrimonio y cierre:</strong> separa el retorno disponible de la amortización de la deuda y compara conservar la propiedad o activar la recompra, cuando corresponda.</li></ul>
+      <p style="margin-top:12px">En un ejemplo de recompra, el resultado al cierre suma el retorno disponible y la amortización. Son dos cosas distintas, y conviene leerlas según la configuración que elijas.</p></div></details>
     {P("ENLACE EN REVISIÓN: https://simuladorpulsoinversor.netlify.app/ — activar el botón (quitar aria-disabled y poner el href) cuando el simulador esté alineado con la presentación vigente y se retire la regla divergente de reparto de amortización.")}
     <a class="btn btn-outline" href="#" aria-disabled="true">Abrir simulador</a></article>
 
-  <article class="card"><div class="card-num">03 · {SOON}</div><h3>Nueva herramienta</h3>
+  <article class="card"><div class="card-num">03 · {SOON}</div><h3>Una nueva herramienta</h3>
     {P("COMPLETAR identidad de la tercera herramienta, alternativa asociada, enlace, datos requeridos y su desplegable 'Cómo leer tu simulación' (tres resultados principales, moneda, horizonte, costos y supuestos).")}
-    <p>Estamos preparando una tercera herramienta para explorar otra de nuestras alternativas.</p>
+    <p>Estamos preparando una tercera herramienta para que explores otra de nuestras alternativas.</p>
     <a class="btn btn-outline" href="#" aria-disabled="true">Abrir simulador</a></article>
 
 </div>
-<p class="disclaimer">Los resultados son referenciales y dependen de los datos y supuestos utilizados. Las condiciones de una operación se revisan en su documentación; la simulación no asegura rentabilidad.</p>
+<p class="disclaimer">Los resultados son referenciales y dependen de los datos y supuestos que uses. Las condiciones reales de una operación están en su documentación, y una simulación no asegura rentabilidad.</p>
 </div></section>
-''' + cta('¿Prefieres revisar tus números con el equipo?', 'Cuéntanos tus objetivos y revisemos por dónde comenzar.', 'Conversar con el equipo', 'Consulta sobre simuladores'))
+''' + cta('¿Prefieres ver los números con alguien?', 'Te acompañamos a leerlos y a resolver tus dudas.', 'Conversemos', 'Consulta sobre simuladores'))
 
 # ---------------- 3.1 Nosotros ----------------
 page('nosotros.html', 'Nosotros',
-     'Conoce la historia, el enfoque, los pilares y el equipo de Pulso Inversor, parte de Grupo Matchmaking.',
-     hero('Conócenos / Nosotros', 'Una trayectoria que evoluciona con nuevas oportunidades',
-          'Facilitamos el acceso a inversiones alternativas vinculadas al mercado inmobiliario.', 'Nuestra historia') + f'''
+     'Detrás de cada inversión hay personas. Conoce la historia, la forma de trabajar y el equipo de Pulso Inversor, parte de Grupo Matchmaking.',
+     hero('Conócenos / Nosotros', 'Detrás de cada inversión hay personas',
+          'Desde 2016 acompañamos a quienes quieren invertir en algo que pueden ver y entender.', 'Quiénes somos') + f'''
 <section class="section"><div class="container split">
-  <div><span class="eyebrow">Nuestra historia</span><h2>Desde 2016 conectando inversión y patrimonio</h2>
-    <p class="muted">Este desarrollo impulsó posteriormente la creación de Grupo Matchmaking, el ecosistema empresarial del que hoy formamos parte.</p></div>
+  <div><span class="eyebrow">Nuestra historia</span><h2>Una historia que empezó en 2016</h2>
+    <p class="muted">Ese camino también dio origen a Grupo Matchmaking, el grupo de empresas del que hoy somos parte.</p></div>
   <ol class="timeline">
-    <li><strong>2016 · Nuestros orígenes</strong><span class="muted">Bajo el alero de Partners &amp; Advisers y la gestión de Iván Barboza, nace el modelo Inversión Remate Seguro (IRS), vinculado a oportunidades de remates judiciales.</span></li>
-    <li><strong>2016–2023 · Experiencia y especialización</strong><span class="muted">Ampliamos nuestra experiencia en evaluación comercial, análisis jurídico y gestión inmobiliaria, abriendo camino hacia el financiamiento privado.</span></li>
-    <li><strong>2023 · Nace Pulso Inversor SpA</strong><span class="muted">A fines de ese año se constituye la empresa y el modelo evoluciona hacia la Inversión con Garantía Real (IGR).</span></li>
+    <li><strong>2016 · Los comienzos</strong><span class="muted">Bajo el alero de Partners &amp; Advisers y con Iván Barboza a la cabeza, nace el modelo Inversión Remate Seguro (IRS), ligado a oportunidades en remates judiciales.</span></li>
+    <li><strong>2016–2023 · Aprendiendo en cada operación</strong><span class="muted">Sumamos experiencia en evaluación comercial, análisis jurídico y gestión inmobiliaria, y se abrió el camino hacia el financiamiento privado.</span></li>
+    <li><strong>2023 · Nace Pulso Inversor SpA</strong><span class="muted">A fines de ese año se constituye la empresa y el modelo da el paso a la Inversión con Garantía Real (IGR).</span></li>
   </ol>
 </div></section>
 
 <section class="section section-dark"><div class="container">
-  <div class="title"><span class="eyebrow dark">Nuestro enfoque</span><h2>Conectamos inversión y oportunidades para el patrimonio</h2>
-    <p class="lead">Facilitamos el acceso a inversiones alternativas vinculadas al mercado inmobiliario, conectando a quienes buscan soluciones de liquidez con personas que quieren diversificar y hacer crecer su patrimonio. Buscamos combinar retornos atractivos con soluciones que ayuden a propietarios a reorganizar sus finanzas.</p></div>
+  <div class="title"><span class="eyebrow dark">Lo que hacemos</span><h2>Unimos dos necesidades que se encuentran</h2>
+    <p class="lead">Hay personas que quieren diversificar y hacer crecer su patrimonio, y propietarios que necesitan liquidez para reorganizar sus finanzas. Nuestro trabajo es unirlas con inversiones alternativas vinculadas al mercado inmobiliario, buscando retornos atractivos y soluciones que les sirvan a ambos.</p></div>
   <div class="grid-4">
-    <article class="card"><div class="card-num">01</div><h3>Transparencia y simplicidad</h3><p>Condiciones comprensibles y acuerdos documentados desde el inicio.</p></article>
-    <article class="card"><div class="card-num">02</div><h3>Seguridad y respaldo</h3><p>Formalización y derechos definidos mediante garantías inmobiliarias o instrumentos contractuales, según la alternativa.</p></article>
-    <article class="card"><div class="card-num">03</div><h3>Rentabilidad</h3><p>Búsqueda de retornos atractivos, considerando el plazo y las condiciones de cada operación.</p></article>
-    <article class="card"><div class="card-num">04</div><h3>Inversión con sentido</h3><p>Soluciones que conectan objetivos de inversión con nuevas posibilidades para el patrimonio de los propietarios.</p></article>
+    <article class="card"><div class="card-num">01</div><h3>Transparencia y simplicidad</h3><p>Condiciones que se entienden y acuerdos por escrito desde el primer día.</p></article>
+    <article class="card"><div class="card-num">02</div><h3>Seguridad y respaldo</h3><p>Tus derechos quedan definidos en garantías inmobiliarias o instrumentos contractuales, según la alternativa.</p></article>
+    <article class="card"><div class="card-num">03</div><h3>Rentabilidad</h3><p>Buscamos retornos atractivos, siempre de acuerdo con el plazo y las condiciones de cada operación.</p></article>
+    <article class="card"><div class="card-num">04</div><h3>Inversión con sentido</h3><p>Tu inversión también abre nuevas posibilidades para los propietarios y su patrimonio.</p></article>
   </div>
 </div></section>
 
 <section class="section"><div class="container">
-  <div class="title"><span class="eyebrow">Nuestro equipo</span><h2>Experiencia inmobiliaria y visión financiera</h2></div>
+  <div class="title"><span class="eyebrow">Nuestro equipo</span><h2>Las personas que te van a acompañar</h2></div>
   {P("INCORPORAR fotografías aprobadas de Iván y Felipe (reemplazar el círculo con iniciales por <img class='avatar'>) y nombres, cargos, fotos y biografías de los demás integrantes.")}
   <div class="grid-2">
     <article class="card person"><div class="avatar" aria-hidden="true">IB</div><div><h3>Iván Barboza</h3><div class="role">Cofundador y experto inmobiliario</div>
-      <p>Aporta experiencia en el desarrollo de modelos de inversión y conocimiento del mercado inmobiliario, con foco en la evaluación de oportunidades, la gestión profesional y el respaldo contractual.</p></div></article>
+      <p>Conoce el mercado inmobiliario desde adentro y ha desarrollado modelos de inversión. Su foco está en evaluar bien cada oportunidad, gestionarla con profesionalismo y dejar todo respaldado por contrato.</p></div></article>
     <article class="card person"><div class="avatar" aria-hidden="true">FR</div><div><h3>Felipe Rojas</h3><div class="role">Cofundador y estratega financiero</div>
-      <p>Con 16 años de trayectoria en finanzas y control de gestión en compañías como LATAM, Iansa y Transbank, aporta visión corporativa y rigor analítico al diseño financiero de las alternativas de Pulso. Su vínculo con el proyecto comenzó como cliente e inversionista.</p></div></article>
+      <p>Lleva 16 años en finanzas y control de gestión, en compañías como LATAM, Iansa y Transbank. Aporta mirada corporativa y rigor al diseño financiero de nuestras alternativas. Llegó a Pulso como cliente e inversionista.</p></div></article>
   </div>
 </div></section>
-''' + cta('Conversemos sobre lo que quieres construir', 'Cuéntanos tus objetivos y revisemos por dónde comenzar.', 'Conversar con el equipo', 'Quiero conversar con el equipo'))
+''' + cta(*CTA_GENERAL))
 
 # ---------------- 3.2 Verifica ----------------
 page('verifica-a-pulso.html', 'Verifica a Pulso',
-     'Situación regulatoria, operación abierta, riesgos y cómo verificar a Pulso Inversor con fuentes independientes.',
-     hero('Conócenos / Verifica a Pulso', '¿Por qué no estamos en la CMF?',
-          'Aquí puedes conocer los documentos de una operación y encontrar información para revisar sus antecedentes por tu cuenta.', 'Verifica a Pulso') + f'''
+     'Desconfiar antes de invertir es sano. Revisa nuestra situación ante la CMF, una operación real, los riesgos y cómo verificarnos por tu cuenta.',
+     hero('Conócenos / Verifica a Pulso', 'Revísanos con toda libertad',
+          'Desconfiar antes de invertir es sano. Aquí tienes lo necesario para comprobar quiénes somos y cómo trabajamos, por tu cuenta.', 'Verifica a Pulso') + f'''
 <section class="section"><div class="container split">
-  <div><span class="eyebrow">Situación regulatoria</span><h2>¿Pulso Inversor requiere certificación CMF?</h2></div>
-  <div><p class="lead">No bajo esta estructura privada, contractual y personalizada. No opera como banco, corredora, administradora de fondos ni plataforma de financiamiento colectivo regulada.</p></div>
+  <div><span class="eyebrow">Situación regulatoria</span><h2>¿Por qué no estamos en la CMF?</h2></div>
+  <div><p class="lead">Pulso Inversor no requiere certificación CMF bajo esta estructura privada, contractual y personalizada. No opera como banco, corredora, administradora de fondos ni plataforma de financiamiento colectivo regulada.</p></div>
 </div></section>
 
 <section class="section section-soft" id="operacion-abierta"><div class="container">
-  <div class="title"><span class="eyebrow">Operación abierta</span><h2>Mira cómo se documenta una operación real</h2>
-    <p class="lead">Conoce un caso, revisa sus documentos y observa la información disponible para seguir sus etapas.</p></div>
+  <div class="title"><span class="eyebrow">Operación abierta</span><h2>Así se documenta una operación real</h2>
+    <p class="lead">Te mostramos un caso de principio a fin: sus documentos y la información para seguir cada etapa.</p></div>
   {P("Caso candidato: Fundo Alhué, Curacaví (tasación 12.580 UF; inversión 3.034,6 UF según portafolio de octubre). CONFIRMAR autorización y estado. COMPLETAR partes, antecedentes reales anonimizados y seguimiento (hitos, fecha, pagos previstos y realizados) antes de publicar el detalle.")}
   <div class="grid-4">
-    <article class="card"><div class="card-icon">📍</div><h3>El caso</h3><p>La operación y el inmueble involucrado.</p></article>
-    <article class="card"><div class="card-icon">🤝</div><h3>Las partes</h3><p>Quién invierte, quién recibe los recursos, quién debe pagar y quién figura como propietario o acreedor.</p></article>
-    <article class="card"><div class="card-icon">📄</div><h3>Los antecedentes</h3><p>Tasación, ficha, contratos e inscripciones de la operación.</p></article>
-    <article class="card"><div class="card-icon">📊</div><h3>El seguimiento</h3><p>Hitos, pagos previstos y realizados, novedades y situación actual.</p></article>
+    <article class="card">{icon('casa')}<h3>El caso</h3><p>La operación y el inmueble detrás de ella.</p></article>
+    <article class="card">{icon('manos')}<h3>Las partes</h3><p>Quién invierte, quién recibe los recursos, quién debe pagar y quién figura como dueño o acreedor.</p></article>
+    <article class="card">{icon('documento')}<h3>Los antecedentes</h3><p>Tasación, ficha, contratos e inscripciones.</p></article>
+    <article class="card">{icon('grafico')}<h3>El seguimiento</h3><p>Hitos, pagos previstos y realizados, novedades y cómo va hoy.</p></article>
   </div>
-  <div class="actions"><a class="btn btn-outline" href="#" aria-disabled="true">Ver documentos del caso</a><a class="btn btn-dark" href="{mail('Consulta sobre la operación abierta')}">Consultar sobre esta operación</a></div>
+  <div class="actions"><a class="btn btn-outline" href="#" aria-disabled="true">Ver documentos del caso</a><a class="btn btn-dark" href="{mail('Consulta sobre la operación abierta')}">Preguntar por esta operación</a></div>
   <p class="disclaimer">Las condiciones y resultados de este caso corresponden a una operación específica.</p>
 </div></section>
 
 <section class="section" id="riesgos"><div class="container">
-  <div class="title"><span class="eyebrow">Riesgos y medidas de gestión</span><h2>Conoce cómo se aborda cada escenario</h2>
-    <p class="lead">Una evaluación completa considera los escenarios posibles y las medidas aplicables para gestionarlos.</p></div>
+  <div class="title"><span class="eyebrow">Riesgos y cómo se gestionan</span><h2>Hablemos también de los riesgos</h2>
+    <p class="lead">Toda inversión los tiene. Preferimos que los conozcas ahora, junto con las medidas que existen para abordarlos.</p></div>
   {P("COMPLETAR la medida que se informa para cada situación: atrasos/insolvencia y cobro; valoración y escenarios de flujos; salida anticipada; revisión jurídica y prioridad de derechos; orientación sobre concentración.")}
   <div class="table-wrap"><table>
     <thead><tr><th>Situación</th><th>Lo que debes conocer</th></tr></thead>
     <tbody>
-      <tr><td>Atrasos o dificultades de la contraparte</td><td>Evaluación, comunicación y acciones de cobro aplicables, y el efecto de una eventual insolvencia.</td></tr>
-      <tr><td>Cambios en el valor del inmueble o en los flujos</td><td>Escenarios de ingresos y gastos, incluidas las consecuencias de resultados inferiores a los previstos.</td></tr>
-      <tr><td>Necesidad de recuperar recursos antes</td><td>Condiciones y costos de salida establecidos en la documentación de tu alternativa.</td></tr>
-      <tr><td>Situación jurídica del inmueble</td><td>Formalización notarial e inscripción de título o hipoteca según la modalidad.</td></tr>
-      <tr><td>Concentración de la inversión</td><td>Tu exposición a una empresa, propiedad o estrategia.</td></tr>
+      <tr><td>Atrasos o dificultades de la contraparte</td><td>Cómo se evalúa, cómo te informamos y qué acciones de cobro aplican, incluido el efecto de una eventual insolvencia.</td></tr>
+      <tr><td>Cambios en el valor del inmueble o en los flujos</td><td>Escenarios de ingresos y gastos, incluido qué pasa si los resultados son menores a lo previsto.</td></tr>
+      <tr><td>Si necesitas tu dinero antes</td><td>Las condiciones y costos de salida que establece la documentación de tu alternativa.</td></tr>
+      <tr><td>Situación jurídica del inmueble</td><td>Formalización ante notario e inscripción del título o la hipoteca, según la modalidad.</td></tr>
+      <tr><td>Concentración de tu inversión</td><td>Cuánto de tu patrimonio quedaría en una empresa, propiedad o estrategia.</td></tr>
     </tbody></table></div>
-  <p class="disclaimer">Las medidas de gestión ayudan a abordar los riesgos; su alcance depende de cada operación y no elimina la posibilidad de pérdidas.</p>
+  <p class="disclaimer">Las medidas de gestión ayudan a abordar los riesgos. Su alcance depende de cada operación y no elimina la posibilidad de pérdidas.</p>
 </div></section>
 
 <section class="section section-soft"><div class="container">
-  <div class="title"><span class="eyebrow">Verificación independiente</span><h2>Contrasta la información con fuentes independientes</h2></div>
+  <div class="title"><span class="eyebrow">Verificación independiente</span><h2>Compruébalo con fuentes que no dependen de nosotros</h2></div>
   <div class="table-wrap"><table>
-    <thead><tr><th>Qué comprobar</th><th>Cómo hacerlo</th></tr></thead>
+    <thead><tr><th>Qué revisar</th><th>Cómo hacerlo</th></tr></thead>
     <tbody>
       <tr><td>La empresa y sus canales</td><td>Contrasta razón social, RUT, domicilio y datos de contacto.</td></tr>
-      <tr><td>La situación regulatoria</td><td>Consulta registros y alertas oficiales de la CMF usando la razón social.</td></tr>
-      <tr><td>La propiedad y sus documentos</td><td>Revisa antecedentes del Conservador correspondiente y solicita una opinión jurídica independiente.</td></tr>
-      <tr><td>Las condiciones y el pago</td><td>Verifica que los compromisos y el destinatario de los fondos coincidan con la documentación.</td></tr>
+      <tr><td>La situación regulatoria</td><td>Busca la razón social en los registros y alertas oficiales de la CMF.</td></tr>
+      <tr><td>La propiedad y sus documentos</td><td>Revisa los antecedentes en el Conservador que corresponda y pide la opinión de un abogado independiente.</td></tr>
+      <tr><td>Las condiciones y el pago</td><td>Comprueba que los compromisos y quién recibe los fondos coincidan con la documentación.</td></tr>
     </tbody></table></div>
-  <p class="note" style="margin-top:24px">Tómate el tiempo para verificar. La presión para transferir, las promesas de ganancias sin riesgo y las negativas a entregar antecedentes son señales para detenerse y pedir aclaraciones. La ausencia de alertas no equivale a una autorización.</p>
+  <p class="note" style="margin-top:24px">Tómate tu tiempo. Si alguien te presiona para transferir, te promete ganancias sin riesgo o no te quiere entregar antecedentes, detente y pide explicaciones. Vale para cualquier inversión, también para la nuestra. Y que no aparezcan alertas no significa que exista una autorización.</p>
   <ul class="facts" style="margin-top:24px">
     <li><strong>Razón social:</strong> Pulso Inversor SpA</li>
     <li><strong>Correo:</strong> <a href="mailto:{EMAIL}">{EMAIL}</a></li>
@@ -450,88 +462,89 @@ page('verifica-a-pulso.html', 'Verifica a Pulso',
   {P("INCORPORAR enlace al perfil oficial de Google: 'Lee las opiniones de nuestros clientes en Google'.")}
   <div class="actions"><a class="btn btn-outline" href="https://www.cmfchile.cl" target="_blank" rel="noopener">Consultar registros y alertas de la CMF</a></div>
 </div></section>
-''' + cta('Si algo no está claro, conversemos', 'Pregúntanos por los antecedentes que necesitas para evaluar tu inversión.', 'Quiero resolver una duda', 'Quiero resolver una duda'))
+''' + cta('Pregúntanos lo que necesites', 'Ninguna pregunta está de más antes de invertir. Te ayudamos a conseguir los antecedentes que te falten.', 'Tengo una duda', 'Quiero resolver una duda'))
 
 # ---------------- 4.1 Mi primera inversión ----------------
 page('mi-primera-inversion.html', 'Mi primera inversión',
-     'Preguntas y conceptos para dar tu primer paso antes de explorar una alternativa de inversión.',
-     hero('Recursos / Mi primera inversión', 'Una base para dar tu primer paso',
-          'Comienza por estas preguntas y conceptos antes de explorar una alternativa.', 'Recursos') + f'''
+     'Dar el primer paso da vértigo, y está bien. Preguntas y conceptos para preparar tu primera inversión con calma.',
+     hero('Recursos / Mi primera inversión', 'Tu primera inversión, paso a paso',
+          'Dar el primer paso da vértigo, y está bien. Partamos por algunas preguntas y conceptos que te van a ayudar.', 'Recursos') + f'''
 <section class="section"><div class="container">
-  <div class="title"><span class="eyebrow">Prepárate</span><h2>Tres preguntas para prepararte</h2></div>
+  <div class="title"><span class="eyebrow">Para prepararte</span><h2>Antes de empezar, pregúntate esto</h2></div>
   <div class="grid-3">
     <article class="card"><div class="card-num">01</div><h3>¿Qué quiero lograr con esta inversión?</h3></article>
-    <article class="card"><div class="card-num">02</div><h3>¿Qué recursos puedo destinar conservando dinero para mis gastos e imprevistos?</h3></article>
-    <article class="card"><div class="card-num">03</div><h3>¿Durante cuánto tiempo puedo mantenerlos invertidos?</h3></article>
+    <article class="card"><div class="card-num">02</div><h3>¿Cuánto puedo destinar sin tocar lo que necesito para mis gastos e imprevistos?</h3></article>
+    <article class="card"><div class="card-num">03</div><h3>¿Por cuánto tiempo puedo dejar ese dinero invertido?</h3></article>
   </div>
 </div></section>
 <section class="section section-soft"><div class="container">
-  <div class="title"><span class="eyebrow">Glosario</span><h2>Cinco conceptos útiles</h2></div>
+  <div class="title"><span class="eyebrow">Palabras útiles</span><h2>Cinco conceptos que vas a escuchar</h2></div>
   <div class="table-wrap"><table>
-    <thead><tr><th>Concepto</th><th>Explicación</th></tr></thead>
+    <thead><tr><th>Concepto</th><th>Qué significa</th></tr></thead>
     <tbody>
-      <tr><td>Capital</td><td>Recursos que aportas a la inversión.</td></tr>
-      <tr><td>Rentabilidad</td><td>Resultado respecto del capital; revisa el período y los costos considerados.</td></tr>
-      <tr><td>Plazo</td><td>Horizonte previsto para la inversión.</td></tr>
-      <tr><td>Liquidez</td><td>Facilidad para convertir la inversión en dinero disponible.</td></tr>
-      <tr><td>Respaldo</td><td>Derechos y garantías de la estructura, con el alcance indicado en sus documentos.</td></tr>
+      <tr><td>Capital</td><td>Lo que aportas a la inversión.</td></tr>
+      <tr><td>Rentabilidad</td><td>Lo que gana tu capital. Fíjate siempre en el período y en los costos considerados.</td></tr>
+      <tr><td>Plazo</td><td>El tiempo previsto para la inversión.</td></tr>
+      <tr><td>Liquidez</td><td>Qué tan fácil es convertir tu inversión en dinero disponible.</td></tr>
+      <tr><td>Respaldo</td><td>Los derechos y garantías que te da la estructura, con el alcance que indican sus documentos.</td></tr>
     </tbody></table></div>
 </div></section>
 <section class="section"><div class="container split">
-  <div><span class="eyebrow">Tu primera reunión</span><h2>Lleva estas preguntas a tu primera conversación</h2>
-    <div class="actions"><a class="btn btn-dark" href="como-funciona.html">Conocer el proceso</a></div></div>
+  <div><span class="eyebrow">Tu primera conversación</span><h2>Lleva estas preguntas contigo</h2>
+    <p class="muted">Ninguna está de más. Hazlas todas, a nosotros y a cualquiera con quien pienses invertir.</p>
+    <div class="actions"><a class="btn btn-dark" href="como-funciona.html">Ver cómo trabajamos</a></div></div>
   <ul class="facts">
-    <li>¿Quién recibe los recursos y quién asume la obligación de pago?</li>
-    <li>¿Qué documentos recibiré y qué derechos establecen?</li>
-    <li>¿Qué costos debo considerar y qué ocurre si necesito recuperar mi dinero antes?</li>
+    <li>¿Quién recibe mi dinero y quién se compromete a pagarme?</li>
+    <li>¿Qué documentos voy a recibir y qué derechos me dan?</li>
+    <li>¿Qué costos tengo que considerar y qué pasa si necesito mi dinero antes?</li>
   </ul>
 </div></section>
-''' + cta('Conversemos sobre lo que quieres construir', 'Cuéntanos tus objetivos y revisemos por dónde comenzar.', 'Conversar con el equipo', 'Mi primera inversión'))
+''' + cta('Cuéntanos qué quieres construir', 'Partimos por lo básico, sin apuro y sin tecnicismos.', 'Conversemos', 'Mi primera inversión'))
 
 # ---------------- 4.2 Experiencia ----------------
 page('ya-tengo-experiencia.html', 'Ya tengo experiencia invirtiendo',
-     'Criterios para evaluar cómo una alternativa de inversión se integra a tu patrimonio.',
-     hero('Recursos / Ya tengo experiencia invirtiendo', 'Compara con una mirada más completa',
-          'Utiliza estos criterios para evaluar cómo una alternativa se integra a tu patrimonio.', 'Recursos') + f'''
+     'Criterios para evaluar cómo una alternativa con respaldo inmobiliario encaja en tu patrimonio.',
+     hero('Recursos / Ya tengo experiencia invirtiendo', 'Evalúa con la mirada que ya tienes',
+          'Ya sabes lo que es invertir. Estos criterios te ayudan a ver cómo encaja una alternativa en tu patrimonio.', 'Recursos') + f'''
 <section class="section"><div class="container">
   <div class="table-wrap"><table>
     <thead><tr><th>Criterio</th><th>Qué revisar</th></tr></thead>
     <tbody>
-      <tr><td>Base de comparación</td><td>Mismo horizonte y moneda; distinguir tasas mensuales de anuales.</td></tr>
-      <tr><td>Resultado neto</td><td>Costos e impuestos considerados, pagos durante el período y devolución del capital.</td></tr>
-      <tr><td>Liquidez</td><td>Condiciones de salida y recursos que necesitas mantener disponibles.</td></tr>
-      <tr><td>Exposición</td><td>Cuánto de tu patrimonio quedaría vinculado a una empresa, inmueble o estrategia.</td></tr>
-      <tr><td>Escenarios</td><td>Efecto de cambios en los plazos, costos, ingresos o valor de salida.</td></tr>
+      <tr><td>Base de comparación</td><td>Mismo horizonte y misma moneda. Distingue tasas mensuales de anuales.</td></tr>
+      <tr><td>Resultado neto</td><td>Costos e impuestos, pagos durante el período y devolución del capital.</td></tr>
+      <tr><td>Liquidez</td><td>Condiciones de salida y cuánto necesitas mantener disponible.</td></tr>
+      <tr><td>Exposición</td><td>Cuánto de tu patrimonio quedaría en una empresa, inmueble o estrategia.</td></tr>
+      <tr><td>Escenarios</td><td>Qué pasa si cambian los plazos, los costos, los ingresos o el valor de salida.</td></tr>
     </tbody></table></div>
 </div></section>
 <section class="section section-soft"><div class="container">
-  <div class="title"><span class="eyebrow">Para profundizar</span><h2>Accesos para profundizar</h2></div>
+  <div class="title"><span class="eyebrow">Para profundizar</span><h2>Todo lo que necesitas para evaluar</h2></div>
   <div class="grid-3">
-    <article class="card"><h3>Tabla comparativa</h3><p>Mínimos, respaldo y plazos de cada alternativa.</p><a class="link-arrow" href="inversiones.html#comparar">Ver tabla</a></article>
-    <article class="card"><h3>Garantías y documentos</h3><p>Qué aporta cada documento y qué puedes comprobar.</p><a class="link-arrow" href="garantias-y-documentos.html">Ver garantías</a></article>
-    <article class="card"><h3>Operación abierta</h3><p>Cómo se documenta una operación real.</p><a class="link-arrow" href="verifica-a-pulso.html#operacion-abierta">Ver operación</a></article>
+    <article class="card"><h3>Tabla comparativa</h3><p>Mínimos, respaldo y plazos de cada alternativa.</p><a class="link-arrow" href="inversiones.html#comparar">Ver la tabla</a></article>
+    <article class="card"><h3>Garantías y documentos</h3><p>Qué aporta cada documento y qué puedes revisar.</p><a class="link-arrow" href="garantias-y-documentos.html">Ver garantías</a></article>
+    <article class="card"><h3>Operación abierta</h3><p>Cómo se documenta una operación real.</p><a class="link-arrow" href="verifica-a-pulso.html#operacion-abierta">Ver la operación</a></article>
   </div>
 </div></section>
-''' + cta('Evalúa con los antecedentes completos', 'Te enviamos la información necesaria para analizar una alternativa.', 'Solicitar antecedentes para evaluar', 'Solicitud de antecedentes para evaluar'))
+''' + cta('Evalúa con todos los antecedentes', 'Te enviamos la información que necesitas para analizar una alternativa a fondo.', 'Pedir antecedentes', 'Solicitud de antecedentes para evaluar'))
 
 # ---------------- 4.3 FAQ ----------------
 def qa(q, a):
     return f'<details><summary>{q}</summary><div class="details-body"><p>{a}</p></div></details>'
 page('preguntas-frecuentes.html', 'Preguntas frecuentes',
-     'Respuestas sobre cómo invertir con Pulso Inversor: montos, documentos, pagos, simuladores, impuestos y CMF.',
-     hero('Recursos / Preguntas frecuentes', 'Respuestas para avanzar',
-          'Lo que más nos preguntan antes de invertir.', 'Preguntas frecuentes') + f'''
+     'Tus preguntas sobre invertir con Pulso Inversor: montos, documentos, pagos, simuladores, impuestos y CMF.',
+     hero('Recursos / Preguntas frecuentes', 'Tus preguntas, respondidas',
+          'Si la tuya no está aquí, pregúntanos. Ninguna duda es pequeña cuando se trata de tus ahorros.', 'Preguntas frecuentes') + f'''
 <section class="section"><div class="container" style="max-width:860px">
-  {qa('¿Necesito haber invertido antes?', 'Puedes comenzar por nuestra <a href="mi-primera-inversion.html">guía de primera inversión</a> y conversar con el equipo sobre tus objetivos.')}
-  {qa('¿Desde cuánto puedo invertir?', 'Consulta los montos y requisitos en la <a href="inversiones.html#comparar">tabla comparativa de alternativas</a>.')}
-  {qa('¿Puedo revisar los documentos con mi abogado?', 'Sí. Una revisión independiente puede ayudarte a comprender los derechos y condiciones de la operación antes de firmar.')}
-  {qa('¿Cuándo recibiré pagos y cómo podré hacer seguimiento?', 'El material comercial contempla reportes trimestrales sobre compra, venta y resultados de los activos. Los pagos y su periodicidad se establecen en el contrato de la modalidad elegida.')}
+  {qa('¿Necesito haber invertido antes?', 'No. Puedes partir por nuestra <a href="mi-primera-inversion.html">guía de primera inversión</a> y después conversar con el equipo sobre lo que buscas.')}
+  {qa('¿Desde cuánto puedo invertir?', 'Depende de la alternativa. Revisa los montos y requisitos en la <a href="inversiones.html#comparar">tabla comparativa</a>.')}
+  {qa('¿Puedo revisar los documentos con mi abogado?', 'Sí, y te lo recomendamos. Una revisión independiente te ayuda a entender tus derechos y las condiciones antes de firmar.')}
+  {qa('¿Cuándo recibiré pagos y cómo sabré cómo va mi inversión?', 'Nuestro material comercial contempla reportes trimestrales sobre la compra, la venta y los resultados de los activos. Los pagos y su frecuencia quedan establecidos en el contrato de la modalidad que elijas.')}
   {P("COMPLETAR canal de entrega de reportes y calendario por alternativa.")}
   {P("AGREGAR cuando esté aprobada: '¿Puedo recuperar mi inversión antes del plazo?' (respuesta consistente con condiciones de salida, con enlace al detalle de cada alternativa).")}
   {P("AGREGAR cuando esté aprobada: '¿Qué costos debo considerar?' (costos del inversionista, momento de cobro, conceptos incluidos/excluidos por alternativa).")}
-  {qa('¿El resultado del simulador es lo que recibiré?', 'Es una estimación basada en los datos y supuestos utilizados. Consulta “Cómo leer tu simulación” en <a href="simuladores.html">Simuladores</a> para interpretar el resultado y sus condiciones.')}
-  {qa('¿Cómo se tratan los impuestos?', 'El tratamiento depende de la estructura y de tu situación. Puedes revisar los antecedentes con tu profesional tributario.')}
-  {qa('¿Dónde reviso la situación de Pulso ante la CMF?', 'Encontrarás la explicación y los accesos de consulta en <a href="verifica-a-pulso.html">Verifica a Pulso</a>.')}
+  {qa('¿Lo que muestra el simulador es lo que voy a recibir?', 'Es una estimación con los datos y supuestos que usaste. En <a href="simuladores.html">Simuladores</a>, la sección “Cómo leer tu simulación” te ayuda a interpretar el resultado.')}
+  {qa('¿Cómo se pagan los impuestos?', 'Depende de la estructura y de tu situación personal. Te recomendamos revisarlo con tu asesor tributario.')}
+  {qa('¿Dónde reviso la situación de Pulso ante la CMF?', 'En <a href="verifica-a-pulso.html">Verifica a Pulso</a> te explicamos nuestra situación y cómo consultarla por tu cuenta.')}
 </div></section>
-''' + cta('¿Tienes otra pregunta?', 'Escríbenos y te respondemos.', 'Consultar al equipo', 'Consulta al equipo'))
+''' + cta('¿Tienes otra pregunta?', 'Escríbenos. Te responde una persona del equipo.', 'Hacer mi pregunta', 'Consulta al equipo'))
 print('ok')
