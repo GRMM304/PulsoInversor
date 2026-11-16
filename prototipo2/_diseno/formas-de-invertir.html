@@ -1,0 +1,51 @@
+<section class="section" id="formas-de-invertir"><div class="container">
+  <div class="title center"><span class="eyebrow">Formas de invertir</span><h2>Tres caminos, según lo que quieres construir</h2></div>
+  <div class="rutas-acc"><a class="ruta is-open" href="soluciones.html#proyecta-un-hogar" data-ruta>
+  <div class="ruta-bg ruta-bg-1" aria-hidden="true"></div>
+  <div class="ruta-top"><span class="ruta-num">01</span><span class="ruta-arrow"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></span></div>
+  <div class="ruta-bottom">
+    <h3>Proyecta un Hogar</h3>
+    <div class="ruta-detail"><div class="ruta-inner">
+      <p>Haz crecer tu capital y ayuda a que una familia que enfrenta un remate tenga una nueva oportunidad.</p>
+      <div class="ruta-rows">
+        <div class="ruta-row"><span class="ruta-label">Qué activas</span><strong>Capital disponible</strong><span>Desde $5.000.000</span></div>
+        <div class="ruta-row"><span class="ruta-label">Qué logras</span><strong>Renta periódica</strong><span>Flujos mensuales o trimestrales con factibilidad de interés</span></div>
+      </div>
+    </div></div>
+  </div>
+</a><a class="ruta" href="soluciones.html#hipoteca-inteligente" data-ruta>
+  <div class="ruta-bg ruta-bg-2" aria-hidden="true"></div>
+  <div class="ruta-top"><span class="ruta-num">02</span><span class="ruta-arrow"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></span></div>
+  <div class="ruta-bottom">
+    <h3>Hipoteca Inteligente</h3>
+    <div class="ruta-detail"><div class="ruta-inner">
+      <p>Usa tu capacidad de crédito para empezar a construir tu patrimonio inmobiliario.</p>
+      <div class="ruta-rows">
+        <div class="ruta-row"><span class="ruta-label">Qué activas</span><strong>Capacidad financiera</strong><span>Desde 2.000 UF de crédito hipotecario</span></div>
+        <div class="ruta-row"><span class="ruta-label">Qué logras</span><strong>Capital y patrimonio</strong><span>Tu capacidad bancaria genera retorno y activos</span></div>
+      </div>
+    </div></div>
+  </div>
+</a><a class="ruta" href="soluciones.html#hipoteca-circular" data-ruta>
+  <div class="ruta-bg ruta-bg-3" aria-hidden="true"></div>
+  <div class="ruta-top"><span class="ruta-num">03</span><span class="ruta-arrow"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></span></div>
+  <div class="ruta-bottom">
+    <h3>Inversión Inmobiliaria Circular</h3>
+    <div class="ruta-detail"><div class="ruta-inner">
+      <p>Dale una nueva vida al capital de tu propiedad, con menos preocupaciones de arriendo.</p>
+      <div class="ruta-rows">
+        <div class="ruta-row"><span class="ruta-label">Qué activas</span><strong>Tu propiedad</strong><span>El capital que hoy está detenido en tu inmueble</span></div>
+        <div class="ruta-row"><span class="ruta-label">Qué logras</span><strong>Un mejor flujo</strong><span>Un flujo de dinero mejor que el que hoy te genera tu propiedad</span></div>
+      </div>
+    </div></div>
+  </div>
+</a></div>
+  <p class="center-note">¿Quieres ordenar todo tu patrimonio? <a href="soluciones.html#configuracion-patrimonial">Conoce Configuración Patrimonial</a></p>
+</div></section>
+<script>
+/* Tres caminos (Prototipo 1): se abre la tarjeta al pasar el mouse; en pantallas táctiles el primer toque abre y el segundo navega. */
+(function(){var rs=document.querySelectorAll('[data-ruta]');var sinHover=window.matchMedia('(hover: none)');
+function abrir(c){rs.forEach(function(o){o.classList.remove('is-open')});c.classList.add('is-open')}
+rs.forEach(function(c){c.addEventListener('click',function(e){if(!sinHover.matches||c.classList.contains('is-open'))return;if(window.matchMedia('(max-width:900px)').matches)return;e.preventDefault();abrir(c)});
+c.addEventListener('mouseenter',function(){abrir(c)});c.addEventListener('focus',function(){abrir(c)})});})();
+</script>

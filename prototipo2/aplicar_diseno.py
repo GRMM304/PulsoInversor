@@ -90,6 +90,20 @@ def pagina(nombre, s):
         assert i > 0 and a > 0, 'no se encontró la sección de las tres preguntas'
         s = s[:a] + open(os.path.join(DIS, 'por-que-pulso.html'), encoding='utf-8').read().strip() + s[b:]
 
+    # Inicio: «Formas de invertir · Tres caminos» del Prototipo 1 reemplaza a «Según cuánto quieres mover» del V5
+    if nombre == 'index.html':
+        i = s.find('Según cuánto quieres mover')
+        a, b = s.rfind('<section', 0, i), s.find('</section>', i) + len('</section>')
+        assert i > 0 and a > 0, 'no se encontró la sección de soluciones'
+        s = s[:a] + open(os.path.join(DIS, 'formas-de-invertir.html'), encoding='utf-8').read().strip() + s[b:]
+
+    # Inicio: «Personas reales, con nombre» del Prototipo 1 reemplaza a la prueba social del V5
+    if nombre == 'index.html':
+        i = s.find('Personas reales, con nombre')
+        a, b = s.rfind('<section', 0, i), s.find('</section>', i) + len('</section>')
+        assert i > 0 and a > 0, 'no se encontró la sección de testimonios'
+        s = s[:a] + open(os.path.join(DIS, 'personas-reales.html'), encoding='utf-8').read().strip() + s[b:]
+
     # Héroe del inicio con la foto de Santiago bajo el filtro verde
     if nombre == 'index.html':
         s = s.replace('<section class="hero centro">',
@@ -120,7 +134,7 @@ def main():
     open(os.path.join(OUT, 'manifest.webmanifest'), 'w', encoding='utf-8').write(m)
 
     shutil.copy(os.path.join(DIS, 'prototipo1.css'), os.path.join(OUT, 'assets', 'css', 'prototipo1.css'))
-    for f in ('logo-pulso-gmm.png', 'hero-santiago.jpg', 'hero-santiago-movil.jpg', 'retrato-pamela-herrera.jpg', 'retrato-gloria-cepeda.jpg'):
+    for f in ('logo-pulso-gmm.png', 'hero-santiago.jpg', 'hero-santiago-movil.jpg', 'retrato-pamela-herrera.jpg', 'retrato-gloria-cepeda.jpg', 'hero-poster.jpg', 'testimonio-gonzalo.jpg'):
         shutil.copy(os.path.join(DIS, f), os.path.join(OUT, 'assets', 'img', f))
 
     # Prototipo: que Google no lo indexe

@@ -196,3 +196,54 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--p1-green
 #por-que-pulso .disclaimer{text-align:center;margin-top:28px}
 @media (max-width:1020px){.why{grid-template-columns:1fr;gap:32px}.why-compare{height:auto}.why-col p{flex:none}}
 @media (max-width:620px){.section{padding:60px 0}.actions .btn{width:100%}.why-compare{grid-template-columns:1fr}.why-col{padding:18px 16px 6px}}
+
+/* ---- Inicio: «Formas de invertir · Tres caminos» (igual al Prototipo 1; clases camino→ruta para no chocar con el V5) ---- */
+.center-note{text-align:center;margin:26px 0 0;color:var(--gray-700)}
+.rutas-acc{display:flex;gap:14px;height:460px}
+.ruta{position:relative;flex:1 1 0;min-width:0;border-radius:var(--radius-xl);overflow:hidden;color:#fff;text-decoration:none;display:flex;flex-direction:column;justify-content:space-between;padding:26px;transition:flex-grow .55s cubic-bezier(.2,.8,.2,1),box-shadow .3s;box-shadow:var(--shadow-soft)}
+.ruta.is-open{flex-grow:2.3;box-shadow:0 24px 70px rgba(0,0,0,.16)}
+.ruta-bg{position:absolute;inset:0;z-index:0;transition:transform .8s ease}
+.ruta:hover .ruta-bg{transform:scale(1.04)}
+.ruta-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(14,44,40,.15) 0%,rgba(14,44,40,.55) 45%,rgba(10,22,20,.92) 100%)}
+.ruta-bg-1{background:radial-gradient(circle at 80% 15%,rgba(255,195,63,.45),transparent 40%),linear-gradient(160deg,#2c6b55,#123D35)}
+.ruta-bg-2{background:url(../img/hero-poster.jpg) center/cover}
+.ruta-bg-3{background:radial-gradient(circle at 20% 20%,rgba(199,217,93,.45),transparent 42%),linear-gradient(200deg,#1E5746,#0E2C28)}
+.ruta-top,.ruta-bottom{position:relative;z-index:1}
+.ruta-top{display:flex;justify-content:space-between;align-items:center}
+.ruta-num{font-size:15px;font-weight:700;opacity:.85}
+.ruta-arrow{width:42px;height:42px;border-radius:50%;border:1.5px solid rgba(255,255,255,.75);display:grid;place-items:center;transition:background .3s,color .3s}
+.ruta.is-open .ruta-arrow{background:#fff;color:var(--green-900);border-color:#fff}
+.ruta h3{color:#fff;font-size:clamp(22px,2.2vw,28px);line-height:1.12;margin:0}
+.ruta-detail{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .5s ease,opacity .35s ease}
+.ruta-inner{overflow:hidden;min-height:0}
+.ruta.is-open .ruta-detail{grid-template-rows:1fr;opacity:1;transition-delay:.12s}
+.ruta-inner>p{margin:12px 0 0;color:rgba(255,255,255,.85);font-size:15px;max-width:480px}
+.ruta-rows{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:6px}
+.ruta .ruta-row{display:grid;gap:4px;border-top:1px solid rgba(255,255,255,.22);padding:14px 0 0}
+.ruta .ruta-label{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--lime)}
+.ruta .ruta-row strong{color:#fff;font-size:18px}
+.ruta .ruta-row span:last-child{color:rgba(255,255,255,.8);font-size:14px}
+@media (max-width:900px){.rutas-acc{flex-direction:column;height:auto}.ruta{min-height:auto;flex:none;gap:60px}.ruta .ruta-detail{grid-template-rows:1fr;opacity:1}.ruta-rows{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){.ruta,.ruta-bg,.ruta-detail{transition:none}}
+@media (min-width:901px) and (max-width:1100px){.rutas-acc{height:500px}.ruta{padding:22px}.ruta-rows{grid-template-columns:1fr}}
+
+/* ---- Inicio: «Personas reales, con nombre» (igual al Prototipo 1) ---- */
+:root{--gold:#FFC33F;--shadow:0 24px 70px rgba(0,0,0,.16)}
+.reviews{display:grid;grid-template-columns:minmax(260px,340px) 1fr;gap:24px;align-items:stretch}
+.review-list{display:grid;gap:20px;align-content:center}
+.review-quote{position:absolute;left:22px;top:12px;font-size:46px;line-height:1;font-weight:900;color:var(--lime)}
+.video-testimonio{margin:0}
+.video-testimonio video{width:100%;aspect-ratio:9/16;object-fit:cover;border-radius:var(--radius-xl);background:var(--green-900);box-shadow:var(--shadow)}
+.video-testimonio figcaption{margin-top:14px;font-size:14px;color:var(--gray-700)}
+.video-testimonio figcaption strong{color:var(--green-900)}
+.testimonio{position:relative;margin:0;background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:26px 28px 24px 70px;box-shadow:var(--shadow-soft);display:flex;flex-direction:column;justify-content:flex-start}
+.testimonio .review-quote{left:24px;top:16px;font-size:56px}
+.testimonio blockquote{margin:0;color:var(--gray-900);font-size:16px;line-height:1.6}
+.testimonio blockquote p{margin:0 0 10px}
+.testimonio figcaption{display:flex;align-items:center;gap:12px;margin-top:14px}
+.testimonio figcaption strong{display:block;color:var(--green-900)}
+.testimonio figcaption small{display:block;color:var(--gray-500);font-size:13px}
+.testimonio-avatar{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:14px;color:var(--green-900);background:linear-gradient(135deg,var(--lime),var(--gold))}
+#personas-reales .disclaimer{text-align:center}
+@media (max-width:900px){.reviews{grid-template-columns:1fr}.video-testimonio{max-width:340px;margin:0 auto}}
+@media (max-width:620px){.testimonio{padding:56px 20px 20px}.testimonio .review-quote{left:20px;top:10px}}
