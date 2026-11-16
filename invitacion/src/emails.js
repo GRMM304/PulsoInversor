@@ -71,7 +71,7 @@ export function correoConfirmacion(a, urls) {
       preheader: `${EVENTO.fechaTexto}, ${EVENTO.horaTexto} · ${EVENTO.direccion}`,
       eyebrow: 'Asistencia confirmada',
       titulo: `¡Gracias, ${esc(a.nombre)}! Tu lugar está reservado`,
-      cuerpo: `<p style="margin:0 0 12px">Confirmamos tu asistencia al <strong>${esc(EVENTO.titulo)}</strong>. ${esc(EVENTO.descripcion)}</p>${acomp}<p style="margin:0">Te enviaremos un recordatorio dos días antes, la noche anterior y la misma mañana del desayuno.</p>`,
+      cuerpo: `<p style="margin:0 0 12px">Confirmamos tu asistencia al <strong>${esc(EVENTO.titulo)}</strong>. ${esc(EVENTO.descripcion)}</p>${acomp}`,
       botones: botonesCalendario(urls.ics),
       urlCancelar: urls.cancelar,
     }),
