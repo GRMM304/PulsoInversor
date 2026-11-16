@@ -168,14 +168,6 @@ def review_slot(n):
       {P(f"RESEÑA {n}: texto original, autor, fecha y enlace (reseña auténtica de Google).")}
     </article>'''
 
-COMPARA = [
-    ('Qué respalda tu dinero', 'La solidez de la institución o un fondo con muchos activos', 'Un inmueble identificado, con su tasación'),
-    ('Dónde está tu dinero', 'Mezclado con el de otros en un fondo o en un pozo colectivo', 'En una operación individual, con tu propio contrato'),
-    ('Lo que puedes revisar', 'Un folleto o un reglamento general', 'La tasación, las garantías y tu contrato, antes de firmar'),
-    ('Quién te acompaña', 'Una plataforma o un ejecutivo que cambia', 'Una persona del equipo, de principio a fin'),
-]
-compara = ''.join(f'''<div class="vs-row"><div class="vs-label">{l}</div><div class="vs-mkt">{m}</div><div class="vs-pulso">{p}</div></div>''' for l, m, p in COMPARA)
-
 page('index.html', 'Inicio',
      'Explora alternativas de inversión vinculadas al mercado inmobiliario y encuentra un punto de partida para tus objetivos. Agenda una conversación con un asesor.', f'''
 <section class="hero">
@@ -215,33 +207,44 @@ page('index.html', 'Inicio',
   </div>
 </div></section>
 
-<section class="section section-dark"><div class="container">
-  <div class="title center"><span class="eyebrow dark">Si prefieres conocernos primero</span><h2>Conoce qué hay detrás de tu inversión</h2>
-    <p class="lead">Descubre cómo te acompañamos y qué información tendrás para evaluar tu alternativa. Antes de invertir, deberías poder responder estas tres preguntas con documentos en la mano. Así trabaja el Modelo IGR.</p></div>
-  <div class="grid-3 igr-cards">
-    <article class="card">{icon('casa')}<h3>¿Qué respalda mi dinero?</h3><p>Una propiedad concreta, con su tasación y su precio de compra.</p></article>
-    <article class="card">{icon('doc-check')}<h3>¿Qué queda a mi favor?</h3><p>Un documento firmado ante notario que puedes revisar con tu abogado.</p></article>
-    <article class="card">{icon('calendario')}<h3>¿Cómo recupero mi dinero?</h3><p>Un calendario de pagos por escrito, antes de firmar.</p></article>
+<section class="section section-soft" id="por-que-pulso"><div class="container">
+  <div class="title center"><span class="eyebrow">¿Por qué invertir con Pulso?</span><h2>Conoce qué hay detrás de tu inversión</h2></div>
+  <div class="why">
+    <div class="why-compare">
+      <div class="why-col why-other">
+        <span class="why-kicker">Otras alternativas</span>
+        <h3>Lo que ya conoces</h3>
+        <p>Los depósitos a plazo suelen ofrecer retornos más conservadores.</p>
+        <p>Los fondos están expuestos a variaciones de mercado.</p>
+        <p>Comprar para arrendar exige una inversión mayor y gestión continua.</p>
+      </div>
+      <div class="why-col why-pulso">
+        <span class="why-kicker">Pulso Inversor</span>
+        <h3>Una alternativa diferente</h3>
+        <p>Rentabilidades pactadas en UF, con potencial de superar alternativas conservadoras.</p>
+        <p>Retornos definidos contractualmente, sin depender directamente de la cotización diaria de un fondo.</p>
+        <p>Participación en operaciones inmobiliarias sin comprar ni administrar una propiedad.</p>
+      </div>
+    </div>
+    <div class="why-igr">
+      <p class="lead">Descubre cómo te acompañamos y qué información tendrás para evaluar tu alternativa. Antes de invertir, deberías poder responder estas tres preguntas con documentos en la mano. Así trabaja el Modelo IGR.</p>
+      <div class="igr-list">
+        <article class="igr-item">{icon('casa')}<div><h3>¿Qué respalda mi dinero?</h3><p>Una propiedad concreta, con su tasación y su precio de compra.</p></div></article>
+        <article class="igr-item">{icon('doc-check')}<div><h3>¿Qué queda a mi favor?</h3><p>Un documento firmado ante notario que puedes revisar con tu abogado.</p></div></article>
+        <article class="igr-item">{icon('calendario')}<div><h3>¿Cómo recupero mi dinero?</h3><p>Un calendario de pagos por escrito, antes de firmar.</p></div></article>
+      </div>
+      <div class="actions"><a class="btn btn-dark" href="como-funciona.html">Ver cómo funciona, paso a paso</a></div>
+    </div>
   </div>
-  <div class="actions" style="justify-content:center"><a class="btn btn-secondary" href="como-funciona.html">Ver cómo funciona, paso a paso</a></div>
+  <p class="disclaimer">Comparación general y referencial. Toda inversión, incluidas las nuestras, tiene riesgos.</p>
 </div></section>
 
-<section class="section section-soft"><div class="container">
+<section class="section"><div class="container">
   <div class="title center"><span class="eyebrow">Formas de invertir</span><h2>Tres caminos, según lo que quieres construir</h2>
     <p class="lead">Toca cada uno para ver qué activas y qué logras.</p></div>
   <div class="grid-3 caminos">{cards}</div>
   <p class="center-note">¿Quieres ordenar todo tu patrimonio? <a href="inversiones.html#configuracion-patrimonial">Conoce Configuración Patrimonial</a></p>
   <div class="actions" style="justify-content:center"><a class="btn btn-outline" href="inversiones.html#comparar">Compararlas lado a lado</a></div>
-</div></section>
-
-<section class="section"><div class="container">
-  <div class="title center"><span class="eyebrow">Una comparación simple</span><h2>¿Qué cambia cuando inviertes con Pulso?</h2>
-    <p class="lead">Lo habitual en el mercado, frente a lo que encuentras con nosotros.</p></div>
-  <div class="vs">
-    <div class="vs-row vs-head"><div></div><div class="vs-mkt">Lo habitual</div><div class="vs-pulso">Con Pulso</div></div>
-    {compara}
-  </div>
-  <p class="disclaimer" style="text-align:center">Comparación general y referencial. Cada alternativa, incluidas las nuestras, tiene sus propias condiciones y riesgos.</p>
 </div></section>
 
 <section class="section section-soft"><div class="container">
