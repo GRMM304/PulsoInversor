@@ -1,0 +1,13 @@
+// Cloudflare Workers: sitio provisorio de Pulso Inversor (solo archivos estáticos).
+// Proyecto aparte del sitio nuevo (raíz del repo): en Cloudflare usar
+// "Root directory" = provisorio y la rama sitio-provisorio.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "pulsoinversor-provisorio",
+  "compatibility_date": "2025-09-01",
+  "assets": {
+    "directory": "./",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  }
+}
