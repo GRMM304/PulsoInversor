@@ -1,0 +1,11 @@
+// Cloudflare Workers: sirve el sitio estático desde la raíz del repositorio.
+// Los archivos que no se publican están en .assetsignore.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "pulsoinversor",
+  "compatibility_date": "2025-09-01",
+  "assets": {
+    "directory": "./",
+    "html_handling": "auto-trailing-slash"
+  }
+}
