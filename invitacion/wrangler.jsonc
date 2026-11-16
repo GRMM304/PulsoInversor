@@ -1,0 +1,36 @@
+// Invitación al Desayuno de Inversionistas Modelo IGR (Pulso Inversor).
+// Worker + D1 + Cron, publicado en invitacion.pulsoinversor.cl.
+// Secretos (no van en este archivo): BREVO_API_KEY y CLAVE_PANEL → `npx wrangler secret put NOMBRE`.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "pulso-invitacion-desayuno",
+  "main": "src/worker.js",
+  "compatibility_date": "2025-09-01",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "html_handling": "auto-trailing-slash"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "pulso-invitacion-desayuno",
+      "database_id": "0d378edd-b395-4d05-843d-1dada11ba224"
+    }
+  ],
+  // Revisa cada 5 minutos si corresponde enviar confirmaciones pendientes, recordatorios o el seguimiento.
+  "triggers": { "crons": ["*/5 * * * *"] },
+  "routes": [
+    { "pattern": "invitacion.pulsoinversor.cl", "custom_domain": true }
+  ],
+  "vars": {
+    "URL_BASE": "https://invitacion.pulsoinversor.cl",
+    "REMITENTE_NOMBRE": "Pulso Inversor",
+    "REMITENTE_EMAIL": "contacto@pulsoinversor.cl",
+    "RESPONDER_A": "contacto@pulsoinversor.cl",
+    "AVISO_EQUIPO_EMAIL": "contacto@pulsoinversor.cl",
+    // 0 = sin límite. Cuenta personas (cada acompañante suma 1).
+    "CUPOS": "0"
+  },
+  "observability": { "enabled": true }
+}

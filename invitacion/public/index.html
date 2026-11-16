@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Invitación · Desayuno de Inversionistas Modelo IGR | Pulso Inversor</title>
+  <meta name="description" content="Viernes 20 de noviembre, 09:30 a 11:00 hrs. Oficina Grupo Matchmaking, Los Militares 5890, oficina 304, Las Condes. Cupos limitados." />
+  <meta name="robots" content="noindex" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Invitación: Desayuno de Inversionistas Modelo IGR" />
+  <meta property="og:description" content="Viernes 20 de noviembre, 09:30 hrs. · Las Condes. Confirma tu asistencia, cupos limitados." />
+  <meta property="og:image" content="https://invitacion.pulsoinversor.cl/assets/invitacion.jpg" />
+  <meta property="og:url" content="https://invitacion.pulsoinversor.cl/" />
+  <meta name="theme-color" content="#0E2C28" />
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root{--verde:#0E2C28;--verde2:#1E5746;--lima:#C7D95D;--oro:#ffc33f;--texto:#1F2523;--gris:#4E5A56;--fondo:#F3F5F2;--borde:#dfe5dc}
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;font-family:Inter,Helvetica,Arial,sans-serif;color:var(--texto);background:var(--verde);overflow-x:hidden}
+    .fondo{position:fixed;inset:-40px;background:url('/assets/invitacion.jpg') center/cover;filter:blur(28px) saturate(1.1);opacity:.45;z-index:0}
+    .fondo:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(14,44,40,.55),rgba(14,44,40,.85))}
+    main{position:relative;z-index:1;width:min(560px,100%);margin:0 auto;padding:24px 16px 40px}
+    .flyer{position:relative;border-radius:22px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.35);background:#fff}
+    .flyer img{display:block;width:100%;height:auto}
+    /* Botón real sobre el botón dibujado en la invitación */
+    .hit{position:absolute;left:25.8%;top:79.2%;width:48.4%;height:6.8%;border:0;border-radius:999px;background:transparent;cursor:pointer;animation:latido 2.4s ease-in-out infinite}
+    .hit:hover,.hit:focus-visible{outline:none;box-shadow:0 0 0 4px rgba(14,44,40,.35),0 12px 30px rgba(199,217,93,.55);background:rgba(255,255,255,.08)}
+    @keyframes latido{0%,100%{box-shadow:0 0 0 0 rgba(199,217,93,.55)}50%{box-shadow:0 0 0 12px rgba(199,217,93,0)}}
+    @media(prefers-reduced-motion:reduce){.hit{animation:none}}
+    .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+    .acciones{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:50px;padding:12px 18px;border-radius:999px;font:inherit;font-weight:800;font-size:15px;text-decoration:none;cursor:pointer;border:1px solid transparent;text-align:center}
+    .btn-lima{background:var(--lima);color:var(--verde)}
+    .btn-borde{background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.28)}
+    .btn-blanco{background:#fff;color:var(--verde);border-color:var(--borde)}
+    .acciones .btn-lima{grid-column:1/-1;font-size:17px;min-height:56px}
+    .nota{color:rgba(255,255,255,.7);font-size:13px;text-align:center;margin:16px 0 0}
+    .nota a{color:var(--lima)}
+    /* Formulario */
+    dialog{border:0;padding:0;border-radius:24px;width:min(520px,calc(100% - 24px));max-height:calc(100dvh - 24px);box-shadow:0 30px 90px rgba(0,0,0,.4)}
+    dialog::backdrop{background:rgba(9,22,20,.72);backdrop-filter:blur(4px)}
+    .caja{padding:26px 24px 22px;position:relative}
+    .cerrar{position:absolute;top:14px;right:14px;width:40px;height:40px;border-radius:12px;border:1px solid var(--borde);background:#fff;font-size:18px;cursor:pointer;color:var(--verde)}
+    .eyebrow{display:inline-block;font-size:12px;letter-spacing:.28em;font-weight:800;color:var(--verde2);text-transform:uppercase;margin-bottom:8px}
+    h2{margin:0 0 6px;font-size:26px;line-height:1.1;color:var(--verde);letter-spacing:-.02em;padding-right:44px}
+    .det{margin:0 0 18px;color:var(--gris);font-size:14px}
+    form{display:grid;gap:12px}
+    .dos{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    label.campo{display:block;font-size:13px;font-weight:800;color:var(--verde);margin-bottom:5px}
+    input[type=text],input[type=email],input[type=tel]{width:100%;min-height:48px;border:1px solid var(--borde);border-radius:14px;padding:12px 14px;font:inherit;font-size:16px;background:#fff;color:var(--texto)}
+    input:focus{outline:none;border-color:var(--verde2);box-shadow:0 0 0 3px rgba(199,217,93,.4)}
+    .tel{display:flex;gap:8px}.tel span{display:inline-flex;align-items:center;padding:0 14px;border-radius:14px;border:1px solid var(--borde);background:var(--fondo);font-weight:700;color:var(--gris)}
+    .opciones{display:flex;gap:8px;flex-wrap:wrap}
+    .opciones label{flex:1;min-width:140px;display:flex;align-items:center;gap:8px;border:1px solid var(--borde);border-radius:14px;padding:12px;cursor:pointer;font-size:15px}
+    .opciones input{accent-color:var(--verde2);width:18px;height:18px}
+    .opciones label:has(input:checked){border-color:var(--verde2);background:rgba(199,217,93,.16)}
+    .check{display:grid;grid-template-columns:20px 1fr;gap:10px;font-size:13px;color:var(--gris);cursor:pointer;line-height:1.45}
+    .check input{width:18px;height:18px;margin:1px 0 0;accent-color:var(--verde2)}
+    .check a{color:var(--verde2)}
+    .trampa{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+    .error{margin:0;color:#b3261e;font-weight:700;font-size:14px}
+    .enviar{width:100%;min-height:54px;font-size:16px}
+    .enviar[disabled]{opacity:.7;cursor:wait}
+    .ok{text-align:center;padding:10px 4px 4px}
+    .ok .icono{width:64px;height:64px;border-radius:50%;margin:0 auto 14px;display:grid;place-items:center;background:var(--lima);color:var(--verde);font-size:32px;font-weight:900}
+    .ok p{color:var(--gris);line-height:1.55}
+    .ok .btns{display:grid;gap:8px;margin-top:16px}
+    @media(max-width:420px){.dos{grid-template-columns:1fr}.acciones{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="fondo" aria-hidden="true"></div>
+  <main>
+    <div class="flyer">
+      <img src="/assets/invitacion.jpg" width="1086" height="1448" alt="Invitación de Pulso Inversor, una empresa de Grupo Matchmaking: Desayuno de Inversionistas Modelo IGR. Viernes 20 de noviembre, de 09:30 a 11:00 hrs., en la Oficina Grupo Matchmaking, Los Militares 5890, oficina 304, Las Condes. Un espacio exclusivo para compartir el estado actual de Pulso Inversor, sus resultados y las nuevas oportunidades que vienen para nuestros inversionistas. Cupos limitados.">
+      <button class="hit" type="button" data-abrir><span class="sr">Confirmar asistencia</span></button>
+    </div>
+
+    <div class="acciones">
+      <button class="btn btn-lima" type="button" data-abrir>Confirmar asistencia ›</button>
+      <a class="btn btn-borde" id="gcal" target="_blank" rel="noopener">Agregar al calendario</a>
+      <a class="btn btn-borde" href="https://www.google.com/maps/search/?api=1&query=Los%20Militares%205890%2C%20Las%20Condes%2C%20Santiago%2C%20Chile" target="_blank" rel="noopener">Cómo llegar</a>
+    </div>
+    <p class="nota">¿Dudas? Escríbenos por <a href="https://wa.me/56983554676?text=Hola%2C%20tengo%20una%20consulta%20sobre%20el%20Desayuno%20de%20Inversionistas%20del%2020%20de%20noviembre" target="_blank" rel="noopener">WhatsApp</a>.</p>
+  </main>
+
+  <dialog id="dlg" aria-labelledby="dlg-titulo">
+    <div class="caja">
+      <button class="cerrar" type="button" aria-label="Cerrar" data-cerrar>✕</button>
+
+      <div id="paso-form">
+        <span class="eyebrow">Invitación</span>
+        <h2 id="dlg-titulo">Confirma tu asistencia</h2>
+        <p class="det">Viernes 20 de noviembre · 09:30 a 11:00 hrs. · Los Militares 5890, of. 304, Las Condes</p>
+        <form id="form" novalidate>
+          <div class="dos">
+            <div><label class="campo" for="nombre">Nombre</label><input id="nombre" name="nombre" type="text" autocomplete="given-name" required></div>
+            <div><label class="campo" for="apellidos">Apellidos</label><input id="apellidos" name="apellidos" type="text" autocomplete="family-name" required></div>
+          </div>
+          <div><label class="campo" for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" inputmode="email" required></div>
+          <div><label class="campo" for="telefono">WhatsApp</label><div class="tel"><span>+56</span><input id="telefono" name="telefono" type="tel" autocomplete="tel-national" inputmode="tel" placeholder="9 1234 5678" required></div></div>
+          <div>
+            <span class="campo" style="display:block;font-size:13px;font-weight:800;color:var(--verde);margin-bottom:5px">¿Vienes con alguien?</span>
+            <div class="opciones">
+              <label><input type="radio" name="con" value="0" checked> Voy solo/a</label>
+              <label><input type="radio" name="con" value="1"> Con un acompañante</label>
+            </div>
+          </div>
+          <div id="campo-acomp" hidden><label class="campo" for="acompanante">Nombre de tu acompañante</label><input id="acompanante" name="acompanante" type="text"></div>
+          <div class="trampa" aria-hidden="true"><label>Sitio web <input type="text" name="sitio_web" tabindex="-1" autocomplete="off"></label></div>
+          <label class="check"><input type="checkbox" name="acepta_privacidad"><span>He leído y acepto la <a href="https://pulsoinversor.cl/privacidad" target="_blank" rel="noopener">Política de privacidad</a>. Pulso Inversor usará mis datos para gestionar mi asistencia y enviarme los recordatorios de este evento.</span></label>
+          <label class="check"><input type="checkbox" name="acepta_publicidad"><span>Quiero recibir novedades y oportunidades de inversión de Pulso Inversor por email y WhatsApp (opcional).</span></label>
+          <p class="error" id="error" role="alert" hidden></p>
+          <button class="btn btn-lima enviar" type="submit">Confirmar mi asistencia</button>
+        </form>
+      </div>
+
+      <div id="paso-ok" class="ok" hidden>
+        <div class="icono">✓</div>
+        <h2 style="padding:0">¡Listo, <span id="ok-nombre"></span>!</h2>
+        <p>Tu asistencia quedó confirmada. Te enviamos un correo a <strong id="ok-email"></strong> con los detalles.</p>
+        <p>Te recordaremos <strong>2 días antes</strong>, <strong>la noche anterior</strong> y <strong>la misma mañana</strong>.</p>
+        <div class="btns">
+          <a class="btn btn-lima" id="ok-gcal" target="_blank" rel="noopener">Agregar a Google Calendar</a>
+          <a class="btn btn-blanco" href="/calendario.ics">Otro calendario (.ics)</a>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <script>
+    (function () {
+      var gcal = 'https://calendar.google.com/calendar/render?' + new URLSearchParams({
+        action: 'TEMPLATE',
+        text: 'Desayuno de Inversionistas Modelo IGR · Pulso Inversor',
+        dates: '20261120T123000Z/20261120T140000Z',
+        details: 'Un espacio exclusivo para compartir el estado actual de Pulso Inversor, sus resultados y las nuevas oportunidades que vienen para nuestros inversionistas.',
+        location: 'Oficina Grupo Matchmaking, Los Militares 5890, oficina 304, Las Condes',
+        ctz: 'America/Santiago'
+      }).toString();
+      document.getElementById('gcal').href = gcal;
+      document.getElementById('ok-gcal').href = gcal;
+
+      var dlg = document.getElementById('dlg');
+      var form = document.getElementById('form');
+      var err = document.getElementById('error');
+      var params = new URLSearchParams(location.search);
+
+      function abrir() {
+        if (typeof dlg.showModal === 'function') dlg.showModal(); else dlg.setAttribute('open', '');
+        setTimeout(function () { document.getElementById('nombre').focus(); }, 50);
+      }
+      document.querySelectorAll('[data-abrir]').forEach(function (b) { b.addEventListener('click', abrir); });
+      document.querySelector('[data-cerrar]').addEventListener('click', function () { dlg.close(); });
+      dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+      if (params.get('confirmar') === '1') abrir();
+
+      form.addEventListener('change', function (e) {
+        if (e.target.name === 'con') document.getElementById('campo-acomp').hidden = e.target.value !== '1';
+      });
+
+      function mostrarError(m) { err.textContent = m; err.hidden = false; }
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        err.hidden = true;
+        var f = new FormData(form);
+        var d = {
+          nombre: (f.get('nombre') || '').trim(),
+          apellidos: (f.get('apellidos') || '').trim(),
+          email: (f.get('email') || '').trim(),
+          telefono: (f.get('telefono') || '').trim(),
+          con_acompanante: f.get('con') === '1',
+          acompanante: (f.get('acompanante') || '').trim(),
+          acepta_privacidad: !!f.get('acepta_privacidad'),
+          acepta_publicidad: !!f.get('acepta_publicidad'),
+          sitio_web: f.get('sitio_web') || '',
+          origen: params.get('origen') || params.get('utm_source') || ''
+        };
+        if (!d.nombre) return mostrarError('Ingresa tu nombre.');
+        if (!d.apellidos) return mostrarError('Ingresa tus apellidos.');
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email)) return mostrarError('Ingresa un email válido.');
+        if (d.telefono.replace(/\D/g, '').length < 8) return mostrarError('Ingresa un WhatsApp válido.');
+        if (d.con_acompanante && !d.acompanante) return mostrarError('Ingresa el nombre de tu acompañante.');
+        if (!d.acepta_privacidad) return mostrarError('Para confirmar, acepta la Política de privacidad.');
+
+        var btn = form.querySelector('.enviar');
+        btn.disabled = true; btn.textContent = 'Confirmando…';
+        fetch('/api/confirmar', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(d) })
+          .then(function (r) { return r.json().catch(function () { return { ok: false }; }); })
+          .then(function (r) {
+            if (!r.ok) throw new Error(r.error || 'No pudimos confirmar. Inténtalo de nuevo.');
+            document.getElementById('ok-nombre').textContent = r.nombre || d.nombre;
+            document.getElementById('ok-email').textContent = r.email || d.email;
+            document.getElementById('paso-form').hidden = true;
+            document.getElementById('paso-ok').hidden = false;
+          })
+          .catch(function (e2) {
+            mostrarError(e2.message === 'Failed to fetch' ? 'Sin conexión. Revisa tu internet e inténtalo de nuevo.' : e2.message);
+          })
+          .finally(function () { btn.disabled = false; btn.textContent = 'Confirmar mi asistencia'; });
+      });
+    })();
+  </script>
+</body>
+</html>
