@@ -85,6 +85,29 @@
     });
   });
 
+  // Cifras del banner: se animan desde cero cada vez que carga la página
+  var nums = document.querySelectorAll('[data-count]');
+  var quieto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (nums.length && !quieto) {
+    var fmt = function (v, dec) {
+      return v.toLocaleString('es-CL', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+    };
+    nums.forEach(function (el) {
+      var fin = parseFloat(el.getAttribute('data-count'));
+      var dec = parseInt(el.getAttribute('data-decimals') || '0', 10);
+      var dur = 1800, t0 = null;
+      el.textContent = fmt(0, dec);
+      var paso = function (t) {
+        if (!t0) t0 = t;
+        var k = Math.min((t - t0) / dur, 1);
+        var e = 1 - Math.pow(1 - k, 3);
+        el.textContent = fmt(fin * e, dec);
+        if (k < 1) requestAnimationFrame(paso); else el.textContent = fmt(fin, dec);
+      };
+      setTimeout(function () { requestAnimationFrame(paso); }, 350);
+    });
+  }
+
   // Año del pie de página
   var y = document.getElementById('year');
   if (y) y.textContent = new Date().getFullYear();
