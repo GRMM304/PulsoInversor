@@ -133,51 +133,89 @@ PRODUCTS = [
 ]
 
 # ---------------- 1. Inicio ----------------
+_ICONS['calendario'] = '<rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17"/><path d="M8 3v4M16 3v4"/><path d="M8 14h2M14 14h2M8 17h2M14 17h2"/>'
+_ICONS['doc-check'] = '<path d="M6 3h9l3 3v8"/><path d="M6 3v18h7"/><path d="M9 8h6M9 11h6M9 14h3"/><circle cx="17.5" cy="18" r="3.5"/><path d="M16 18l1 1 2-2"/>'
+
+CAMINOS = [p for p in PRODUCTS if p[2] != 'configuracion-patrimonial']
 cards = ''.join(f'''<article class="card product-card"><div class="card-num">0{i+1}</div><h3>{t}</h3><p>{d}</p>
-<a class="link-arrow" href="inversiones.html#{a}">Conocer más</a></article>''' for i, (t, d, a) in enumerate(PRODUCTS))
+<a class="link-arrow" href="inversiones.html#{a}">Conocer más</a></article>''' for i, (t, d, a) in enumerate(CAMINOS))
+
+def review_slot(n):
+    return f'''<article class="review-slot">
+      <div class="review-quote" aria-hidden="true">“</div>
+      <div class="review-lines" aria-hidden="true"><span></span><span></span><span style="width:60%"></span></div>
+      <div class="review-author"><div class="review-avatar" aria-hidden="true"></div><div class="review-lines small" aria-hidden="true"><span style="width:110px"></span><span style="width:80px"></span></div></div>
+      {P(f"RESEÑA {n}: texto original, autor, fecha y enlace (reseña auténtica de Google).")}
+    </article>'''
+
 page('index.html', 'Inicio',
-     'Tus ahorros merecen una inversión que puedas entender. Alternativas con respaldo inmobiliario, explicadas con calma y con los documentos sobre la mesa.', f'''
+     'Explora alternativas de inversión vinculadas al mercado inmobiliario y encuentra un punto de partida para tus objetivos. Agenda una conversación con un asesor.', f'''
 <section class="hero">
   <video autoplay muted loop playsinline poster="assets/media/hero-poster.jpg" aria-hidden="true"><source src="assets/media/hero-loop.mp4" type="video/mp4"></video>
   <div class="container"><div class="hero-content">
     <span class="eyebrow dark">Inversión con Garantía Real</span>
-    <h1>Tus ahorros merecen una inversión que puedas entender</h1>
-    <p>Sabemos lo que cuesta juntar ese dinero. Por eso te mostramos qué hay detrás de cada alternativa, con calma y con los documentos sobre la mesa, para que decidas cuando todo te haga sentido.</p>
-    <div class="actions">
-      <a class="btn btn-primary" href="inversiones.html">Ver las alternativas</a>
-      <a class="btn btn-secondary" href="como-funciona.html">Cómo trabajamos</a>
-    </div>
-    <p style="font-size:14px;color:rgba(255,255,255,.65);margin-top:4px">Sin apuro. Si quieres, revisa todo con tu abogado.</p>
+    <h1>Tu próxima inversión <span class="accent">comienza con claridad</span></h1>
+    <p>Explora alternativas vinculadas al mercado inmobiliario y encuentra un punto de partida para tus objetivos.</p>
+    {P("AGENDA: hoy el formulario abre un correo a contacto@pulsoinversor.cl con el nombre. Reemplazar por el enlace de agenda del asesor (Calendly, Google Calendar u otro) cuando exista; se cambia en assets/js/main.js (AGENDA_URL).")}
+    <form class="hero-form" data-agenda novalidate>
+      <label for="agenda-nombre" class="sr-only">Tu nombre</label>
+      <input id="agenda-nombre" name="nombre" type="text" autocomplete="given-name" placeholder="Escribe tu nombre" required>
+      <button class="btn btn-primary" type="submit">Empecemos por ti <span aria-hidden="true">→</span></button>
+    </form>
+    <p class="hero-form-note">Agenda una conversación con un asesor. Sin apuro y sin compromiso.</p>
   </div></div>
 </section>
 
 <section class="section"><div class="container">
-  <div class="title center"><span class="eyebrow">Cada historia parte distinto</span><h2>¿En qué momento estás?</h2></div>
-  <div class="grid-2">
-    <article class="card profile-card">{icon('brote')}<h3>Estoy pensando en mi primera inversión</h3>
-      <p>Tienes ahorros y ganas de que crezcan, pero también dudas. Es normal. Partimos por lo básico y vamos a tu ritmo.</p>
-      <a class="btn btn-dark" href="mi-primera-inversion.html">Quiero empezar</a></article>
-    <article class="card profile-card">{icon('camino')}<h3>Ya tengo experiencia invirtiendo</h3>
-      <p>Conoces otras alternativas y quieres sumar algo distinto a tu patrimonio. Te mostramos la estructura completa para que la evalúes a fondo.</p>
-      <a class="btn btn-dark" href="ya-tengo-experiencia.html">Quiero profundizar</a></article>
+  <div class="title center"><span class="eyebrow">Hablemos de lo que te sirve</span><h2>¿Inviertes por primera vez?</h2>
+    <p class="lead">No es lo mismo dar el primer paso fuera del banco que venir de fondos, acciones o crowdfunding. Elige y te llevamos a la información pensada para ti.</p></div>
+  <div class="grid-2 choice-grid">
+    <a class="card profile-card choice" href="mi-primera-inversion.html">
+      <h3><span class="choice-tag yes">Sí</span> es mi primera vez</h3>
+      <p>Tengo ahorros en el banco y nunca he invertido, o lo hice sin entender bien.</p>
+      <span class="btn btn-primary">Quiero empezar a entender</span></a>
+    <a class="card profile-card choice" href="ya-tengo-experiencia.html">
+      <h3><span class="choice-tag no">No</span> ya he invertido</h3>
+      <p>Ya probé otras alternativas y quiero revisar qué hay detrás de esta antes de decidir.</p>
+      <span class="btn btn-dark">Quiero revisar una operación</span></a>
   </div>
 </div></section>
 
-<section class="section section-dark"><div class="container split">
-  <div><span class="eyebrow dark">Cómo trabajamos</span><h2>Antes de invertir, mereces saber qué hay detrás</h2>
-    <p class="lead">Te acompañamos en cada paso y te damos la información para que evalúes tranquilo. Nadie te va a pedir que decidas en la primera reunión.</p>
-    <div class="actions"><a class="btn btn-primary" href="como-funciona.html">Así trabajamos</a></div></div>
-  <ol class="steps two">
-    {PASOS}
-  </ol>
+<section class="section section-dark"><div class="container">
+  <div class="title center"><span class="eyebrow dark">Si prefieres conocernos primero</span><h2>Conoce qué hay detrás de tu inversión</h2>
+    <p class="lead">Descubre cómo te acompañamos y qué información tendrás para evaluar tu alternativa. Antes de invertir, deberías poder responder estas tres preguntas con documentos en la mano. Así trabaja el Modelo IGR.</p></div>
+  <div class="grid-3 igr-cards">
+    <article class="card">{icon('casa')}<h3>¿Qué respalda mi dinero?</h3><p>Una propiedad concreta, con su tasación y su precio de compra.</p></article>
+    <article class="card">{icon('doc-check')}<h3>¿Qué queda a mi favor?</h3><p>Un documento firmado ante notario que puedes revisar con tu abogado.</p></article>
+    <article class="card">{icon('calendario')}<h3>¿Cómo recupero mi dinero?</h3><p>Un calendario de pagos por escrito, antes de firmar.</p></article>
+  </div>
+  <div class="actions" style="justify-content:center"><a class="btn btn-secondary" href="como-funciona.html">Ver cómo funciona, paso a paso</a></div>
 </div></section>
 
-{P("SECCIÓN EXPERIENCIAS OCULTA hasta tener contenido. Título propuesto: 'Personas que un día tuvieron tus mismas dudas'. INCORPORAR hasta tres reseñas auténticas de Google (texto, autor, fecha, enlace), el enlace al perfil oficial, y un video autorizado de un cliente con nombre y frase breve, sin atribuirle resultados no verificados. Aviso: 'Las experiencias corresponden a casos particulares y no aseguran resultados futuros.'")}
-
 <section class="section section-soft"><div class="container">
-  <div class="title center"><span class="eyebrow">Formas de invertir</span><h2>Cuatro caminos, según lo que quieres construir</h2></div>
-  <div class="grid-4">{cards}</div>
+  <div class="title center"><span class="eyebrow">Formas de invertir</span><h2>Tres caminos, según lo que quieres construir</h2></div>
+  <div class="grid-3">{cards}</div>
+  <p class="center-note">¿Quieres ordenar todo tu patrimonio? <a href="inversiones.html#configuracion-patrimonial">Conoce Configuración Patrimonial</a></p>
   <div class="actions" style="justify-content:center"><a class="btn btn-outline" href="inversiones.html#comparar">Compararlas lado a lado</a></div>
+</div></section>
+
+<section class="section"><div class="container">
+  <div class="title center"><span class="eyebrow">Personas reales, con nombre</span><h2>Lo que encontraron quienes ya invirtieron</h2>
+    <p class="lead">Perfiles distintos, la misma experiencia: condiciones claras, documentos que se pueden revisar y lo acordado, cumplido.</p></div>
+  <div class="reviews">
+    <div class="video-slot">
+      {P("VIDEO: testimonio autorizado de un cliente (nombre y frase breve, sin atribuirle resultados no verificados). Reemplazar este bloque por <video controls poster='...'><source src='assets/media/testimonio.mp4' type='video/mp4'></video>.")}
+      <div class="play" aria-hidden="true"><svg viewBox="0 0 24 24" width="30" height="30"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></div>
+      <span>Video testimonio</span>
+    </div>
+    <div class="review-list">
+      {review_slot(1)}
+      {review_slot(2)}
+      {review_slot(3)}
+    </div>
+  </div>
+  {P("INCORPORAR enlace al perfil oficial de Pulso en Google: botón 'Ver opiniones en Google'.")}
+  <p class="disclaimer" style="text-align:center">Las experiencias corresponden a casos particulares y no aseguran resultados futuros.</p>
 </div></section>
 ''' + cta(*CTA_GENERAL))
 

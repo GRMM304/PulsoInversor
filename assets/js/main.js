@@ -46,6 +46,29 @@
     a.addEventListener('click', function (e) { e.preventDefault(); });
   });
 
+  // Banner de inicio: el nombre abre la solicitud de reunión con un asesor.
+  // Cuando exista una agenda en línea, poner su enlace en AGENDA_URL
+  // (el nombre se agrega como parámetro ?name=).
+  var AGENDA_URL = '';
+  var CORREO = 'contacto@pulsoinversor.cl';
+  document.querySelectorAll('form[data-agenda]').forEach(function (form) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var input = form.querySelector('input');
+      var nombre = (input.value || '').trim();
+      if (!nombre) { form.classList.add('error'); input.focus(); return; }
+      form.classList.remove('error');
+      if (AGENDA_URL) {
+        window.location.href = AGENDA_URL + (AGENDA_URL.indexOf('?') < 0 ? '?' : '&') + 'name=' + encodeURIComponent(nombre);
+        return;
+      }
+      var asunto = 'Quiero agendar una reunión con un asesor';
+      var cuerpo = 'Hola, soy ' + nombre + '. Me gustaría agendar una conversación con un asesor de Pulso Inversor.';
+      window.location.href = 'mailto:' + CORREO + '?subject=' + encodeURIComponent(asunto) + '&body=' + encodeURIComponent(cuerpo);
+    });
+    form.querySelector('input').addEventListener('input', function () { form.classList.remove('error'); });
+  });
+
   // Año del pie de página
   var y = document.getElementById('year');
   if (y) y.textContent = new Date().getFullYear();
