@@ -259,3 +259,53 @@ details .details-body li{margin:8px 0}
   .hero-form .btn{width:100%}
   .hero p.hero-form-note{margin-left:0;text-align:center}
 }
+
+/* Inicio: perfiles con viñetas */
+.choice-list{list-style:none;padding:0;margin:4px 0 0;display:grid;gap:10px}
+.choice-list li{display:flex;gap:10px;font-size:15px;color:var(--gray-900);padding-top:10px;border-top:1px solid var(--gray-200)}
+.choice-list li::before{content:"✓";flex:none;color:var(--green-500);font-weight:900}
+
+/* Inicio: tres caminos desplegables */
+.caminos{align-items:start}
+details.camino{margin:0;padding:0;border:1px solid rgba(14,44,40,.08);border-top:4px solid var(--lime);cursor:pointer;transition:box-shadow .15s,transform .15s}
+details.camino:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
+details.camino summary{display:block;padding:28px;font-weight:inherit;color:inherit}
+details.camino summary::after{content:none}
+details.camino summary p{color:var(--gray-700);margin-bottom:16px}
+.camino-toggle{display:inline-flex;align-items:center;gap:8px;font-weight:800;font-size:14px;color:var(--green-700)}
+.camino-toggle::after{content:"+";display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:rgba(199,217,93,.35);color:var(--green-800);font-size:16px;line-height:1}
+details.camino[open] .camino-toggle::after{content:"–"}
+.camino-body{padding:0 28px 26px;cursor:default}
+.camino-row{display:grid;gap:4px;padding:16px 0;border-top:1px solid var(--gray-200)}
+.camino-label{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gray-500)}
+.camino-row strong{font-size:20px;color:var(--green-900)}
+.camino-row span:last-child{color:var(--gray-700)}
+.camino-body .link-arrow{margin-top:6px}
+
+/* Inicio: comparación con el mercado */
+.vs{max-width:920px;margin:0 auto;border-radius:var(--radius-xl);overflow:hidden;border:1px solid var(--gray-200);box-shadow:var(--shadow-soft);background:#fff}
+.vs-row{display:grid;grid-template-columns:1fr 1.2fr 1.2fr;border-top:1px solid var(--gray-200)}
+.vs-row>div{padding:20px 24px}
+.vs-head{border-top:0}
+.vs-head>div{padding:16px 24px;font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.vs-label{font-weight:800;color:var(--green-900)}
+.vs-mkt{color:var(--gray-500)}
+.vs-pulso{background:rgba(199,217,93,.16);color:var(--green-900);font-weight:650}
+.vs-head .vs-pulso{background:var(--green-900);color:var(--lime)}
+.vs-row:not(.vs-head) .vs-pulso::before{content:"✓ ";color:var(--green-500);font-weight:900}
+@media (max-width:700px){
+  .vs-row{grid-template-columns:1fr 1fr}
+  .vs-label{grid-column:1/-1;padding-bottom:0!important}
+  .vs-head>div:first-child{display:none}
+  .vs-row>div{padding:14px 16px}
+}
+
+/* Inicio: video testimonio vertical */
+.reviews{grid-template-columns:minmax(260px,340px) 1fr}
+.video-testimonio{margin:0}
+.video-testimonio video{width:100%;aspect-ratio:9/16;object-fit:cover;border-radius:var(--radius-xl);background:var(--green-900);box-shadow:var(--shadow)}
+.video-testimonio figcaption{margin-top:14px;font-size:14px;color:var(--gray-700)}
+.video-testimonio figcaption strong{color:var(--green-900)}
+.review-list{align-content:center}
+@media (max-width:900px){.video-testimonio{max-width:340px;margin:0 auto}}
+@media (max-width:900px){.reviews{grid-template-columns:1fr}}

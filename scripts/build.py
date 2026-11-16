@@ -136,9 +136,29 @@ PRODUCTS = [
 _ICONS['calendario'] = '<rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17"/><path d="M8 3v4M16 3v4"/><path d="M8 14h2M14 14h2M8 17h2M14 17h2"/>'
 _ICONS['doc-check'] = '<path d="M6 3h9l3 3v8"/><path d="M6 3v18h7"/><path d="M9 8h6M9 11h6M9 14h3"/><circle cx="17.5" cy="18" r="3.5"/><path d="M16 18l1 1 2-2"/>'
 
-CAMINOS = [p for p in PRODUCTS if p[2] != 'configuracion-patrimonial']
-cards = ''.join(f'''<article class="card product-card"><div class="card-num">0{i+1}</div><h3>{t}</h3><p>{d}</p>
-<a class="link-arrow" href="inversiones.html#{a}">Conocer más</a></article>''' for i, (t, d, a) in enumerate(CAMINOS))
+# Tres caminos: a primera vista, nombre y frase; al abrir, qué activas y qué logras.
+CAMINOS = [
+    ('proyecta-un-hogar', 'Proyecta un Hogar', 'Haz crecer tu capital y ayuda a que una familia que enfrenta un remate tenga una nueva oportunidad.',
+     ('Capital disponible', 'Desde $5.000.000'),
+     ('Renta periódica', 'Flujos mensuales o trimestrales con factibilidad de interés')),
+    ('hipoteca-inteligente', 'Hipoteca Inteligente', 'Usa tu capacidad de crédito para empezar a construir tu patrimonio inmobiliario.',
+     ('Capacidad financiera', 'Desde 2.000 UF de crédito hipotecario'),
+     ('Capital y patrimonio', 'Tu capacidad bancaria genera retorno y activos')),
+    ('inversion-circular', 'Inversión Inmobiliaria Circular', 'Dale una nueva vida al capital de tu propiedad, con menos preocupaciones de arriendo.',
+     ('Tu propiedad', 'El capital que hoy está detenido en tu inmueble'),
+     ('Un mejor flujo', 'Un flujo de dinero mejor que el que hoy te genera tu propiedad')),
+]
+cards = ''.join(f'''<details class="card product-card camino">
+  <summary><div class="card-num">0{i+1}</div><h3>{t}</h3><p>{d}</p><span class="camino-toggle">Ver qué activas y qué logras</span></summary>
+  <div class="camino-body">
+    <div class="camino-row"><span class="camino-label">Qué activas</span><strong>{act[0]}</strong><span>{act[1]}</span></div>
+    <div class="camino-row"><span class="camino-label">Qué logras</span><strong>{log[0]}</strong><span>{log[1]}</span></div>
+    <a class="link-arrow" href="inversiones.html#{a}">Conocer más</a>
+  </div>
+</details>''' for i, (a, t, d, act, log) in enumerate(CAMINOS))
+
+def bullets(items):
+    return '<ul class="choice-list">' + ''.join(f'<li>{x}</li>' for x in items) + '</ul>'
 
 def review_slot(n):
     return f'''<article class="review-slot">
@@ -147,6 +167,14 @@ def review_slot(n):
       <div class="review-author"><div class="review-avatar" aria-hidden="true"></div><div class="review-lines small" aria-hidden="true"><span style="width:110px"></span><span style="width:80px"></span></div></div>
       {P(f"RESEÑA {n}: texto original, autor, fecha y enlace (reseña auténtica de Google).")}
     </article>'''
+
+COMPARA = [
+    ('Qué respalda tu dinero', 'La solidez de la institución o un fondo con muchos activos', 'Un inmueble identificado, con su tasación'),
+    ('Dónde está tu dinero', 'Mezclado con el de otros en un fondo o en un pozo colectivo', 'En una operación individual, con tu propio contrato'),
+    ('Lo que puedes revisar', 'Un folleto o un reglamento general', 'La tasación, las garantías y tu contrato, antes de firmar'),
+    ('Quién te acompaña', 'Una plataforma o un ejecutivo que cambia', 'Una persona del equipo, de principio a fin'),
+]
+compara = ''.join(f'''<div class="vs-row"><div class="vs-label">{l}</div><div class="vs-mkt">{m}</div><div class="vs-pulso">{p}</div></div>''' for l, m, p in COMPARA)
 
 page('index.html', 'Inicio',
      'Explora alternativas de inversión vinculadas al mercado inmobiliario y encuentra un punto de partida para tus objetivos. Agenda una conversación con un asesor.', f'''
@@ -172,12 +200,18 @@ page('index.html', 'Inicio',
   <div class="grid-2 choice-grid">
     <a class="card profile-card choice" href="mi-primera-inversion.html">
       <h3><span class="choice-tag yes">Sí</span> es mi primera vez</h3>
-      <p>Tengo ahorros en el banco y nunca he invertido, o lo hice sin entender bien.</p>
-      <span class="btn btn-primary">Quiero empezar a entender</span></a>
+      <p>Tengo mis ahorros en el banco y quiero hacerlos crecer, pero me preocupa arriesgar mi dinero.</p>
+      {bullets(['Invierte desde $5 millones, sin necesidad de comprometer todos tus ahorros.',
+                'Tu inversión está respaldada por un inmueble, no solo por una promesa de pago.',
+                'Conoce cuánto podrías ganar y en qué plazo, antes de tomar una decisión.'])}
+      <span class="btn btn-primary">Quiero conocer cómo funciona</span></a>
     <a class="card profile-card choice" href="ya-tengo-experiencia.html">
       <h3><span class="choice-tag no">No</span> ya he invertido</h3>
-      <p>Ya probé otras alternativas y quiero revisar qué hay detrás de esta antes de decidir.</p>
-      <span class="btn btn-dark">Quiero revisar una operación</span></a>
+      <p>Ya conozco otras alternativas y busco oportunidades con retornos atractivos, respaldo y condiciones claras.</p>
+      {bullets(['Operaciones desde $25 millones, con rentabilidades pactadas en UF.',
+                'Respaldo inmobiliario identificable: conoce el inmueble, su tasación y la cobertura de la operación.',
+                'Estructura contractual individual: revisa las garantías, los plazos y las condiciones de pago antes de invertir.'])}
+      <span class="btn btn-dark">Quiero evaluar oportunidades</span></a>
   </div>
 </div></section>
 
@@ -193,21 +227,31 @@ page('index.html', 'Inicio',
 </div></section>
 
 <section class="section section-soft"><div class="container">
-  <div class="title center"><span class="eyebrow">Formas de invertir</span><h2>Tres caminos, según lo que quieres construir</h2></div>
-  <div class="grid-3">{cards}</div>
+  <div class="title center"><span class="eyebrow">Formas de invertir</span><h2>Tres caminos, según lo que quieres construir</h2>
+    <p class="lead">Toca cada uno para ver qué activas y qué logras.</p></div>
+  <div class="grid-3 caminos">{cards}</div>
   <p class="center-note">¿Quieres ordenar todo tu patrimonio? <a href="inversiones.html#configuracion-patrimonial">Conoce Configuración Patrimonial</a></p>
   <div class="actions" style="justify-content:center"><a class="btn btn-outline" href="inversiones.html#comparar">Compararlas lado a lado</a></div>
 </div></section>
 
 <section class="section"><div class="container">
+  <div class="title center"><span class="eyebrow">Una comparación simple</span><h2>¿Qué cambia cuando inviertes con Pulso?</h2>
+    <p class="lead">Lo habitual en el mercado, frente a lo que encuentras con nosotros.</p></div>
+  <div class="vs">
+    <div class="vs-row vs-head"><div></div><div class="vs-mkt">Lo habitual</div><div class="vs-pulso">Con Pulso</div></div>
+    {compara}
+  </div>
+  <p class="disclaimer" style="text-align:center">Comparación general y referencial. Cada alternativa, incluidas las nuestras, tiene sus propias condiciones y riesgos.</p>
+</div></section>
+
+<section class="section section-soft"><div class="container">
   <div class="title center"><span class="eyebrow">Personas reales, con nombre</span><h2>Lo que encontraron quienes ya invirtieron</h2>
     <p class="lead">Perfiles distintos, la misma experiencia: condiciones claras, documentos que se pueden revisar y lo acordado, cumplido.</p></div>
   <div class="reviews">
-    <div class="video-slot">
-      {P("VIDEO: testimonio autorizado de un cliente (nombre y frase breve, sin atribuirle resultados no verificados). Reemplazar este bloque por <video controls poster='...'><source src='assets/media/testimonio.mp4' type='video/mp4'></video>.")}
-      <div class="play" aria-hidden="true"><svg viewBox="0 0 24 24" width="30" height="30"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></div>
-      <span>Video testimonio</span>
-    </div>
+    <figure class="video-testimonio">
+      <video controls playsinline preload="none" poster="assets/media/testimonio-gonzalo.jpg"><source src="assets/media/testimonio-gonzalo.mp4" type="video/mp4"></video>
+      <figcaption><strong>Gonzalo</strong>, kinesiólogo. Tenía sus ahorros quietos en el banco y aquí cuenta cómo fue su primera inversión con Pulso.</figcaption>
+    </figure>
     <div class="review-list">
       {review_slot(1)}
       {review_slot(2)}
@@ -280,7 +324,7 @@ page('inversiones.html', 'Inversiones',
     <thead><tr><th>Alternativa</th><th>Desde</th><th>Qué queda a tu favor</th><th>Plazos</th></tr></thead>
     <tbody>
       <tr><td>Proyecta un Hogar</td>
-        <td>Según la modalidad contractual que elijas. {P("CONFIRMAR cuáles modalidades de Renta de Capital se ofrecen bajo este nombre. Mínimos confirmados: pagaré $5 millones; hipoteca $25 millones; título $100 millones.")}</td>
+        <td>Capital disponible desde $5.000.000. {P("Mínimo confirmado por la usuaria el 2026-11-16 (portada). CONFIRMAR qué otras modalidades de Renta de Capital se ofrecen bajo este nombre: hipoteca $25 millones; título $100 millones.")}</td>
         <td>Documentación según la modalidad elegida. {P("CONFIRMAR si incluye pagaré/mutuo, hipoteca y título, o solo alguna.")}</td>
         <td>Según la modalidad elegida. {P("ASIGNAR: 12, 18 o 24 meses en pagaré; 15, 21 o 27 en hipoteca/título, si pertenecen a Proyecta un Hogar.")}</td></tr>
       <tr><td>Hipoteca Inteligente</td><td>Capacidad de crédito hipotecario desde 2.000 UF, sujeta a aprobación bancaria.</td>
