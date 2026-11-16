@@ -111,6 +111,9 @@ def pagina(nombre, s):
 
     # Héroe del inicio con la foto de Santiago bajo el filtro verde
     if nombre == 'index.html':
+        viejo = '<h1>Con tu dinero no se juega.<br><em>Míralo antes de firmar.</em></h1>'
+        assert viejo in s, 'no se encontró el título del inicio'
+        s = s.replace(viejo, '<h1>Queremos que entiendas<br><em>antes de decidir.</em></h1>', 1)
         s = s.replace('<section class="hero centro">',
                       '<section class="hero centro hero-foto"><img class="hero-bg" src="assets/img/hero-santiago.jpg" '
                       'srcset="assets/img/hero-santiago-movil.jpg 1000w, assets/img/hero-santiago.jpg 1920w" sizes="100vw" alt="" fetchpriority="high">', 1)
