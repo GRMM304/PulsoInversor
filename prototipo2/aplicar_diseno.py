@@ -83,6 +83,13 @@ def pagina(nombre, s):
     s = re.sub(r'<div class="foto">\[REQUIERE: foto\]</div><b>([^<]+)</b>', foto, s)
     s = s.replace('[REQUIERE: fotos de la propiedad]', 'Fotos de la propiedad: se muestran en la reunión')
 
+    # Inicio: la sección «¿Por qué invertir con Pulso?» del Prototipo 1 reemplaza a la de las tres preguntas del V5
+    if nombre == 'index.html':
+        i = s.find('Elijas el camino que elijas')
+        a, b = s.rfind('<section', 0, i), s.find('</section>', i) + len('</section>')
+        assert i > 0 and a > 0, 'no se encontró la sección de las tres preguntas'
+        s = s[:a] + open(os.path.join(DIS, 'por-que-pulso.html'), encoding='utf-8').read().strip() + s[b:]
+
     # Héroe del inicio con la foto de Santiago bajo el filtro verde
     if nombre == 'index.html':
         s = s.replace('<section class="hero centro">',
