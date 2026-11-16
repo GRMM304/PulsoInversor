@@ -25,7 +25,7 @@ Invitación interactiva con confirmación de asistencia, correos automáticos y 
 | Hoy es el desayuno | Viernes 20, 07:30 | Confirmados antes de esa hora |
 | Gracias por acompañarnos | Viernes 20, 16:00 | Marcados como "Llegó" en el panel |
 | Te echamos de menos | Viernes 20, 16:00 | Confirmados que no fueron marcados |
-| Aviso al equipo | Al confirmar, actualizar o cancelar | ibarboza@pulsoinversor.cl y frojas@pulsoinversor.cl |
+| Aviso al equipo | Al confirmar, actualizar o cancelar | Organizadores: ibarboza, frojas, jvalenzuela y eorrego @grupomm.cl, más ibarboza y frojas @pulsoinversor.cl |
 
 Reglas:
 - Quien cancela deja de recibir correos.
