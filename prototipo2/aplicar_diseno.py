@@ -123,6 +123,13 @@ def pagina(nombre, s):
         assert i > 0 and a > 0, 'no se encontró la sección del camino'
         s = s[:a] + open(os.path.join(DIS, 'camino-ritmo.html'), encoding='utf-8').read().strip() + s[b:]
 
+    # Cómo funciona: cuerpo rediseñado (todo hasta el llamado final, que se mantiene)
+    if nombre == 'como-funciona.html':
+        a = s.find('<section class="hero hero-pag">')
+        b = s.find('<section class="s dark centro">')
+        assert 0 < a < b, 'no se encontró el cuerpo de Cómo funciona'
+        s = s[:a] + open(os.path.join(DIS, 'como-funciona-cuerpo.html'), encoding='utf-8').read().strip() + '\n\n' + s[b:]
+
     # Héroe del inicio con la foto de Santiago bajo el filtro verde
     if nombre == 'index.html':
         viejo = '<h1>Con tu dinero no se juega.<br><em>Míralo antes de firmar.</em></h1>'
