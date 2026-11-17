@@ -1553,3 +1553,53 @@ button.tipo{font:inherit;text-align:left;cursor:pointer;width:100%}
 .to-top:hover{background:var(--green-800)}
 .to-top svg{width:22px;height:22px}
 @media (max-width:620px){.why-col p{text-align:left;-webkit-hyphens:manual;hyphens:manual}}
+
+/* ---------------- Correcciones móvil (2) ---------------- */
+.why-m{display:none}
+main p,main li,main blockquote{-webkit-hyphens:manual!important;hyphens:manual!important;overflow-wrap:normal;word-break:normal}
+@media (max-width:620px){
+  /* títulos, subtítulos y bajadas sin justificar; interlineado más holgado */
+  h1,h2,h3,h4,.lead,.title p,.hero p,.page-hero p,.sim-head p,.aht-tag,.v-answer,.eyebrow,.rx-kicker{text-align:inherit!important;text-align-last:auto!important}
+  .title.center .lead,.title.center p{text-align:center!important}
+  h1{line-height:1.1;margin-bottom:18px}
+  h2{line-height:1.16;margin-bottom:14px}
+  h3{line-height:1.28}
+  .h-sub{margin-top:.12em}
+  .eyebrow{margin-bottom:14px}
+  .cta-final h2{line-height:1.08}
+  /* etiqueta del inicio en una línea */
+  .hero .eyebrow{white-space:nowrap;font-size:11px;padding:6px 10px;letter-spacing:0;max-width:100%}
+  /* cartera: más rápida */
+  .marquee-track{animation-duration:20s}
+  .marquee .prop-card{width:250px;margin-right:14px}
+  /* ¿Por qué Pulso?: destaca Pulso y deja la comparación como referencia */
+  .why-compare{display:none}
+  .why-m{display:grid;gap:12px;padding:22px 18px;border-radius:var(--radius-xl);background:var(--green-900);color:#fff;box-shadow:var(--shadow)}
+  .why-m .why-kicker{color:var(--lime);margin:0}
+  .why-m h3{color:#fff;font-size:24px;margin:0 0 4px}
+  .why-m-item{border-radius:16px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);overflow:hidden}
+  .why-m-pulso{margin:0;padding:14px 16px 14px 44px;position:relative;font-size:15.5px;font-weight:600;color:#fff;text-align:left!important}
+  .why-m-pulso::before{content:"✓";position:absolute;left:14px;top:13px;width:20px;height:20px;border-radius:50%;background:var(--lime);color:var(--green-900);font-size:12px;font-weight:900;display:grid;place-items:center}
+  .why-m-otra{margin:0;padding:10px 16px 12px 44px;font-size:13px;color:rgba(255,255,255,.6);background:rgba(0,0,0,.18);text-align:left!important}
+  .why-m-otra span{display:block;font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:2px}
+  /* Inversiones: con una abierta, las tres se vuelven un menú compacto */
+  .tipos-sec.has-open .tipos{position:sticky;top:var(--header-h);z-index:15;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:10px 16px;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--gray-200)}
+  .tipos-sec.has-open .tipos::-webkit-scrollbar{display:none}
+  .tipos-sec.has-open .tipo{flex:none;width:auto;padding:10px 14px;border-radius:999px;gap:0;transform:none;box-shadow:none;opacity:1}
+  .tipos-sec.has-open .tipo::before,.tipos-sec.has-open .tipo p,.tipos-sec.has-open .tipo-chip,.tipos-sec.has-open .tipo-go,.tipos-sec.has-open .tipo-n{display:none}
+  .tipos-sec.has-open .tipo h3{font-size:14px;white-space:nowrap}
+  .tipos-sec.has-open .tipo.is-active{background:var(--green-900);border-color:var(--green-900);box-shadow:none}
+  .tipos-sec.has-open .tipo.is-active h3{color:var(--lime)}
+  .tipos-sec.has-open .inv-panel{margin-top:16px}
+  .tipos-sec.has-open .tipos .h-sub{display:inline}
+  /* equipo: carrusel horizontal */
+  .crew{display:flex;grid-template-columns:none;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;margin:0 -16px;padding:4px 16px 14px;scrollbar-width:none}
+  .crew::-webkit-scrollbar{display:none}
+  .crew-card{flex:0 0 44%;scroll-snap-align:start}
+  .crew-hint{display:block}
+}
+.crew-hint{display:none;text-align:right;font-size:12.5px;font-weight:700;color:var(--gray-500);margin:6px 2px 0}
+@media (max-width:620px){
+  main li,main blockquote{text-align:left}
+  .pasos strong,.rx-step h3,.rx-after-card h4,.hitos strong,.senal h3,.riesgo-q h3{text-align:left!important}
+}

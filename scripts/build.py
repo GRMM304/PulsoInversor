@@ -341,6 +341,11 @@ page('index.html', 'Inicio',
         <p>Participación en operaciones inmobiliarias sin comprar ni administrar una propiedad.</p>
       </div>
     </div>
+    <div class="why-m"><span class="why-kicker">Con nosotros</span><h3>Pulso Inversor</h3>
+      <div class="why-m-item"><p class="why-m-pulso">Intereses pactados en UF, con potencial de superar alternativas conservadoras.</p><p class="why-m-otra"><span>Otras alternativas</span>Los depósitos a plazo suelen ofrecer retornos más conservadores.</p></div>
+      <div class="why-m-item"><p class="why-m-pulso">Retornos definidos contractualmente, sin depender directamente de la cotización diaria de un fondo.</p><p class="why-m-otra"><span>Otras alternativas</span>Los fondos están expuestos a variaciones de mercado.</p></div>
+      <div class="why-m-item"><p class="why-m-pulso">Participación en operaciones inmobiliarias sin comprar ni administrar una propiedad.</p><p class="why-m-otra"><span>Otras alternativas</span>Comprar para arrendar exige una inversión mayor y gestión continua.</p></div>
+    </div>
     <div class="why-igr">
       <p class="lead">Descubre cómo te acompañamos y qué información tendrás para evaluar tu alternativa. Antes de invertir, deberías poder responder estas tres preguntas con documentos en la mano. Así trabaja el Modelo IGR.</p>
       <div class="igr-list">
@@ -980,6 +985,7 @@ page('nosotros.html', 'Nosotros',
   {P("EQUIPO y fotos entregados por la usuaria el 2026-11-17.")}
   <h3 class="team-sub">El equipo que te acompaña</h3>
   <div class="crew">{crew}</div>
+  <p class="crew-hint" aria-hidden="true">Desliza para ver a todo el equipo →</p>
 </div></section>
 
 <section class="section section-soft"><div class="container">

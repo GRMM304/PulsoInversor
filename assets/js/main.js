@@ -280,7 +280,7 @@
     document.documentElement.classList.add('js-reveal');
     var io = new IntersectionObserver(function (es) {
       es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } });
-    }, { threshold: .3 });
+    }, { threshold: .12 });
     rev.forEach(function (el) { io.observe(el); });
   }
 
