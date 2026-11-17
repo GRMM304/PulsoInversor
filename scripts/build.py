@@ -1052,68 +1052,138 @@ page('verifica-a-pulso.html', 'Verifica a Pulso',
 </div></section>
 """)
 
-# ---------------- 4.1 Mi primera inversión ----------------
-page('mi-primera-inversion.html', 'Mi primera inversión',
-     'Dar el primer paso da vértigo, y está bien. Preguntas y conceptos para preparar tu primera inversión con calma.',
-     hero('Recursos / Mi primera inversión', 'Tu primera inversión, paso a paso',
-          'Dar el primer paso da vértigo, y está bien. Partamos por algunas preguntas y conceptos que te van a ayudar.', 'Recursos') + f'''
-<section class="section"><div class="container">
-  <div class="title"><span class="eyebrow">Para prepararte</span><h2>Antes de empezar, pregúntate esto</h2></div>
-  <div class="grid-3">
-    <article class="card"><div class="card-num">01</div><h3>¿Qué quiero lograr con esta inversión?</h3></article>
-    <article class="card"><div class="card-num">02</div><h3>¿Cuánto puedo destinar sin tocar lo que necesito para mis gastos e imprevistos?</h3></article>
-    <article class="card"><div class="card-num">03</div><h3>¿Por cuánto tiempo puedo dejar ese dinero invertido?</h3></article>
+# ---------------- 4 Recursos: componentes compartidos ----------------
+_CHECK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+_CROSS = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>'
+
+def rx_hero(eyebrow, h1, texto, btn1, tema, btn2, href2, chips, card):
+    ch = ''.join(f'<span>{_CHECK}{c}</span>' for c in chips)
+    return f"""<section class="page-hero rx-hero"><div class="container rx-hero-grid">
+  <div class="rx-hero-copy">
+    <div class="breadcrumb"><a href="index.html">Inicio</a> / Recursos</div>
+    <span class="rx-kicker">{eyebrow}</span>
+    <h1>{h1}</h1>
+    <p>{texto}</p>
+    <div class="rx-hero-actions">
+      <a class="btn btn-primary btn-xl" href="{mail(tema)}" target="_blank" rel="noopener">{btn1}</a>
+      <a class="btn btn-secondary btn-xl" href="{href2}">{btn2}</a>
+    </div>
+    <div class="rx-chips">{ch}</div>
+    <p class="rx-legal">Operaciones bajo contratos civiles, no reguladas por la CMF. Toda inversión tiene riesgos. Revisa los documentos con tu abogado antes de firmar.</p>
   </div>
-</div></section>
-<section class="section section-soft"><div class="container">
-  <div class="title"><span class="eyebrow">Palabras útiles</span><h2>Cinco conceptos que vas a escuchar</h2></div>
-  <div class="table-wrap"><table>
-    <thead><tr><th>Concepto</th><th>Qué significa</th></tr></thead>
-    <tbody>
-      <tr><td>Capital</td><td>Lo que aportas a la inversión.</td></tr>
-      <tr><td>Rentabilidad</td><td>Lo que gana tu capital. Fíjate siempre en el período y en los costos considerados.</td></tr>
-      <tr><td>Plazo</td><td>El tiempo previsto para la inversión.</td></tr>
-      <tr><td>Liquidez</td><td>Qué tan fácil es convertir tu inversión en dinero disponible.</td></tr>
-      <tr><td>Respaldo</td><td>Los derechos y garantías que te da la estructura, con el alcance que indican sus documentos.</td></tr>
-    </tbody></table></div>
-</div></section>
-<section class="section"><div class="container split">
-  <div><span class="eyebrow">Tu primera conversación</span><h2>Lleva estas preguntas contigo</h2>
-    <p class="muted">Ninguna está de más. Hazlas todas, a nosotros y a cualquiera con quien pienses invertir.</p>
-    <div class="actions"><a class="btn btn-dark" href="como-funciona.html">Ver cómo trabajamos</a></div></div>
-  <ul class="facts">
-    <li>¿Quién recibe mi dinero y quién se compromete a pagarme?</li>
-    <li>¿Qué documentos voy a recibir y qué derechos me dan?</li>
-    <li>¿Qué costos tengo que considerar y qué pasa si necesito mi dinero antes?</li>
-  </ul>
-</div></section>
-''' + cta('Cuéntanos qué quieres construir', 'Partimos por lo básico, sin apuro y sin tecnicismos.', AGENDAR, 'Mi primera inversión'))
+  {card}
+</div></section>"""
+
+def rx_fit(id_, eyebrow, h2, p1, p2, visual, si, no):
+    si_ = ''.join(f'<div class="rx-fit-row">{_CHECK}<span>{x}</span></div>' for x in si)
+    no_ = ''.join(f'<div class="rx-fit-row">{_CROSS}<span>{x}</span></div>' for x in no)
+    return f"""<section class="section rx-fit" id="{id_}"><div class="container">
+  <div class="rx-fit-top">
+    <div><span class="rx-kicker dark">{eyebrow}</span><h2>{h2}</h2><p class="lead">{p1}</p><p>{p2}</p></div>
+    <div class="rx-visual" data-reveal>{visual}</div>
+  </div>
+  <div class="rx-fit-cols" data-reveal>
+    <div class="rx-fit-card si"><h3>Esto es para ti si…</h3>{si_}</div>
+    <div class="rx-fit-card no"><h3>Esto NO es para ti si…</h3>{no_}</div>
+  </div>
+</div></section>"""
+
+def rx_proceso(eyebrow, h2, pasos, h3, despues):
+    ps = ''.join(f'<div class="rx-step"><span class="rx-step-n">{i}</span><div><h3>{t}</h3><p>{d}</p></div></div>' for i, (t, d) in enumerate(pasos, 1))
+    ds = ''.join(f'<div class="rx-after-card"><span class="rx-after-ico">{icon(ic)}</span><h4>{t}</h4><p>{d}</p></div>' for ic, t, d in despues)
+    return f"""<section class="section section-soft rx-proc"><div class="container">
+  <div class="rx-proc-grid">
+    <div class="rx-proc-head"><span class="rx-kicker dark">{eyebrow}</span><h2>{h2}</h2>
+      <p class="muted">Cinco pasos, siempre con una persona del equipo y sin apuro. Tú decides cuándo avanzar.</p></div>
+    <div class="rx-steps" data-reveal>{ps}</div>
+  </div>
+  <h3 class="rx-after-title">{h3}</h3>
+  <div class="rx-after" data-reveal>{ds}</div>
+</div></section>"""
+
+# ---------------- 4.1 Mi primera inversión ----------------
+_preg = [('¿Qué respalda mi dinero?', 'Una propiedad concreta, con su tasación y su precio de compra.'),
+         ('¿Qué queda a mi favor?', 'Un documento firmado ante notario que te permite cobrar.'),
+         ('¿Cómo recupero mi dinero?', 'Un calendario de pagos por escrito, antes de firmar.')]
+_card1 = '<aside class="rx-card" data-reveal><span class="rx-card-kicker">Antes de invertir, deberías poder responder esto</span>' + ''.join(
+    f'<div class="rx-q"><span class="rx-q-n">{i}</span><div><strong>{q}</strong><p>{r}</p></div></div>' for i, (q, r) in enumerate(_preg, 1)) + \
+    '<p class="rx-card-note">Si alguien te ofrece invertir y no te responde estas tres preguntas con documentos, no firmes. Tampoco con nosotros.</p></aside>'
+
+page('mi-primera-inversion.html', 'Mi primera inversión',
+     'Tu primera inversión fuera del banco: qué propiedad respalda tu dinero, qué documento queda a tu favor y cómo lo recuperas. Sin tecnicismos y sin apuro.',
+     rx_hero('Tu primera inversión fuera del banco',
+             'Invierte tus ahorros sabiendo qué hay detrás. <span class="accent">Míralo antes de firmar.</span>',
+             'Si tienes desde $5 millones en el banco y nunca has invertido, te explicamos en simple qué propiedad respalda tu dinero, qué documento queda a tu favor y cómo lo recuperas. Sin tecnicismos, sin apuro y con tu abogado revisando todo si quieres.',
+             'Quiero una conversación sin compromiso', 'Mi primera inversión', 'Primero quiero entender', '#para-ti',
+             ['Desde $5 millones', 'Firma ante notario', 'Puedes venir con tu pareja o tu abogado', 'No te pedimos decidir en la reunión'], _card1)
+     + rx_fit('para-ti', 'Antes de hablar de tasas, hablamos de ti',
+              'En tu primera inversión, lo primero no es cuánto ganas. Es cuánto puedes mover sin quedarte sin colchón.',
+              'Si inviertes el dinero que vas a necesitar, cualquier imprevisto te obliga a salir en mal momento. Y una primera mala experiencia se convierte en la razón para no volver a invertir nunca.',
+              'Por eso la primera conversación es sobre ti: cuánto tienes, para qué es ese dinero y cuánto necesitas disponible si pasa algo. Si lo sensato es que inviertas menos, o que todavía no lo hagas, te lo vamos a decir.',
+              '''<h3>Un ejemplo</h3><p class="muted">Tienes $10 millones ahorrados. Quizás lo sensato es mover 5 y dejar 5 de colchón.</p>
+      <div class="rx-total"><span>Tus ahorros</span><strong>$10 MM</strong></div>
+      <div class="rx-bar"><div class="rx-seg s1" style="--w:50%"><strong>$5 MM</strong><span>para invertir</span></div><div class="rx-seg s3" style="--w:50%"><strong>$5 MM</strong><span>tu colchón</span></div></div>
+      <p class="rx-visual-note">Empiezas con el mínimo y creces a medida que ganas confianza. No tienes que poner todos tus ahorros.</p>''',
+              ['Tienes al menos $5 millones que no vas a necesitar en el corto plazo.', 'Nunca has invertido fuera del banco, o lo hiciste sin entender bien.',
+               'Quieres entender qué hay detrás de tu dinero antes de moverlo.', 'Estás dispuesto a conversar y revisar documentos con calma.'],
+              ['Buscas hacerte rico rápido.', 'Ese ahorro es tu único fondo de emergencia.', 'Quieres que alguien decida por ti sin explicarte.'])
+     + rx_proceso('Qué pasa después de que dejas tus datos', 'Así de simple, y sin sorpresas',
+                  [('Te escribe un asesor con nombre y apellido', 'Por WhatsApp, en el horario que elijas, para coordinar una conversación. No es un robot vendiéndote algo.'),
+                   ('Conversamos sobre ti, sin compromiso', 'Revisamos tu situación y te decimos con honestidad si esto es para ti hoy. Puedes venir con tu pareja, un socio o tu abogado.'),
+                   ('Te mostramos una operación real y sus documentos', 'La propiedad, su tasación, el precio de compra, el documento que queda a tu favor y el calendario de pagos.'),
+                   ('Te los llevas y los revisas con calma', 'Con quien quieras, el tiempo que necesites. Si algo no queda claro, no avanzas.'),
+                   ('Si decides avanzar, firmamos ante notario', 'Solo cuando tú estés tranquilo con lo que firmas.')],
+                  'Y después de firmar, no quedas solo',
+                  [('reloj', 'Pagos en fecha', 'En tu cuenta, en las fechas pactadas en tu contrato.'),
+                   ('grafico', 'Reportes simples', 'Cada trimestre sabes cómo va tu inversión.'),
+                   ('manos', 'Tu asesor al teléfono', 'Una persona a quien llamar si tienes una duda.'),
+                   ('brote', 'Al terminar, decides', 'Recuperas tu capital y te ayudamos a evaluar si reinviertes.')])
+     + cta_final('Tu primer paso', 'Empieza por una <span class="accent">conversación</span>, no por una firma',
+                 'Cuéntanos cuánto tienes y para qué es. Te decimos con honestidad si esto es para ti hoy.',
+                 'Quiero una conversación sin compromiso', 'Mi primera inversión'))
 
 # ---------------- 4.2 Experiencia ----------------
+_rev = [('La propiedad', 'Dirección, rol y antecedentes de la propiedad vinculada a tu operación.'),
+        ('Tasación y precio de compra', 'Para que veas el margen entre lo que se pagó y su valor comercial estimado.'),
+        ('El documento a tu favor', 'Hipoteca inscrita en el Conservador o título de dominio a tu nombre.'),
+        ('Calendario y devolución', 'Plazo, fechas de pago y cómo vuelve tu capital, por escrito.'),
+        ('El peor escenario', 'Qué herramienta legal tienes si algo no se cumple, y qué riesgos se mantienen.')]
+_card2 = '<aside class="rx-card rx-ficha" data-reveal><div class="rx-ficha-head"><span class="rx-card-kicker">Lo que revisas antes de firmar</span><span class="rx-tag">Ficha de la operación</span></div>' + ''.join(
+    f'<div class="rx-check">{_CHECK}<div><strong>{t}</strong><p>{d}</p></div></div>' for t, d in _rev) + \
+    '<p class="rx-card-note boxed">Si alguien te ofrece «respaldo inmobiliario» y no te entrega esto antes de firmar, no avances. Tampoco con nosotros.</p></aside>'
+
 page('ya-tengo-experiencia.html', 'Ya tengo experiencia invirtiendo',
-     'Criterios para evaluar cómo una alternativa con respaldo inmobiliario encaja en tu patrimonio.',
-     hero('Recursos / Ya tengo experiencia invirtiendo', 'Evalúa con la mirada que ya tienes',
-          'Ya sabes lo que es invertir. Estos criterios te ayudan a ver cómo encaja una alternativa en tu patrimonio.', 'Recursos') + f'''
-<section class="section"><div class="container">
-  <div class="table-wrap"><table>
-    <thead><tr><th>Criterio</th><th>Qué revisar</th></tr></thead>
-    <tbody>
-      <tr><td>Base de comparación</td><td>Mismo horizonte y misma moneda. Distingue tasas mensuales de anuales.</td></tr>
-      <tr><td>Resultado neto</td><td>Costos e impuestos, pagos durante el período y devolución del capital.</td></tr>
-      <tr><td>Liquidez</td><td>Condiciones de salida y cuánto necesitas mantener disponible.</td></tr>
-      <tr><td>Exposición</td><td>Cuánto de tu patrimonio quedaría en una empresa, inmueble o estrategia.</td></tr>
-      <tr><td>Escenarios</td><td>Qué pasa si cambian los plazos, los costos, los ingresos o el valor de salida.</td></tr>
-    </tbody></table></div>
-</div></section>
-<section class="section section-soft"><div class="container">
-  <div class="title"><span class="eyebrow">Para profundizar</span><h2>Todo lo que necesitas para evaluar</h2></div>
-  <div class="grid-3">
-    <article class="card"><h3>Tabla comparativa</h3><p>Mínimos, respaldo y plazos de cada alternativa.</p><a class="link-arrow" href="inversiones.html#comparar">Ver la tabla</a></article>
-    <article class="card"><h3>Garantías y respaldo</h3><p>Qué protege tu inversión y cómo funcionan sus resguardos.</p><a class="link-arrow" href="garantias-y-documentos.html">Ver garantías</a></article>
-    <article class="card"><h3>Operación abierta</h3><p>Cómo se documenta una operación real.</p><a class="link-arrow" href="verifica-a-pulso.html#operacion-abierta">Ver la operación</a></article>
-  </div>
-</div></section>
-''' + cta('Evalúa con todos los antecedentes', 'Te enviamos la información que necesitas para analizar una alternativa a fondo.', 'Pedir antecedentes', 'Solicitud de antecedentes para evaluar'))
+     'Operaciones desde $25 millones con una propiedad identificada y una hipoteca inscrita a tu favor o la propiedad a tu nombre. Revisa la ficha completa con tu abogado.',
+     rx_hero('Para quien ya invirtió y quiere ver qué hay detrás',
+             'Ya probaste fondos, acciones o crowdfunding. Esta vez, <span class="accent">mira la propiedad antes de firmar.</span>',
+             'Operaciones desde $25 millones con una propiedad identificada, comprada en oportunidad, y una hipoteca inscrita a tu favor o la propiedad inscrita a tu nombre. Sin pozo colectivo y sin «confía en nosotros». Te mostramos la ficha completa, incluido el peor escenario, y la revisas con tu abogado.',
+             'Quiero revisar una operación real', 'Revisar una operación real', 'Ver cómo está estructurada', 'verifica-a-pulso.html#operacion-abierta',
+             ['Desde $25 millones', 'Hipoteca inscrita o propiedad a tu nombre', 'Una operación identificada, no un pozo', 'Ven con tu abogado, contador o socio'], _card2)
+     + rx_fit('tu-patrimonio', 'Antes de la operación, tu patrimonio',
+              'Saber cuánto tienes no es lo mismo que saber cuánto puedes mover',
+              'Tu empresa, tu salud y tu familia definen cuánto capital puede quedar comprometido 15, 21 o 27 meses. Quien invierte sin ese análisis termina con demasiado amarrado o con demasiado quieto.',
+              'Por eso la primera reunión es un diagnóstico uno a uno: qué tienes hoy (banco, propiedades, empresa), qué necesitas líquido y para qué, y cuál es el horizonte real de ese dinero. Con eso definimos monto, línea y plazo. A veces el monto es menor de lo que el cliente imaginaba, y se lo decimos.',
+              '''<h3>Una parte de tu patrimonio, no todo</h3><p class="muted">Ejemplo ilustrativo de cómo se ordena un patrimonio antes de invertir:</p>
+      <div class="rx-bar three"><div class="rx-seg s2" style="--w:30%"><span>Liquidez que no se toca</span></div><div class="rx-seg s4" style="--w:39%"><span>Tus inversiones actuales</span></div><div class="rx-seg s3" style="--w:31%"><span>Operación con respaldo</span></div></div>
+      <p class="rx-visual-note">Las proporciones son solo un ejemplo: las de tu caso salen del diagnóstico. Si quieres, el equipo legal, tributario y patrimonial de Grupo MatchMaking te ayuda a ordenar el resto.</p>''',
+              ['Tienes $25 millones o más disponibles y tu vivienda resuelta.', 'Ya invertiste en fondos, acciones, crowdfunding o propiedades.',
+               'Quieres diversificar una parte de tu patrimonio, no todo.', 'Quieres revisar la propiedad y los documentos antes de firmar, con tu abogado o contador.'],
+              ['Buscas duplicar tu capital rápido. Eso no existe, y si alguien te lo ofrece, aléjate.', 'Vas a necesitar ese dinero en los próximos 12 meses.',
+               'Prefieres que te digan «confía en mí» en vez de mostrarte los papeles.'])
+     + rx_proceso('Qué pasa después de que dejas tus datos', 'Un proceso a tu ritmo, sin presión para decidir',
+                  [('Te escribe el asesor que corresponde a tu monto', 'Por WhatsApp, con su nombre, en el horario que elijas. Si quieres, te envía la ficha de una operación antes de conversar.'),
+                   ('Diagnóstico patrimonial, uno a uno', '45 minutos para revisar tu situación y ver si esto tiene sentido para ti hoy. Puedes venir con tu socio, tu pareja o tu abogado.'),
+                   ('Revisas una operación concreta', 'La propiedad, la tasación, el precio de compra, el documento a tu favor, el calendario y el peor escenario.'),
+                   ('Te llevas los documentos', 'Para que tu abogado o tu contador los revisen el tiempo que necesiten.'),
+                   ('Si decides avanzar, firmas ante notario', 'Y se inscribe la hipoteca a tu favor o la propiedad a tu nombre.')],
+                  'Y durante la operación',
+                  [('reloj', 'Pagos en fecha', 'En tu cuenta, en las fechas de tu contrato.'),
+                   ('grafico', 'Reportes trimestrales', 'Sabes cómo va tu operación sin tener que preguntar.'),
+                   ('manos', 'Una persona al teléfono', 'Tu asesor responde, no un bot.'),
+                   ('brote', 'Al cierre, decides', 'Recuperas tu capital o evalúas una nueva operación.')])
+     + cta_final('Con los papeles sobre la mesa', 'Revisa una <span class="accent">operación real</span> con tu abogado',
+                 'Te mostramos la ficha completa, incluido el peor escenario. Tú decides si avanzas.',
+                 'Quiero revisar una operación real', 'Revisar una operación real'))
 
 # ---------------- 4.3 FAQ ----------------
 def qa(q, a):
