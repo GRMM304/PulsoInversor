@@ -308,3 +308,10 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--p1-green
   .ritmo-cta .btn{width:100%}
 }
 @media (prefers-reduced-motion:reduce){.ritmo-nodo,.ritmo-pasos::after{transition:none}}
+
+/* Ajustes pedidos: fondo plano como «Personas reales», título sin degradado, foto sin marco ni sombra detrás */
+.ritmo{background:var(--gray-100)}
+.ritmo::before,.ritmo::after{display:none}
+.ritmo-acento{background:none;-webkit-background-clip:border-box;background-clip:border-box;color:inherit}
+.ritmo-foto::before{display:none}
+.ritmo-foto img{box-shadow:none}
