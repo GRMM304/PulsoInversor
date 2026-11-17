@@ -58,7 +58,7 @@ function correoInteresado(d) {
     asunto: 'Recibimos tus datos · Agenda tu reunión con Pulso',
     html: plantilla(`Gracias, ${primer}. Ya tenemos tus datos.`,
       p('Un asesor de Pulso te escribirá por WhatsApp con su nombre para coordinar la reunión' + (d.horario ? `, en el horario que elegiste (${esc(d.horario.toLowerCase())})` : '') + '.') +
-      p('En la reunión te mostramos una operación real con sus documentos: <b>qué propiedad respalda tu plata, qué documento queda a tu favor y cómo recuperas tu dinero.</b>') +
+      p('En la reunión te mostramos una operación real con sus documentos: <b>qué propiedad respalda tu dinero, qué documento queda a tu favor y cómo lo recuperas.</b>') +
       p('Puedes venir con tu pareja, tu socio o tu abogado. No te vamos a pedir que decidas en la reunión.') +
       `<p style="margin:22px 0"><a href="https://wa.me/56983554676" style="background:#C7D95D;color:#0E2C28;text-decoration:none;font-weight:bold;padding:13px 22px;border-radius:999px;display:inline-block">Escríbenos por WhatsApp</a></p>`),
   };
