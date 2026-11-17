@@ -920,3 +920,47 @@ details.camino[open] .camino-toggle::after{content:"–"}
 .cp-card .lead{margin:0}
 @media (max-width:1020px){.estrs{grid-template-columns:1fr}.inv-split{grid-template-columns:1fr;gap:32px}.inv-side{position:static}}
 @media (max-width:700px){.inv-head{flex-direction:column;gap:6px}.cp-card{flex-direction:column;align-items:flex-start;padding:28px}.inv-facts li{grid-template-columns:1fr;gap:2px}}
+
+/* ===== Inversiones v3 ===== */
+.tipos-sec{padding:56px 0}
+.tipos{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.tipo{position:relative;display:flex;flex-direction:column;gap:8px;padding:30px 28px 26px;border-radius:var(--radius-xl);background:#fff;border:1px solid var(--gray-200);box-shadow:var(--shadow-soft);text-decoration:none;color:inherit;overflow:hidden;transition:transform .3s,box-shadow .3s,border-color .3s}
+.tipo::before{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:linear-gradient(90deg,var(--green-700),var(--lime),var(--gold))}
+.tipo:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:rgba(199,217,93,.6)}
+.tipo-n{font-size:14px;font-weight:900;color:var(--green-500);letter-spacing:.06em}
+.tipo h3{font-size:24px;margin:0}
+.tipo p{color:var(--gray-700);margin:0 0 6px}
+.tipo-chip{align-self:flex-start;font-size:13px;font-weight:800;padding:5px 11px;border-radius:999px;background:rgba(199,217,93,.28);color:var(--green-900)}
+.tipo-go{margin-top:auto;padding-top:14px;font-size:14px;font-weight:800;color:var(--green-700)}
+.ahts{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.aht{position:relative;display:flex;flex-direction:column;padding:34px 30px 28px;border-radius:var(--radius-xl);background:#fff;box-shadow:var(--shadow-soft);overflow:hidden;transition:transform .3s,box-shadow .3s}
+.aht::before{content:"";position:absolute;left:0;right:0;top:0;height:8px;background:linear-gradient(90deg,var(--green-700),var(--lime),var(--gold))}
+.aht:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.aht-letter{display:grid;place-items:center;width:62px;height:62px;border-radius:18px;background:var(--green-900);color:var(--lime);font-size:30px;font-weight:900;margin-bottom:20px}
+.aht h3{font-size:28px;margin-bottom:8px}
+.aht-tag{font-size:18px;font-weight:700;color:var(--gray-700);line-height:1.4;margin-bottom:20px}
+.aht-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.aht-chips span{font-size:14px;font-weight:800;padding:8px 14px;border-radius:999px;background:var(--gray-100);color:var(--green-900)}
+.aht-desc{color:var(--gray-700);font-size:16px;margin-bottom:24px}
+.aht-btn{margin-top:auto;width:100%}
+.perfiles{display:grid;gap:12px;max-width:940px;margin:0 auto}
+.perfil{display:grid;grid-template-columns:1.3fr auto 1fr;gap:22px;align-items:center;padding:20px 26px;border-radius:var(--radius-lg);background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);text-decoration:none;color:#fff;transition:background .3s,border-color .3s,transform .3s}
+.perfil:hover{background:rgba(199,217,93,.1);border-color:rgba(199,217,93,.5);transform:translateX(4px)}
+.perfil-q{font-size:18px;font-weight:600;line-height:1.4}
+.perfil-arrow{font-size:22px;color:var(--lime);transition:transform .3s}
+.perfil:hover .perfil-arrow{transform:translateX(4px)}
+.perfil-a small{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.55)}
+.perfil-a strong{display:block;font-size:20px;color:var(--lime)}
+.perfil-a em{display:block;font-style:normal;font-size:13.5px;color:rgba(255,255,255,.7)}
+@media (max-width:1020px){.tipos,.ahts{grid-template-columns:1fr}}
+@media (max-width:700px){.perfil{grid-template-columns:1fr;gap:8px}.perfil-arrow{display:none}}
+#para-ti{scroll-margin-top:calc(var(--header-h) + 60px)}
+#para-ti .perfil{background:#fff;border-color:var(--gray-200);color:var(--gray-900);box-shadow:var(--shadow-soft)}
+#para-ti .perfil:hover{background:#fff;border-color:rgba(199,217,93,.8);box-shadow:var(--shadow)}
+#para-ti .perfil-q{color:var(--green-900)}
+#para-ti .perfil-arrow{color:var(--green-500)}
+#para-ti .perfil-a{padding-left:20px;border-left:3px solid var(--lime)}
+#para-ti .perfil-a small{color:var(--gray-500)}
+#para-ti .perfil-a strong{color:var(--green-700)}
+#para-ti .perfil-a em{color:var(--gray-700)}
+@media (max-width:700px){#para-ti .perfil-a{padding-left:12px}}

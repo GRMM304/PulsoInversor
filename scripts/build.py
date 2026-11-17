@@ -312,7 +312,6 @@ page('index.html', 'Inicio',
 <section class="section"><div class="container">
   <div class="title center"><span class="eyebrow">Formas de invertir</span><h2>Tres caminos, según lo que quieres construir</h2></div>
   <div class="caminos-acc">{cards}</div>
-  <p class="center-note">¿Quieres ordenar todo tu patrimonio? <a href="inversiones.html#configuracion-patrimonial">Conoce Configuración Patrimonial</a></p>
 </div></section>
 
 <section class="section section-soft"><div class="container">
@@ -450,84 +449,83 @@ def pasos(lista):
     return '<ol class="pasos">' + ''.join(f'<li><span class="paso-n">{i+1}</span><div><strong>{t}</strong><p>{d}</p></div></li>' for i, (t, d) in enumerate(lista)) + '</ol>'
 
 ESTRATEGIAS = [
-    ('Acción', 'Desde $5 millones', '12, 18 o 24 meses', 'documento',
-     'Prestas tu capital a Pulso y recibes un contrato de mutuo y un pagaré.',
-     'El pagaré es un título ejecutivo: si no se te paga, puedes cobrar por la vía judicial ejecutiva, más rápida que un juicio largo.'),
-    ('Hipoteca', 'Desde $25 millones', '15, 21 o 27 meses', 'hipoteca',
-     'Prestas tu capital como lo haría un banco, con una hipoteca constituida a tu favor sobre una propiedad.',
-     'No eres el dueño de la casa, pero si no se te devuelve el dinero tienes derecho a pedir su remate judicial y pagarte con lo que se obtenga.'),
-    ('Título', 'Desde $100 millones', '15, 21 o 27 meses', 'llave',
-     'Compras con tu capital una propiedad que se destina a Hipoteca Inteligente, sin pedir crédito bancario.',
-     'Quedas como dueño inscrito en el Conservador de Bienes Raíces, y Pulso administra la propiedad y cobra el arriendo.'),
+    ('A', 'Acción', 'Acceso flexible con respaldo notarial.', 'Desde $5MM', 'Pagaré',
+     'Para inversionistas que buscan menor ticket de entrada y una estructura documentada.'),
+    ('H', 'Hipoteca', 'Inversión respaldada por garantía hipotecaria.', 'Desde $25MM', 'Hipoteca',
+     'Para inversionistas que priorizan respaldo inmobiliario mediante hipoteca.'),
+    ('T', 'Título', 'Máximo respaldo mediante título de propiedad.', 'Desde $150MM', 'Título',
+     'Para inversionistas que buscan una estructura de mayor resguardo.'),
 ]
-estrategias = ''.join(f"""<article class="estr">
-      <div class="estr-head">{icon(ic)}<div><span class="estr-k">Estrategia</span><h4>{n}</h4></div></div>
-      <div class="estr-meta"><span>{mn}</span><span>{pl}</span></div>
-      <p class="estr-main">{d1}</p>
-      <p class="estr-prot"><strong>Cómo te protege:</strong> {d2}</p>
-    </article>""" for n, mn, pl, ic, d1, d2 in ESTRATEGIAS)
+estrategias = ''.join(f"""<article class="aht" id="estrategia-{n.lower().replace('í','i').replace('ó','o')}">
+      <span class="aht-letter" aria-hidden="true">{l}</span>
+      <h3>{n}</h3>
+      <p class="aht-tag">{tag}</p>
+      <div class="aht-chips"><span>{mn}</span><span>{doc}</span></div>
+      <p class="aht-desc">{d}</p>
+      <a class="btn btn-outline aht-btn" href="{mail('Estrategia ' + n)}" target="_blank" rel="noopener">Solicitar asesoría experta</a>
+    </article>""" for l, n, tag, mn, doc, d in ESTRATEGIAS)
+
+TIPOS = [
+    ('proyecta-un-hogar', 'Proyecta un Hogar', 'Invierte tu capital con respaldo y elige la estrategia que va contigo: Acción, Hipoteca o Título.', 'Desde $5MM'),
+    ('hipoteca-inteligente', 'Hipoteca Inteligente', 'Usa tu capacidad de crédito para comprar una propiedad antes del remate y recibe el arriendo como retorno.', 'Desde 2.000 UF de crédito'),
+    ('inversion-circular', 'Inversión Inmobiliaria Circular', 'Transforma el capital detenido en tu propiedad en una inversión que te da flujo cada mes.', 'Con tu propiedad'),
+]
+tipos = ''.join(f"""<a class="tipo" href="#{a_}"><span class="tipo-n">0{i+1}</span><h3>{t}</h3><p>{d}</p><span class="tipo-chip">{c}</span><span class="tipo-go">Ver cómo funciona <span aria-hidden="true">↓</span></span></a>""" for i, (a_, t, d, c) in enumerate(TIPOS))
 
 PASOS_HI = [
-    ('Una familia en riesgo de remate', 'Un propietario con una deuda bancaria que no puede sostener está a punto de perder su casa.'),
-    ('Compras la propiedad antes del remate', 'Con tu capacidad de crédito o con capital propio, compras la casa y evitas que la familia la pierda.'),
-    ('Se la arriendas por 2 a 5 años', 'En lugar de que se vayan, la familia sigue viviendo ahí con un contrato de arriendo a plazo fijo.'),
-    ('El arriendo es tu ingreso mensual', 'Lo que paga la familia cada mes es el retorno de tu inversión.'),
-    ('Opción de recompra desde el segundo año', 'Entre el año 2 y el 5, la familia puede recomprar su casa al precio que pagaste más un recargo anual (por ejemplo, 5%).'),
-    ('El cierre', 'Si recompra, recuperas tu capital con ganancia. Si no puede hacerlo al final del plazo, entrega la propiedad y tú decides si la conservas o la vendes a valor de mercado.'),
+    ('Compras la propiedad antes del remate', 'Con tu capacidad de crédito o capital propio, evitas que una familia pierda su casa.'),
+    ('La familia la arrienda de 2 a 5 años', 'Sigue viviendo ahí con un contrato de arriendo a plazo fijo.'),
+    ('Recibes el arriendo cada mes', 'Ese pago es el retorno de tu inversión.'),
+    ('Recompra o conservas la propiedad', 'Desde el segundo año la familia puede recomprarla con un recargo; si no, la propiedad sigue siendo tuya.'),
 ]
 PASOS_IC = [
-    ('Vendes tu propiedad con un descuento', 'Para lograr una venta rápida, la propiedad se ofrece bajo su valor de mercado (por ejemplo, un 15% más barata).'),
-    ('Pagas toda tu deuda hipotecaria', 'Con el dinero de la venta saldas el crédito con el banco y te sacas de encima tu principal carga financiera.'),
-    ('El saldo se invierte en Pulso', 'Lo que queda a tu favor se invierte en una alternativa de Pulso con rentabilidad fija mensual, y pasas a tener un flujo de caja positivo.'),
-    ('Recuperas tu capacidad de crédito', 'Al saldar la deuda, tu historial financiero queda limpio.'),
-    ('Puedes construir más patrimonio', 'Con esa capacidad recuperada puedes evaluar comprar nuevas propiedades de inversión que se arrienden, sujeto a la evaluación de cada banco.'),
+    ('Vendes tu propiedad', 'Se ofrece a un precio que permita una venta ágil.'),
+    ('Liberas su capital', 'Si tiene una deuda hipotecaria, se salda con la venta.'),
+    ('Lo inviertes en Pulso', 'El capital genera una rentabilidad fija mensual y te da un flujo de caja constante.'),
 ]
+PERFILES = [
+    ('Quiero empezar con un monto acotado', 'Acción', 'Desde $5MM · Pagaré', '#estrategia-accion'),
+    ('Busco que mi inversión tenga respaldo inmobiliario', 'Hipoteca', 'Desde $25MM · Hipoteca a tu favor', '#estrategia-hipoteca'),
+    ('Quiero el mayor resguardo: una propiedad a mi nombre', 'Título', 'Desde $150MM · Título de propiedad', '#estrategia-titulo'),
+    ('Tengo capacidad de crédito y quiero construir patrimonio', 'Hipoteca Inteligente', 'Desde 2.000 UF de crédito', '#hipoteca-inteligente'),
+    ('Tengo una propiedad y quiero que su capital trabaje', 'Inversión Circular', 'Flujo mensual con tu propiedad', '#inversion-circular'),
+]
+perfiles = ''.join(f"""<a class="perfil" href="{h}"><span class="perfil-q">“{q}”</span><span class="perfil-arrow" aria-hidden="true">→</span><span class="perfil-a"><small>Te recomendamos</small><strong>{r}</strong><em>{m}</em></span></a>""" for q, r, m, h in PERFILES)
 
 page('inversiones.html', 'Inversiones',
-     'Cómo funciona cada alternativa de Pulso Inversor, paso a paso: Proyecta un Hogar (estrategias Acción, Hipoteca y Título), Hipoteca Inteligente e Inversión Inmobiliaria Circular.',
+     'Las tres formas de invertir con Pulso Inversor: Proyecta un Hogar (estrategias Acción, Hipoteca y Título), Hipoteca Inteligente e Inversión Inmobiliaria Circular.',
      hero('Cómo invertir / Inversiones', 'Encuentra la alternativa que va contigo',
-          'Te explicamos cada una paso a paso: qué haces, qué queda a tu favor y cómo termina.', 'Inversiones') + f"""
-<nav class="inv-nav" aria-label="Alternativas"><div class="container">
-  <a href="#proyecta-un-hogar">Proyecta un Hogar</a><a href="#hipoteca-inteligente">Hipoteca Inteligente</a><a href="#inversion-circular">Inversión Circular</a><a href="#configuracion-patrimonial">Configuración Patrimonial</a><a href="#comparar">Comparar</a>
-</div></nav>
-
-<section class="section inv-sec" id="proyecta-un-hogar"><div class="container">
-  <div class="inv-head"><span class="inv-num">01</span><div>
-    <span class="eyebrow">Para invertir tu capital</span><h2>Proyecta un Hogar</h2>
-    <p class="lead">Pon tu capital a trabajar y elige cómo proteger tu dinero. Tus inversiones financian operaciones que ayudan a familias que enfrentan un remate a mantener su hogar.</p></div></div>
-  <div class="estrs">{estrategias}</div>
-  <div class="actions"><a class="btn btn-dark" href="{mail('Proyecta un Hogar')}" target="_blank" rel="noopener">Quiero saber más</a><a class="btn btn-outline" href="garantias-y-documentos.html">Ver las garantías en detalle</a></div>
+          'Tres formas de invertir, cada una pensada para un momento distinto. Elige la tuya y conversemos.', 'Inversiones') + f"""
+<section class="section tipos-sec"><div class="container">
+  <div class="tipos">{tipos}</div>
 </div></section>
 
-<section class="section section-soft inv-sec" id="hipoteca-inteligente"><div class="container inv-split">
+<nav class="inv-nav" aria-label="Alternativas"><div class="container">
+  <a href="#proyecta-un-hogar">Proyecta un Hogar</a><a href="#hipoteca-inteligente">Hipoteca Inteligente</a><a href="#inversion-circular">Inversión Circular</a><a href="#comparar">Comparar</a><a href="#para-ti">¿Cuál es para ti?</a>
+</div></nav>
+
+<section class="section section-soft inv-sec" id="proyecta-un-hogar"><div class="container">
+  <div class="title center"><span class="eyebrow">01 · Para invertir tu capital</span><h2>Proyecta un Hogar</h2>
+    <p class="lead">Pon tu capital a trabajar en operaciones que ayudan a familias que enfrentan un remate a mantener su hogar. Elige la estrategia que va contigo.</p></div>
+  <div class="ahts">{estrategias}</div>
+  {P("Montos y textos de las estrategias según la imagen entregada el 2026-11-17 (Título desde $150MM; antes figuraba $100MM). Plazos por estrategia en la tabla: VALIDAR.")}
+</div></section>
+
+<section class="section inv-sec" id="hipoteca-inteligente"><div class="container inv-split">
   <div class="inv-side">
-    <span class="inv-num">02</span>
-    <span class="eyebrow">Para quien tiene capacidad de crédito</span><h2>Hipoteca Inteligente</h2>
-    <p class="lead">Usa tu capacidad de crédito o tu capital para comprar la casa de una familia antes de que el banco la remate, y recibe el arriendo como retorno.</p>
-    <ul class="inv-facts"><li><span>Desde</span><strong>2.000 UF de capacidad de crédito hipotecario, o capital propio</strong></li><li><span>Plazo</span><strong>2 a 5 años</strong></li><li><span>A tu favor</span><strong>La propiedad, a tu nombre</strong></li></ul>
-    <div class="actions"><a class="btn btn-dark" href="{mail('Hipoteca Inteligente')}" target="_blank" rel="noopener">Quiero saber más</a></div>
+    <span class="eyebrow">02 · Para quien tiene capacidad de crédito</span><h2>Hipoteca Inteligente</h2>
+    <p class="lead">Compra la casa de una familia antes de que el banco la remate y recibe el arriendo como retorno.</p>
+    <ul class="inv-facts"><li><span>Desde</span><strong>2.000 UF de capacidad de crédito, o capital propio</strong></li><li><span>Plazo</span><strong>2 a 5 años</strong></li></ul>
   </div>
   {pasos(PASOS_HI)}
 </div></section>
 
-<section class="section inv-sec" id="inversion-circular"><div class="container inv-split">
+<section class="section section-soft inv-sec" id="inversion-circular"><div class="container inv-split">
   <div class="inv-side">
-    <span class="inv-num">03</span>
-    <span class="eyebrow">Para propietarios con mucha deuda</span><h2>Inversión Inmobiliaria Circular</h2>
-    <p class="lead">Si una deuda hipotecaria muy alta te tiene inmovilizado, transforma esa deuda en una inversión que te genere flujo cada mes.</p>
-    <ul class="inv-facts"><li><span>Desde</span><strong>El capital que queda tras vender y pagar la deuda</strong></li><li><span>Retorno</span><strong>Rentabilidad fija mensual sobre el saldo invertido</strong></li><li><span>Resultado</span><strong>Sin deuda y con capacidad de crédito recuperada</strong></li></ul>
-    <div class="actions"><a class="btn btn-dark" href="{mail('Inversión Inmobiliaria Circular')}" target="_blank" rel="noopener">Quiero saber más</a></div>
+    <span class="eyebrow">03 · Para propietarios</span><h2>Inversión Inmobiliaria Circular</h2>
+    <p class="lead">Transforma el capital detenido en tu propiedad en una inversión que te da flujo cada mes, y deja atrás las cargas que hoy te genera.</p>
   </div>
   {pasos(PASOS_IC)}
-</div></section>
-
-<section class="section section-soft" id="configuracion-patrimonial"><div class="container">
-  <div class="cp-card">
-    <div><span class="eyebrow">Para ordenar todo tu patrimonio</span><h2>Configuración Patrimonial</h2>
-      <p class="lead">Una estrategia integral para ordenar, invertir y proyectar tu patrimonio. Combinamos recursos, activos, financiamiento y estructuras jurídicas según lo que te importa: proteger, ganar eficiencia, dar continuidad o dejar un legado.</p></div>
-    <a class="btn btn-primary" href="{mail('Configuración Patrimonial')}" target="_blank" rel="noopener">Conversemos tu caso</a>
-  </div>
-  {P("COMPLETAR alcance contratado, honorarios, entregables y condiciones del acompañamiento.")}
 </div></section>
 
 <section class="section" id="comparar"><div class="container">
@@ -537,28 +535,19 @@ page('inversiones.html', 'Inversiones',
     <tbody>
       <tr><td>Proyecta un Hogar · Acción</td><td>$5 millones</td><td>Contrato de mutuo y pagaré</td><td>12, 18 o 24 meses</td></tr>
       <tr><td>Proyecta un Hogar · Hipoteca</td><td>$25 millones</td><td>Hipoteca inscrita a tu favor</td><td>15, 21 o 27 meses</td></tr>
-      <tr><td>Proyecta un Hogar · Título</td><td>$100 millones</td><td>La propiedad inscrita a tu nombre</td><td>15, 21 o 27 meses</td></tr>
+      <tr><td>Proyecta un Hogar · Título</td><td>$150 millones</td><td>La propiedad inscrita a tu nombre</td><td>15, 21 o 27 meses</td></tr>
       <tr><td>Hipoteca Inteligente</td><td>2.000 UF de capacidad de crédito, o capital propio</td><td>La propiedad a tu nombre, arrendada con opción de recompra</td><td>2 a 5 años</td></tr>
-      <tr><td>Inversión Inmobiliaria Circular</td><td>Capital neto tras vender y pagar la deuda</td><td>Inversión en Pulso con rentabilidad fija mensual</td><td>Según tu contrato</td></tr>
-      <tr><td>Configuración Patrimonial</td><td>Según tu patrimonio</td><td>Los documentos de cada solución que combines</td><td>Según el diseño</td></tr>
+      <tr><td>Inversión Inmobiliaria Circular</td><td>El capital de tu propiedad</td><td>Inversión en Pulso con rentabilidad fija mensual</td><td>Según tu contrato</td></tr>
     </tbody></table></div>
-  {P("VALIDAR plazos y mínimos por estrategia con el equipo (vienen de la presentación de Netlify y la confirmación de que Proyecta un Hogar agrupa Acción, Hipoteca y Título).")}
 </div></section>
 
-<section class="section section-soft"><div class="container">
+<section class="section section-soft" id="para-ti"><div class="container">
   <div class="title center"><span class="eyebrow">Para orientarte</span><h2>¿Cuál es para ti?</h2>
-    <p class="lead">Busca la frase que más se parezca a lo que estás viviendo hoy.</p></div>
-  <div class="table-wrap"><table>
-    <thead><tr><th>Me identifico con…</th><th>Por dónde partir</th></tr></thead>
-    <tbody>
-      <tr><td>Tengo ahorros y quiero que crezcan con respaldo</td><td><a href="#proyecta-un-hogar">Proyecta un Hogar</a>: parte con la estrategia Acción desde $5 millones.</td></tr>
-      <tr><td>Tengo capacidad de crédito y quiero construir patrimonio</td><td>Explora <a href="#hipoteca-inteligente">Hipoteca Inteligente</a>.</td></tr>
-      <tr><td>Tengo una propiedad con una deuda que me ahoga</td><td>Conoce la <a href="#inversion-circular">Inversión Inmobiliaria Circular</a>.</td></tr>
-      <tr><td>Quiero ordenar mis activos pensando en mi familia y el futuro</td><td>Conversemos sobre <a href="#configuracion-patrimonial">Configuración Patrimonial</a>.</td></tr>
-    </tbody></table></div>
+    <p class="lead">Busca la frase que más se parezca a lo que estás pensando.</p></div>
+  <div class="perfiles">{perfiles}</div>
 </div></section>
 """ + cta_final('¿Te ves en más de una?', 'Revisemos juntos <span class="accent">tu caso</span>',
-                'Pasa más de lo que crees. En una conversación vemos cuál calza con lo que quieres construir.', AGENDAR, 'Ayúdenme a encontrar mi alternativa'))
+                'Un asesor te ayuda a elegir la alternativa que calza con lo que quieres construir.', AGENDAR, 'Ayúdenme a encontrar mi alternativa'))
 
 # ---------------- 2.3 Garantías y respaldo ----------------
 _ICONS['pagare'] = '<path d="M6 3h9l3 3v15H6z"/><path d="M15 3v3h3"/><path d="M9 10h6M9 13h4"/><path d="M8.5 18c1-1.4 1.8-1.4 2.4 0s1.4 1.4 2.4-.4"/>'
