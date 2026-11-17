@@ -110,6 +110,8 @@
             </div>
           </div>
           <div id="campo-acomp" hidden><label class="campo" for="acompanante">Nombre de tu acompañante</label><input id="acompanante" name="acompanante" type="text"></div>
+          <label class="check"><input type="checkbox" name="estacionamiento" id="estacionamiento"><span><strong>Necesito estacionamiento</strong> para mi auto.</span></label>
+          <div id="campo-patente" hidden><label class="campo" for="patente">Patente del auto</label><input id="patente" name="patente" type="text" maxlength="10" autocapitalize="characters" autocomplete="off" placeholder="Ej: ABCD12" style="text-transform:uppercase"></div>
           <div class="trampa" aria-hidden="true"><label>Sitio web <input type="text" name="sitio_web" tabindex="-1" autocomplete="off"></label></div>
           <label class="check"><input type="checkbox" name="acepta_privacidad"><span>He leído y acepto la <a href="https://pulsoinversor.cl/privacidad" target="_blank" rel="noopener">Política de privacidad</a>. Pulso Inversor usará mis datos para gestionar mi asistencia y enviarme los recordatorios de este evento.</span></label>
           <label class="check"><input type="checkbox" name="acepta_publicidad"><span>Quiero recibir novedades y oportunidades de inversión de Pulso Inversor por email y WhatsApp (opcional).</span></label>
@@ -159,6 +161,7 @@
 
       form.addEventListener('change', function (e) {
         if (e.target.name === 'con') document.getElementById('campo-acomp').hidden = e.target.value !== '1';
+        if (e.target.name === 'estacionamiento') { document.getElementById('campo-patente').hidden = !e.target.checked; if (e.target.checked) document.getElementById('patente').focus(); }
       });
 
       function mostrarError(m) { err.textContent = m; err.hidden = false; }
@@ -174,6 +177,8 @@
           telefono: (f.get('telefono') || '').trim(),
           con_acompanante: f.get('con') === '1',
           acompanante: (f.get('acompanante') || '').trim(),
+          estacionamiento: !!f.get('estacionamiento'),
+          patente: (f.get('patente') || '').toUpperCase().replace(/[^A-Z0-9]/g, ''),
           acepta_privacidad: !!f.get('acepta_privacidad'),
           acepta_publicidad: !!f.get('acepta_publicidad'),
           sitio_web: f.get('sitio_web') || '',
@@ -184,6 +189,7 @@
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email)) return mostrarError('Ingresa un email válido.');
         if (d.telefono.replace(/\D/g, '').length < 8) return mostrarError('Ingresa un WhatsApp válido.');
         if (d.con_acompanante && !d.acompanante) return mostrarError('Ingresa el nombre de tu acompañante.');
+        if (d.estacionamiento && !/^[A-Z0-9]{5,8}$/.test(d.patente)) return mostrarError('Ingresa la patente de tu auto (ej: ABCD12).');
         if (!d.acepta_privacidad) return mostrarError('Para confirmar, acepta la Política de privacidad.');
 
         var btn = form.querySelector('.enviar');

@@ -92,6 +92,8 @@ async function confirmar(request, env, ctx) {
     email: limpiar(d.email, 160).toLowerCase(),
     telefono: String(d.telefono ?? '').replace(/[^\d+]/g, '').slice(0, 20),
     acompanante: d.con_acompanante ? limpiar(d.acompanante, 120) : '',
+    estacionamiento: d.estacionamiento ? 1 : 0,
+    patente: d.estacionamiento ? String(d.patente ?? '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 8) : '',
     acepta_privacidad: d.acepta_privacidad ? 1 : 0,
     acepta_publicidad: d.acepta_publicidad ? 1 : 0,
   };
@@ -101,6 +103,7 @@ async function confirmar(request, env, ctx) {
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(a.email)) return json({ ok: false, error: 'Ingresa un email válido.' }, 400);
   if (a.telefono.replace(/\D/g, '').length < 8) return json({ ok: false, error: 'Ingresa un WhatsApp válido (mínimo 8 dígitos).' }, 400);
   if (d.con_acompanante && !a.acompanante) return json({ ok: false, error: 'Ingresa el nombre de tu acompañante.' }, 400);
+  if (a.estacionamiento && !/^[A-Z0-9]{5,8}$/.test(a.patente)) return json({ ok: false, error: 'Ingresa la patente de tu auto (ej: ABCD12).' }, 400);
   if (!a.acepta_privacidad) return json({ ok: false, error: 'Para confirmar, acepta la Política de privacidad.' }, 400);
   if (!a.telefono.startsWith('+')) a.telefono = '+56' + a.telefono.replace(/^0+/, '');
 
@@ -113,15 +116,15 @@ async function confirmar(request, env, ctx) {
   }
 
   const fila = await env.DB.prepare(`
-    INSERT INTO asistentes (token, nombre, apellidos, email, telefono, acompanante, acepta_privacidad, acepta_publicidad, estado, creado, actualizado, origen)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'confirmado', ?, ?, ?)
+    INSERT INTO asistentes (token, nombre, apellidos, email, telefono, acompanante, estacionamiento, patente, acepta_privacidad, acepta_publicidad, estado, creado, actualizado, origen)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'confirmado', ?, ?, ?)
     ON CONFLICT(email) DO UPDATE SET
       nombre = excluded.nombre, apellidos = excluded.apellidos, telefono = excluded.telefono,
-      acompanante = excluded.acompanante, acepta_privacidad = excluded.acepta_privacidad,
+      acompanante = excluded.acompanante, estacionamiento = excluded.estacionamiento, patente = excluded.patente, acepta_privacidad = excluded.acepta_privacidad,
       acepta_publicidad = excluded.acepta_publicidad, estado = 'confirmado',
       actualizado = excluded.actualizado, enviado_confirmacion = NULL, cancelado = NULL
     RETURNING *`
-  ).bind(crypto.randomUUID(), a.nombre, a.apellidos, a.email, a.telefono, a.acompanante || null,
+  ).bind(crypto.randomUUID(), a.nombre, a.apellidos, a.email, a.telefono, a.acompanante || null, a.estacionamiento, a.patente || null,
     a.acepta_privacidad, a.acepta_publicidad, ahora, ahora, limpiar(d.origen, 60) || null).first();
 
   ctx.waitUntil((async () => {
@@ -212,12 +215,13 @@ async function panel(request, env) {
   const conf = results.filter((a) => a.estado === 'confirmado');
   const personas = conf.reduce((n, a) => n + 1 + (a.acompanante ? 1 : 0), 0);
   const llegaron = conf.filter((a) => a.asistio).length;
+  const autos = conf.filter((a) => a.estacionamiento).length;
   const cupos = parseInt(env.CUPOS || '0', 10);
   const marca = (v) => v === 'omitido' ? '<span title="No correspondía">—</span>' : v ? `<span title="${esc(fmtFecha(v))}">✓</span>` : '';
 
   const filas = results.map((a) => `
     <tr class="${a.estado}">
-      <td><strong>${esc(a.nombre)} ${esc(a.apellidos)}</strong>${a.acompanante ? `<br><small>+ ${esc(a.acompanante)}</small>` : ''}${a.estado === 'cancelado' ? '<br><small class="tag">Canceló</small>' : ''}</td>
+      <td><strong>${esc(a.nombre)} ${esc(a.apellidos)}</strong>${a.acompanante ? `<br><small>+ ${esc(a.acompanante)}</small>` : ''}${a.estacionamiento ? `<br><small>🚗 Estacionamiento · ${esc(a.patente || '')}</small>` : ''}${a.estado === 'cancelado' ? '<br><small class="tag">Canceló</small>' : ''}</td>
       <td><a href="mailto:${esc(a.email)}">${esc(a.email)}</a><br><a href="https://wa.me/${esc(a.telefono.replace(/\D/g, ''))}" target="_blank">${esc(a.telefono)}</a></td>
       <td>${esc(fmtFecha(a.creado))}</td>
       <td class="c">${a.acepta_publicidad ? 'Sí' : 'No'}</td>
@@ -240,6 +244,7 @@ button{border-radius:999px;padding:8px 12px;font-weight:800;cursor:pointer;font:
     <div class="kpi"><b>${conf.length}</b><span>Registros confirmados</span></div>
     <div class="kpi"><b>${personas}${cupos ? ` / ${cupos}` : ''}</b><span>Personas (con acompañantes)${cupos ? ' / cupos' : ''}</span></div>
     <div class="kpi"><b>${llegaron}</b><span>Llegaron (marcados hoy)</span></div>
+    <div class="kpi"><b>${autos}</b><span>Estacionamientos pedidos</span></div>
     <div class="kpi"><b>${results.length - conf.length}</b><span>Cancelaron</span></div>
   </div>
   <div class="acc"><input type="search" id="q" placeholder="Buscar por nombre, email o teléfono"><a href="/panel/asistentes.csv">Descargar Excel (CSV)</a><a href="/panel">Actualizar</a></div>
@@ -264,7 +269,7 @@ async function exportarCsv(env) {
   const { results } = await env.DB.prepare('SELECT * FROM asistentes ORDER BY creado ASC').all();
   const cols = [
     ['Nombre', 'nombre'], ['Apellidos', 'apellidos'], ['Email', 'email'],
-    ['WhatsApp', (a) => String(a.telefono || '').replace(/^\+56(9)(\d{4})(\d{4})$/, '+56 $1 $2 $3')], ['Acompañante', 'acompanante'],
+    ['WhatsApp', (a) => String(a.telefono || '').replace(/^\+56(9)(\d{4})(\d{4})$/, '+56 $1 $2 $3')], ['Acompañante', 'acompanante'], ['Estacionamiento', (a) => (a.estacionamiento ? 'Sí' : 'No')], ['Patente', 'patente'],
     ['Estado', 'estado'], ['Llegó', (a) => (a.asistio ? 'Sí' : 'No')], ['Hora de llegada', (a) => fmtFecha(a.llegada)],
     ['Acepta publicidad', (a) => (a.acepta_publicidad ? 'Sí' : 'No')], ['Confirmó', (a) => fmtFecha(a.creado)],
     ['Canceló', (a) => fmtFecha(a.cancelado)], ['Correo confirmación', (a) => fmtFecha(a.enviado_confirmacion)],

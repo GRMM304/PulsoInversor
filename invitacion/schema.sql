@@ -9,6 +9,8 @@ CREATE TABLE IF NOT EXISTS asistentes (
   email                TEXT    NOT NULL UNIQUE,              -- una inscripción por email (si repite, se actualiza)
   telefono             TEXT    NOT NULL,                     -- WhatsApp con código de país
   acompanante          TEXT,                                 -- nombre del acompañante, o NULL si viene solo
+  estacionamiento      INTEGER NOT NULL DEFAULT 0,           -- 1 = pidió estacionamiento
+  patente              TEXT,                                 -- patente del auto si pidió estacionamiento
   acepta_privacidad    INTEGER NOT NULL DEFAULT 0,           -- 1 = aceptó la Política de privacidad (obligatorio)
   acepta_publicidad    INTEGER NOT NULL DEFAULT 0,           -- 1 = aceptó recibir publicidad (opcional)
   estado               TEXT    NOT NULL DEFAULT 'confirmado' CHECK (estado IN ('confirmado', 'cancelado')),

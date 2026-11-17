@@ -64,7 +64,8 @@ function botonesCalendario(urlIcs) {
 // --- Correos al asistente ---------------------------------------------------
 
 export function correoConfirmacion(a, urls) {
-  const acomp = a.acompanante ? `<p style="margin:0 0 12px">Registramos que vienes con <strong>${esc(a.acompanante)}</strong>.</p>` : '';
+  const acomp = (a.acompanante ? `<p style="margin:0 0 12px">Registramos que vienes con <strong>${esc(a.acompanante)}</strong>.</p>` : '')
+    + (a.estacionamiento ? `<p style="margin:0 0 12px">Registramos que necesitas estacionamiento para tu auto patente <strong>${esc(a.patente || '')}</strong>.</p>` : '');
   return {
     asunto: `Confirmado: te esperamos el ${EVENTO.fechaTexto.toLowerCase()} en el Desayuno de Inversionistas`,
     html: plantilla({
@@ -139,6 +140,7 @@ export function correoEquipo(evento, a, urls) {
     ['Email', a.email],
     ['WhatsApp', a.telefono],
     ['Acompañante', a.acompanante || 'No'],
+    ['Estacionamiento', a.estacionamiento ? `Sí · patente ${a.patente || ''}` : 'No'],
     ['Acepta publicidad', a.acepta_publicidad ? 'Sí' : 'No'],
   ].map(([k, v]) => `<tr><td style="padding:6px 12px 6px 0;color:${C.gris}">${esc(k)}</td><td style="padding:6px 0;font-weight:bold">${esc(v)}</td></tr>`).join('');
   const titulo = { cancelacion: 'Canceló su asistencia', actualizacion: 'Actualizó su registro' }[evento] || 'Nueva confirmación';
