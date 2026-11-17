@@ -62,7 +62,7 @@ def footer():
     </div>
     <div class="footer-bottom">
       <span>© <span id="year">2026</span> Pulso Inversor SpA. Todos los derechos reservados.</span>
-      <span>La información de este sitio es referencial y no constituye una oferta ni asegura rentabilidad.</span>
+      <span><a href="privacidad.html">Política de privacidad</a> · La información de este sitio es referencial y no constituye una oferta ni asegura rentabilidad.</span>
     </div>
   </div>
 </footer>'''
@@ -83,7 +83,7 @@ def _etiquetar_tablas(html):
         return _re.sub(r'<tr>.*?</tr>', fila, t, flags=_re.S)
     return _re.sub(r'<table>.*?</table>', una, html, flags=_re.S)
 
-def page(slug, title, desc, body):
+def page(slug, title, desc, body, scripts=''):
     full = 'Pulso Inversor · Inversiones con garantía real' if slug == 'index.html' else f'{title} · Pulso Inversor'
     html = f'''<!doctype html>
 <html lang="es">
@@ -108,7 +108,7 @@ def page(slug, title, desc, body):
 {body}
 </main>
 {footer()}
-<script src="assets/js/main.js"></script>
+<script src="assets/js/main.js"></script>{scripts}
 </body>
 </html>
 '''
@@ -462,7 +462,7 @@ estrategias = ''.join(f"""<article class="aht" id="estrategia-{n.lower().replace
       <p class="aht-tag">{tag}</p>
       <div class="aht-chips"><span>{mn}</span><span>{doc}</span></div>
       <p class="aht-desc">{d}</p>
-      <a class="btn btn-outline aht-btn" href="{mail('Estrategia ' + n)}" target="_blank" rel="noopener">Solicitar asesoría experta</a>
+      <div class="aht-btns"><a class="btn btn-primary" href="simuladores.html?serie={l}#sim-proyecta">Simular {n}</a><a class="btn btn-outline" href="{mail('Estrategia ' + n)}" target="_blank" rel="noopener">Solicitar asesoría experta</a></div>
     </article>""" for l, n, tag, mn, doc, d in ESTRATEGIAS)
 
 TIPOS = [
@@ -470,7 +470,12 @@ TIPOS = [
     ('hipoteca-inteligente', 'Hipoteca Inteligente', 'Usa tu capacidad de crédito para comprar una propiedad antes del remate y recibe el arriendo como retorno.', 'Desde 2.000 UF de crédito'),
     ('inversion-circular', 'Inversión Inmobiliaria Circular', 'Transforma el capital detenido en tu propiedad en una inversión que te da flujo cada mes.', 'Con tu propiedad'),
 ]
-tipos = ''.join(f"""<a class="tipo" href="#{a_}"><span class="tipo-n">0{i+1}</span><h3>{t}</h3><p>{d}</p><span class="tipo-chip">{c}</span><span class="tipo-go">Ver cómo funciona <span aria-hidden="true">↓</span></span></a>""" for i, (a_, t, d, c) in enumerate(TIPOS))
+SIM_LINK = {'proyecta-un-hogar': 'simuladores.html#sim-proyecta', 'hipoteca-inteligente': 'simuladores.html#sim-hipoteca'}
+def _tipo(i, a_, t, d, c):
+    sim = f'<a class="btn btn-primary" href="{SIM_LINK[a_]}">Simular mi inversión</a>' if a_ in SIM_LINK else '<span class="tipo-soon">Simulador próximamente</span>'
+    return f"""<article class="tipo"><span class="tipo-n">0{i+1}</span><h3>{t}</h3><p>{d}</p><span class="tipo-chip">{c}</span>
+      <div class="tipo-actions">{sim}<a class="tipo-go" href="#{a_}">Ver cómo funciona <span aria-hidden="true">↓</span></a></div></article>"""
+tipos = ''.join(_tipo(i, *x) for i, x in enumerate(TIPOS))
 
 PASOS_HI = [
     ('Compras la propiedad antes del remate', 'Con tu capacidad de crédito o capital propio, evitas que una familia pierda su casa.'),
@@ -516,6 +521,7 @@ page('inversiones.html', 'Inversiones',
     <span class="eyebrow">02 · Para quien tiene capacidad de crédito</span><h2>Hipoteca Inteligente</h2>
     <p class="lead">Compra la casa de una familia antes de que el banco la remate y recibe el arriendo como retorno.</p>
     <ul class="inv-facts"><li><span>Desde</span><strong>2.000 UF de capacidad de crédito, o capital propio</strong></li><li><span>Plazo</span><strong>2 a 5 años</strong></li></ul>
+    <div class="actions"><a class="btn btn-primary" href="simuladores.html#sim-hipoteca">Simular Hipoteca Inteligente</a></div>
   </div>
   {pasos(PASOS_HI)}
 </div></section>
@@ -633,44 +639,153 @@ page('garantias-y-documentos.html', 'Garantías y respaldo',
                 'Resolver mis dudas', 'garantías y respaldo'))
 
 # ---------------- 2.4 Simuladores ----------------
-SOON = '<span class="pill soon">Próximamente</span>'
+# Lógica en assets/js/simuladores.js. Proyecta un Hogar replica www.pulsoinversor.cl (con comparación vs depósito a plazo);
+# Hipoteca Inteligente replica simuladorpulsoinversor.netlify.app.
 page('simuladores.html', 'Simuladores',
-     'Explora los números de tu inversión con calma y sin compromiso.',
+     'Simula tu inversión en Proyecta un Hogar (Acción, Hipoteca o Título) y compárala con un depósito a plazo, o arma tu configuración de Hipoteca Inteligente.',
      hero('Cómo invertir / Simuladores', 'Mira tus números antes de decidir',
-          'Elige una herramienta y explora con calma. Es para ti, sin compromiso.', 'Simuladores') + f'''
-<section class="section"><div class="container"><div class="grid-3">
-
-  <article class="card"><div class="card-num">01 · {SOON}</div><h3>Proyección de inversión de capital</h3>
-    {P("CONFIRMAR nombre, alternativa asociada y enlace del simulador de capital.")}
-    <p>Para ver cómo se relacionan tu capital, el plazo y el retorno estimado.</p>
-    <details><summary>Cómo leer tu simulación</summary><div class="details-body"><ul>
-      <li><strong>Capital:</strong> lo que aportas a la inversión.</li>
-      <li><strong>Retorno estimado:</strong> el interés proyectado con las condiciones del cálculo. Fíjate si está en pesos o reajustado en UF.</li>
-      <li><strong>Total y pagos:</strong> separa la devolución de tu capital del interés, y mira cuándo recibirías cada uno.</li></ul></div></details>
-    {P("COMPLETAR campos reales, costos incluidos y modalidad de pagos del simulador definitivo.")}
-    <a class="btn btn-outline" href="#" aria-disabled="true">Abrir simulador</a></article>
-
-  <article class="card"><div class="card-num">02 · {SOON}</div><h3>Hipoteca Inteligente</h3>
-    <p>Para ver cómo tu capacidad de financiamiento puede convertirse en retorno y patrimonio, con sus costos.</p>
-    <p>Te pediremos tu nombre, teléfono, correo y la capacidad de crédito que declares. Después eliges propiedad, plazo y las opciones disponibles.</p>
-    <details><summary>Cómo leer tu simulación</summary><div class="details-body"><ul>
-      <li><strong>Capacidad financiera:</strong> es la referencia que declaras para evaluar cada propiedad. No equivale a la aprobación del banco.</li>
-      <li><strong>Retorno proyectado:</strong> el resultado estimado de la propiedad elegida y el período del cálculo.</li>
-      <li><strong>Flujo y costos:</strong> ingresos, dividendos, administración y gastos considerados. Si el flujo sale negativo, son recursos que tendrías que cubrir en ese escenario.</li>
-      <li><strong>Patrimonio y cierre:</strong> separa el retorno disponible de la amortización de la deuda y compara conservar la propiedad o activar la recompra, cuando corresponda.</li></ul>
-      <p style="margin-top:12px">En un ejemplo de recompra, el resultado al cierre suma el retorno disponible y la amortización. Son dos cosas distintas, y conviene leerlas según la configuración que elijas.</p></div></details>
-    {P("ENLACE EN REVISIÓN: https://simuladorpulsoinversor.netlify.app/ — activar el botón (quitar aria-disabled y poner el href) cuando el simulador esté alineado con la presentación vigente y se retire la regla divergente de reparto de amortización.")}
-    <a class="btn btn-outline" href="#" aria-disabled="true">Abrir simulador</a></article>
-
-  <article class="card"><div class="card-num">03 · {SOON}</div><h3>Una nueva herramienta</h3>
-    {P("COMPLETAR identidad de la tercera herramienta, alternativa asociada, enlace, datos requeridos y su desplegable 'Cómo leer tu simulación' (tres resultados principales, moneda, horizonte, costos y supuestos).")}
-    <p>Estamos preparando una tercera herramienta para que explores otra de nuestras alternativas.</p>
-    <a class="btn btn-outline" href="#" aria-disabled="true">Abrir simulador</a></article>
-
-</div>
-<p class="disclaimer">Los resultados son referenciales y dependen de los datos y supuestos que uses. Las condiciones reales de una operación están en su documentación, y una simulación no asegura rentabilidad.</p>
+          'Completa tus datos una vez y usa los simuladores con calma. Los resultados son referenciales.', 'Simuladores') + f"""
+<div data-simuladores>
+<section class="section section-soft" id="datos"><div class="container">
+  <div class="gate" id="sim-gate">
+    <div class="gate-intro"><span class="eyebrow">Paso previo</span><h2>Completa tus datos para simular</h2>
+      <p class="lead">Así un asesor puede revisar tus números contigo si lo necesitas. Los usamos según nuestra <a href="privacidad.html" target="_blank">Política de privacidad</a>.</p></div>
+    <form class="gate-form" id="gate-form" novalidate>
+      <label>Nombre y apellido<input id="gate-nombre" name="nombre" autocomplete="name" placeholder="Tu nombre" required></label>
+      <label>Correo electrónico<input name="email" type="email" autocomplete="email" placeholder="nombre@correo.cl" required></label>
+      <label>Teléfono / WhatsApp<span class="gate-tel"><span>+56</span><input name="telefono" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="9 1234 5678" required></span></label>
+      <label class="check"><input type="checkbox" name="terminos" required><span>Acepto los términos y condiciones y la <a href="privacidad.html" target="_blank">Política de privacidad</a> de Pulso Inversor.</span></label>
+      <label class="check"><input type="checkbox" name="contenido" required><span>Acepto que Pulso Inversor me envíe contenido e información sobre inversiones por correo y WhatsApp.</span></label>
+      <div class="hp" aria-hidden="true"><label>No completar<input name="website" tabindex="-1" autocomplete="off"></label></div>
+      <p class="gate-err" id="gate-err" role="alert"></p>
+      <button class="btn btn-primary btn-xl" type="submit">Ver los simuladores <span aria-hidden="true">→</span></button>
+    </form>
+    <div class="gate-ok"><span class="gate-check" aria-hidden="true">✓</span><div><strong>Listo, <span id="gate-ok-name"></span>.</strong><p>Ya puedes usar los simuladores.</p></div></div>
+  </div>
+  {P("CASILLAS: ambas obligatorias a pedido de la usuaria. Ojo: la Política de privacidad del sitio actual decía que la casilla de contenido/publicidad era opcional; conviene revisarlo con legal. FALTA el documento de Términos y condiciones (hoy el enlace va a la Política de privacidad).")}
 </div></section>
-''' + cta('¿Prefieres ver los números con alguien?', 'Te acompañamos a leerlos y a resolver tus dudas.', AGENDAR, 'Consulta sobre simuladores'))
+
+<section class="section" id="sim-area"><div class="container">
+  <div class="sim-tabs" role="tablist" aria-label="Simuladores">
+    <button type="button" role="tab" data-sim-tab="sim-proyecta">Proyecta un Hogar</button>
+    <button type="button" role="tab" data-sim-tab="sim-hipoteca">Hipoteca Inteligente</button>
+    <button type="button" role="tab" data-sim-tab="sim-circular">Inversión Circular <small>Próximamente</small></button>
+  </div>
+  <div class="sim-lock"><span class="sim-lock-ico" aria-hidden="true">🔒</span><strong>Completa tus datos para ver los simuladores</strong><p>Nombre, correo, teléfono y las dos casillas de autorización.</p><button type="button" class="btn btn-dark" data-go-gate>Completar mis datos</button></div>
+
+  <div class="sim-panel" id="sim-proyecta" data-sim-panel="sim-proyecta"><div class="sim-panel-body">
+    <div class="sim-head"><h2>Proyecta un Hogar</h2><p class="muted">Elige tu estrategia, el monto y el plazo, y compara con lo que te daría un depósito a plazo.</p></div>
+    <div class="pro">
+      <div class="pro-form">
+        <span class="pro-label">Estrategia</span>
+        <div class="pro-series">
+          <button type="button" data-serie="A"><b>A</b><span>Acción<small>Desde $5MM · Pagaré</small></span></button>
+          <button type="button" data-serie="H"><b>H</b><span>Hipoteca<small>Desde $25MM · Hipoteca</small></span></button>
+          <button type="button" data-serie="T"><b>T</b><span>Título<small>Desde $150MM · Título</small></span></button>
+        </div>
+        <label class="pro-label" for="p-monto">Monto a invertir</label>
+        <input id="p-monto" class="pro-monto" type="text" inputmode="numeric" autocomplete="off">
+        <div class="pro-chips" id="p-quick"></div>
+        <p class="pro-help" id="p-min"></p>
+        <p class="pro-warn" id="p-warn" hidden>El monto está bajo el mínimo; se calcula con el mínimo de la estrategia.</p>
+        <span class="pro-label">Plazo</span>
+        <div class="pro-chips" id="p-plazos"></div>
+        <label class="check pro-retiro" id="p-retiro-wrap"><input type="checkbox" id="p-retiro"><span>Quiero la opción de retiro anticipado (tasa 0,1 punto menor)</span></label>
+      </div>
+      <aside class="pro-result">
+        <span class="eyebrow dark">Resultado referencial</span>
+        <div class="pro-total"><small>Total a recibir</small><strong id="r-total">—</strong><span>Ganancia estimada <b id="r-ganancia">—</b></span></div>
+        <ul class="pro-list">
+          <li><span>Estrategia</span><strong id="r-estrategia">—</strong></li>
+          <li><span>Monto</span><strong id="r-monto">—</strong></li>
+          <li><span>Plazo</span><strong id="r-plazo">—</strong></li>
+          <li><span>Tasa</span><strong id="r-tasa">—</strong></li>
+        </ul>
+        <div class="dap">
+          <h4>Pulso vs. depósito a plazo</h4>
+          <div class="dap-bar"><span>Con Pulso</span><div><i id="d-bar-pulso"></i></div><b id="d-pulso">—</b></div>
+          <div class="dap-bar dap-bank"><span>Depósito a plazo</span><div><i id="d-bar-dap"></i></div><b id="d-dap">—</b></div>
+          <p class="dap-veces">Tu ganancia sería <strong id="d-veces">—</strong> la de un depósito a plazo: <strong id="d-dif">—</strong> más.</p>
+        </div>
+        <div class="pro-actions"><button type="button" class="btn btn-primary" id="p-enviar">Enviar mi simulación a un asesor</button><button type="button" class="btn btn-secondary" id="p-whatsapp">Enviar por WhatsApp</button></div>
+        <p class="pro-status" id="p-status" role="status"></p>
+        <p class="pro-note">Referencial. Depósito a plazo calculado con una tasa de <span id="d-tasa">—</span> mensual a 30 días, renovado cada mes. <span id="r-nota-uf">Hipoteca y Título se reajustan en UF (UF de hoy <span id="r-uf">—</span>, IPC estimado 4,5% anual).</span> Las condiciones finales dependen de la evaluación y del contrato.</p>
+      </aside>
+    </div>
+    {P("TASA del depósito a plazo (DAP_MENSUAL en assets/js/simuladores.js): 0,40% mensual referencial; CONFIRMAR el valor a usar.")}
+  </div></div>
+
+  <div class="sim-panel" id="sim-hipoteca" data-sim-panel="sim-hipoteca" hidden><div class="sim-panel-body">
+    <div class="sim-head"><h2>Hipoteca Inteligente</h2><p class="muted">Arma tu configuración: el Portafolio Tracción genera el retorno y el Portafolio Patrimonio construye tu patrimonio.</p></div>
+    <form class="hi-capform" id="hi-cap-form" novalidate>
+      <div><strong>Tu capacidad financiera</strong><p>Indica cuánto crédito hipotecario podrías obtener por operación. Cada propiedad se valida por separado; los créditos no se suman.</p></div>
+      <label class="hi-capfield"><span class="sr-only">Capacidad financiera por crédito</span><input id="hi-cap" inputmode="decimal" autocomplete="off" placeholder="Ej. 3.000"><span>UF</span></label>
+      <button class="btn btn-primary" type="submit">Comenzar simulación</button>
+      <p class="gate-err" id="hi-caperr" role="alert"></p>
+    </form>
+    <div class="hi" id="hi-body">
+      <div class="hi-lockmsg"><strong>Ingresa tu capacidad financiera para ver la simulación</strong></div>
+      <article class="hi-panel"><div class="hi-bar"></div><div class="hi-pad">
+        <span class="hi-n">01</span><span class="hi-k">Portafolio Tracción</span><h3>Genera el retorno</h3>
+        <p class="muted">Selecciona una propiedad y el plazo de la estrategia.</p>
+        <label class="pro-label" for="hi-traction">Propiedad Tracción</label><select id="hi-traction" class="hi-select"></select>
+        <div class="hi-rows" id="hi-tmetrics"></div>
+        <div class="hi-ret"><small id="hi-retlabel">Retorno acumulado</small><strong id="hi-retval">—</strong><span>5% anual simple sobre el 80%</span></div>
+        <div class="hi-years" id="hi-years"></div>
+        <p class="hi-foot">Este retorno financia los costos estimados del Portafolio Patrimonio. Capacidad declarada: <b id="hi-capdisplay">—</b> por crédito.</p>
+      </div></article>
+      <article class="hi-panel"><div class="hi-bar green"></div><div class="hi-pad">
+        <span class="hi-n">02</span><span class="hi-k">Portafolio Patrimonio</span><h3>Elige hasta dos propiedades</h3>
+        <p class="muted">Cada propiedad se valida contra tu capacidad financiera.</p>
+        <div id="hi-table"></div>
+        <p class="hi-note" id="hi-note">El flujo incorpora arriendo, dividendo y administración.</p>
+      </div></article>
+      <article class="hi-panel"><div class="hi-bar gold"></div><div class="hi-pad">
+        <span class="hi-n">03</span><span class="hi-k">Resultado de la configuración</span><h3>Tu elección cambia el cierre</h3>
+        <div id="hi-result"></div>
+      </div></article>
+    </div>
+    <p class="pro-note">Simulación referencial en UF. Considera una vacancia promedio de 1 mes por año, contribuciones estimadas en 0,08% anual de la tasación y mantención y reparaciones estimadas en 0,04% anual. En la recompra, la amortización acumulada se distribuye en partes iguales entre el inversionista y Pulso. Los valores definitivos dependen de cada propiedad y de la tabla bancaria aplicable.</p>
+    {P("REVISIÓN 7 pedía retirar la regla de reparto 50/50 de la amortización en la recompra porque difiere de la presentación vigente. Se replicó tal cual el simulador actual a pedido de la usuaria: CONFIRMAR.")}
+    <img id="hi-logo" src="assets/img/logo-pulso-gmm.png" alt="" width="396" height="44" hidden>
+  </div></div>
+
+  <div class="sim-panel" id="sim-circular" data-sim-panel="sim-circular" hidden><div class="sim-panel-body">
+    <div class="sim-soon"><span class="pill soon">Próximamente</span><h2>Inversión Inmobiliaria Circular</h2><p class="muted">Estamos preparando este simulador. Mientras tanto, un asesor puede revisar tu caso contigo.</p>
+      <a class="btn btn-dark" href="{mail('Inversión Inmobiliaria Circular')}" target="_blank" rel="noopener">Agendar una reunión</a></div>
+  </div></div>
+</div></section>
+</div>
+<section class="section section-soft"><div class="container"><p class="disclaimer" style="text-align:center;margin:0">Los resultados son referenciales y dependen de los datos y supuestos utilizados. Las condiciones de una operación se revisan en su documentación; la simulación no asegura rentabilidad.</p></div></section>
+""" + cta_final('¿Prefieres ver los números con alguien?', 'Revisemos tu simulación <span class="accent">juntos</span>',
+                'Un asesor te acompaña a leer los resultados y a resolver tus dudas.', AGENDAR, 'mi simulación'),
+     scripts='\n<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>\n<script src="assets/js/simuladores.js"></script>')
+
+# ---------------- Política de privacidad ----------------
+page('privacidad.html', 'Política de privacidad',
+     'Qué datos personales recoge Pulso Inversor, para qué los usa y cómo ejercer tus derechos.',
+     hero('Política de privacidad', 'Política de privacidad', 'Última actualización: 17 de noviembre de 2026', 'Tus datos') + f"""
+{P("Texto basado en la Política de privacidad publicada en www.pulsoinversor.cl (16-11-2026), adaptada a los simuladores de este sitio. REVISAR con legal, en especial el punto 2 (contenido obligatorio para usar los simuladores).")}
+<section class="section"><div class="container legal-text">
+  <p>En Pulso Inversor, empresa de Grupo Matchmaking, cuidamos los datos personales que nos entregas a través de este sitio. Aquí te contamos qué datos recogemos, para qué los usamos y cómo puedes ejercer tus derechos, conforme a la Ley N° 19.628 sobre protección de la vida privada y sus modificaciones.</p>
+  <h2>1. Qué datos recogemos</h2>
+  <p>Cuando usas los simuladores o nos contactas, recogemos tu nombre, correo, teléfono o WhatsApp, los datos de tu simulación (estrategia, monto, plazo y resultado referencial) y, en Hipoteca Inteligente, la capacidad financiera que declares.</p>
+  <h2>2. Para qué los usamos</h2>
+  <ul><li>Responder tu solicitud: un asesor puede contactarte para revisar tu simulación y orientarte.</li>
+    <li>Enviarte contenido e información sobre inversiones por correo y WhatsApp, si lo autorizaste. Puedes darte de baja cuando quieras.</li></ul>
+  <p>No vendemos ni cedemos tus datos a terceros para fines comerciales propios de ellos.</p>
+  <h2>3. Quién más trata tus datos</h2>
+  <p>Usamos proveedores de servicios tecnológicos, como la plataforma de correo y gestión de contactos Brevo y Google (planillas). Ellos tratan tus datos solo por encargo nuestro y para los fines descritos aquí.</p>
+  <h2>4. Cuánto tiempo los guardamos</h2>
+  <p>Mientras mantengamos contacto contigo o hasta que nos pidas eliminarlos, salvo que la ley nos obligue a conservarlos por más tiempo.</p>
+  <h2>5. Tus derechos</h2>
+  <p>Puedes pedirnos en cualquier momento acceder a tus datos, corregirlos, eliminarlos u oponerte a su uso, y retirar tu autorización para recibir contenido. Escríbenos a <a href="mailto:{EMAIL}">{EMAIL}</a> indicando tu nombre y lo que necesitas.</p>
+  <h2>6. Contacto</h2>
+  <p>Correo: <a href="mailto:{EMAIL}">{EMAIL}</a> · Teléfono: +56 2 3365 5239</p>
+  <h2>7. Cambios a esta política</h2>
+  <p>Si actualizamos esta política, publicaremos la nueva versión en esta página con su fecha.</p>
+</div></section>
+""")
 
 # ---------------- 3.1 Nosotros ----------------
 HITOS = [
