@@ -23,3 +23,18 @@ CREATE TABLE IF NOT EXISTS simulaciones (
   notas TEXT
 );
 CREATE INDEX IF NOT EXISTS idx_sim_creado ON simulaciones(creado);
+
+-- Reuniones avisadas por Brevo Meetings (webhooks "Meeting booked" y "Meeting cancelled")
+CREATE TABLE IF NOT EXISTS reuniones (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  recibido TEXT NOT NULL,
+  evento TEXT NOT NULL,             -- reservada / cancelada
+  email TEXT,
+  nombre TEXT,
+  inicio TEXT,
+  fin TEXT,
+  reunion TEXT,                     -- meeting_name
+  cuenta TEXT,                      -- account_email (usuario Brevo del asesor)
+  datos TEXT                        -- JSON completo recibido
+);
+CREATE INDEX IF NOT EXISTS idx_reu_email ON reuniones(email);

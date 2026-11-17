@@ -16,6 +16,7 @@
 import { DEFAULT_SENDER, EQUIPO, MAX_PDF_BYTES, ORIGENES, TIPOS, ASESORES, asesoresPara, json, esc, clp, brevo, plantilla, boton, bloqueResumen, P, C, WHATSAPP } from './comun.js';
 import { programarSeguimiento, rutaSeguimiento, HORAS_SEGUIMIENTO } from './seguimiento.js';
 import { rutaPanel } from './panel.js';
+import { recibirReunion } from './reuniones.js';
 
 
 function correoInversionista({ tipo, nombre, lineas, personas }) {
@@ -143,6 +144,7 @@ export default {
       try { return await enviarSimulacion(request, env); }
       catch (e) { console.error(e); return json({ ok: false, error: 'envio_fallido' }, 502); }
     }
+    if (url.pathname.startsWith('/api/brevo-reuniones/')) return recibirReunion(request, env, url);
     if (url.pathname === '/panel' || url.pathname.startsWith('/panel/')) return rutaPanel(request, env, url);
     if (url.pathname.startsWith('/seguimiento/')) {
       try { const r = await rutaSeguimiento(request, env, url); if (r) return r; }
