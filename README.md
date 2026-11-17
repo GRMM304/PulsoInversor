@@ -36,9 +36,12 @@ La información marcada en amarillo en el documento de contenidos **no se public
 
 ## Publicación (Cloudflare)
 
-El sitio se publica en Cloudflare Workers con archivos estáticos, conectado a este repositorio: cada cambio que llega a `main` se publica solo.
+Este es el **Prototipo 1** (rama `main`). Se publica en Cloudflare Workers con archivos estáticos, conectado a este repositorio: cada cambio que llega a `main` se publica solo.
 
-- `wrangler.jsonc`: nombre del proyecto (`pulsoinversor`) y carpeta publicada (la raíz).
+- **Ver:** https://1.pulsoinversor.cl (única dirección; la de workers.dev está desactivada).
+- `wrangler.jsonc`: proyecto `pulsoinversor`, dominio `1.pulsoinversor.cl` y carpeta publicada (la raíz).
 - `.assetsignore`: lo que **no** se publica (`scripts/`, `.md`, configuración).
 
 Probar con el mismo motor de Cloudflare: `npx wrangler dev` y abrir http://127.0.0.1:8787.
+
+Otras ramas del repositorio con sitios aparte: `prototipo-2` (2.pulsoinversor.cl) y `sitio-provisorio` (pulsoinversor.cl).
