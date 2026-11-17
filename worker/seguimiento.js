@@ -6,7 +6,7 @@
 //
 // Secreto necesario en Cloudflare: FIRMA_SEGUIMIENTO (texto aleatorio para firmar los enlaces).
 
-import { ASESORES, SITIO, WHATSAPP, DEFAULT_SENDER, C, P, esc, clp, brevo, boton, bloqueResumen, plantilla } from './comun.js';
+import { AGENDA_BREVO, ASESORES, SITIO, WHATSAPP, DEFAULT_SENDER, C, P, esc, clp, brevo, boton, bloqueResumen, plantilla } from './comun.js';
 
 export const HORAS_SEGUIMIENTO = 48;
 const ENCUESTA_EMAIL = ['eorrego@grupomm.cl'];
@@ -114,6 +114,9 @@ async function agendar(request, env, url) {
   if (request.method !== 'POST') {
     const d = await leer(env, t);
     if (!d) return enlaceVencido();
+    // Si el tramo tiene agenda de Brevo, se redirige allí (el enlace del correo no cambia aunque se cambie la agenda).
+    const brevoUrl = AGENDA_BREVO[d.g];
+    if (brevoUrl) return Response.redirect(brevoUrl, 302);
     const ps = personasDe(d), varios = ps.length > 1;
     const manana = new Date(Date.now() + 864e5 - 3 * 3600e3).toISOString().slice(0, 10);
     return pagina('Agendar reunión', `<p class="eyebrow">Agendar reunión · ${esc(d.s)}</p>
