@@ -44,4 +44,19 @@ Este es el **Prototipo 1** (rama `main`). Se publica en Cloudflare Workers con a
 
 Probar con el mismo motor de Cloudflare: `npx wrangler dev` y abrir http://127.0.0.1:8787.
 
+## Envío de simulaciones por correo
+
+El botón "Enviar a mi correo" de los simuladores genera un PDF en el navegador y lo manda a `/api/enviar-simulacion` (`worker/index.js`). El Worker envía, con la API de Brevo:
+
+1. al cliente, su simulación en PDF al correo que registró;
+2. a Pulso, una notificación con sus datos y el mismo PDF.
+
+**Para activarlo** (una vez, en Cloudflare: Workers & Pages > `pulsoinversor` > Settings > Variables and Secrets):
+
+- `BREVO_API_KEY` (tipo *Secret*): clave de API de Brevo (Brevo > SMTP & API > API Keys).
+- `SENDER_EMAIL` (opcional): remitente verificado en Brevo. Por defecto `contacto@pulsoinversor.cl`.
+- `NOTIFY_EMAIL` (opcional): quién recibe las notificaciones. Por defecto `contacto@pulsoinversor.cl`.
+
+Mientras no exista la clave, la ruta responde "correo no configurado" y el sitio muestra un aviso; los datos igual llegan a Pulso por Brevo (formulario) y por la planilla de Hipoteca Inteligente.
+
 Otras ramas del repositorio con sitios aparte: `prototipo-2` (2.pulsoinversor.cl) y `sitio-provisorio` (pulsoinversor.cl).

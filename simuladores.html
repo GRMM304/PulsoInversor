@@ -41,7 +41,7 @@
     <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-hipoteca" aria-selected="false">
       <span class="sim-pick-ico">HI</span><strong>Hipoteca Inteligente</strong><span>Arma tu configuración con tu capacidad de crédito y mira cómo termina.</span><em>Desde 2.000 UF de crédito</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
     <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-circular" aria-selected="false">
-      <span class="sim-pick-ico">IC</span><strong>Inversión Circular</strong><span>Transforma el capital de tu propiedad en flujo mensual.</span><em>Próximamente</em><span class="sim-pick-go">Ver más <i aria-hidden="true">↓</i></span></button>
+      <span class="sim-pick-ico">IC</span><strong>Inversión Circular</strong><span>Compara conservar tu propiedad con venderla e invertir en Pulso.</span><em>Con tu propiedad</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
   </div>
 
   <div class="sim-stage" id="sim-stage" hidden>
@@ -109,10 +109,9 @@
             </ul>
           </div>
         </div>
-        <div class="pro-diff"><span>Con Pulso ganas</span><strong id="d-dif">—</strong><span>más que en un depósito a plazo · <b id="d-veces">—</b> su ganancia</span></div>
         <p class="pro-pref" id="p-pref" hidden>Sobre $250.000.000 puedes acceder a condiciones preferentes. Pregúntale a tu asesor.</p>
-        <div class="pro-actions"><button type="button" class="btn btn-primary" id="p-enviar">Enviar mi simulación a un asesor</button><button type="button" class="btn btn-outline" id="p-whatsapp">Enviar por WhatsApp</button></div>
-        <p class="pro-status" id="p-status" role="status"></p>
+        <div class="pro-actions"><button type="button" class="btn btn-primary btn-xl" id="p-correo">Enviar a mi correo <span aria-hidden="true">→</span></button></div>
+        <p class="sim-status" id="p-status" role="status"></p>
         <p class="pro-note">Referencial. Depósito a plazo calculado a 30 días, renovado cada mes. <span id="r-nota-uf">Hipoteca y Título se reajustan en UF (UF de hoy <span id="r-uf">—</span>, IPC estimado 4,5% anual).</span> Las condiciones finales dependen de la evaluación y del contrato.</p>
       </div>
     </div>
@@ -151,17 +150,68 @@
     </div>
     <p class="pro-note">Simulación referencial en UF. Considera una vacancia promedio de 1 mes por año, contribuciones estimadas en 0,08% anual de la tasación y mantención y reparaciones estimadas en 0,04% anual. En la recompra, la amortización acumulada se distribuye en partes iguales entre el inversionista y Pulso. Los valores definitivos dependen de cada propiedad y de la tabla bancaria aplicable.</p>
     <!-- PENDIENTE: REVISIÓN 7 pedía retirar la regla de reparto 50/50 de la amortización en la recompra porque difiere de la presentación vigente. Se replicó tal cual el simulador actual a pedido de la usuaria: CONFIRMAR. -->
-    <img id="hi-logo" src="assets/img/logo-pulso-gmm.png" alt="" width="396" height="44" hidden>
   </div></div>
 
   <div class="sim-panel" id="sim-circular" data-sim-panel="sim-circular" hidden><div class="sim-panel-body">
-    <div class="sim-soon"><span class="pill soon">Próximamente</span><h2>Inversión Inmobiliaria Circular</h2><p class="muted">Estamos preparando este simulador. Mientras tanto, un asesor puede revisar tu caso contigo.</p>
-      <a class="btn btn-dark" href="https://wa.me/56983554676?text=Hola%2C%20quiero%20agendar%20una%20reuni%C3%B3n%20con%20un%20asesor%20de%20Pulso%20Inversor.%20Tema%3A%20Inversi%C3%B3n%20Inmobiliaria%20Circular." target="_blank" rel="noopener">Agendar una reunión</a></div>
+    <div class="sim-head"><h2>Inversión Inmobiliaria Circular</h2><p class="muted">Compara conservar tu propiedad arrendada con venderla e invertir el capital en Pulso. Cifras en pesos.</p></div>
+    <div class="ic">
+      <form class="pro-form ic-form" id="ic-form" novalidate>
+        <span class="pro-label">¿Tu propiedad tiene deuda?</span>
+        <div class="pro-yesno"><button type="button" class="chip-opt" data-ic-debt="no">Sin deuda</button><button type="button" class="chip-opt" data-ic-debt="yes">Con deuda</button></div>
+        <label class="pro-label" for="ic-value">¿Cuánto vale tu propiedad hoy?</label>
+        <div class="money-in"><span>$</span><input id="ic-value" inputmode="numeric" autocomplete="off" value="100.000.000"></div>
+        <label class="pro-label" for="ic-rent">¿Cuánto recibes de arriendo al mes? <small>Si no está arrendada, deja 0.</small></label>
+        <div class="money-in"><span>$</span><input id="ic-rent" inputmode="numeric" autocomplete="off" value="500.000"></div>
+        <label class="pro-label" for="ic-oldpayment">¿Cuánto pagas de dividendo al mes?</label>
+        <div class="money-in"><span>$</span><input id="ic-oldpayment" inputmode="numeric" autocomplete="off" value="0"></div>
+        <div id="ic-debtfields" class="ic-sub" hidden>
+          <label class="pro-label" for="ic-debt">¿Cuánto debes hoy? <small>Saldo de prepago que informa tu banco.</small></label>
+          <div class="money-in"><span>$</span><input id="ic-debt" inputmode="numeric" autocomplete="off" placeholder="Ej. 40.000.000"></div>
+          <label class="pro-label" for="ic-oldmonths">¿Cuántas cuotas te quedan?</label>
+          <input id="ic-oldmonths" type="number" inputmode="numeric" min="1" max="600" placeholder="Ej. 225">
+        </div>
+        <span class="pro-label">¿Cada cuánto quieres recibir tus intereses?</span>
+        <div class="pro-chips"><button type="button" class="chip-opt" data-ic-freq="quarterly">Cada 3 meses · 1,2% mensual</button><button type="button" class="chip-opt" data-ic-freq="monthly">Cada mes · 1,0% mensual</button></div>
+        <span class="pro-label">¿A cuántos años quieres proyectar?</span>
+        <div class="pro-yesno"><button type="button" class="chip-opt" data-ic-years="5">5 años</button><button type="button" class="chip-opt" data-ic-years="10">10 años</button></div>
+        <label class="check ic-purchase"><input type="checkbox" id="ic-purchase"><span>Quiero evaluar comprar una nueva propiedad con el capital <small>(opcional)</small></span></label>
+        <div id="ic-purchasefields" class="ic-sub" hidden>
+          <label class="pro-label" for="ic-newvalue">Valor de la nueva propiedad</label>
+          <div class="money-in"><span>$</span><input id="ic-newvalue" inputmode="numeric" autocomplete="off" value="80.000.000"></div>
+          <label class="pro-label" for="ic-newrent">Arriendo que podría generar</label>
+          <div class="money-in"><span>$</span><input id="ic-newrent" inputmode="numeric" autocomplete="off" value="400.000"></div>
+          <div class="ic-2"><label><span class="pro-label">Financiamiento (% tasación)</span><input id="ic-ltv" type="number" value="85" min="0" max="100" step="0.1"></label>
+            <label><span class="pro-label">Plazo del crédito (años)</span><input id="ic-term" type="number" value="20" min="1" max="40"></label></div>
+          <div class="ic-2"><label><span class="pro-label">Tasa del crédito (% anual UF)</span><input id="ic-rate" type="number" value="5" min="0" max="30" step="0.1"></label>
+            <label><span class="pro-label">Gastos de compra (% del precio)</span><input id="ic-buycost" type="number" value="2" min="0" max="30" step="0.1"></label></div>
+        </div>
+      </form>
+      <div class="ic-out" id="ic-results">
+        <div class="sim-alert" id="ic-error" role="alert" hidden></div>
+        <div class="sim-alert warn" id="ic-warning" role="status" hidden></div>
+        <div class="ic-head"><h3>Más claridad para decidir</h3><span id="ic-period">Proyección a 5 años</span></div>
+        <div class="ic-kpis">
+          <div class="ic-kpi"><small>Capital neto de la venta</small><strong id="ic-k-net">—</strong><span>Venta menos prepago y gastos</span></div>
+          <div class="ic-kpi"><small>Ingreso mensual equivalente</small><strong id="ic-k-monthly">—</strong><span id="ic-k-monthly-sub">—</span></div>
+          <div class="ic-kpi"><small>Flujo actual antes de costos</small><strong id="ic-k-flow">—</strong><span>Arriendo menos dividendo actual</span></div>
+        </div>
+        <p class="ic-summary" id="ic-summary"></p>
+        <div class="ic-card"><h4 id="ic-bars-title">¿Con cuánto terminas?</h4><div class="cb" id="ic-bars"></div>
+          <p class="cb-legend"><span class="cb-a"></span>Patrimonio o capital al término <span class="cb-b"></span>Ingresos recibidos en el período</p></div>
+        <div class="ic-card"><div class="ic-head"><h4>La comparación que respalda tu decisión</h4><span>TIR anual efectiva</span></div>
+          <div class="ic-tablewrap"><table class="ic-table"><thead><tr><th>Alternativa</th><th>5 años</th><th>10 años*</th></tr></thead><tbody id="ic-tir"></tbody></table></div>
+          <p class="ic-note" id="ic-base"></p>
+          <p class="ic-note">*Proyectar diez años exige continuidad de tasa, condiciones y cumplimiento de pagos. La nueva compra es opcional y se evalúa por separado.</p></div>
+        <div class="pro-actions"><button type="button" class="btn btn-primary btn-xl" id="ic-correo">Enviar a mi correo <span aria-hidden="true">→</span></button></div>
+        <p class="sim-status" id="ic-status" role="status"></p>
+      </div>
+    </div>
+    <!-- PENDIENTE: SUPUESTOS fijos (como el simulador de referencia): venta 15% bajo valor comercial, tasas Pulso 1,2% (pago trimestral) y 1,0% (mensual), inflación 3%, arriendo +3% anual, mantención $150.000/año, vacancia 42 días cada 3 años con 1 mes de garantía, reparaciones $1.200.000 cada 3 años. VALIDAR. -->
   </div></div>
   </div>
 </div></section>
 </div>
-<section class="section section-soft"><div class="container"><p class="disclaimer" style="text-align:center;margin:0">Los resultados son referenciales y dependen de los datos y supuestos utilizados. Las condiciones de una operación se revisan en su documentación; la simulación no asegura rentabilidad.</p></div></section>
+<img id="sim-logo" class="pdf-logo" src="assets/img/logo-pulso-gmm.png" alt="" width="396" height="44">
 <section class="cta-final">
   <div class="container">
     <span class="eyebrow dark">¿Prefieres ver los números con alguien?</span>

@@ -76,6 +76,55 @@
       .then(function () { return true; }, function () { return false; });
   }
 
+  /* ---------- Envío de la simulación al correo (Worker /api/enviar-simulacion) ---------- */
+  var API_CORREO = '/api/enviar-simulacion';
+  function folioPI() { var d = new Date(), p = function (n) { return String(n).padStart(2, '0'); }; return 'PI-' + String(d.getFullYear()).slice(2) + p(d.getMonth() + 1) + p(d.getDate()) + '-' + p(d.getHours()) + p(d.getMinutes()) + '-' + Math.random().toString(36).slice(2, 5).toUpperCase(); }
+  function slugNombre() { return String(contacto ? contacto.nombre : 'cliente').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40) || 'cliente'; }
+  // PDF sencillo: encabezado de marca + secciones de filas clave/valor y párrafos.
+  function pdfSimple(titulo, subtitulo, secciones) {
+    var doc = new window.jspdf.jsPDF({ unit: 'mm', format: 'a4' });
+    var C = { deep: [24, 76, 63], lime: [191, 212, 30], text: [20, 63, 55], muted: [107, 125, 119], line: [221, 228, 224], red: [198, 40, 40], pos: [42, 107, 79] };
+    var W = 210, M = 16, CW = W - 2 * M, y = 0, fol = folioPI();
+    var font = function (sz, st, k) { doc.setFont('helvetica', st || 'normal'); doc.setFontSize(sz); doc.setTextColor.apply(doc, C[k || 'text']); };
+    var ensure = function (h) { if (y + h > 276) { doc.addPage(); y = 18; } };
+    var logo = $('#sim-logo');
+    try { var lw = 92, lh = lw * logo.naturalHeight / logo.naturalWidth; doc.addImage(logo, 'PNG', M, 9, lw, lh, undefined, 'FAST'); } catch (e) { font(12, 'bold'); doc.text('Pulso Inversor', M, 17); }
+    font(9, 'bold'); doc.text('Folio ' + fol, W - M, 14, { align: 'right' });
+    font(9, 'normal', 'muted'); doc.text(new Date().toLocaleDateString('es-CL', { day: '2-digit', month: 'long', year: 'numeric' }), W - M, 19.5, { align: 'right' });
+    doc.setFillColor.apply(doc, C.deep); doc.rect(0, 28, W, 20, 'F'); doc.setFillColor.apply(doc, C.lime); doc.rect(0, 48, W, 1.6, 'F');
+    font(17, 'bold'); doc.setTextColor(255, 255, 255); doc.text(titulo, M, 39.5);
+    font(9, 'normal'); doc.setTextColor(207, 224, 217); doc.text(subtitulo, W - M, 39.5, { align: 'right' }); y = 56;
+    var secs = [{ t: 'Preparada para', rows: [['Nombre', contacto ? contacto.nombre : ''], ['Correo electrónico', contacto ? contacto.email : ''], ['Teléfono', contacto ? '+56 ' + contacto.telefono : '']] }].concat(secciones);
+    secs.forEach(function (sec) {
+      ensure(22); y += 4; doc.setFillColor.apply(doc, C.lime); doc.rect(M, y, 12, 1.4, 'F'); y += 6; font(12, 'bold'); doc.text(sec.t, M, y); y += 5;
+      (sec.rows || []).forEach(function (r) {
+        ensure(8); font(9.5, 'normal', 'muted'); doc.text(String(r[0]), M, y + 4.5); font(9.5, 'bold', r[2] || 'text'); doc.text(String(r[1]).replace(/−/g, '-'), M + CW, y + 4.5, { align: 'right' });
+        y += 7; doc.setDrawColor.apply(doc, C.line); doc.setLineWidth(.2); doc.line(M, y, M + CW, y);
+      });
+      if (sec.text) { font(sec.small ? 8.5 : 9.5, 'normal', sec.small ? 'muted' : 'text'); var l = doc.splitTextToSize(String(sec.text).replace(/−/g, '-'), CW); ensure(l.length * 4.4 + 2); doc.text(l, M, y + 4.5); y += l.length * 4.4 + 3; }
+    });
+    var n = doc.getNumberOfPages(); for (var i = 1; i <= n; i++) { doc.setPage(i); doc.setDrawColor.apply(doc, C.line); doc.setLineWidth(.2); doc.line(M, 286, W - M, 286); font(7.5, 'normal', 'muted'); doc.text('Pulso Inversor · Simulación ' + fol, M, 291); doc.text('Página ' + i + ' de ' + n, W - M, 291, { align: 'right' }); }
+    doc.__folio = fol;
+    return doc;
+  }
+  function enviarCorreo(tipo, doc, prefijo, resumen, st, btn) {
+    if (!contacto) return;
+    st.className = st.className.replace(/\s?is-(ok|err)/g, '');
+    st.textContent = 'Enviando a ' + contacto.email + '…'; btn.disabled = true;
+    var b64 = doc.output('datauristring').split(',')[1];
+    var archivo = prefijo + '_' + (doc.__folio || folioPI()) + '_' + slugNombre() + '.pdf';
+    fetch(API_CORREO, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tipo: tipo, cliente: { nombre: contacto.nombre, email: contacto.email, telefono: contacto.telefono }, pdfBase64: b64, archivo: archivo, resumen: resumen, website: '' }) })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return r.ok && j.ok; }); })
+      .then(function (ok) {
+        st.classList.add(ok ? 'is-ok' : 'is-err');
+        st.textContent = ok ? '✓ Te enviamos la simulación a ' + contacto.email + '. Si no la ves, revisa tu carpeta de spam.'
+          : 'No pudimos enviar el correo en este momento. Ya recibimos tu simulación y un asesor te la hará llegar.';
+      }, function () { st.classList.add('is-err'); st.textContent = 'No pudimos enviar el correo en este momento. Ya recibimos tu simulación y un asesor te la hará llegar.'; })
+      .then(function () { btn.disabled = false; });
+  }
+  function jspdfListo(st) { if (window.jspdf && window.jspdf.jsPDF) return true; st.textContent = 'No se pudo preparar el documento. Revisa tu conexión y recarga la página.'; return false; }
+
   $('#gate-form').addEventListener('submit', function (e) {
     e.preventDefault();
     var f = e.target, err = $('#gate-err');
@@ -151,9 +200,6 @@
     $('#d-monto').textContent = fmtCLP(r.monto);
     $('#d-plazo').textContent = P.plazo + ' meses';
     $('#p-pref').hidden = r.monto < 250000000;
-    var veces = r.dapGanancia > 0 ? r.ganancia / r.dapGanancia : 0;
-    $('#d-veces').textContent = veces ? veces.toLocaleString('es-CL', { maximumFractionDigits: 1 }) + ' veces' : '—';
-    $('#d-dif').textContent = '+' + fmtCLP(r.ganancia - r.dapGanancia);
     $('#d-tasa').textContent = fmtPct(DAP_MENSUAL, 2);
     $('#r-nota-uf').hidden = !s.uf;
     $('#r-uf').textContent = fmtCLP(UF);
@@ -179,16 +225,20 @@
     render(true);
   });
   $('#p-monto').addEventListener('blur', function () { P.monto = montoEf(); render(); });
-  $('#p-enviar').addEventListener('click', function () {
-    var st = $('#p-status');
-    if (!contacto) return;
-    st.textContent = 'Enviando…';
-    brevo(contacto.nombre, contacto.email, contacto.telefono, '--- Simulación Proyecta un Hogar ---\n' + resumen()).then(function (ok) {
-      st.textContent = ok ? '✓ Simulación enviada. Un asesor te contactará pronto.' : 'No pudimos enviarla. Revisa tu conexión o envíala por WhatsApp.';
-    });
-  });
-  $('#p-whatsapp').addEventListener('click', function () {
-    window.open('https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent('Hola, quiero revisar mi simulación de Pulso Inversor:\n\n' + resumen()), '_blank', 'noopener');
+  $('#p-correo').addEventListener('click', function () {
+    var st = $('#p-status'), btn = $('#p-correo');
+    if (!contacto || !jspdfListo(st)) return;
+    var r = calcular(), sr = SERIES[P.serie];
+    var resumenTxt = resumen();
+    brevo(contacto.nombre, contacto.email, contacto.telefono, '--- Simulación Proyecta un Hogar ---\n' + resumenTxt);
+    var doc = pdfSimple('Simulación Proyecta un Hogar', 'Resultado referencial', [
+      { t: 'Tu simulación', rows: [['Estrategia', sr.nombre + ' · ' + sr.garantia], ['Monto a invertir', fmtCLP(r.monto)], ['Plazo', P.plazo + ' meses'],
+        ['Tasa', fmtPct(tasa(), 1) + ' mensual' + (sr.uf ? ' + UF' : '')]].concat(sr.retiro ? [['Retiro anticipado', P.retiro ? 'Sí' : 'No']] : []) },
+      { t: 'Con Pulso', rows: [['Total a recibir', fmtCLP(r.total)], ['Ganancia', '+' + fmtCLP(r.ganancia), 'pos']] },
+      { t: 'En un depósito a plazo', rows: [['Tasa referencial', fmtPct(DAP_MENSUAL, 2) + ' mensual'], ['Total a recibir', fmtCLP(r.dapTotal)], ['Ganancia', '+' + fmtCLP(r.dapGanancia), 'red']] },
+      { t: 'Supuestos', small: true, text: 'Simulación referencial. Depósito a plazo calculado a 30 días, renovado cada mes.' + (sr.uf ? ' Hipoteca y Título se reajustan en UF (UF ' + fmtCLP(UF) + ', IPC estimado 4,5% anual).' : '') + ' Las condiciones finales dependen de la evaluación y del contrato de cada operación. Este documento no constituye una oferta vinculante.' }
+    ]);
+    enviarCorreo('proyecta', doc, 'Simulacion_ProyectaUnHogar', resumenTxt.split('\n'), st, btn);
   });
   renderSeries(); render();
 
@@ -267,7 +317,7 @@
     var ret = tractionReturn(), months = H.years * 12, t = tractionData[H.tr];
     var picks = H.selected.map(function (i) { return { i: i, p: patrimonyData[i], d: dec(i), c: calcPat(patrimonyData[i]) }; });
     var d = function (a, b, k, sub) { return '<div class="hi-drow ' + (k || '') + '"><span>' + a + (sub ? '<em>' + sub + '</em>' : '') + '</span><b>' + b + '</b></div>'; };
-    var pdfBar = '<div class="hi-actions"><button class="btn btn-primary" id="hi-pdf" type="button">Descargar cotización en PDF</button><span class="hi-status" id="hi-pdfstatus" role="status"></span></div>';
+    var pdfBar = '<div class="hi-actions"><button class="btn btn-primary" id="hi-pdf" type="button">Enviar a mi correo</button></div><p class="sim-status" id="hi-pdfstatus" role="status"></p>';
     if (!picks.length) {
       var ok = H.tractionOnly === true;
       var concl0 = 'Elegiste enfocarte solo en el retorno del Portafolio Tracción. Al término de ' + H.years + ' años, el retorno acumulado estimado es ' + signed(ret) + ', sin propiedades del Portafolio Patrimonio ni equity asociado.';
@@ -358,7 +408,7 @@
   function generarPDF() {
     var status = $('#hi-pdfstatus'), qd = H.quote;
     if (!qd) { status.textContent = 'Selecciona una propiedad o confirma que tu objetivo es solo el retorno de Tracción.'; return; }
-    if (!window.jspdf || !window.jspdf.jsPDF) { status.textContent = 'No se pudo cargar el generador de PDF. Revisa tu conexión y recarga la página.'; return; }
+    if (!jspdfListo(status)) return;
     var doc = new window.jspdf.jsPDF({ unit: 'mm', format: 'a4' });
     var C = { deep: [24, 76, 63], lime: [191, 212, 30], limeSoft: [244, 248, 226], goldSoft: [253, 246, 227], text: [20, 63, 55], muted: [107, 125, 119], line: [221, 228, 224], pos: [42, 107, 79], neg: [179, 67, 44], soft: [238, 242, 239] };
     var W = 210, M = 16, CW = W - 2 * M, y = 0, fol = folio(), fecha = new Date().toLocaleDateString('es-CL', { day: '2-digit', month: 'long', year: 'numeric' }), t = tractionData[H.tr];
@@ -367,8 +417,8 @@
     var section = function (title, need) { ensure(18 + (need || 0)); y += 4; doc.setFillColor.apply(doc, C.lime); doc.rect(M, y, 12, 1.4, 'F'); y += 6; font(12, 'bold'); doc.text(title, M, y); y += 5; };
     var kv = function (label, value, color) { ensure(8); font(9.5, 'normal', 'muted'); doc.text(label, M, y + 4.5); font(9.5, 'bold', color || 'text'); doc.text(pt(value), M + CW, y + 4.5, { align: 'right' }); y += 7; doc.setDrawColor.apply(doc, C.line); doc.setLineWidth(.2); doc.line(M, y, M + CW, y); };
     var para = function (txt, sz, k) { font(sz || 9, 'normal', k || 'muted'); var l = doc.splitTextToSize(pt(txt), CW); ensure(l.length * 4.2 + 2); doc.text(l, M, y + 4); y += l.length * 4.2 + 2; };
-    var logo = $('#hi-logo');
-    try { var lw = 92, lh = lw * logo.naturalHeight / logo.naturalWidth; doc.addImage(logo, 'PNG', M, 9, lw, lh); } catch (e) { font(12, 'bold'); doc.text('Pulso Inversor', M, 17); }
+    var logo = $('#sim-logo');
+    try { var lw = 92, lh = lw * logo.naturalHeight / logo.naturalWidth; doc.addImage(logo, 'PNG', M, 9, lw, lh, undefined, 'FAST'); } catch (e) { font(12, 'bold'); doc.text('Pulso Inversor', M, 17); }
     font(9, 'bold'); doc.text('Folio ' + fol, W - M, 14, { align: 'right' }); font(9, 'normal', 'muted'); doc.text(fecha, W - M, 19.5, { align: 'right' });
     doc.setFillColor.apply(doc, C.deep); doc.rect(0, 28, W, 20, 'F'); doc.setFillColor.apply(doc, C.lime); doc.rect(0, 48, W, 1.6, 'F');
     font(17, 'bold'); doc.setTextColor(255, 255, 255); doc.text('Cotización Hipoteca Inteligente', M, 39.5);
@@ -405,10 +455,162 @@
     section('Supuestos y condiciones');
     para('Simulación referencial en UF. Considera una vacancia promedio de 1 mes por año, contribuciones estimadas en 0,08% anual de la tasación y mantención y reparaciones estimadas en 0,04% anual. En la recompra, la amortización acumulada se distribuye en partes iguales entre el inversionista y Pulso. Los valores definitivos dependen de cada propiedad y de la tabla bancaria aplicable. Este documento no constituye una oferta vinculante ni una aprobación de crédito.', 8.5);
     var n = doc.getNumberOfPages(); for (var i = 1; i <= n; i++) { doc.setPage(i); doc.setDrawColor.apply(doc, C.line); doc.setLineWidth(.2); doc.line(M, 286, W - M, 286); font(7.5, 'normal', 'muted'); doc.text('Pulso Inversor · Cotización ' + fol, M, 291); doc.text('Página ' + i + ' de ' + n, W - M, 291, { align: 'right' }); }
-    var slug = String(contacto ? contacto.nombre : 'cliente').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40) || 'cliente';
-    doc.save('Cotizacion_' + fol + '_' + slug + '.pdf');
-    status.textContent = 'PDF descargado · folio ' + fol + '.';
+    doc.__folio = fol;
+    var resumenHI = ['Propiedad Tracción: ' + t.name + ' (' + t.comuna + ')', 'Plazo: ' + H.years + ' años', 'Capacidad declarada: ' + uf(H.capacity) + ' por crédito',
+      'Retorno disponible: ' + pt(signed(qd.available)), 'Capital líquido estimado: ' + pt(signed(qd.realized))].concat(qd.picks.map(function (x) { return 'Patrimonio: ' + x.p.name + ' · ' + (x.d === 'keep' ? 'Conservar' : 'Activar recompra'); }));
+    enviarCorreo('hipoteca', doc, 'Cotizacion_HipotecaInteligente', resumenHI, status, $('#hi-pdf'));
     var pk = qd.picks.map(function (x) { return { name: x.p.name, financingUF: x.p.fin, decision: x.d === 'keep' ? 'Conservar' : 'Activar recompra' }; });
     if (contacto) sheet('quote', Object.assign({ name: contacto.nombre, phone: contacto.telefono, email: contacto.email, capacityUF: H.capacity, consent: true, folio: fol, traction: t.name, tractionComuna: t.comuna, years: H.years, p1: pk[0] || null, p2: pk[1] || null }, H.summary || {}));
   }
+
+  /* =========================================================
+     Inversión Inmobiliaria Circular
+     Modelo replicado del simulador de referencia (artifact de diseño).
+     Muestra solo lo esencial: capital neto, ingreso mensual, flujo actual,
+     barras "¿Con cuánto terminas?" y la TIR a 5 y 10 años.
+     ========================================================= */
+  (function () {
+    if (!$('#ic-form')) return;
+    // Supuestos de referencia (fijos)
+    var FIJOS = { discount: 15, sellcost: 0, quarterrate: 1.2, monthrate: 1, base: 'market', inflation: 3, growth: 0, rentgrowth: 3,
+      maintenance: 150000, turnyears: 3, vacancydays: 42, repairs: 1200000, guarantee: 1 };
+    function payment(p, r, n) { return p <= 0 ? 0 : r === 0 ? p / n : p * r / (1 - Math.pow(1 + r, -n)); }
+    function loanRate(p, a, n) { if (p <= 0) return 0; if (a * n < p - 1) throw new Error('El dividendo y las cuotas que te quedan no alcanzan para pagar la deuda. Revisa esos datos.'); var lo = 0, hi = 1; for (var j = 0; j < 100; j++) { var m = (lo + hi) / 2; if (payment(p, m, n) > a) hi = m; else lo = m; } return (lo + hi) / 2; }
+    function irr(cf) { if (cf[0] >= 0 || !cf.slice(1).some(function (v) { return v > 0; })) return null; var npv = function (r) { return cf.reduce(function (s, v, i) { return s + v * Math.exp(-i * Math.log1p(r)); }, 0); }; var lo = -.5, hi = 1; if (npv(lo) < 0 || npv(hi) > 0) return null; for (var j = 0; j < 120; j++) { var m = (lo + hi) / 2; if (npv(m) > 0) lo = m; else hi = m; } return Math.pow(1 + (lo + hi) / 2, 12) - 1; }
+    function compute(x, years) {
+      years = years || x.years;
+      var months = Math.round(years * 12), sale = x.value * (1 - x.discount / 100), net = sale * (1 - x.sellcost / 100) - x.debt;
+      var equity = x.value - x.debt, base = x.base === 'net' ? net : equity;
+      var newprice = x.newvalue * (1 - x.discount / 100), loan = Math.min(newprice, x.newvalue * x.ltv / 100), upfront = newprice - loan + newprice * x.buycost / 100, invest = net - upfront;
+      var q = x.frequency === 'quarterly' ? 3 : 1, rate = (q === 3 ? x.quarterrate : x.monthrate) / 100;
+      var oldrate = x.debt > 0 ? loanRate(x.debt, x.oldpayment, x.oldmonths) : 0, newrate = x.rate / 1200;
+      var newpayment = payment(loan, newrate, x.term * 12), infl = x.inflation / 100, app = (1 + infl) * (1 + x.growth / 100);
+      var bal = x.debt, newbal = loan, flows = [[-base], [-base], [-base]], series = [[], [], []], totals = [0, 0, 0];
+      var rentAt = function (r, m) { return r * Math.pow(1 + x.rentgrowth / 100, Math.floor((m - 1) / 12)); };
+      var parts = function (r, m) { if (m % 12) return { vac: 0, maint: 0, rep: 0 }; var year = m / 12, f = Math.pow(1 + infl, year - 1), turn = year % x.turnyears === 0; return { vac: turn ? Math.max(0, (x.vacancydays / 30 - x.guarantee) * r) : 0, maint: x.maintenance * f, rep: turn ? x.repairs * f : 0 }; };
+      var expense = function (r, m) { var p = parts(r, m); return p.vac + p.maint + p.rep; };
+      var keepFirstYear = 0;
+      for (var t = 0; t <= months; t++) {
+        if (t) {
+          var idx0 = Math.pow(1 + infl, (t - 1) / 12), oldpaid = t <= x.oldmonths && bal > 0 ? Math.min(x.oldpayment, bal * (1 + oldrate)) : 0;
+          bal = Math.max(0, bal * (1 + oldrate) - oldpaid);
+          var np = t <= x.term * 12 && newbal > 0 ? Math.min(newpayment, newbal * (1 + newrate)) : 0; newbal = Math.max(0, newbal * (1 + newrate) - np);
+          var rent = rentAt(x.rent, t), newrent = rentAt(x.newrent, t), payout = t % q === 0 ? q * rate : 0;
+          var kp = parts(rent, t), kdiv = oldpaid * idx0 + (x.flatpayment || 0) * idx0;
+          if (t <= 12) keepFirstYear += rent - kdiv - kp.vac - kp.maint - kp.rep;
+          var last = [rent - kdiv - kp.vac - kp.maint - kp.rep, net * payout, invest * payout + (x.purchase ? newrent - np * idx0 - expense(newrent, t) : 0)];
+          for (var i = 0; i < 3; i++) { flows[i].push(last[i]); totals[i] += last[i]; }
+        }
+        var idx = Math.pow(1 + infl, t / 12), v = x.value * Math.pow(app, t / 12), nv = x.newvalue * Math.pow(app, t / 12);
+        series[0].push(v - bal * idx); series[1].push(net); series[2].push(invest + (x.purchase ? nv - newbal * idx : 0));
+      }
+      if (months % q) { var acc = rate * (months % q); flows[1][months] += net * acc; flows[2][months] += invest * acc; totals[1] += net * acc; totals[2] += invest * acc; }
+      var end = series.map(function (a) { return a[a.length - 1]; }); flows.forEach(function (a, i) { a[months] += end[i]; });
+      var propEnd = x.value * Math.pow(app, years);
+      return { keepFirstYear: keepFirstYear, propEnd: propEnd, plusvalia: propEnd - x.value, base: base, sale: sale, net: net, invest: invest, bal: bal * Math.pow(1 + infl, years),
+        totals: totals, end: end, tirs: flows.map(irr), rate: rate, q: q, monthly: net * rate, payout: net * rate * q };
+    }
+
+    var MONEY = ['value', 'rent', 'oldpayment', 'debt', 'newvalue', 'newrent'];
+    var X = { debtmode: 'no', frequency: 'quarterly', years: 5, purchase: false };
+    var editoNueva = false;
+    var num = function (id) { var el = $('#ic-' + id); return MONEY.indexOf(id) >= 0 ? Number(el.value.replace(/\D/g, '')) : Number(el.value); };
+    var money = function (n) { return '$' + Math.round(n || 0).toLocaleString('es-CL'); };
+    var compact = function (n) { return '$' + (n / 1e6).toLocaleString('es-CL', { maximumFractionDigits: 1 }) + ' MM'; };
+    var pct = function (n) { return n === null ? 'No calculable' : (n * 100).toLocaleString('es-CL', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '%'; };
+    function inputs() {
+      var x = { value: num('value'), rent: num('rent'), oldpayment: num('oldpayment'), debt: num('debt'), oldmonths: num('oldmonths'),
+        newvalue: num('newvalue'), newrent: num('newrent'), ltv: num('ltv'), term: num('term'), rate: num('rate'), buycost: num('buycost'),
+        frequency: X.frequency, years: X.years, purchase: X.purchase, debtmode: X.debtmode, flatpayment: 0 };
+      Object.keys(FIJOS).forEach(function (k) { x[k] = FIJOS[k]; });
+      if (X.debtmode === 'no') { x.debt = 0; x.flatpayment = x.oldpayment; }
+      return x;
+    }
+    function err(msg) { var e = $('#ic-error'); e.textContent = msg; e.hidden = false; $('#ic-results').classList.add('is-stale'); }
+    var ultimo = null;
+    function render() {
+      $('#ic-error').hidden = true; $('#ic-warning').hidden = true; $('#ic-results').classList.remove('is-stale');
+      $$('[data-ic-debt]').forEach(function (b) { var on = b.getAttribute('data-ic-debt') === X.debtmode; b.classList.toggle('is-active', on); b.setAttribute('aria-pressed', on); });
+      $$('[data-ic-freq]').forEach(function (b) { var on = b.getAttribute('data-ic-freq') === X.frequency; b.classList.toggle('is-active', on); b.setAttribute('aria-pressed', on); });
+      $$('[data-ic-years]').forEach(function (b) { var on = +b.getAttribute('data-ic-years') === X.years; b.classList.toggle('is-active', on); b.setAttribute('aria-pressed', on); });
+      $('#ic-debtfields').hidden = X.debtmode !== 'yes';
+      $('#ic-purchasefields').hidden = !X.purchase;
+      var x = inputs();
+      if (!(x.value >= 1000000)) return err('Ingresa el valor de tu propiedad.');
+      if (X.debtmode === 'yes' && !(x.debt > 0)) return err('Ingresa cuánto debes hoy, o elige «Sin deuda».');
+      if (X.debtmode === 'yes' && !(x.oldmonths > 0)) return err('Ingresa cuántas cuotas te quedan.');
+      if (x.debt >= x.value) return err('La deuda debe ser menor al valor de tu propiedad.');
+      if (X.purchase && !(x.newvalue > 0 && x.ltv >= 0 && x.term > 0)) return err('Completa los datos de la nueva propiedad.');
+      var c, c5, c10;
+      try { c = compute(x); c5 = compute(x, 5); c10 = compute(x, 10); } catch (e) { return err(e.message); }
+      if (c.net <= 0) return err('La venta no libera capital después del descuento y el prepago. Revisa los valores.');
+      var cicloOk = !X.purchase || c.invest >= 0;
+      if (!cicloOk) { $('#ic-warning').textContent = 'El pie de la nueva compra supera el capital liberado: el ciclo con nueva propiedad no es viable con estos datos.'; $('#ic-warning').hidden = false; }
+      var flujoActual = x.rent - x.oldpayment;
+      $('#ic-k-net').textContent = compact(c.net);
+      $('#ic-k-monthly').textContent = money(c.monthly);
+      $('#ic-k-monthly-sub').textContent = X.frequency === 'quarterly' ? 'Pago efectivo trimestral: ' + money(c.payout) : 'Pago mensual';
+      $('#ic-k-flow').textContent = money(flujoActual);
+      var dif = c.monthly - flujoActual;
+      $('#ic-summary').textContent = 'La venta estima ' + money(c.sale) + '. Después de prepagar ' + money(x.debt) + ' y descontar gastos, quedan ' + money(c.net) + '. El ingreso mensual equivalente ' + (dif >= 0 ? 'aumenta' : 'disminuye') + ' en ' + money(Math.abs(dif)) + ' frente al arriendo menos dividendo, antes de costos. Tasa utilizada: ' + (c.rate * 100).toLocaleString('es-CL', { minimumFractionDigits: 2 }) + '% mensual simple.';
+      $('#ic-period').textContent = 'Proyección a ' + X.years + ' años';
+      // Barras: ¿con cuánto terminas?
+      var nombres = ['Si conservas y arriendas', 'Si vendes e inviertes en Pulso', 'Si vendes, inviertes y compras otra propiedad'];
+      var pa = [(x.debt ? 'Tu propiedad, descontada la deuda' : 'Valor de tu propiedad') + ' (incluye plusvalía de ' + compact(c.plusvalia) + ')', 'Capital invertido', 'Capital invertido y nueva propiedad'];
+      var pb = ['Arriendos netos recibidos', 'Intereses recibidos', 'Intereses y arriendos netos recibidos'];
+      var n = X.purchase ? 3 : 2, filas = [];
+      for (var i = 0; i < n; i++) { if (i === 2 && !cicloOk) { filas.push({ i: i, nv: true }); continue; } filas.push({ i: i, a: c.end[i], b: c.totals[i], t: c.end[i] + c.totals[i] }); }
+      var ok = filas.filter(function (r) { return !r.nv; }), max = Math.max.apply(null, [1].concat(ok.map(function (r) { return Math.max(0, r.a) + Math.max(0, r.b); })));
+      var best = ok.reduce(function (m, r) { return r.t > m.t ? r : m; }, ok[0]);
+      $('#ic-bars-title').textContent = '¿Con cuánto terminas en ' + X.years + ' años?';
+      $('#ic-bars').innerHTML = filas.map(function (r) {
+        if (r.nv) return '<div class="cb-row"><div class="cb-head"><b>' + nombres[r.i] + '</b><span class="cb-nv">No viable con estos datos</span></div></div>';
+        return '<div class="cb-row' + (r === best ? ' is-best' : '') + '"><div class="cb-head"><b>' + nombres[r.i] + (ok.length > 1 && r === best ? '<span class="cb-best">Mayor resultado</span>' : '') + '</b><span class="cb-total">' + compact(r.t) + '</span></div>' +
+          '<div class="cb-track" role="img" aria-label="' + nombres[r.i] + ': ' + compact(r.t) + '"><span class="cb-a" style="width:' + (Math.max(0, r.a) / max * 100).toFixed(2) + '%"></span><span class="cb-b" style="width:' + (Math.max(0, r.b) / max * 100).toFixed(2) + '%"></span></div>' +
+          '<p class="cb-detail">' + pa[r.i] + ': <b>' + compact(r.a) + '</b> · ' + (r.b >= 0 ? pb[r.i] + ': <b>' + compact(r.b) + '</b>' : '<span class="neg">Pagaste ' + compact(-r.b) + ' más de lo que recibiste</span>') + '</p></div>';
+      }).join('');
+      // TIR
+      var tnames = ['Conservar y arrendar', 'Vender, prepagar e invertir', 'Ciclo completo con nueva compra'];
+      $('#ic-tir').innerHTML = tnames.slice(0, n).map(function (nm, i) { var nv = i === 2 && !cicloOk; return '<tr><td>' + nm + '</td><td>' + (nv ? 'No viable' : pct(c5.tirs[i])) + '</td><td>' + (nv ? 'No viable' : pct(c10.tirs[i])) + '</td></tr>'; }).join('');
+      $('#ic-base').textContent = 'Base inicial común: ' + money(c.base) + '. Patrimonio actual (valor comercial' + (x.debt ? ' menos deuda' : '') + '). La TIR reconoce el descuento de venta.';
+      ultimo = { x: x, c: c, c5: c5, c10: c10, n: n, cicloOk: cicloOk, flujoActual: flujoActual, best: best ? nombres[best.i] : '' };
+    }
+    MONEY.forEach(function (id) { $('#ic-' + id).addEventListener('input', function (e) { var raw = e.target.value.replace(/\D/g, ''); e.target.value = raw ? Number(raw).toLocaleString('es-CL') : ''; }); });
+    $('#ic-form').addEventListener('input', function (e) {
+      if (e.target.id === 'ic-newvalue') editoNueva = true;
+      if (e.target.id === 'ic-value' && !editoNueva) $('#ic-newvalue').value = Math.round(num('value') * .8).toLocaleString('es-CL');
+      render();
+    });
+    $('#ic-form').addEventListener('click', function (e) {
+      var b;
+      if ((b = e.target.closest('[data-ic-debt]'))) { X.debtmode = b.getAttribute('data-ic-debt'); render(); }
+      else if ((b = e.target.closest('[data-ic-freq]'))) { X.frequency = b.getAttribute('data-ic-freq'); render(); }
+      else if ((b = e.target.closest('[data-ic-years]'))) { X.years = +b.getAttribute('data-ic-years'); render(); }
+    });
+    $('#ic-purchase').addEventListener('change', function (e) { X.purchase = e.target.checked; render(); });
+    $('#ic-form').addEventListener('submit', function (e) { e.preventDefault(); });
+    render();
+
+    $('#ic-correo').addEventListener('click', function () {
+      var st = $('#ic-status'), btn = $('#ic-correo');
+      render();
+      if (!contacto || !ultimo || !$('#ic-error').hidden) { st.textContent = 'Completa los datos del simulador antes de enviar.'; return; }
+      if (!jspdfListo(st)) return;
+      var u = ultimo, x = u.x, c = u.c;
+      var filasTir = ['Conservar y arrendar', 'Vender, prepagar e invertir', 'Ciclo completo con nueva compra'].slice(0, u.n).map(function (nm, i) { var nv = i === 2 && !u.cicloOk; return [nm, (nv ? 'No viable' : pct(u.c5.tirs[i])) + ' (5 años) · ' + (nv ? 'No viable' : pct(u.c10.tirs[i])) + ' (10 años)']; });
+      var resumenIC = ['Valor de la propiedad: ' + money(x.value), 'Deuda: ' + money(x.debt), 'Capital neto de la venta: ' + money(c.net), 'Ingreso mensual equivalente: ' + money(c.monthly),
+        'Flujo actual antes de costos: ' + money(u.flujoActual), 'Horizonte: ' + x.years + ' años', 'Mayor resultado: ' + u.best];
+      var doc = pdfSimple('Simulación Inversión Circular', 'Proyección a ' + x.years + ' años', [
+        { t: 'Tu propiedad', rows: [['Valor comercial', money(x.value)], ['Arriendo mensual', money(x.rent)], ['Dividendo mensual', money(x.oldpayment)], ['Deuda a prepagar', money(x.debt)]] },
+        { t: 'Lo esencial', rows: [['Capital neto de la venta', money(c.net)], ['Ingreso mensual equivalente', money(c.monthly)], [x.frequency === 'quarterly' ? 'Pago efectivo trimestral' : 'Pago mensual', money(x.frequency === 'quarterly' ? c.payout : c.monthly)], ['Flujo actual antes de costos', money(u.flujoActual)]] },
+        { t: 'Resumen', text: $('#ic-summary').textContent },
+        { t: '¿Con cuánto terminas en ' + x.years + ' años?', rows: [['Si conservas y arriendas', compact(c.end[0] + c.totals[0])], ['Si vendes e inviertes en Pulso', compact(c.end[1] + c.totals[1])]].concat(u.n === 3 && u.cicloOk ? [['Si vendes, inviertes y compras otra', compact(c.end[2] + c.totals[2])]] : []).concat([['Mayor resultado', u.best, 'pos']]) },
+        { t: 'TIR anual efectiva', rows: filasTir },
+        { t: 'Supuestos', small: true, text: $('#ic-base').textContent + ' Venta 15% bajo el valor comercial; inflación 3% anual; arriendo reajustado 3% anual; mantención, vacancia y reparaciones estimadas. Proyectar diez años exige continuidad de tasa, condiciones y cumplimiento de pagos. La nueva compra es opcional y se evalúa por separado. Simulación referencial, no constituye una oferta vinculante.' }
+      ]);
+      brevo(contacto.nombre, contacto.email, contacto.telefono, '--- Simulación Inversión Circular ---\n' + resumenIC.join('\n'));
+      enviarCorreo('circular', doc, 'Simulacion_InversionCircular', resumenIC, st, btn);
+    });
+  })();
+
 })();
