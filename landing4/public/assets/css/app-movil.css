@@ -1,0 +1,121 @@
+/* =====================================================================
+   Pulso Inversor · experiencia tipo app en celular
+   Se activa con la clase body.pi-app (la pone app-movil.js) bajo 760 px.
+   Sin JavaScript el sitio sigue funcionando con el menú plegable normal.
+   ===================================================================== */
+@view-transition { navigation: auto; }
+::view-transition-old(root) { animation: pi-salir .18s ease-in both; }
+::view-transition-new(root) { animation: pi-entrar .28s ease-out both; }
+@keyframes pi-salir { to { opacity: 0; transform: translateY(-6px); } }
+@keyframes pi-entrar { from { opacity: 0; transform: translateY(10px); } }
+
+/* Redes sociales y canales (todas las pantallas) */
+.pi-redes-cab { color: #fff; font-weight: 700; font-size: .95rem; margin: 6px 0 12px; }
+.pi-redes { display: flex; flex-wrap: wrap; gap: 10px; }
+.pi-red { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; border-radius: 14px; padding: 9px 14px 9px 10px; line-height: 1.2; }
+.pi-red svg { width: 22px; height: 22px; flex-shrink: 0; }
+.pi-red-t { display: flex; flex-direction: column; }
+.pi-red-t b { font-size: .88rem; }
+.pi-red-t small { font-size: .74rem; opacity: .85; font-weight: 400; }
+.pi-redes-pie { margin-bottom: 26px; }
+.pi-redes-pie .pi-red { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); color: #dfe7e1; }
+.pi-redes-pie a.pi-red:hover { border-color: #C7D95D; color: #C7D95D; }
+.pi-redes-tarjeta { flex-direction: column; gap: 8px; margin-top: 10px; }
+.pi-redes-tarjeta .pi-red { background: #f4f6f2; color: #0E2C28; border: 1px solid #E3E8E2; }
+.pi-redes-tarjeta a.pi-red { border-color: #C7D95D; background: #f6fbe9; }
+.pi-redes-tarjeta a.pi-red svg { color: #1E5746; }
+.pi-pend { cursor: default; }
+.pi-pend svg { opacity: .55; }
+
+/* Elementos de la app: ocultos fuera del celular */
+.pi-tabs, .pi-hoja { display: none; }
+
+@media (max-width: 760px) {
+  html { -webkit-tap-highlight-color: transparent; }
+  body.pi-app { padding-bottom: calc(92px + env(safe-area-inset-bottom)); }
+
+  /* Barra superior compacta que se esconde al bajar y vuelve al subir */
+  body.pi-app .pi-top { transition: transform .28s cubic-bezier(.2,.8,.2,1); padding-top: env(safe-area-inset-top); }
+  body.pi-app .pi-top.pi-oculta { transform: translateY(-100%); }
+  body.pi-app .pi-top .pi-in { height: 58px; }
+  body.pi-app .pi-hamb, body.pi-app .pi-nav { display: none !important; }
+  body.pi-app .pi-logo img { height: 30px; }
+  .pi-titulo { margin-left: auto; color: #C7D95D; font: 700 .78rem Inter, sans-serif; letter-spacing: .08em; text-transform: uppercase; max-width: 52%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  body.pi-app .pi-franja { height: 3px; }
+
+  /* La barra fija propia de las landings la reemplaza el botón central */
+  body.pi-app .cta-movil { display: none !important; }
+
+  /* Barra de pestañas inferior */
+  body.pi-app .pi-tabs { display: grid; grid-template-columns: repeat(5, 1fr); align-items: end; position: fixed; z-index: 70; left: 10px; right: 10px; bottom: calc(10px + env(safe-area-inset-bottom)); height: 66px; padding: 0 4px 8px; background: rgba(14,44,40,.96); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,.08); border-radius: 22px; box-shadow: 0 14px 34px rgba(10,20,14,.35); transition: transform .28s cubic-bezier(.2,.8,.2,1); }
+  .pi-tab { display: flex; flex-direction: column; align-items: center; gap: 4px; color: #9fb0a5; text-decoration: none; font: 600 .66rem Inter, sans-serif; background: none; border: 0; padding: 0; cursor: pointer; position: relative; }
+  .pi-tab svg { width: 24px; height: 24px; transition: transform .2s; }
+  .pi-tab:active svg { transform: scale(.86); }
+  .pi-tab.pi-on { color: #C7D95D; }
+  .pi-tab.pi-on:after { content: ""; position: absolute; top: -9px; width: 5px; height: 5px; border-radius: 50%; background: #C7D95D; }
+  .pi-tab.pi-central { color: #0E2C28; }
+  .pi-tab.pi-central .pi-burbuja { width: 58px; height: 58px; margin-top: -26px; border-radius: 50%; background: #C7D95D; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 22px rgba(199,217,93,.45), 0 0 0 5px #0E2C28; animation: pi-latido 3.2s ease-in-out 1.2s 2; }
+  .pi-tab.pi-central span:last-child { color: #dfe7e1; }
+  .pi-tab.pi-central.pi-on span:last-child { color: #C7D95D; }
+  .pi-tab.pi-central.pi-on:after { display: none; }
+  .pi-tab.pi-central:active .pi-burbuja { transform: scale(.92); }
+  @keyframes pi-latido { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.07); } }
+
+  /* Hoja inferior (menú) */
+  body.pi-app .pi-hoja { display: block; position: fixed; inset: 0; z-index: 90; pointer-events: none; }
+  .pi-hoja-fondo { position: absolute; inset: 0; background: rgba(12,20,15,.5); opacity: 0; transition: opacity .25s; }
+  .pi-hoja-panel { position: absolute; left: 0; right: 0; bottom: 0; max-height: 88vh; overflow-y: auto; overscroll-behavior: contain; background: #fff; border-radius: 26px 26px 0 0; padding: 10px 18px calc(22px + env(safe-area-inset-bottom)); transform: translateY(105%); transition: transform .34s cubic-bezier(.2,.8,.2,1); font-family: Inter, sans-serif; color: #0E2C28; }
+  body.pi-app .pi-hoja.pi-abierta { pointer-events: auto; }
+  .pi-hoja.pi-abierta .pi-hoja-fondo { opacity: 1; }
+  .pi-hoja.pi-abierta .pi-hoja-panel { transform: none; }
+  .pi-asa { width: 44px; height: 5px; border-radius: 3px; background: #d5ddd7; margin: 2px auto 14px; }
+  .pi-hoja h2 { font-size: 1.25rem; margin: 0 0 4px; font-weight: 800; letter-spacing: -.01em; }
+  .pi-hoja .pi-sub { color: #4d5a53; font-size: .9rem; margin: 0 0 14px; }
+  .pi-grupo { margin: 16px 0 6px; font-size: .7rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #599675; }
+  .pi-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .pi-tile { display: flex; flex-direction: column; gap: 6px; text-decoration: none; color: #0E2C28; background: #f4f6f2; border: 1px solid #e6ebe7; border-radius: 18px; padding: 14px 13px; min-height: 104px; transition: transform .15s, background .15s; }
+  .pi-tile:active { transform: scale(.97); background: #ecf3df; }
+  .pi-tile.pi-act { border-color: #C7D95D; background: #f6fbe9; }
+  .pi-tile svg { width: 26px; height: 26px; color: #1E5746; }
+  .pi-tile b { font-size: .92rem; line-height: 1.2; }
+  .pi-tile small { font-size: .74rem; color: #64736b; line-height: 1.3; }
+  .pi-hoja-cta { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 18px 0 6px; background: #C7D95D; color: #0E2C28; text-decoration: none; font-weight: 800; border-radius: 16px; min-height: 56px; font-size: 1rem; box-shadow: 0 8px 20px rgba(199,217,93,.3); }
+  .pi-hoja .pi-redes { margin-top: 8px; }
+  .pi-hoja .pi-legal { font-size: .72rem; color: #64736b; margin-top: 14px; line-height: 1.45; }
+  .pi-cerrar { position: sticky; float: right; margin: -6px -4px 0 0; z-index: 2; top: 0; width: 36px; height: 36px; border-radius: 50%; border: 0; background: #f0f3f0; color: #0E2C28; font-size: 1.1rem; cursor: pointer; }
+
+  /* Botones y tarjetas: grandes y con respuesta al toque */
+  body.pi-app .btn, body.pi-app button[type="submit"] { min-height: 54px; font-size: 1rem; transition: transform .15s; }
+  body.pi-app .btn:active, body.pi-app button[type="submit"]:active { transform: scale(.97); }
+  body.pi-app a.card:active, body.pi-app a.camino:active, body.pi-app .tab:active { transform: scale(.985); }
+  body.pi-app .card, body.pi-app .camino { border-radius: 20px; }
+  body.pi-app input[type="text"], body.pi-app input[type="tel"], body.pi-app input[type="email"], body.pi-app select, body.pi-app textarea { font-size: 16px; min-height: 50px; border-radius: 14px; }
+  body.pi-app .opciones label { min-height: 50px; display: flex; align-items: center; border-radius: 14px; }
+  body.pi-app .check input[type="checkbox"] { width: 22px; height: 22px; flex-shrink: 0; margin-top: 2px; accent-color: #1E5746; }
+
+  /* Tarjetas deslizables */
+  .pi-carrusel { display: flex !important; grid-template-columns: none !important; overflow-x: auto; scroll-snap-type: x mandatory; gap: 12px !important; margin-left: -16px !important; margin-right: -16px !important; padding: 6px 16px 10px !important; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .pi-carrusel::-webkit-scrollbar { display: none; }
+  .pi-carrusel > * { flex: 0 0 84%; scroll-snap-align: center; margin: 0 !important; }
+  .pi-puntos { display: flex; justify-content: center; gap: 6px; margin: 2px 0 8px; }
+  .pi-puntos i { width: 7px; height: 7px; border-radius: 4px; background: currentColor; opacity: .22; transition: width .25s, opacity .25s; }
+  .pi-puntos i.pi-on { width: 20px; opacity: .8; }
+  .pi-desliza { font-size: .74rem; opacity: .6; text-align: center; margin: -2px 0 6px; }
+
+  /* Aparición suave al hacer scroll */
+  .pi-rev { opacity: 0; transform: translateY(22px); transition: opacity .55s ease-out, transform .55s cubic-bezier(.2,.8,.2,1); }
+  .pi-rev.pi-vis { opacity: 1; transform: none; }
+
+  /* El pie deja espacio para la barra */
+  body.pi-app footer { padding-bottom: 30px; }
+  body.pi-app .pi-redes-pie .pi-red { flex: 1 1 calc(50% - 10px); }
+}
+
+@media (max-width: 760px) and (prefers-reduced-motion: reduce) {
+  .pi-rev { opacity: 1 !important; transform: none !important; transition: none; }
+  .pi-hoja-panel, .pi-top, .pi-tabs { transition: none !important; }
+  .pi-tab.pi-central .pi-burbuja { animation: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
+}

@@ -1,0 +1,229 @@
+/* Estilos base de las landings de campaña (copiados de landing_primera_inversion_pulso.html) */
+
+:root{
+  --oscuro:#0E2C28;      /* fondo marca */
+  --oscuro-2:#123D35;
+  --verde:#599675;       /* verde Pulso */
+  --verde-osc:#1E5746;
+  --lima:#C7D95D;        /* verde limón */
+  --oliva:#599675;
+  --dorado:#F5B05E;
+  --texto:#0E2C28;
+  --texto-2:#4d5a53;
+  --borde:#E3E8E2;
+  --fondo:#ffffff;
+  --fondo-2:#f4f6f2;
+  --radio:14px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--texto);background:var(--fondo);line-height:1.6;font-size:17px;-webkit-font-smoothing:antialiased}
+img{max-width:100%}
+a{color:var(--verde-osc)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+.narrow{max-width:760px}
+h1,h2,h3{line-height:1.2;margin:0 0 .5em;letter-spacing:-.01em}
+h2{font-size:clamp(1.6rem,3.6vw,2.3rem);font-weight:800}
+h3{font-size:1.15rem;font-weight:700}
+p{margin:0 0 1em}
+.eyebrow{display:inline-block;font-size:.78rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--verde);margin-bottom:.8em}
+section{padding:72px 0}
+.alt{background:var(--fondo-2)}
+.dark{background:var(--oscuro);color:#e9eee9}
+.dark h2,.dark h3{color:#fff}
+.dark .eyebrow{color:var(--oliva)}
+.lead{font-size:1.15rem;color:var(--texto-2)}
+.dark .lead{color:#c9d3cc}
+.ph{background:#fff3c4;color:#6b5200;border:1px dashed #d9b300;border-radius:4px;padding:0 4px;font-size:.92em;font-weight:600}
+
+/* Botones */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5em;padding:15px 26px;border-radius:999px;font-weight:700;font-size:1rem;text-decoration:none;border:2px solid transparent;cursor:pointer;font-family:inherit;text-align:center;transition:transform .15s ease, box-shadow .15s ease}
+.btn:hover{transform:translateY(-1px)}
+.btn-lima{background:var(--lima);color:var(--oscuro);box-shadow:0 6px 20px rgba(199,217,93,.25)}
+.btn-ghost{border-color:rgba(255,255,255,.35);color:#fff;background:transparent}
+.btn-verde{background:var(--verde);color:#fff}
+.btn-wsp{background:#25d366;color:#0b2e17}
+
+/* Barra superior */
+.top{position:sticky;top:0;z-index:20;background:rgba(14,44,40,.97);backdrop-filter:blur(6px);border-bottom:1px solid rgba(255,255,255,.06)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;height:64px;gap:12px}
+.logo{display:flex;flex-direction:column;line-height:1.1;text-decoration:none}
+.logo b{color:#fff;font-size:1.1rem;letter-spacing:.02em}
+.logo b span{color:var(--lima)}
+.logo small{color:#9fb0a5;font-size:.7rem}
+.top .btn{padding:10px 18px;font-size:.9rem}
+.franja{height:5px;display:grid;grid-template-columns:repeat(4,1fr)}
+.franja i:nth-child(1){background:var(--verde)}.franja i:nth-child(2){background:var(--oliva)}.franja i:nth-child(3){background:var(--dorado)}.franja i:nth-child(4){background:var(--lima)}
+
+/* Hero */
+.hero{background:var(--oscuro);color:#fff;padding:72px 0 64px;position:relative;overflow:hidden}
+.hero .grid{display:grid;grid-template-columns:1.25fr .9fr;gap:48px;align-items:center;position:relative;z-index:1}
+.hero h1{font-size:clamp(2rem,5vw,3.2rem);font-weight:800;margin-bottom:.4em}
+.hero h1 em{font-style:normal;color:var(--lima)}
+.hero .lead{color:#cfd9d2;font-size:1.18rem;max-width:36em}
+.hero .ctas{display:flex;flex-wrap:wrap;gap:12px;margin:28px 0 22px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;padding:0;margin:0;list-style:none}
+.chips li{font-size:.86rem;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.07);color:#dfe7e1;border:1px solid rgba(255,255,255,.08)}
+.chips li:before{content:"✓ ";color:var(--lima);font-weight:700}
+.hero-card{background:#fff;color:var(--texto);border-radius:18px;padding:26px;box-shadow:0 20px 50px rgba(0,0,0,.35)}
+.hero-card h3{font-size:1rem;margin-bottom:14px;color:var(--verde-osc);text-transform:uppercase;letter-spacing:.08em}
+.preg{display:flex;gap:14px;padding:14px 0;border-top:1px solid var(--borde)}
+.preg:first-of-type{border-top:none;padding-top:0}
+.preg .n{flex:0 0 34px;height:34px;border-radius:50%;background:var(--lima);color:var(--oscuro);display:grid;place-items:center;font-weight:800}
+.preg b{display:block}
+.preg span{font-size:.92rem;color:var(--texto-2)}
+.legal-mini{font-size:.78rem;color:#93a399;margin-top:18px;max-width:46em}
+
+/* Empatía */
+.dudas{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:30px 0}
+.duda{background:#fff;border:1px solid var(--borde);border-radius:var(--radio);padding:18px 20px;font-size:1.02rem;position:relative}
+.duda:before{content:"“";position:absolute;top:-6px;left:14px;font-size:2.6rem;color:var(--lima);font-weight:800;line-height:1}
+.duda p{margin:10px 0 0;font-style:italic;color:var(--texto)}
+.remate{font-size:1.25rem;font-weight:700;border-left:5px solid var(--lima);padding:4px 0 4px 18px;margin-top:28px}
+
+/* Señales de estafa */
+.senales{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:30px}
+.senal{background:var(--oscuro-2);border-radius:var(--radio);padding:24px;border:1px solid rgba(255,255,255,.06)}
+.senal .alerta{font-size:.8rem;font-weight:700;color:#f5b05e;text-transform:uppercase;letter-spacing:.08em}
+.senal h3{margin:8px 0 14px}
+.senal .resp{border-top:1px solid rgba(255,255,255,.1);padding-top:14px;color:#d5ded8;font-size:.97rem}
+.senal .resp b{color:var(--lima)}
+
+/* Diagnóstico */
+.dos-col{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+.barra{display:flex;border-radius:12px;overflow:hidden;height:64px;margin:16px 0 10px;font-weight:700;font-size:.95rem}
+.barra div{display:flex;align-items:center;justify-content:center;text-align:center;padding:0 8px}
+.barra .inv{flex:1;background:var(--verde);color:#fff}
+.barra .col{flex:1;background:var(--lima);color:var(--oscuro)}
+.caja{background:#fff;border:1px solid var(--borde);border-radius:var(--radio);padding:24px}
+.para{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:34px}
+.para ul{margin:0;padding:0;list-style:none}
+.para li{padding:8px 0 8px 30px;position:relative;border-top:1px solid var(--borde)}
+.para li:first-child{border-top:none}
+.para .si li:before{content:"✓";position:absolute;left:4px;color:var(--verde);font-weight:800}
+.para .no li:before{content:"✕";position:absolute;left:4px;color:#c0583c;font-weight:800}
+
+/* Pilares */
+.pilares{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:30px}
+.pilar{background:#fff;border:1px solid var(--borde);border-radius:var(--radio);padding:26px;border-top:5px solid var(--verde)}
+.pilar .num{font-size:.78rem;font-weight:800;color:var(--verde);letter-spacing:.1em}
+.pilar .simple{background:var(--fondo-2);border-radius:10px;padding:12px 14px;font-size:.93rem;margin-top:14px}
+.pilar .simple b{color:var(--verde-osc)}
+
+/* Explicación en simple */
+.ejemplo{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:12px;align-items:stretch;margin:30px 0}
+.ej{background:#fff;border:1px solid var(--borde);border-radius:var(--radio);padding:20px;text-align:center}
+.ej .ico{font-size:1.8rem}
+.ej b{display:block;margin:6px 0}
+.ej span{font-size:.92rem;color:var(--texto-2)}
+.flecha{display:grid;place-items:center;font-size:1.6rem;color:var(--verde)}
+.nota{font-size:.92rem;color:var(--texto-2);background:#fff;border-left:4px solid var(--dorado);padding:12px 16px;border-radius:0 10px 10px 0}
+table.lineas{width:100%;border-collapse:collapse;margin-top:20px;background:#fff;border-radius:var(--radio);overflow:hidden;border:1px solid var(--borde);font-size:.95rem}
+.lineas th,.lineas td{padding:14px 16px;text-align:left;border-bottom:1px solid var(--borde);vertical-align:top}
+.lineas th{background:var(--oscuro);color:#fff;font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.05em}
+.lineas tr.destacada td{background:#f3f9e6}
+.tag{display:inline-block;font-size:.72rem;font-weight:800;background:var(--lima);color:var(--oscuro);border-radius:999px;padding:2px 8px;margin-left:6px;vertical-align:middle}
+.tabla-scroll{overflow-x:auto}
+
+/* Glosario */
+.glosario{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:26px}
+.glosario div{background:#fff;border:1px solid var(--borde);border-radius:12px;padding:16px 18px}
+.glosario dt{font-weight:800;color:var(--verde-osc)}
+.glosario dd{margin:4px 0 0;color:var(--texto-2);font-size:.95rem}
+
+/* Pasos */
+.pasos{list-style:none;padding:0;margin:34px 0 0;counter-reset:p;display:grid;gap:14px}
+.pasos li{counter-increment:p;display:grid;grid-template-columns:52px 1fr;gap:16px;align-items:start;background:#fff;border:1px solid var(--borde);border-radius:var(--radio);padding:18px 20px}
+.pasos li:before{content:counter(p);width:44px;height:44px;border-radius:50%;background:var(--oscuro);color:var(--lima);display:grid;place-items:center;font-weight:800;font-size:1.15rem}
+.pasos li b{display:block;font-size:1.05rem}
+.pasos li span{color:var(--texto-2);font-size:.95rem}
+.despues{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:22px}
+.despues div{background:var(--oscuro);color:#e5ece7;border-radius:12px;padding:16px;font-size:.93rem}
+.despues b{display:block;color:var(--lima);margin-bottom:4px}
+
+/* Testimonios */
+.testis{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:30px}
+.testi{background:var(--oscuro-2);border-radius:var(--radio);padding:24px;display:flex;flex-direction:column}
+.testi blockquote{margin:0 0 16px;font-size:1.08rem;color:#fff;font-weight:600}
+.testi .quien{margin-top:auto;display:flex;gap:12px;align-items:center}
+.avatar{width:46px;height:46px;border-radius:50%;background:var(--verde);display:grid;place-items:center;font-weight:800;color:#fff;flex:0 0 46px}
+.testi .quien b{color:#fff;display:block}
+.testi .quien span{color:#a9b8ae;font-size:.88rem}
+.testi p{color:#cbd5ce;font-size:.95rem}
+.testi.vacio{border:2px dashed rgba(255,255,255,.2);background:transparent}
+.disc{font-size:.8rem;color:#93a399;margin-top:18px}
+
+/* Equipo / verifica */
+.equipo{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:26px}
+.persona{background:#fff;border:1px solid var(--borde);border-radius:var(--radio);padding:22px;text-align:center}
+.persona .foto{width:96px;height:96px;border-radius:50%;margin:0 auto 12px;background:var(--fondo-2);border:2px dashed var(--oliva);display:grid;place-items:center;font-size:.7rem;color:var(--texto-2);padding:6px}
+.persona b{display:block;font-size:1.05rem}
+.persona span{font-size:.9rem;color:var(--texto-2)}
+.verifica{margin-top:34px;display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.verifica ul{margin:0;padding-left:20px}
+.verifica li{margin-bottom:6px}
+
+/* FAQ */
+.faq details{background:#fff;border:1px solid var(--borde);border-radius:12px;margin-bottom:10px;overflow:hidden}
+.faq summary{cursor:pointer;list-style:none;padding:18px 54px 18px 20px;font-weight:700;position:relative;font-size:1.03rem}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary:after{content:"+";position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:1.5rem;color:var(--verde);font-weight:400}
+.faq details[open] summary:after{content:"–"}
+.faq details[open] summary{color:var(--verde-osc)}
+.faq .r{padding:0 20px 18px;color:var(--texto-2)}
+.faq .r p:last-child{margin:0}
+
+/* Formulario */
+.form-sec{background:var(--oscuro);color:#fff}
+.form-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:44px;align-items:start}
+.promesas{list-style:none;padding:0;margin:22px 0 0}
+.promesas li{padding:10px 0 10px 34px;position:relative;color:#d5ded8;border-top:1px solid rgba(255,255,255,.08)}
+.promesas li:before{content:"✓";position:absolute;left:6px;color:var(--lima);font-weight:800}
+form.lead{background:#fff;color:var(--texto);border-radius:18px;padding:28px;box-shadow:0 20px 50px rgba(0,0,0,.3)}
+.campo{margin-bottom:16px}
+.campo label,.campo legend{display:block;font-weight:700;font-size:.93rem;margin-bottom:6px}
+.campo small{display:block;color:var(--texto-2);font-size:.82rem;margin-top:-2px;margin-bottom:6px;font-weight:400}
+.campo input[type=text],.campo input[type=tel],.campo input[type=email]{width:100%;padding:13px 14px;border:1.5px solid var(--borde);border-radius:10px;font-size:1rem;font-family:inherit}
+.campo input:focus{outline:none;border-color:var(--verde);box-shadow:0 0 0 3px rgba(89,150,117,.2)}
+fieldset.campo{border:none;padding:0;margin:0 0 16px}
+.opciones{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.opciones.tres{grid-template-columns:repeat(3,1fr)}
+.opciones label{display:flex;align-items:center;gap:8px;border:1.5px solid var(--borde);border-radius:10px;padding:11px 12px;font-weight:600;font-size:.92rem;cursor:pointer;margin:0}
+.opciones input{accent-color:var(--verde)}
+.opciones label:has(input:checked){border-color:var(--verde);background:#eef6f1}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:.85rem;color:var(--texto-2);margin:6px 0 18px}
+.check input{margin-top:4px;accent-color:var(--verde)}
+form.lead .btn{width:100%;font-size:1.05rem}
+.bajo-btn{font-size:.82rem;color:var(--texto-2);text-align:center;margin:12px 0 0}
+.error{color:#b3401f;font-size:.85rem;margin-top:4px;display:none}
+.gracias{display:none;background:#fff;color:var(--texto);border-radius:18px;padding:30px;box-shadow:0 20px 50px rgba(0,0,0,.3)}
+.gracias h3{font-size:1.4rem}
+
+/* Footer */
+footer{background:#111514;color:#9fb0a5;font-size:.88rem;padding:40px 0 100px}
+footer .legal{border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:16px 18px;color:#c9d3cc;margin-bottom:22px}
+footer a{color:#c9d3cc}
+
+/* CTA fijo móvil */
+.cta-movil{display:none;position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(14,44,40,.97);padding:10px 16px calc(10px + env(safe-area-inset-bottom));border-top:1px solid rgba(255,255,255,.08)}
+.cta-movil .btn{width:100%}
+
+@media (max-width:900px){
+  .hero .grid,.dos-col,.form-grid{grid-template-columns:1fr;gap:32px}
+  .senales,.pilares,.testis,.equipo{grid-template-columns:1fr}
+  .despues{grid-template-columns:1fr 1fr}
+  .ejemplo{grid-template-columns:1fr}
+  .flecha{transform:rotate(90deg);height:28px}
+}
+@media (max-width:640px){
+  body{font-size:16px}
+  section{padding:56px 0}
+  .wrap{padding:0 16px}
+  .dudas,.para,.glosario,.verifica,.opciones,.opciones.tres,.despues{grid-template-columns:1fr}
+  .top .btn{display:none}
+  .cta-movil{display:block}
+  .hero{padding:48px 0}
+  .hero .ctas .btn{width:100%;padding:14px 18px}
+  .cta-movil .btn{padding:12px 18px}
+  form.lead,.gracias{padding:22px}
+}
