@@ -696,12 +696,11 @@ page('garantias-y-documentos.html', 'Garantías y respaldo',
 # Hipoteca Inteligente replica simuladorpulsoinversor.netlify.app.
 page('simuladores.html', 'Simuladores',
      'Simula tu inversión en Proyecta un Hogar (Acción, Hipoteca o Título) y compárala con un depósito a plazo, o arma tu configuración de Hipoteca Inteligente.',
-     hero('Cómo invertir / Simuladores', 'Mira tus números antes de decidir',
-          'Elige un simulador, completa tus datos una vez y revisa tus números con calma. Los resultados son referenciales.', 'Simuladores') + f"""
+f"""
 <div data-simuladores>
-<section class="section" id="sim-area"><div class="container">
-  <div class="title center"><span class="eyebrow">Elige tu simulador</span><h2>¿Qué quieres simular?</h2>
-    <p class="lead">Toca una opción para abrir su simulador.</p></div>
+<section class="section sim-top" id="sim-area"><div class="container">
+  <div class="title center"><h1>¿Qué quieres simular?</h1>
+    <p class="lead">Elige un simulador, completa tus datos una vez y revisa tus números con calma. Los resultados son referenciales.</p></div>
   <div class="sim-picks" role="tablist" aria-label="Simuladores">
     <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-proyecta" aria-selected="false">
       <span class="sim-pick-ico">A·H·T</span><strong>Proyecta un Hogar</strong><span>Invierte tu capital con Acción, Hipoteca o Título y compáralo con un depósito a plazo.</span><em>Desde $5MM</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>

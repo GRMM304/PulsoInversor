@@ -49,6 +49,7 @@
   function abrir(id, desplazar) {
     if (!$('[data-sim-panel="' + id + '"]')) return;
     stage.hidden = false;
+    var area = $('#sim-area'); if (area) area.classList.add('has-open');
     tabs.forEach(function (t) { var on = t.getAttribute('data-sim-tab') === id; t.classList.toggle('is-active', on); t.setAttribute('aria-selected', on ? 'true' : 'false'); });
     panels.forEach(function (p) { p.hidden = p.getAttribute('data-sim-panel') !== id; });
     setLocked(!contacto);

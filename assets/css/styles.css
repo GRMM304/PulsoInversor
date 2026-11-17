@@ -1603,3 +1603,21 @@ main p,main li,main blockquote{-webkit-hyphens:manual!important;hyphens:manual!i
   main li,main blockquote{text-align:left}
   .pasos strong,.rx-step h3,.rx-after-card h4,.hitos strong,.senal h3,.riesgo-q h3{text-align:left!important}
 }
+
+/* Simuladores: la página parte con la pregunta */
+.sim-top{padding-top:56px}
+.sim-top .title h1{font-size:clamp(32px,4.4vw,52px);color:var(--green-900);margin-bottom:14px}
+.sim-stage{scroll-margin-top:calc(var(--header-h) + 76px)}
+@media (max-width:620px){
+  .sim-top{padding-top:32px}
+  #sim-area.has-open .sim-picks{position:sticky;top:var(--header-h);z-index:15;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:10px 16px;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--gray-200)}
+  #sim-area.has-open .sim-picks::-webkit-scrollbar{display:none}
+  #sim-area.has-open .sim-pick{flex:none;padding:10px 14px;border-radius:999px;gap:0;transform:none;box-shadow:none;background:#fff}
+  #sim-area.has-open .sim-pick>*:not(strong){display:none}
+  #sim-area.has-open .sim-pick::after{content:none}
+  #sim-area.has-open .sim-pick strong{font-size:14px;white-space:nowrap}
+  #sim-area.has-open .sim-pick.is-active{background:var(--green-900);border-color:var(--green-900)}
+  #sim-area.has-open .sim-pick.is-active strong{color:var(--lime)}
+  #sim-area.has-open .sim-stage{margin-top:16px}
+  #sim-area.has-open .title{display:none}
+}
