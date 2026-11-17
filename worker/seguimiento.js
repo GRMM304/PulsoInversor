@@ -115,8 +115,15 @@ async function agendar(request, env, url) {
     const d = await leer(env, t);
     if (!d) return enlaceVencido();
     // Si el tramo tiene agenda de Brevo, se redirige allí (el enlace del correo no cambia aunque se cambie la agenda).
-    const brevoUrl = AGENDA_BREVO[d.g];
-    if (brevoUrl) return Response.redirect(brevoUrl, 302);
+    const agendas = (AGENDA_BREVO[d.g] || []).filter((a) => a.url);
+    if (agendas.length === 1) return Response.redirect(agendas[0].url, 302);
+    if (agendas.length > 1) {
+      return pagina('Agendar reunión', `<p class="eyebrow">Agendar reunión · ${esc(d.s)}</p>
+<h1>Hola ${esc(d.n.split(' ')[0])}, elige con quién quieres reunirte</h1>
+<p>${esc(agendas.map((a) => a.nombre).join(' y '))} son los cofundadores de Pulso. Elige a uno y luego el día y la hora que te acomoden. Puedes venir con tu pareja, tu socio o tu abogado.</p>
+${agendas.map((a) => `<p><a href="${esc(a.url)}" style="display:inline-block;background:${C.lima};color:${C.verde};font-weight:700;text-decoration:none;padding:14px 24px;border-radius:999px">Agendar con ${esc(a.nombre)} →</a></p>`).join('')}
+<p class="nota">No te vamos a pedir que decidas en la reunión.</p>`);
+    }
     const ps = personasDe(d), varios = ps.length > 1;
     const manana = new Date(Date.now() + 864e5 - 3 * 3600e3).toISOString().slice(0, 10);
     return pagina('Agendar reunión', `<p class="eyebrow">Agendar reunión · ${esc(d.s)}</p>
