@@ -408,20 +408,83 @@ c.addEventListener('mouseenter',function(){abrir(c)});c.addEventListener('focus'
 
 
 <!-- 8. PROCESO (Genoma 4, Oferta: soluciones en orden) -->
-<section class="s">
-  <div class="wrap">
-    <div class="grid g2" style="align-items:center;margin-bottom:28px"><div class="cab" style="margin:0"><span class="eyebrow">Sin sorpresas</span><h2>Así es el camino, a tu ritmo</h2><p>Conversas con una persona, ves una operación real y te llevas los documentos. Nadie te pide decidir en la reunión.</p></div>
-      <figure class="foto-esc"><img src="assets/img/reunion-con-asesor.jpg" alt="Reunión en la oficina de Pulso: un asesor conversa con dos personas en la mesa" loading="lazy" width="1200" height="900"></figure></div>
-    <ol class="pasos h">
-      <li><b>Simulas</b><span>Eliges monto y plazo y ves cómo sería tu inversión.</span></li>
-      <li><b>Conversas</b><span>Con un asesor. Puedes venir con tu pareja, un socio o tu abogado.</span></li>
-      <li><b>Ves una operación real</b><span>La propiedad, su tasación, el precio de compra y el calendario.</span></li>
-      <li><b>Revisas con calma</b><span>Te llevas los documentos, el tiempo que necesites.</span></li>
-      <li><b>Firmas ante notario</b><span>Solo si decides avanzar y todo te quedó claro.</span></li>
-      <li><b>Recibes pagos y reportes</b><span>En las fechas del contrato, con tu asesor a un llamado.</span></li>
+<section class="section ritmo" id="camino-a-tu-ritmo">
+  <div class="container">
+    <div class="ritmo-head">
+      <div class="ritmo-intro">
+        <span class="eyebrow">Sin sorpresas</span>
+        <h2>Así es el camino, <span class="ritmo-acento">a tu ritmo</span></h2>
+        <p class="lead">Conversas con una persona, ves una operación real y te llevas los documentos. Nadie te pide decidir en la reunión.</p>
+        <ul class="ritmo-chips" aria-label="Cómo trabajamos">
+          <li>Sin apuro</li><li>Sin compromiso</li><li>Con tu abogado, si quieres</li>
+        </ul>
+      </div>
+      <figure class="ritmo-foto">
+        <img src="assets/img/reunion-con-asesor.jpg" alt="Reunión en la oficina de Pulso: un asesor conversa con dos personas en la mesa" loading="lazy" width="1200" height="900">
+        <figcaption class="ritmo-badge">
+          <span class="ritmo-badge-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg></span>
+          <span><strong>Nadie te pide decidir en la reunión</strong><small>Puedes venir con tu pareja, un socio o tu abogado.</small></span>
+        </figcaption>
+      </figure>
+    </div>
+
+    <ol class="ritmo-pasos">
+      <li class="ritmo-paso" style="--i:0">
+        <span class="ritmo-nodo" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M8 7h8"/><path d="M8.5 12h.01M12 12h.01M15.5 12h.01M8.5 15.5h.01M12 15.5h.01M15.5 15.5h.01"/></svg></span>
+        <span class="ritmo-num">Paso 1</span>
+        <h3>Simulas</h3>
+        <p>Eliges monto y plazo y ves cómo sería tu inversión.</p>
+        <span class="ritmo-tag">En línea, cuando quieras</span>
+      </li>
+      <li class="ritmo-paso" style="--i:1">
+        <span class="ritmo-nodo" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H9l-4 3v-3H5a2 2 0 0 1-2-2z"/><path d="M16 9h3a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-1v3l-4-3h-3a2 2 0 0 1-2-2v-1"/></svg></span>
+        <span class="ritmo-num">Paso 2</span>
+        <h3>Conversas</h3>
+        <p>Con un asesor. Puedes venir con tu pareja, un socio o tu abogado.</p>
+        <span class="ritmo-tag">Con una persona real</span>
+      </li>
+      <li class="ritmo-paso" style="--i:2">
+        <span class="ritmo-nodo" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l8-6 8 6"/><path d="M5 10v9h7"/><circle cx="17" cy="16" r="3"/><path d="M19.2 18.2L21.5 20.5"/></svg></span>
+        <span class="ritmo-num">Paso 3</span>
+        <h3>Ves una operación real</h3>
+        <p>La propiedad, su tasación, el precio de compra y el calendario.</p>
+        <span class="ritmo-tag">Todo a la vista</span>
+      </li>
+      <li class="ritmo-paso" style="--i:3">
+        <span class="ritmo-nodo" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l3 3v8"/><path d="M6 3v18h7"/><path d="M9 8h6M9 11h6M9 14h3"/><circle cx="17.5" cy="18" r="3.5"/><path d="M16 18l1 1 2-2"/></svg></span>
+        <span class="ritmo-num">Paso 4</span>
+        <h3>Revisas con calma</h3>
+        <p>Te llevas los documentos, el tiempo que necesites.</p>
+        <span class="ritmo-tag">Sin plazos de presión</span>
+      </li>
+      <li class="ritmo-paso" style="--i:4">
+        <span class="ritmo-nodo" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 4.5l4 4L9 19H5v-4z"/><path d="M13.5 6.5l4 4"/><path d="M4 21h16"/></svg></span>
+        <span class="ritmo-num">Paso 5</span>
+        <h3>Firmas ante notario</h3>
+        <p>Solo si decides avanzar y todo te quedó claro.</p>
+        <span class="ritmo-tag">Tú decides cuándo</span>
+      </li>
+      <li class="ritmo-paso" style="--i:5">
+        <span class="ritmo-nodo" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17"/><path d="M8 3v4M16 3v4"/><path d="M9 15l2 2 4-4"/></svg></span>
+        <span class="ritmo-num">Paso 6</span>
+        <h3>Recibes pagos y reportes</h3>
+        <p>En las fechas del contrato, con tu asesor a un llamado.</p>
+        <span class="ritmo-tag">Acompañamiento continuo</span>
+      </li>
     </ol>
+
+    <div class="ritmo-cta">
+      <a class="btn btn-lima" href="simuladores.html">Empieza por el paso 1: simula</a>
+      <a class="btn btn-borde" href="contacto.html">Prefiero conversar primero</a>
+    </div>
   </div>
 </section>
+<script>
+/* Los pasos se encienden en orden cuando la sección entra en pantalla */
+(function(){var s=document.getElementById('camino-a-tu-ritmo');if(!s)return;
+if(!('IntersectionObserver' in window)||window.matchMedia('(prefers-reduced-motion: reduce)').matches){s.classList.add('en-vista');return;}
+var o=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting){s.classList.add('en-vista');o.disconnect();}})},{threshold:.25});o.observe(s.querySelector('.ritmo-pasos'));})();
+</script>
 
 <section class="s dark centro"><div class="wrap angosto">
   <h2>¿Empezamos por ti?</h2>

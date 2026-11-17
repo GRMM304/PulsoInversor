@@ -109,6 +109,13 @@ def pagina(nombre, s):
         assert i > 0 and a > 0, 'no se encontró la sección de testimonios'
         s = s[:a] + open(os.path.join(DIS, 'personas-reales.html'), encoding='utf-8').read().strip() + s[b:]
 
+    # Inicio: «Así es el camino, a tu ritmo» rediseñado con línea de tiempo
+    if nombre == 'index.html':
+        i = s.find('Así es el camino, a tu ritmo')
+        a, b = s.rfind('<section', 0, i), s.find('</section>', i) + len('</section>')
+        assert i > 0 and a > 0, 'no se encontró la sección del camino'
+        s = s[:a] + open(os.path.join(DIS, 'camino-ritmo.html'), encoding='utf-8').read().strip() + s[b:]
+
     # Héroe del inicio con la foto de Santiago bajo el filtro verde
     if nombre == 'index.html':
         viejo = '<h1>Con tu dinero no se juega.<br><em>Míralo antes de firmar.</em></h1>'

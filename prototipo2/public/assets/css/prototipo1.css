@@ -228,7 +228,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--p1-green
 @media (min-width:901px) and (max-width:1100px){.rutas-acc{height:500px}.ruta{padding:22px}.ruta-rows{grid-template-columns:1fr}}
 
 /* ---- Inicio: «Personas reales, con nombre» (igual al Prototipo 1) ---- */
-:root{--gold:#FFC33F;--shadow:0 24px 70px rgba(0,0,0,.16)}
+:root{--gold:#FFC33F;--shadow:0 24px 70px rgba(0,0,0,.16);--green-700:#1E5746;--green-500:#599675;--orange:#F5B05E}
 .reviews{display:grid;grid-template-columns:minmax(260px,340px) 1fr;gap:24px;align-items:stretch}
 .review-list{display:grid;gap:20px;align-content:center}
 .review-quote{position:absolute;left:22px;top:12px;font-size:46px;line-height:1;font-weight:900;color:var(--lime)}
@@ -247,3 +247,64 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--p1-green
 #personas-reales .disclaimer{text-align:center}
 @media (max-width:900px){.reviews{grid-template-columns:1fr}.video-testimonio{max-width:340px;margin:0 auto}}
 @media (max-width:620px){.testimonio{padding:56px 20px 20px}.testimonio .review-quote{left:20px;top:10px}}
+
+/* ---- Inicio: «Así es el camino, a tu ritmo» (rediseño con línea de tiempo) ---- */
+.ritmo{position:relative;overflow:hidden;background:linear-gradient(180deg,#fff 0%,var(--gray-100) 100%)}
+.ritmo::before,.ritmo::after{content:"";position:absolute;border-radius:50%;pointer-events:none;filter:blur(10px)}
+.ritmo::before{width:520px;height:520px;right:-180px;top:-200px;background:radial-gradient(circle,rgba(199,217,93,.35),transparent 65%)}
+.ritmo::after{width:440px;height:440px;left:-200px;bottom:-220px;background:radial-gradient(circle,rgba(255,195,63,.22),transparent 65%)}
+.ritmo .container{position:relative;z-index:1}
+.ritmo-head{display:grid;grid-template-columns:1fr 1.05fr;gap:56px;align-items:center;margin-bottom:64px}
+.ritmo-acento{background:linear-gradient(90deg,var(--green-700),#7FA83A);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ritmo-intro .lead{margin-bottom:22px}
+.ritmo-chips{display:flex;flex-wrap:wrap;gap:10px;list-style:none;padding:0;margin:0}
+.ritmo-chips li{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:999px;background:#fff;border:1px solid var(--gray-200);font-size:14px;font-weight:700;color:var(--green-900);box-shadow:0 6px 18px rgba(14,44,40,.06)}
+.ritmo-chips li::before{content:"";width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,var(--lime),var(--gold))}
+.ritmo-foto{position:relative;margin:0 0 26px 0}
+.ritmo-foto img{width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;border-radius:var(--radius-xl);box-shadow:var(--shadow);display:block}
+.ritmo-foto::before{content:"";position:absolute;inset:18px -18px -18px 18px;border-radius:var(--radius-xl);background:linear-gradient(135deg,var(--lime),var(--gold));opacity:.55;z-index:-1}
+.ritmo-badge{position:absolute;left:-28px;bottom:-26px;display:flex;align-items:center;gap:14px;max-width:340px;padding:16px 18px;border-radius:20px;background:var(--green-900);color:#fff;box-shadow:0 20px 50px rgba(14,44,40,.35)}
+.ritmo-badge strong{display:block;font-size:15px;line-height:1.25}
+.ritmo-badge small{display:block;font-size:13px;color:rgba(255,255,255,.72);margin-top:3px;line-height:1.35}
+.ritmo-badge-ico{flex:none;width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--lime);color:var(--green-900)}
+
+.ritmo-pasos{--avance:0;position:relative;display:grid;grid-template-columns:repeat(6,1fr);gap:18px;list-style:none;padding:0;margin:0}
+.ritmo-pasos::before,.ritmo-pasos::after{content:"";position:absolute;top:31px;left:calc(100%/12);right:calc(100%/12);height:4px;border-radius:4px}
+.ritmo-pasos::before{background:var(--gray-200)}
+.ritmo-pasos::after{background:linear-gradient(90deg,var(--green-700),var(--lime),var(--gold));transform-origin:left;transform:scaleX(0);transition:transform 1.8s cubic-bezier(.2,.8,.2,1) .2s}
+.ritmo.en-vista .ritmo-pasos::after{transform:scaleX(1)}
+.ritmo-paso{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 4px}
+.ritmo-nodo{position:relative;z-index:1;width:66px;height:66px;border-radius:20px;display:grid;place-items:center;background:#fff;color:var(--green-700);border:2px solid var(--gray-200);box-shadow:0 10px 26px rgba(14,44,40,.10);margin-bottom:18px;transition:background .45s ease,color .45s ease,border-color .45s ease,transform .3s ease,box-shadow .3s ease;transition-delay:calc(.25s + var(--i)*.28s)}
+.ritmo.en-vista .ritmo-nodo{background:linear-gradient(135deg,var(--green-900),var(--green-700));color:var(--lime);border-color:transparent}
+.ritmo-paso:last-child .ritmo-nodo{transition-delay:calc(.25s + 5*.28s)}
+.ritmo.en-vista .ritmo-paso:last-child .ritmo-nodo{background:linear-gradient(135deg,var(--lime),var(--gold));color:var(--green-900)}
+.ritmo-num{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--gray-500);margin-bottom:6px}
+.ritmo-paso h3{font-size:18px;line-height:1.2;margin:0 0 8px;color:var(--green-900)}
+.ritmo-paso p{font-size:14.5px;line-height:1.5;color:var(--gray-700);margin:0 0 14px;flex:1}
+.ritmo-tag{display:inline-flex;padding:6px 11px;border-radius:999px;background:rgba(199,217,93,.25);color:var(--green-800);font-size:12px;font-weight:800}
+.ritmo-paso:hover .ritmo-nodo{transform:translateY(-4px) scale(1.04);box-shadow:0 18px 36px rgba(14,44,40,.2);transition-delay:0s}
+.ritmo-cta{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin-top:52px}
+
+@media (max-width:1020px){
+  .ritmo-head{grid-template-columns:1fr;gap:40px}
+  .ritmo-foto{max-width:640px;margin:0 auto 26px}
+  .ritmo-badge{left:16px}
+  .ritmo-pasos{grid-template-columns:repeat(3,1fr);row-gap:40px}
+  .ritmo-pasos::before,.ritmo-pasos::after{display:none}
+}
+@media (max-width:640px){
+  .ritmo-head{margin-bottom:44px}
+  .ritmo-foto::before{inset:12px -10px -12px 10px}
+  .ritmo-badge{position:relative;left:auto;bottom:auto;margin:-36px 14px 0;max-width:none}
+  .ritmo-pasos{grid-template-columns:1fr;gap:0;padding-left:0}
+  .ritmo-pasos::before,.ritmo-pasos::after{display:block;top:20px;bottom:20px;left:27px;right:auto;width:4px;height:auto}
+  .ritmo-pasos::after{transform:scaleY(0);transform-origin:top}
+  .ritmo.en-vista .ritmo-pasos::after{transform:scaleY(1)}
+  .ritmo-paso{display:grid;grid-template-columns:58px 1fr;column-gap:16px;align-items:start;text-align:left;padding:0 0 26px}
+  .ritmo-nodo{width:58px;height:58px;border-radius:18px;margin:0;grid-row:span 4}
+  .ritmo-num{margin:4px 0 4px}
+  .ritmo-paso p{margin-bottom:10px}
+  .ritmo-tag{justify-self:start}
+  .ritmo-cta .btn{width:100%}
+}
+@media (prefers-reduced-motion:reduce){.ritmo-nodo,.ritmo-pasos::after{transition:none}}
