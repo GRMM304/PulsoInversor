@@ -200,6 +200,80 @@
     });
   }
 
+  // Inversiones: cada tarjeta despliega su explicación debajo
+  var inv = document.querySelector('[data-inv]');
+  if (inv) {
+    var tabs = inv.querySelectorAll('[data-inv-tab]'), panels = inv.querySelectorAll('[data-inv-panel]');
+    var abrirInv = function (id, desplazar, destino) {
+      tabs.forEach(function (t) { var on = t.getAttribute('data-inv-tab') === id; t.classList.toggle('is-active', on); t.setAttribute('aria-expanded', on ? 'true' : 'false'); });
+      panels.forEach(function (p) { p.hidden = p.getAttribute('data-inv-panel') !== id; });
+      inv.classList.toggle('has-open', !!id);
+      if (id && desplazar) {
+        var el = destino || inv.querySelector('[data-inv-panel="' + id + '"]');
+        setTimeout(function () { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 30);
+      }
+    };
+    tabs.forEach(function (t) {
+      t.addEventListener('click', function () {
+        var id = t.getAttribute('data-inv-tab');
+        abrirInv(t.classList.contains('is-active') ? null : id, false);
+        if (t.classList.contains('is-active')) {
+          var pnl = inv.querySelector('[data-inv-panel="' + id + '"]'), r = pnl.getBoundingClientRect();
+          if (r.top > window.innerHeight * .8) pnl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+    var porHash = function (hash, desplazar) {
+      if (!hash || hash.length < 2) return false;
+      var el = document.getElementById(decodeURIComponent(hash.slice(1)));
+      var pnl = el && el.closest('[data-inv-panel]');
+      if (!pnl) return false;
+      abrirInv(pnl.getAttribute('data-inv-panel'), desplazar, el);
+      return true;
+    };
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest('a[href^="#"]');
+      if (a && porHash(a.getAttribute('href'), true)) { e.preventDefault(); history.replaceState(null, '', a.getAttribute('href')); }
+    });
+    porHash(location.hash, true);
+    window.addEventListener('hashchange', function () { porHash(location.hash, true); });
+  }
+
+  // Nosotros · Nuestro enfoque: las palabras se encienden al bajar y la sección se despide al salir
+  var enf = document.querySelector('[data-enfoque]');
+  if (enf && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    var q = enf.querySelector('[data-scrub]'), ws = [];
+    (function partir(nodo) {
+      Array.prototype.slice.call(nodo.childNodes).forEach(function (n) {
+        if (n.nodeType === 3) {
+          var frag = document.createDocumentFragment();
+          n.textContent.split(/(\s+)/).forEach(function (t) {
+            if (!t) return;
+            if (/^\s+$/.test(t)) { frag.appendChild(document.createTextNode(t)); return; }
+            var sp = document.createElement('span'); sp.className = 'sw'; sp.textContent = t; frag.appendChild(sp); ws.push(sp);
+          });
+          nodo.replaceChild(frag, n);
+        } else if (n.nodeType === 1) { partir(n); }
+      });
+    })(q);
+    enf.classList.add('js-scrub');
+    var inner = enf.querySelector('.container'), tick = false;
+    var pintar = function () {
+      tick = false;
+      var r = enf.getBoundingClientRect(), vh = window.innerHeight;
+      var p = Math.min(1, Math.max(0, (vh * .85 - r.top) / (vh * .6)));
+      var n = Math.round(p * ws.length);
+      ws.forEach(function (w, i) { w.classList.toggle('on', i < n); });
+      var out = 1 - Math.min(1, Math.max(0, r.bottom / (vh * .55)));
+      inner.style.opacity = String(1 - out * .9);
+      inner.style.transform = 'translateY(' + (-out * 60) + 'px) scale(' + (1 - out * .06) + ')';
+      inner.style.filter = out > .02 ? 'blur(' + (out * 4).toFixed(1) + 'px)' : '';
+    };
+    window.addEventListener('scroll', function () { if (!tick) { tick = true; requestAnimationFrame(pintar); } }, { passive: true });
+    window.addEventListener('resize', pintar);
+    pintar();
+  }
+
   // Animaciones al aparecer en pantalla
   var rev = document.querySelectorAll('[data-reveal]');
   if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {

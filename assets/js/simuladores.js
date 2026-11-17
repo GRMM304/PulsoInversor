@@ -19,7 +19,7 @@
   // Planilla de Google (Apps Script) que usa hoy el simulador de Hipoteca Inteligente.
   var SHEET_URL = 'https://script.google.com/macros/s/AKfycby1He4sHgOoqwfI5Zc0hJ8Ux3SlESniUs3vZEkC0PvcZxFHhmalKODK4v-pEKjrWBPH/exec';
   // Tasa mensual referencial de un depósito a plazo a 30 días, renovado cada mes. PENDIENTE: confirmar.
-  var DAP_MENSUAL = 0.40;
+  var DAP_ANUAL = 4.8;   // % anual referencial de un depósito a plazo a 365 días (CONFIRMAR)
   // Valores de respaldo si no responde el servicio de indicadores.
   var UF = 39100, IPC = 4.5;
 
@@ -158,13 +158,14 @@
     H: { nombre: 'Hipoteca', garantia: 'Hipoteca', plazos: [15, 21, 27], retiro: false, minimo: 25000000, interes: [0.7, 0.8, 0.9], uf: true },
     T: { nombre: 'Título', garantia: 'Título', plazos: [15, 21, 27], retiro: false, minimo: 100000000, interes: [0.8, 0.9, 1.0], uf: true }
   };
-  var P = { serie: 'A', monto: 5000000, plazo: 12, retiro: false };
+  var P = { serie: null, monto: 0, plazo: null, retiro: null };
   var q = new URLSearchParams(location.search).get('serie');
   if (q && SERIES[q.toUpperCase()]) P.serie = q.toUpperCase();
 
   var tasaBase = function () { var s = SERIES[P.serie]; var i = s.plazos.indexOf(P.plazo); return s.interes[i < 0 ? 0 : i]; };
-  var tasa = function () { return (P.serie === 'A' && P.retiro) ? Math.round((tasaBase() - 0.1) * 10) / 10 : tasaBase(); };
-  var montoEf = function () { return Math.max(P.monto || 0, SERIES[P.serie].minimo); };
+  var tasa = function () { return (P.serie === 'A' && P.retiro === true) ? Math.round((tasaBase() - 0.1) * 10) / 10 : tasaBase(); };
+  var montoEf = function () { return P.serie ? Math.max(P.monto || 0, SERIES[P.serie].minimo) : (P.monto || 0); };
+  var completo = function () { return !!(P.serie && P.monto && P.plazo && (!SERIES[P.serie].retiro || P.retiro !== null)); };
   function calcular() {
     var s = SERIES[P.serie], m = montoEf(), n = P.plazo, t = tasa() / 100, total, interes;
     if (!s.uf) { interes = Math.round(m * n * t); total = m + interes; }
@@ -173,23 +174,40 @@
       var ufProy = UF * (IPC / 100) * n / 12 + UF;
       total = Math.round((inv + intUF) * ufProy); interes = total - m;
     }
-    var dap = Math.round(m * Math.pow(1 + DAP_MENSUAL / 100, n));
+    // Depósito a 365 días renovado al vencimiento (interés compuesto anual); los meses que no completan un año, en proporción.
+    var dap = Math.round(m * Math.pow(1 + DAP_ANUAL / 100, n / 12));
     return { monto: m, total: total, ganancia: total - m, dapTotal: dap, dapGanancia: dap - m };
   }
   function renderSeries() {
     $$('[data-serie]').forEach(function (b) { var on = b.getAttribute('data-serie') === P.serie; b.classList.toggle('is-active', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
     var s = SERIES[P.serie];
+    if (!s) {
+      $('#p-plazos').innerHTML = '<span class="pro-help">Elige primero una estrategia.</span>';
+      $('#p-quick').innerHTML = [5000000, 10000000, 25000000, 50000000, 100000000, 250000000].map(function (v) { return '<button type="button" class="chip-opt" data-monto="' + v + '">' + (v / 1e6) + ' millones</button>'; }).join('');
+      $('#p-min').textContent = ''; $('#p-retiro-wrap').hidden = true; return;
+    }
     $('#p-plazos').innerHTML = s.plazos.map(function (p) { return '<button type="button" class="chip-opt' + (p === P.plazo ? ' is-active' : '') + '" data-plazo="' + p + '" aria-pressed="' + (p === P.plazo) + '">' + p + ' meses</button>'; }).join('');
     $('#p-quick').innerHTML = [5000000, 10000000, 25000000, 50000000, 100000000, 250000000].filter(function (v) { return v >= s.minimo; })
       .map(function (v) { return '<button type="button" class="chip-opt" data-monto="' + v + '">' + (v / 1e6) + ' millones</button>'; }).join('');
     $('#p-min').textContent = 'Mínimo para esta estrategia: ' + fmtCLP(s.minimo);
     $('#p-retiro-wrap').hidden = !s.retiro;
-    $$('[data-retiro]').forEach(function (b) { var on = (b.getAttribute('data-retiro') === '1') === P.retiro; b.classList.toggle('is-active', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+    $$('[data-retiro]').forEach(function (b) { var on = P.retiro !== null && (b.getAttribute('data-retiro') === '1') === P.retiro; b.classList.toggle('is-active', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
   }
   function render(enEdicion) {
+    if (!enEdicion) $('#p-monto').value = P.monto ? fmtCLP(P.monto) : '';
+    var listo = completo();
+    $('#p-correo').disabled = !listo;
+    $$('.pro-cols').forEach(function (c) { c.classList.toggle('is-empty', !listo); });
+    $('#p-falta').hidden = listo;
+    if (!listo) {
+      ['r-estrategia', 'r-monto', 'r-plazo', 'r-tasa', 'r-total', 'r-ganancia', 'd-total', 'd-dap', 'd-monto', 'd-plazo'].forEach(function (id) { $('#' + id).textContent = '—'; });
+      $('#d-tasa').textContent = fmtPct(DAP_ANUAL, 2);
+      $('#p-warn').hidden = !(P.serie && P.monto && P.monto < SERIES[P.serie].minimo);
+      $('#p-pref').hidden = true; $('#r-nota-uf').hidden = !(P.serie && SERIES[P.serie].uf); $('#r-uf').textContent = fmtCLP(UF);
+      return;
+    }
     var r = calcular(), s = SERIES[P.serie];
     window.__pulsoMonto = r.monto;
-    if (!enEdicion) $('#p-monto').value = P.monto ? fmtCLP(P.monto) : '';
     $('#p-warn').hidden = !(P.monto && P.monto < s.minimo);
     $('#r-estrategia').textContent = s.nombre + ' · ' + s.garantia;
     $('#r-monto').textContent = fmtCLP(r.monto);
@@ -202,7 +220,7 @@
     $('#d-monto').textContent = fmtCLP(r.monto);
     $('#d-plazo').textContent = P.plazo + ' meses';
     $('#p-pref').hidden = r.monto < 250000000;
-    $('#d-tasa').textContent = fmtPct(DAP_MENSUAL, 2);
+    $('#d-tasa').textContent = fmtPct(DAP_ANUAL, 2);
     $('#r-nota-uf').hidden = !s.uf;
     $('#r-uf').textContent = fmtCLP(UF);
   }
@@ -212,11 +230,11 @@
     return 'Estrategia: ' + s.nombre + ' (' + s.garantia + ')\nMonto: ' + fmtCLP(r.monto) + '\nPlazo: ' + P.plazo + ' meses' +
       (s.retiro ? '\nRetiro anticipado: ' + (P.retiro ? 'Sí' : 'No') : '') + '\nTasa mensual: ' + fmtPct(tasa(), 1) +
       '\nTotal a recibir (referencial): ' + fmtCLP(r.total) + '\nGanancia: ' + fmtCLP(r.ganancia) +
-      '\nDepósito a plazo (' + fmtPct(DAP_MENSUAL, 2) + ' mensual): ' + fmtCLP(r.dapGanancia);
+      '\nDepósito a plazo a 365 días (' + fmtPct(DAP_ANUAL, 2) + ' anual): ' + fmtCLP(r.dapGanancia);
   }
   root.addEventListener('click', function (e) {
     var b;
-    if ((b = e.target.closest('[data-serie]'))) { P.serie = b.getAttribute('data-serie'); var s = SERIES[P.serie]; P.plazo = s.plazos[0]; P.monto = Math.max(P.monto, s.minimo); P.retiro = false; renderSeries(); render(); }
+    if ((b = e.target.closest('[data-serie]'))) { P.serie = b.getAttribute('data-serie'); var s = SERIES[P.serie]; P.plazo = null; if (P.monto) P.monto = Math.max(P.monto, s.minimo); P.retiro = null; renderSeries(); render(); }
     else if ((b = e.target.closest('[data-plazo]'))) { P.plazo = +b.getAttribute('data-plazo'); renderSeries(); render(); }
     else if ((b = e.target.closest('[data-monto]'))) { P.monto = +b.getAttribute('data-monto'); render(); }
     else if ((b = e.target.closest('[data-retiro]'))) { P.retiro = b.getAttribute('data-retiro') === '1'; renderSeries(); render(); }
@@ -226,9 +244,10 @@
     e.target.value = P.monto ? fmtCLP(P.monto) : '';
     render(true);
   });
-  $('#p-monto').addEventListener('blur', function () { P.monto = montoEf(); render(); });
+  $('#p-monto').addEventListener('blur', function () { if (P.monto) P.monto = montoEf(); render(); });
   $('#p-correo').addEventListener('click', function () {
     var st = $('#p-status'), btn = $('#p-correo');
+    if (!completo()) { st.textContent = 'Completa estrategia, monto y plazo antes de enviar.'; return; }
     if (!contacto || !jspdfListo(st)) return;
     var r = calcular(), sr = SERIES[P.serie];
     var resumenTxt = resumen();
@@ -237,8 +256,8 @@
       { t: 'Tu simulación', rows: [['Estrategia', sr.nombre + ' · ' + sr.garantia], ['Monto a invertir', fmtCLP(r.monto)], ['Plazo', P.plazo + ' meses'],
         ['Tasa', fmtPct(tasa(), 1) + ' mensual' + (sr.uf ? ' + UF' : '')]].concat(sr.retiro ? [['Retiro anticipado', P.retiro ? 'Sí' : 'No']] : []) },
       { t: 'Con Pulso', rows: [['Total a recibir', fmtCLP(r.total)], ['Ganancia', '+' + fmtCLP(r.ganancia), 'pos']] },
-      { t: 'En un depósito a plazo', rows: [['Tasa referencial', fmtPct(DAP_MENSUAL, 2) + ' mensual'], ['Total a recibir', fmtCLP(r.dapTotal)], ['Ganancia', '+' + fmtCLP(r.dapGanancia), 'red']] },
-      { t: 'Supuestos', small: true, text: 'Simulación referencial. Depósito a plazo calculado a 30 días, renovado cada mes.' + (sr.uf ? ' Hipoteca y Título se reajustan en UF (UF ' + fmtCLP(UF) + ', IPC estimado 4,5% anual).' : '') + ' Las condiciones finales dependen de la evaluación y del contrato de cada operación. Este documento no constituye una oferta vinculante.' }
+      { t: 'En un depósito a plazo a 365 días', rows: [['Tasa referencial', fmtPct(DAP_ANUAL, 2) + ' anual'], ['Total a recibir', fmtCLP(r.dapTotal)], ['Ganancia', '+' + fmtCLP(r.dapGanancia), 'red']] },
+      { t: 'Supuestos', small: true, text: 'Simulación referencial. Depósito a plazo a 365 días, renovado al vencimiento con interés compuesto; los meses que no completan un año se calculan en proporción.' + (sr.uf ? ' Hipoteca y Título se reajustan en UF (UF ' + fmtCLP(UF) + ', IPC estimado 4,5% anual).' : '') + ' Las condiciones finales dependen de la evaluación y del contrato de cada operación. Este documento no constituye una oferta vinculante.' }
     ]);
     enviarCorreo('proyecta', doc, 'Simulacion_ProyectaUnHogar', resumenTxt.split('\n'), st, btn);
   });
@@ -271,7 +290,7 @@
     { name: 'Camino Playa Blanca', comuna: 'Caburgua', tas: 3482, fin: 2785.6, saldo3: 2591.84, saldo5: 2447.37, rent: 12.6, div: 16.99216, admin: 1.008 }
   ];
   var COST = { vac: 1, contrib: .0008, mant: .0004 };
-  var H = { tr: 0, years: 5, capacity: 0, selected: [1], decisions: {}, tractionOnly: null, open: {} };
+  var H = { tr: null, years: null, capacity: 0, selected: [], decisions: {}, tractionOnly: null, open: {} };
   var fmt = function (v) { return new Intl.NumberFormat('es-CL', { maximumFractionDigits: 1 }).format(v); };
   var uf = function (v) { return fmt(v) + ' UF'; };
   var signed = function (v) { return (v >= 0 ? '+' : '−') + uf(Math.abs(v)); };
@@ -286,28 +305,36 @@
       contributions = -(p.tas * COST.contrib * H.years), maintenance = -(p.tas * COST.mant * H.years);
     return { monthly: monthly, op: op, vacancy: vacancy, contributions: contributions, maintenance: maintenance, totalCost: op + vacancy + contributions + maintenance, amort: amortAt(p, H.years) };
   }
-  var tractionReturn = function () { return tractionData[H.tr].fin * .05 * H.years; };
+  var tractionReturn = function () { return H.tr === null || !H.years ? 0 : tractionData[H.tr].fin * .05 * H.years; };
   var hiBody = $('#hi-body'), hiCap = $('#hi-cap-form');
 
   function renderTraction() {
-    var t = tractionData[H.tr], ret = tractionReturn();
-    $('#hi-traction').value = H.tr;
+    var t = H.tr === null ? null : tractionData[H.tr], ret = tractionReturn();
+    $('#hi-traction').value = H.tr === null ? '' : H.tr;
     var row = function (a, b) { return '<div class="hi-row"><span>' + a + '</span><b>' + b + '</b></div>'; };
-    $('#hi-tmetrics').innerHTML = row('Tasación', uf(t.tas)) + row('Monto de inversión · 80%', uf(t.fin)) + row('Rentabilidad', '5% anual simple') + row('Plazo elegido', H.years + ' años');
+    if (!t || !H.years) {
+      $('#hi-tmetrics').innerHTML = row('Tasación', t ? uf(t.tas) : '—') + row('Monto de inversión · 80%', t ? uf(t.fin) : '—') + row('Interés', '5% anual simple') + row('Plazo elegido', H.years ? H.years + ' años' : '—');
+      $('#hi-retlabel').textContent = 'Retorno acumulado'; $('#hi-retval').textContent = '—';
+      $('#hi-years').innerHTML = [2, 3, 4, 5].map(function (y) { return '<button type="button" data-year="' + y + '" class="hi-year' + (y === H.years ? ' is-active' : '') + '" aria-pressed="' + (y === H.years) + '"><small>' + y + ' años</small><b>' + (t ? uf(t.fin * .05 * y) : '—') + '</b></button>'; }).join('');
+      $('#hi-capdisplay').textContent = H.capacity > 0 ? uf(H.capacity) : '—';
+      return;
+    }
+    $('#hi-tmetrics').innerHTML = row('Tasación', uf(t.tas)) + row('Monto de inversión · 80%', uf(t.fin)) + row('Interés', '5% anual simple') + row('Plazo elegido', H.years + ' años');
     $('#hi-retlabel').textContent = 'Retorno acumulado · ' + H.years + ' años';
     $('#hi-retval').textContent = signed(ret);
     $('#hi-years').innerHTML = [2, 3, 4, 5].map(function (y) { return '<button type="button" data-year="' + y + '" class="hi-year' + (y === H.years ? ' is-active' : '') + '" aria-pressed="' + (y === H.years) + '"><small>' + y + ' años</small><b>' + uf(t.fin * .05 * y) + '</b></button>'; }).join('');
     $('#hi-capdisplay').textContent = H.capacity > 0 ? uf(H.capacity) : '—';
   }
   function renderTable() {
+    var lleno = H.selected.length >= 2;
     var rows = patrimonyData.map(function (p, i) {
-      var flow = p.rent - p.div - p.admin, sel = H.selected.indexOf(i) >= 0, dis = p.fin > H.capacity;
+      var flow = p.rent - p.div - p.admin, sel = H.selected.indexOf(i) >= 0, dis = p.fin > H.capacity, lock = lleno && !sel && !dis;
       var decision = dis ? '<span class="hi-na">No disponible</span>' : '<select data-purpose="' + i + '" aria-label="Decisión al cierre para ' + esc(p.name) + '"><option value="keep"' + (dec(i) === 'keep' ? ' selected' : '') + '>Conservar</option><option value="sell"' + (dec(i) === 'sell' ? ' selected' : '') + '>Activar recompra</option></select>';
-      return '<div class="hi-prow' + (sel ? ' sel' : '') + (dis ? ' dis' : '') + '"><input type="checkbox" data-property="' + i + '"' + (sel ? ' checked' : '') + (dis ? ' disabled' : '') + ' aria-label="Seleccionar ' + esc(p.name) + '">' +
+      return '<div class="hi-prow' + (sel ? ' sel' : '') + (dis ? ' dis' : '') + (lock ? ' lock' : '') + '"><input type="checkbox" data-property="' + i + '"' + (sel ? ' checked' : '') + (dis || lock ? ' disabled' : '') + ' aria-label="Seleccionar ' + esc(p.name) + '">' +
         '<div class="hi-pinfo"><b>' + esc(p.name) + '</b><span>' + esc(p.comuna) + ' · Tasación ' + uf(p.tas) + '</span><span>Financiamiento: ' + uf(p.fin) + '</span><em class="hi-pill' + (dis ? ' bad' : '') + '">' + (dis ? 'Supera tu capacidad' : 'Disponible') + '</em></div>' +
         '<div class="hi-flow ' + (flow >= 0 ? 'pos' : 'neg') + '">' + sgn(flow) + '<small>UF/mes</small></div><div class="hi-dec">' + decision + '</div></div>';
     }).join('');
-    $('#hi-table').innerHTML = '<div class="hi-ptable"><div class="hi-prow head"><span></span><span>Propiedad</span><span>Flujo</span><span>Decisión al cierre</span></div>' + rows + '</div>';
+    $('#hi-table').innerHTML = (lleno ? '<p class="hi-full">Ya elegiste dos propiedades. Desmarca una para cambiarla.</p>' : '') + '<div class="hi-ptable"><div class="hi-prow head"><span></span><span>Propiedad</span><span>Flujo</span><span>Decisión al cierre</span></div>' + rows + '</div>';
   }
   function conclusion(picks, available, kept, soldAmort, invA, pulA, realized) {
     var keepN = picks.filter(function (x) { return x.d === 'keep'; }).length, sellN = picks.length - keepN, plazo = H.years + ' años';
@@ -316,6 +343,7 @@
     return 'Elegiste combinar patrimonio y liquidez. Conservas una propiedad con ' + signed(kept) + ' de equity y activas la recompra de la otra. De la amortización recomprada, recibes ' + signed(invA) + ' y Pulso recibe ' + signed(pulA) + '. Tu capital líquido estimado es ' + signed(realized) + '.';
   }
   function renderResult() {
+    if (H.tr === null || !H.years) { H.quote = null; $('#hi-result').innerHTML = '<div class="hi-empty"><strong>Tu resultado aparecerá aquí</strong><p>Elige la propiedad Tracción, el plazo y hasta dos propiedades del Portafolio Patrimonio.</p></div>'; return; }
     var ret = tractionReturn(), months = H.years * 12, t = tractionData[H.tr];
     var picks = H.selected.map(function (i) { return { i: i, p: patrimonyData[i], d: dec(i), c: calcPat(patrimonyData[i]) }; });
     var d = function (a, b, k, sub) { return '<div class="hi-drow ' + (k || '') + '"><span>' + a + (sub ? '<em>' + sub + '</em>' : '') + '</span><b>' + b + '</b></div>'; };
@@ -362,8 +390,8 @@
   }
   function renderHI() { renderTraction(); renderTable(); renderResult(); }
 
-  $('#hi-traction').innerHTML = tractionData.map(function (p, i) { return '<option value="' + i + '">' + esc(p.name) + ' · ' + esc(p.comuna) + ' · ' + uf(p.tas) + '</option>'; }).join('');
-  $('#hi-traction').addEventListener('change', function (e) { H.tr = +e.target.value; renderHI(); });
+  $('#hi-traction').innerHTML = '<option value="" disabled selected>Elige una propiedad</option>' + tractionData.map(function (p, i) { return '<option value="' + i + '">' + esc(p.name) + ' · ' + esc(p.comuna) + ' · ' + uf(p.tas) + '</option>'; }).join('');
+  $('#hi-traction').addEventListener('change', function (e) { H.tr = e.target.value === '' ? null : +e.target.value; renderHI(); });
   $('#hi-years').addEventListener('click', function (e) { var b = e.target.closest('[data-year]'); if (!b) return; H.years = +b.getAttribute('data-year'); renderHI(); });
   $('#hi-table').addEventListener('change', function (e) {
     var t = e.target, note = $('#hi-note');
@@ -426,7 +454,7 @@
     font(17, 'bold'); doc.setTextColor(255, 255, 255); doc.text('Cotización Hipoteca Inteligente', M, 39.5);
     font(9, 'normal'); doc.setTextColor(207, 224, 217); doc.text('Simulación referencial en UF', W - M, 39.5, { align: 'right' }); y = 56;
     section('Preparada para'); kv('Nombre', contacto ? contacto.nombre : ''); kv('Teléfono', contacto ? '+56 ' + contacto.telefono : ''); kv('Correo electrónico', contacto ? contacto.email : ''); kv('Capacidad financiera declarada', uf(H.capacity) + ' por crédito');
-    section('Portafolio Tracción · genera el retorno'); kv('Propiedad', t.name + ' · ' + t.comuna); kv('Tasación', uf(t.tas)); kv('Monto de inversión · 80%', uf(t.fin)); kv('Rentabilidad', '5% anual simple'); kv('Plazo', H.years + ' años'); kv('Retorno acumulado', signed(qd.ret), 'pos');
+    section('Portafolio Tracción · genera el retorno'); kv('Propiedad', t.name + ' · ' + t.comuna); kv('Tasación', uf(t.tas)); kv('Monto de inversión · 80%', uf(t.fin)); kv('Interés', '5% anual simple'); kv('Plazo', H.years + ' años'); kv('Retorno acumulado', signed(qd.ret), 'pos');
     if (qd.tractionOnly) { section('Portafolio Patrimonio', 10); para('El cliente no seleccionó propiedades del Portafolio Patrimonio. La simulación considera solo el retorno del Portafolio Tracción.', 9.5, 'text'); }
     else {
       section('Portafolio Patrimonio · propiedades elegidas', 46);
@@ -514,7 +542,7 @@
     }
 
     var MONEY = ['value', 'rent', 'oldpayment', 'debt', 'newvalue', 'newrent'];
-    var X = { debtmode: 'no', frequency: 'quarterly', years: 5, purchase: false };
+    var X = { debtmode: null, frequency: null, years: null, purchase: false };
     var editoNueva = false;
     var num = function (id) { var el = $('#ic-' + id); return MONEY.indexOf(id) >= 0 ? Number(el.value.replace(/\D/g, '')) : Number(el.value); };
     var money = function (n) { return '$' + Math.round(n || 0).toLocaleString('es-CL'); };
@@ -538,6 +566,20 @@
       $('#ic-debtfields').hidden = X.debtmode !== 'yes';
       $('#ic-purchasefields').hidden = !X.purchase;
       var x = inputs();
+      var falta = !X.debtmode || !X.frequency || !X.years || !(x.value > 0);
+      $('#ic-results').classList.toggle('is-empty', falta);
+      $('#ic-correo').disabled = falta;
+      if (falta) {
+        ['ic-k-net', 'ic-k-monthly', 'ic-k-flow'].forEach(function (id) { $('#' + id).textContent = '—'; });
+        $('#ic-k-monthly-sub').textContent = 'Según cada cuánto recibas tus intereses';
+        $('#ic-gain').hidden = true;
+        $('#ic-summary').textContent = 'Completa los datos de tu propiedad, elige cada cuánto quieres recibir tus intereses y el horizonte para ver tu comparación.';
+        $('#ic-period').textContent = X.years ? 'Proyección a ' + X.years + ' años' : 'Proyección';
+        $('#ic-bars-title').textContent = '¿Con cuánto terminas?';
+        $('#ic-bars').innerHTML = '<p class="ic-empty">Aquí verás cuánto terminas teniendo en cada alternativa.</p>';
+        $('#ic-tir').innerHTML = '<tr><td colspan="3" class="ic-empty">Aquí verás la TIR de cada alternativa.</td></tr>';
+        $('#ic-base').textContent = ''; ultimo = null; return;
+      }
       if (!(x.value >= 1000000)) return err('Ingresa el valor de tu propiedad.');
       if (X.debtmode === 'yes' && !(x.debt > 0)) return err('Ingresa cuánto debes hoy, o elige «Sin deuda».');
       if (X.debtmode === 'yes' && !(x.oldmonths > 0)) return err('Ingresa cuántas cuotas te quedan.');
@@ -554,7 +596,12 @@
       $('#ic-k-monthly-sub').textContent = X.frequency === 'quarterly' ? 'Pago efectivo trimestral: ' + money(c.payout) : 'Pago mensual';
       $('#ic-k-flow').textContent = money(flujoActual);
       var dif = c.monthly - flujoActual;
-      $('#ic-summary').textContent = 'La venta estima ' + money(c.sale) + '. Después de prepagar ' + money(x.debt) + ' y descontar gastos, quedan ' + money(c.net) + '. El ingreso mensual equivalente ' + (dif >= 0 ? 'aumenta' : 'disminuye') + ' en ' + money(Math.abs(dif)) + ' frente al arriendo menos dividendo, antes de costos. Tasa utilizada: ' + (c.rate * 100).toLocaleString('es-CL', { minimumFractionDigits: 2 }) + '% mensual simple.';
+      var g = $('#ic-gain');
+      g.hidden = false; g.classList.toggle('neg', dif < 0);
+      g.innerHTML = dif >= 0
+        ? '<span class="ic-gain-k">Con el modelo Pulso</span><strong>Tu ingreso mensual aumenta <b>+' + money(dif) + '</b></strong><span>De ' + money(flujoActual) + ' a ' + money(c.monthly) + ' al mes' + (flujoActual > 0 ? ' · ' + (c.monthly / flujoActual >= 3 ? 'más del triple de lo que recibes hoy' : c.monthly / flujoActual >= 2 ? 'más del doble de lo que recibes hoy' : '+' + Math.round((c.monthly / flujoActual - 1) * 100) + '% sobre lo que recibes hoy') : '') + '</span>'
+        : '<span class="ic-gain-k">Con el modelo Pulso</span><strong>Tu ingreso mensual sería ' + money(Math.abs(dif)) + ' menor</strong><span>De ' + money(flujoActual) + ' a ' + money(c.monthly) + ' al mes, antes de costos</span>';
+      $('#ic-summary').textContent = 'La venta estima ' + money(c.sale) + '. Después de prepagar ' + money(x.debt) + ' y descontar gastos, quedan ' + money(c.net) + ' para invertir en Pulso, a ' + (c.rate * 100).toLocaleString('es-CL', { minimumFractionDigits: 1 }) + '% mensual simple. La comparación es frente al arriendo menos dividendo, antes de costos.';
       $('#ic-period').textContent = 'Proyección a ' + X.years + ' años';
       // Barras: ¿con cuánto terminas?
       var nombres = ['Si conservas y arriendas', 'Si vendes e inviertes en Pulso', 'Si vendes, inviertes y compras otra propiedad'];
@@ -596,7 +643,7 @@
     $('#ic-correo').addEventListener('click', function () {
       var st = $('#ic-status'), btn = $('#ic-correo');
       render();
-      if (!contacto || !ultimo || !$('#ic-error').hidden) { st.textContent = 'Completa los datos del simulador antes de enviar.'; return; }
+      if (!contacto || !ultimo || !$('#ic-error').hidden || $('#ic-results').classList.contains('is-empty')) { st.textContent = 'Completa los datos del simulador antes de enviar.'; return; }
       if (!jspdfListo(st)) return;
       var u = ultimo, x = u.x, c = u.c;
       var filasTir = ['Conservar y arrendar', 'Vender, prepagar e invertir', 'Ciclo completo con nueva compra'].slice(0, u.n).map(function (nm, i) { var nv = i === 2 && !u.cicloOk; return [nm, (nv ? 'No viable' : pct(u.c5.tirs[i])) + ' (5 años) · ' + (nv ? 'No viable' : pct(u.c10.tirs[i])) + ' (10 años)']; });

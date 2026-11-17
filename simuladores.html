@@ -103,6 +103,7 @@ src="https://www.facebook.com/tr?id=4384764601785320&ev=PageView&noscript=1"
         </div>
       </div>
       <div class="pro-out">
+        <p class="pro-falta" id="p-falta">Elige la estrategia, el monto y el plazo para ver tu resultado</p>
         <div class="pro-cols">
           <div class="pro-result">
             <span class="pro-tag">Con Pulso</span>
@@ -122,17 +123,17 @@ src="https://www.facebook.com/tr?id=4384764601785320&ev=PageView&noscript=1"
             <ul class="pro-list">
               <li><span>Monto</span><strong id="d-monto">—</strong></li>
               <li><span>Plazo</span><strong id="d-plazo">—</strong></li>
-              <li><span>Tasa</span><strong><span id="d-tasa">—</span> mensual</strong></li>
+              <li><span>Tasa</span><strong><span id="d-tasa">—</span> anual</strong></li>
             </ul>
           </div>
         </div>
         <p class="pro-pref" id="p-pref" hidden>Sobre $250.000.000 puedes acceder a condiciones preferentes. Pregúntale a tu asesor.</p>
         <div class="pro-actions"><button type="button" class="btn btn-primary btn-xl" id="p-correo">Enviar a mi correo <span aria-hidden="true">→</span></button></div>
         <p class="sim-status" id="p-status" role="status"></p>
-        <p class="pro-note">Referencial. Depósito a plazo calculado a 30 días, renovado cada mes. <span id="r-nota-uf">Hipoteca y Título se reajustan en UF (UF de hoy <span id="r-uf">—</span>, IPC estimado 4,5% anual).</span> Las condiciones finales dependen de la evaluación y del contrato.</p>
+        <p class="pro-note">Referencial. Depósito a plazo a 365 días, renovado al vencimiento con interés compuesto; los meses que no completan un año se calculan en proporción. <span id="r-nota-uf">Hipoteca y Título se reajustan en UF (UF de hoy <span id="r-uf">—</span>, IPC estimado 4,5% anual).</span> Las condiciones finales dependen de la evaluación y del contrato.</p>
       </div>
     </div>
-    <!-- PENDIENTE: TASA del depósito a plazo (DAP_MENSUAL en assets/js/simuladores.js): 0,40% mensual referencial; CONFIRMAR el valor a usar. -->
+    <!-- PENDIENTE: TASA del depósito a plazo a 365 días (DAP_ANUAL en assets/js/simuladores.js): 4,8% anual referencial; CONFIRMAR el valor vigente a usar. -->
   </div></div>
 
   <div class="sim-panel" id="sim-hipoteca" data-sim-panel="sim-hipoteca" hidden><div class="sim-panel-body">
@@ -152,6 +153,7 @@ src="https://www.facebook.com/tr?id=4384764601785320&ev=PageView&noscript=1"
         <div class="hi-rows" id="hi-tmetrics"></div>
         <div class="hi-ret"><small id="hi-retlabel">Retorno acumulado</small><strong id="hi-retval">—</strong><span>5% anual simple sobre el 80%</span></div>
         <div class="hi-years" id="hi-years"></div>
+        <p class="hi-yearnote">Plazos referenciales, se determinan en el contrato</p>
         <p class="hi-foot">Este retorno financia los costos estimados del Portafolio Patrimonio. Capacidad declarada: <b id="hi-capdisplay">—</b> por crédito.</p>
       </div></article>
       <article class="hi-panel"><div class="hi-bar green"></div><div class="hi-pad">
@@ -176,11 +178,11 @@ src="https://www.facebook.com/tr?id=4384764601785320&ev=PageView&noscript=1"
         <span class="pro-label">¿Tu propiedad tiene deuda?</span>
         <div class="pro-yesno"><button type="button" class="chip-opt" data-ic-debt="no">Sin deuda</button><button type="button" class="chip-opt" data-ic-debt="yes">Con deuda</button></div>
         <label class="pro-label" for="ic-value">¿Cuánto vale tu propiedad hoy?</label>
-        <div class="money-in"><span>$</span><input id="ic-value" inputmode="numeric" autocomplete="off" value="100.000.000"></div>
-        <label class="pro-label" for="ic-rent">¿Cuánto recibes de arriendo al mes? <small>Si no está arrendada, deja 0.</small></label>
-        <div class="money-in"><span>$</span><input id="ic-rent" inputmode="numeric" autocomplete="off" value="500.000"></div>
+        <div class="money-in"><span>$</span><input id="ic-value" inputmode="numeric" autocomplete="off" placeholder="0"></div>
+        <label class="pro-label" for="ic-rent">¿Cuánto recibes de arriendo al mes? <small>Si no está arrendada, déjalo vacío.</small></label>
+        <div class="money-in"><span>$</span><input id="ic-rent" inputmode="numeric" autocomplete="off" placeholder="0"></div>
         <label class="pro-label" for="ic-oldpayment">¿Cuánto pagas de dividendo al mes?</label>
-        <div class="money-in"><span>$</span><input id="ic-oldpayment" inputmode="numeric" autocomplete="off" value="0"></div>
+        <div class="money-in"><span>$</span><input id="ic-oldpayment" inputmode="numeric" autocomplete="off" placeholder="0"></div>
         <div id="ic-debtfields" class="ic-sub" hidden>
           <label class="pro-label" for="ic-debt">¿Cuánto debes hoy? <small>Saldo de prepago que informa tu banco.</small></label>
           <div class="money-in"><span>$</span><input id="ic-debt" inputmode="numeric" autocomplete="off" placeholder="Ej. 40.000.000"></div>
@@ -207,9 +209,10 @@ src="https://www.facebook.com/tr?id=4384764601785320&ev=PageView&noscript=1"
         <div class="sim-alert" id="ic-error" role="alert" hidden></div>
         <div class="sim-alert warn" id="ic-warning" role="status" hidden></div>
         <div class="ic-head"><h3>Más claridad para decidir</h3><span id="ic-period">Proyección a 5 años</span></div>
+        <div class="ic-gain" id="ic-gain" hidden></div>
         <div class="ic-kpis">
           <div class="ic-kpi"><small>Capital neto de la venta</small><strong id="ic-k-net">—</strong><span>Venta menos prepago y gastos</span></div>
-          <div class="ic-kpi"><small>Ingreso mensual equivalente</small><strong id="ic-k-monthly">—</strong><span id="ic-k-monthly-sub">—</span></div>
+          <div class="ic-kpi hl"><small>Ingreso mensual equivalente con Pulso</small><strong id="ic-k-monthly">—</strong><span id="ic-k-monthly-sub">—</span></div>
           <div class="ic-kpi"><small>Flujo actual antes de costos</small><strong id="ic-k-flow">—</strong><span>Arriendo menos dividendo actual</span></div>
         </div>
         <p class="ic-summary" id="ic-summary"></p>
@@ -257,7 +260,7 @@ src="https://www.facebook.com/tr?id=4384764601785320&ev=PageView&noscript=1"
     </div>
     <div class="footer-bottom">
       <span>© <span id="year">2026</span> Pulso Inversor SpA. Todos los derechos reservados.</span>
-      <span><a href="privacidad.html">Política de privacidad</a> · La información de este sitio es referencial y no constituye una oferta ni asegura rentabilidad.</span>
+      <span><a href="privacidad.html">Política de privacidad</a> · La información de este sitio es referencial y no constituye una oferta ni asegura resultados.</span>
     </div>
   </div>
 </footer>

@@ -1404,3 +1404,129 @@ select{appearance:none;-webkit-appearance:none;padding-right:40px;background:#ff
 .rx-hero .rx-card p{color:var(--gray-700);font-size:15.5px;max-width:none}
 .rx-hero .rx-card .rx-card-note{font-size:14.5px;margin:20px 0 0}
 .rx-hero-actions .btn-xl{font-size:16px;padding:15px 24px;min-height:56px}
+
+/* ---------------- Correcciones 2026-11-17 ---------------- */
+/* Títulos de dos frases: segunda línea con otro grosor, sin punto */
+.h-sub{display:block;font-weight:500}
+
+/* Inicio · ¿Por qué Pulso? animado */
+.why-cta{display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:44px;text-align:center}
+.why-cta .btn-xl{box-shadow:0 18px 44px rgba(199,217,93,.5)}
+.why-cta>span{font-size:14.5px;color:var(--gray-700)}
+.js-reveal .why[data-reveal] .why-other{opacity:0;transform:translateX(-48px)}
+.js-reveal .why[data-reveal] .why-pulso{opacity:0;transform:translateX(48px)}
+.js-reveal .why[data-reveal] .why-col p{opacity:0;transform:translateY(12px)}
+.js-reveal .why[data-reveal] .why-igr .lead{opacity:0;transform:translateY(14px)}
+.js-reveal .why[data-reveal] .igr-item{opacity:0;transform:translateY(26px)}
+.js-reveal .why[data-reveal] .igr-item .card-icon{transform:scale(.4)}
+.js-reveal .why[data-reveal].is-in .why-other,.js-reveal .why[data-reveal].is-in .why-pulso{opacity:1;transform:none;transition:opacity .7s ease,transform .8s cubic-bezier(.2,.8,.2,1)}
+.js-reveal .why[data-reveal].is-in .why-pulso{transition-delay:.15s;animation:whyGlow 2.4s ease 1.6s 2}
+.js-reveal .why[data-reveal].is-in .why-col p{opacity:1;transform:none;transition:opacity .5s ease,transform .5s ease}
+.js-reveal .why[data-reveal].is-in .why-col p:nth-of-type(1){transition-delay:.55s}
+.js-reveal .why[data-reveal].is-in .why-col p:nth-of-type(2){transition-delay:.75s}
+.js-reveal .why[data-reveal].is-in .why-col p:nth-of-type(3){transition-delay:.95s}
+.js-reveal .why[data-reveal].is-in .why-igr .lead{opacity:1;transform:none;transition:opacity .6s ease .3s,transform .6s ease .3s}
+.js-reveal .why[data-reveal].is-in .igr-item{opacity:1;transform:none;transition:opacity .6s ease,transform .6s ease}
+.js-reveal .why[data-reveal].is-in .igr-item:nth-child(1){transition-delay:.6s}
+.js-reveal .why[data-reveal].is-in .igr-item:nth-child(2){transition-delay:.85s}
+.js-reveal .why[data-reveal].is-in .igr-item:nth-child(3){transition-delay:1.1s}
+.js-reveal .why[data-reveal].is-in .igr-item .card-icon{transform:none;transition:transform .5s cubic-bezier(.3,1.6,.5,1)}
+.js-reveal .why[data-reveal].is-in .igr-item:nth-child(1) .card-icon{transition-delay:.8s}
+.js-reveal .why[data-reveal].is-in .igr-item:nth-child(2) .card-icon{transition-delay:1.05s}
+.js-reveal .why[data-reveal].is-in .igr-item:nth-child(3) .card-icon{transition-delay:1.3s}
+@keyframes whyGlow{0%,100%{box-shadow:0 0 0 0 rgba(199,217,93,0)}50%{box-shadow:0 0 0 6px rgba(199,217,93,.45)}}
+
+/* Inversiones · tarjetas que despliegan su explicación */
+button.tipo{font:inherit;text-align:left;cursor:pointer;width:100%}
+.tipo .tipo-go{display:inline-flex;align-items:center;gap:6px;margin-top:auto;padding-top:14px}
+.tipo .tipo-go i{font-style:normal;transition:transform .3s}
+.tipo .tipo-go-close{display:none}
+.tipo.is-active .tipo-go-open{display:none}
+.tipo.is-active .tipo-go-close{display:inline}
+.tipo.is-active .tipo-go i{transform:rotate(180deg)}
+.tipo.is-active{border-color:var(--green-700);box-shadow:0 0 0 3px rgba(199,217,93,.7),var(--shadow);transform:translateY(-4px)}
+.tipos-sec.has-open .tipo:not(.is-active){opacity:.62}
+.tipos-sec.has-open .tipo:not(.is-active):hover{opacity:1}
+.inv-panel{margin-top:28px;padding:56px 48px;border-radius:32px;background:var(--gray-100);scroll-margin-top:calc(var(--header-h) + 16px);animation:invIn .5s ease}
+.inv-panel .title{margin-bottom:32px}
+.inv-panel .inv-side{top:calc(var(--header-h) + 30px)}
+@keyframes invIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.pasos li.opt>div{background:#fff;border:2px dashed rgba(89,150,117,.55);box-shadow:none}
+.pasos li.opt strong{color:var(--green-900)}
+.pasos li.opt p{color:var(--gray-700)}
+.pasos li.opt .paso-n{border-style:dashed}
+.paso-opt{display:inline-block;font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--green-700);background:rgba(199,217,93,.35);padding:3px 9px;border-radius:999px;margin-bottom:6px}
+@media (max-width:620px){.inv-panel{padding:32px 16px;border-radius:24px}}
+
+/* Garantías · fotos reales */
+.marquee .prop-info .prop-type{font-size:12.5px;font-weight:700;color:var(--green-800);background:rgba(199,217,93,.3);padding:4px 10px;border-radius:999px}
+
+/* Simuladores */
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+.pro-falta{margin:0 0 12px;padding:12px 16px;border-radius:12px;background:rgba(199,217,93,.22);font-size:14.5px;color:var(--green-900);font-weight:600}
+.pro-cols.is-empty{opacity:.55}
+.hi-yearnote{font-size:12.5px;color:var(--gray-500);margin:8px 0 0}
+.hi-prow.lock{opacity:.35;filter:grayscale(1);background:var(--gray-100)}
+.hi-full{font-size:13px;font-weight:700;color:var(--green-800);background:rgba(199,217,93,.25);padding:8px 12px;border-radius:10px;margin:0 0 10px}
+.hi-empty{padding:22px;border-radius:16px;background:var(--gray-100);color:var(--gray-700);font-size:14.5px}
+.hi-empty strong{display:block;color:var(--green-900);margin-bottom:4px}
+.hi-empty p{margin:0}
+.ic{align-items:stretch}
+.ic-gain{display:flex;flex-direction:column;gap:4px;padding:20px 24px;border-radius:var(--radius-lg);background:linear-gradient(135deg,var(--green-800),var(--green-900));color:#fff;box-shadow:0 16px 40px rgba(14,44,40,.22)}
+.ic-gain-k{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--lime)}
+.ic-gain strong{font-size:clamp(20px,2.3vw,27px);color:#fff;letter-spacing:-.01em}
+.ic-gain strong b{color:var(--lime)}
+.ic-gain>span:last-child{color:rgba(255,255,255,.78);font-size:14.5px}
+.ic-gain.neg{background:var(--gray-100);color:var(--gray-900);box-shadow:none}
+.ic-gain.neg strong{color:var(--green-900)}
+.ic-gain.neg>span:last-child{color:var(--gray-700)}
+.ic-kpi{display:flex;flex-direction:column}
+.ic-kpi small{min-height:2.9em;line-height:1.4}
+.ic-kpi.hl{background:rgba(199,217,93,.32);box-shadow:inset 0 0 0 2px var(--lime)}
+.ic-empty{color:var(--gray-500);font-size:14px;margin:0;text-align:center!important;padding:18px!important}
+.ic-out.is-empty .ic-kpis,.ic-out.is-empty .ic-card{opacity:.6}
+
+/* Nosotros · la página parte con la historia */
+.nos-hero{padding:72px 0 64px}
+.nos-hero .split{align-items:start}
+.nos-hero h1{font-size:clamp(34px,4.6vw,54px)}
+.hitos-dark li::before{background:var(--green-900)}
+.hitos-dark strong{color:#fff}
+.page-hero .hitos-dark p{color:rgba(255,255,255,.74);font-size:16px;max-width:none}
+.hitos-dark .hito-year{color:var(--lime);background:rgba(199,217,93,.14)}
+.js-reveal [data-reveal].is-in li:nth-child(4){transition-delay:.95s}
+.js-scrub .enfoque-quote .sw{color:rgba(255,255,255,.16);transition:color .35s ease}
+.js-scrub .enfoque-quote .sw.on{color:#fff}
+.js-scrub .enfoque-quote .accent .sw.on{color:var(--lime)}
+.enfoque{overflow:hidden}
+.js-scrub>.container{will-change:transform,opacity}
+.pilar{position:relative;overflow:hidden}
+.pilar::after{content:"";position:absolute;left:0;bottom:0;height:4px;width:0;background:linear-gradient(90deg,var(--green-500),var(--orange));transition:width .9s ease .5s}
+.js-reveal .pilares[data-reveal] .pilar{opacity:0;transform:translateY(46px) scale(.96)}
+.js-reveal .pilares[data-reveal].is-in .pilar{opacity:1;transform:none;transition:opacity .7s ease,transform .8s cubic-bezier(.2,.8,.2,1),box-shadow .3s}
+.js-reveal .pilares[data-reveal].is-in .pilar:nth-child(2){transition-delay:.15s}
+.js-reveal .pilares[data-reveal].is-in .pilar:nth-child(3){transition-delay:.3s}
+.js-reveal .pilares[data-reveal].is-in .pilar:nth-child(4){transition-delay:.45s}
+.js-reveal .pilares[data-reveal].is-in .pilar::after,.pilar:hover::after{width:100%}
+.js-reveal .pilares[data-reveal].is-in .pilar:nth-child(2)::after{transition-delay:.65s}
+.js-reveal .pilares[data-reveal].is-in .pilar:nth-child(3)::after{transition-delay:.8s}
+.js-reveal .pilares[data-reveal].is-in .pilar:nth-child(4)::after{transition-delay:.95s}
+.pilares[data-reveal].is-in .pilar-num{animation:numPop .6s cubic-bezier(.3,1.6,.5,1) both}
+@keyframes numPop{from{transform:scale(.3);opacity:0}to{transform:none;opacity:1}}
+
+/* Verifica · señales a la altura del video; imprevistos en tono positivo */
+.estafa-grid{align-items:stretch}
+.estafa-grid>div{display:flex;flex-direction:column}
+.estafa-grid .senales{flex:1;grid-auto-rows:1fr}
+.estafa-grid .senal{display:flex;flex-direction:column;justify-content:center}
+.estafa-video{display:flex;flex-direction:column;justify-content:center}
+.riesgo-q{background:#f3f6ec}
+.riesgo-ico{color:var(--green-900);background:rgba(199,217,93,.5)}
+
+/* Ya tengo experiencia · tarjeta más liviana */
+.rx-check.compact{padding:13px 0;align-items:center}
+.rx-check.compact svg{margin-top:0}
+.rx-check.compact strong{margin:0}
+.rx-hero h1{font-size:clamp(34px,4.4vw,54px)}
+.rx-hero-actions{gap:12px}
+.rx-hero-actions .btn-xl{padding:15px 22px}

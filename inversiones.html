@@ -47,65 +47,69 @@ src="https://www.facebook.com/tr?id=4384764601785320&ev=PageView&noscript=1"
 <main id="contenido">
 <section class="page-hero"><div class="container">
 <div class="breadcrumb"><a href="index.html">Inicio</a> / Cómo invertir / Inversiones</div><span class="eyebrow dark">Inversiones</span>
-<h1>Encuentra la alternativa que va contigo</h1><p>Tres formas de invertir, cada una pensada para un momento distinto. Elige la tuya y conversemos.</p></div></section>
-<section class="section tipos-sec"><div class="container">
-  <div class="tipos"><article class="tipo"><span class="tipo-n">01</span><h3>Proyecta un Hogar</h3><p>Invierte tu capital con respaldo y elige la estrategia que va contigo: Acción, Hipoteca o Título.</p><span class="tipo-chip">Desde $5MM</span>
-      <div class="tipo-actions"><a class="btn btn-primary" href="simuladores.html#sim-proyecta">Simular mi inversión</a><a class="tipo-go" href="#proyecta-un-hogar">Ver cómo funciona <span aria-hidden="true">↓</span></a></div></article><article class="tipo"><span class="tipo-n">02</span><h3>Hipoteca Inteligente</h3><p>Usa tu capacidad de crédito para comprar una propiedad antes del remate y recibe el arriendo como retorno.</p><span class="tipo-chip">Desde 2.000 UF de crédito</span>
-      <div class="tipo-actions"><a class="btn btn-primary" href="simuladores.html#sim-hipoteca">Simular mi inversión</a><a class="tipo-go" href="#hipoteca-inteligente">Ver cómo funciona <span aria-hidden="true">↓</span></a></div></article><article class="tipo"><span class="tipo-n">03</span><h3>Inversión Inmobiliaria Circular</h3><p>Transforma el capital detenido en tu propiedad en una inversión que te da flujo cada mes.</p><span class="tipo-chip">Con tu propiedad</span>
-      <div class="tipo-actions"><a class="btn btn-primary" href="simuladores.html#sim-circular">Simular mi inversión</a><a class="tipo-go" href="#inversion-circular">Ver cómo funciona <span aria-hidden="true">↓</span></a></div></article></div>
-</div></section>
+<h1>Encuentra la alternativa que va contigo</h1><p>Tres formas de invertir, cada una pensada para un momento distinto. Toca la tuya para ver cómo funciona.</p></div></section>
+<section class="section tipos-sec" data-inv><div class="container">
+  <div class="tipos"><button type="button" class="tipo" data-inv-tab="proyecta-un-hogar" aria-expanded="false" aria-controls="proyecta-un-hogar">
+      <span class="tipo-n">01</span><h3>Proyecta un Hogar</h3><p>Invierte tu capital con respaldo y elige la estrategia que va contigo: Acción, Hipoteca o Título.</p><span class="tipo-chip">Desde $5MM</span>
+      <span class="tipo-go"><span class="tipo-go-open">Ver cómo funciona</span><span class="tipo-go-close">Cerrar</span> <i aria-hidden="true">↓</i></span></button><button type="button" class="tipo" data-inv-tab="hipoteca-inteligente" aria-expanded="false" aria-controls="hipoteca-inteligente">
+      <span class="tipo-n">02</span><h3>Hipoteca Inteligente</h3><p>Invierte sin capital: usa tu capacidad de crédito para comprar una propiedad y despreocúpate de los dividendos.</p><span class="tipo-chip">Desde 2.000 UF de crédito</span>
+      <span class="tipo-go"><span class="tipo-go-open">Ver cómo funciona</span><span class="tipo-go-close">Cerrar</span> <i aria-hidden="true">↓</i></span></button><button type="button" class="tipo" data-inv-tab="inversion-circular" aria-expanded="false" aria-controls="inversion-circular">
+      <span class="tipo-n">03</span><h3>Inversión Inmobiliaria Circular</h3><p>Transforma el capital detenido en tu propiedad en una inversión que te da flujo cada mes.</p><span class="tipo-chip">Con tu propiedad</span>
+      <span class="tipo-go"><span class="tipo-go-open">Ver cómo funciona</span><span class="tipo-go-close">Cerrar</span> <i aria-hidden="true">↓</i></span></button></div>
 
-<nav class="inv-nav" aria-label="Alternativas"><div class="container">
-  <a href="#proyecta-un-hogar">Proyecta un Hogar</a><a href="#hipoteca-inteligente">Hipoteca Inteligente</a><a href="#inversion-circular">Inversión Circular</a><a href="#comparar">Comparar</a><a href="#para-ti">¿Cuál es para ti?</a>
-</div></nav>
-
-<section class="section section-soft inv-sec" id="proyecta-un-hogar"><div class="container">
-  <div class="title center"><span class="eyebrow">01 · Para invertir tu capital</span><h2>Proyecta un Hogar</h2>
-    <p class="lead">Pon tu capital a trabajar en operaciones que ayudan a familias que enfrentan un remate a mantener su hogar. Elige la estrategia que va contigo.</p></div>
-  <div class="ahts"><article class="aht" id="estrategia-accion">
+  <div class="inv-panel" id="proyecta-un-hogar" data-inv-panel="proyecta-un-hogar" hidden>
+    <div class="title center"><span class="eyebrow">01 · Para invertir tu capital</span><h2>Proyecta un Hogar</h2>
+      <p class="lead">Pon tu capital a trabajar en operaciones que ayudan a familias que enfrentan un remate a mantener su hogar. Elige la estrategia que va contigo.</p></div>
+    <div class="ahts"><article class="aht" id="estrategia-accion">
       <span class="aht-letter" aria-hidden="true">A</span>
       <h3>Acción</h3>
-      <p class="aht-tag">Acceso flexible con respaldo notarial.</p>
+      <p class="aht-tag">Acceso flexible con respaldo notarial</p>
       <div class="aht-chips"><span>Desde $5MM</span><span>Pagaré</span></div>
       <p class="aht-desc">Para inversionistas que buscan menor ticket de entrada y una estructura documentada.</p>
-      <div class="aht-btns"><a class="btn btn-primary" href="simuladores.html?serie=A#sim-proyecta">Simular Acción</a><a class="btn btn-outline" href="https://wa.me/56983554676?text=Hola%2C%20quiero%20agendar%20una%20reuni%C3%B3n%20con%20un%20asesor%20de%20Pulso%20Inversor.%20Tema%3A%20Estrategia%20Acci%C3%B3n." target="_blank" rel="noopener">Solicitar asesoría experta</a></div>
+      <div class="aht-btns"><a class="btn btn-primary" href="simuladores.html?serie=A#sim-proyecta">Simular Acción</a></div>
     </article><article class="aht" id="estrategia-hipoteca">
       <span class="aht-letter" aria-hidden="true">H</span>
       <h3>Hipoteca</h3>
-      <p class="aht-tag">Inversión respaldada por garantía hipotecaria.</p>
+      <p class="aht-tag">Inversión respaldada por garantía hipotecaria</p>
       <div class="aht-chips"><span>Desde $25MM</span><span>Hipoteca</span></div>
       <p class="aht-desc">Para inversionistas que priorizan respaldo inmobiliario mediante hipoteca.</p>
-      <div class="aht-btns"><a class="btn btn-primary" href="simuladores.html?serie=H#sim-proyecta">Simular Hipoteca</a><a class="btn btn-outline" href="https://wa.me/56983554676?text=Hola%2C%20quiero%20agendar%20una%20reuni%C3%B3n%20con%20un%20asesor%20de%20Pulso%20Inversor.%20Tema%3A%20Estrategia%20Hipoteca." target="_blank" rel="noopener">Solicitar asesoría experta</a></div>
+      <div class="aht-btns"><a class="btn btn-primary" href="simuladores.html?serie=H#sim-proyecta">Simular Hipoteca</a></div>
     </article><article class="aht" id="estrategia-titulo">
       <span class="aht-letter" aria-hidden="true">T</span>
       <h3>Título</h3>
-      <p class="aht-tag">Máximo respaldo mediante título de propiedad.</p>
+      <p class="aht-tag">Máximo respaldo mediante título de propiedad</p>
       <div class="aht-chips"><span>Desde $100MM</span><span>Título</span></div>
       <p class="aht-desc">Para inversionistas que buscan una estructura de mayor resguardo.</p>
-      <div class="aht-btns"><a class="btn btn-primary" href="simuladores.html?serie=T#sim-proyecta">Simular Título</a><a class="btn btn-outline" href="https://wa.me/56983554676?text=Hola%2C%20quiero%20agendar%20una%20reuni%C3%B3n%20con%20un%20asesor%20de%20Pulso%20Inversor.%20Tema%3A%20Estrategia%20T%C3%ADtulo." target="_blank" rel="noopener">Solicitar asesoría experta</a></div>
+      <div class="aht-btns"><a class="btn btn-primary" href="simuladores.html?serie=T#sim-proyecta">Simular Título</a></div>
     </article></div>
-  <!-- PENDIENTE: Montos y textos de las estrategias según la imagen entregada el 2026-11-17 (Título desde $100MM según la tabla de condiciones del 2026-11-17). Plazos por estrategia en la tabla: VALIDAR. -->
-</div></section>
-
-<section class="section inv-sec" id="hipoteca-inteligente"><div class="container inv-split">
-  <div class="inv-side">
-    <span class="eyebrow">02 · Para quien tiene capacidad de crédito</span><h2>Hipoteca Inteligente</h2>
-    <p class="lead">Compra la casa de una familia antes de que el banco la remate y recibe el arriendo como retorno.</p>
-    <ul class="inv-facts"><li><span>Desde</span><strong>2.000 UF de capacidad de crédito, o capital propio</strong></li><li><span>Plazo</span><strong>2 a 5 años</strong></li></ul>
-    <div class="actions"><a class="btn btn-primary" href="simuladores.html#sim-hipoteca">Simular Hipoteca Inteligente</a></div>
+    <!-- PENDIENTE: Montos y textos de las estrategias según la imagen entregada el 2026-11-17 (Título desde $100MM según la tabla de condiciones del 2026-11-17). Plazos por estrategia en la tabla: VALIDAR. -->
   </div>
-  <ol class="pasos"><li><span class="paso-n">1</span><div><strong>Compras la propiedad antes del remate</strong><p>Con tu capacidad de crédito o capital propio, evitas que una familia pierda su casa.</p></div></li><li><span class="paso-n">2</span><div><strong>La familia la arrienda de 2 a 5 años</strong><p>Sigue viviendo ahí con un contrato de arriendo a plazo fijo.</p></div></li><li><span class="paso-n">3</span><div><strong>Recibes el arriendo cada mes</strong><p>Ese pago es el retorno de tu inversión.</p></div></li><li><span class="paso-n">4</span><div><strong>Recompra o conservas la propiedad</strong><p>Desde el segundo año la familia puede recomprarla con un recargo; si no, la propiedad sigue siendo tuya.</p></div></li></ol>
-</div></section>
 
-<section class="section section-soft inv-sec" id="inversion-circular"><div class="container inv-split">
-  <div class="inv-side">
-    <span class="eyebrow">03 · Para propietarios</span><h2>Inversión Inmobiliaria Circular</h2>
-    <p class="lead">Transforma el capital detenido en tu propiedad en una inversión que te da flujo cada mes, y deja atrás las cargas que hoy te genera.</p>
+  <div class="inv-panel" id="hipoteca-inteligente" data-inv-panel="hipoteca-inteligente" hidden>
+    <div class="inv-split">
+      <div class="inv-side">
+        <span class="eyebrow">02 · Para quien tiene capacidad de crédito</span><h2>Hipoteca Inteligente</h2>
+        <p class="lead">No necesitas tener el dinero ni preocuparte de pagar dividendos. Usas tu capacidad de crédito para comprar una propiedad que requiere financiamiento, y la operación hace el resto.</p>
+        <ul class="inv-facts"><li><span>Desde</span><strong>2.000 UF de capacidad de crédito</strong></li><li><span>Capital</span><strong>No necesitas capital propio</strong></li><li><span>Plazo</span><strong>2 a 5 años</strong></li></ul>
+        <div class="actions"><a class="btn btn-primary" href="simuladores.html#sim-hipoteca">Simular Hipoteca Inteligente</a></div>
+      </div>
+      <ol class="pasos"><li><span class="paso-n">1</span><div><strong>Compras una propiedad con tu crédito hipotecario</strong><p>Usas tu capacidad de crédito para comprar una propiedad que requiere financiamiento. No necesitas poner capital.</p></div></li><li><span class="paso-n">2</span><div><strong>La familia la arrienda por mínimo 2 años</strong><p>Sigue viviendo en su casa con un contrato de arriendo de mínimo 2 años.</p></div></li><li><span class="paso-n">3</span><div><strong>Despreocúpate: no pagas tus dividendos</strong><p>Mientras dura la operación, los dividendos de tu crédito no salen de tu bolsillo.</p></div></li><li><span class="paso-n">4</span><div><strong>Recompra de la propiedad</strong><p>Al cierre, la propiedad se recompra: la recompra la familia o la hacemos nosotros.</p></div></li></ol>
+    </div>
   </div>
-  <ol class="pasos"><li><span class="paso-n">1</span><div><strong>Vendes tu propiedad</strong><p>Se ofrece a un precio que permita una venta ágil.</p></div></li><li><span class="paso-n">2</span><div><strong>Liberas su capital</strong><p>Si tiene una deuda hipotecaria, se salda con la venta.</p></div></li><li><span class="paso-n">3</span><div><strong>Lo inviertes en Pulso</strong><p>El capital genera una rentabilidad fija mensual y te da un flujo de caja constante.</p></div></li></ol>
+
+  <div class="inv-panel" id="inversion-circular" data-inv-panel="inversion-circular" hidden>
+    <div class="inv-split">
+      <div class="inv-side">
+        <span class="eyebrow">03 · Para propietarios</span><h2>Inversión Inmobiliaria Circular</h2>
+        <p class="lead">Transforma el capital detenido en tu propiedad en una inversión que te da flujo cada mes, y deja atrás las cargas que hoy te genera.</p>
+        <div class="actions"><a class="btn btn-primary" href="simuladores.html#sim-circular">Simular Inversión Circular</a></div>
+      </div>
+      <ol class="pasos"><li><span class="paso-n">1</span><div><strong>Vendes tu propiedad</strong><p>Se ofrece a un precio que permita una venta ágil.</p></div></li><li><span class="paso-n">2</span><div><strong>Liberas su capital</strong><p>Si tiene una deuda hipotecaria, se salda con la venta.</p></div></li><li><span class="paso-n">3</span><div><strong>Lo inviertes en Pulso</strong><p>El capital genera intereses fijos cada mes y te da un flujo de caja constante.</p></div></li><li class=opt><span class="paso-n">4</span><div><span class="paso-opt">Opcional</span><strong>Puedes optar a comprar otra propiedad con descuento</strong><p>Si quieres seguir en el mercado inmobiliario, puedes comprar otra propiedad con descuento.</p></div></li></ol>
+    </div>
+  </div>
 </div></section>
 
-<section class="section" id="comparar"><div class="container">
+<section class="section section-soft" id="comparar"><div class="container">
   <div class="title center"><span class="eyebrow">Tabla comparativa</span><h2>Compáralas lado a lado</h2></div>
   <div class="table-wrap compare"><table>
     <thead><tr><th>Alternativa</th><th>Desde</th><th>Qué queda a tu favor</th><th>Plazos</th></tr></thead>
@@ -113,15 +117,15 @@ src="https://www.facebook.com/tr?id=4384764601785320&ev=PageView&noscript=1"
       <tr><td data-label="Alternativa">Proyecta un Hogar · Acción</td><td data-label="Desde">$5 millones</td><td data-label="Qué queda a tu favor">Contrato de mutuo y pagaré</td><td data-label="Plazos">12, 18 o 24 meses</td></tr>
       <tr><td data-label="Alternativa">Proyecta un Hogar · Hipoteca</td><td data-label="Desde">$25 millones</td><td data-label="Qué queda a tu favor">Hipoteca inscrita a tu favor</td><td data-label="Plazos">15, 21 o 27 meses</td></tr>
       <tr><td data-label="Alternativa">Proyecta un Hogar · Título</td><td data-label="Desde">$100 millones</td><td data-label="Qué queda a tu favor">La propiedad inscrita a tu nombre</td><td data-label="Plazos">15, 21 o 27 meses</td></tr>
-      <tr><td data-label="Alternativa">Hipoteca Inteligente</td><td data-label="Desde">2.000 UF de capacidad de crédito, o capital propio</td><td data-label="Qué queda a tu favor">La propiedad a tu nombre, arrendada con opción de recompra</td><td data-label="Plazos">2 a 5 años</td></tr>
-      <tr><td data-label="Alternativa">Inversión Inmobiliaria Circular</td><td data-label="Desde">El capital de tu propiedad</td><td data-label="Qué queda a tu favor">Inversión en Pulso con rentabilidad fija mensual</td><td data-label="Plazos">Según tu contrato</td></tr>
+      <tr><td data-label="Alternativa">Hipoteca Inteligente</td><td data-label="Desde">2.000 UF de capacidad de crédito</td><td data-label="Qué queda a tu favor">La propiedad a tu nombre durante la operación, con recompra al cierre</td><td data-label="Plazos">2 a 5 años</td></tr>
+      <tr><td data-label="Alternativa">Inversión Inmobiliaria Circular</td><td data-label="Desde">El capital de tu propiedad</td><td data-label="Qué queda a tu favor">Inversión en Pulso con intereses fijos mensuales</td><td data-label="Plazos">Según tu contrato</td></tr>
     </tbody></table></div>
 </div></section>
 
-<section class="section section-soft" id="para-ti"><div class="container">
+<section class="section" id="para-ti"><div class="container">
   <div class="title center"><span class="eyebrow">Para orientarte</span><h2>¿Cuál es para ti?</h2>
     <p class="lead">Busca la frase que más se parezca a lo que estás pensando.</p></div>
-  <div class="perfiles"><a class="perfil" href="#estrategia-accion"><span class="perfil-q">“Quiero empezar con un monto acotado”</span><span class="perfil-arrow" aria-hidden="true">→</span><span class="perfil-a"><small>Te recomendamos</small><strong>Acción</strong><em>Desde $5MM · Pagaré</em></span></a><a class="perfil" href="#estrategia-hipoteca"><span class="perfil-q">“Busco que mi inversión tenga respaldo inmobiliario”</span><span class="perfil-arrow" aria-hidden="true">→</span><span class="perfil-a"><small>Te recomendamos</small><strong>Hipoteca</strong><em>Desde $25MM · Hipoteca a tu favor</em></span></a><a class="perfil" href="#estrategia-titulo"><span class="perfil-q">“Quiero el mayor resguardo: una propiedad a mi nombre”</span><span class="perfil-arrow" aria-hidden="true">→</span><span class="perfil-a"><small>Te recomendamos</small><strong>Título</strong><em>Desde $100MM · Título de propiedad</em></span></a><a class="perfil" href="#hipoteca-inteligente"><span class="perfil-q">“Tengo capacidad de crédito y quiero construir patrimonio”</span><span class="perfil-arrow" aria-hidden="true">→</span><span class="perfil-a"><small>Te recomendamos</small><strong>Hipoteca Inteligente</strong><em>Desde 2.000 UF de crédito</em></span></a><a class="perfil" href="#inversion-circular"><span class="perfil-q">“Tengo una propiedad y quiero que su capital trabaje”</span><span class="perfil-arrow" aria-hidden="true">→</span><span class="perfil-a"><small>Te recomendamos</small><strong>Inversión Circular</strong><em>Flujo mensual con tu propiedad</em></span></a></div>
+  <div class="perfiles"><a class="perfil" href="#estrategia-accion"><span class="perfil-q">“Tengo capital disponible para invertir”</span><span class="perfil-arrow" aria-hidden="true">→</span><span class="perfil-a"><small>Te recomendamos</small><strong>Acción</strong><em>Desde $5MM · Pagaré</em></span></a><a class="perfil" href="#estrategia-hipoteca"><span class="perfil-q">“Busco que mi inversión tenga respaldo inmobiliario”</span><span class="perfil-arrow" aria-hidden="true">→</span><span class="perfil-a"><small>Te recomendamos</small><strong>Hipoteca</strong><em>Desde $25MM · Hipoteca a tu favor</em></span></a><a class="perfil" href="#estrategia-titulo"><span class="perfil-q">“Quiero el mayor resguardo: una propiedad a mi nombre”</span><span class="perfil-arrow" aria-hidden="true">→</span><span class="perfil-a"><small>Te recomendamos</small><strong>Título</strong><em>Desde $100MM · Título de propiedad</em></span></a><a class="perfil" href="#hipoteca-inteligente"><span class="perfil-q">“Tengo capacidad de crédito y no poseo capital para invertir”</span><span class="perfil-arrow" aria-hidden="true">→</span><span class="perfil-a"><small>Te recomendamos</small><strong>Hipoteca Inteligente</strong><em>Desde 2.000 UF de crédito</em></span></a><a class="perfil" href="#inversion-circular"><span class="perfil-q">“Tengo una propiedad y quiero que su capital trabaje”</span><span class="perfil-arrow" aria-hidden="true">→</span><span class="perfil-a"><small>Te recomendamos</small><strong>Inversión Circular</strong><em>Flujo mensual con tu propiedad</em></span></a></div>
 </div></section>
 <section class="cta-final">
   <div class="container">
@@ -151,7 +155,7 @@ src="https://www.facebook.com/tr?id=4384764601785320&ev=PageView&noscript=1"
     </div>
     <div class="footer-bottom">
       <span>© <span id="year">2026</span> Pulso Inversor SpA. Todos los derechos reservados.</span>
-      <span><a href="privacidad.html">Política de privacidad</a> · La información de este sitio es referencial y no constituye una oferta ni asegura rentabilidad.</span>
+      <span><a href="privacidad.html">Política de privacidad</a> · La información de este sitio es referencial y no constituye una oferta ni asegura resultados.</span>
     </div>
   </div>
 </footer>
