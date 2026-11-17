@@ -1046,8 +1046,6 @@ page('verifica-a-pulso.html', 'Verifica a Pulso',
   <h1>¿Por qué no estamos en la CMF?</h1>
   <p class="v-answer">Pulso Inversor no requiere certificación CMF bajo esta estructura privada, contractual y personalizada. No opera como banco, corredora, administradora de fondos ni plataforma de financiamiento colectivo regulada.</p>
   <p>Tu respaldo está en los documentos que firmas. Por eso, aquí te damos lo necesario para revisarnos por tu cuenta.</p>
-  <div class="actions"><a class="btn btn-secondary" href="https://www.cmfchile.cl" target="_blank" rel="noopener">Consultar registros y alertas de la CMF</a></div>
-  {P("INCORPORAR enlaces oficiales directos a los registros y alertas de la CMF; por ahora se enlaza el sitio general.")}
 </div></section>
 
 <section class="section section-soft estafa"><div class="container estafa-grid">
