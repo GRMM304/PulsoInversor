@@ -56,6 +56,7 @@
       var nombre = (input.value || '').trim();
       if (!nombre) { form.classList.add('error'); input.focus(); return; }
       form.classList.remove('error');
+      if (window.fbq) fbq('track', 'Schedule', { content_name: 'Agendar reunión (inicio)' });
       var texto = 'Hola, soy ' + nombre + '. Quiero agendar una reunión con un asesor de Pulso Inversor.';
       var url = 'https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(texto);
       var w = window.open(url, '_blank', 'noopener');
@@ -213,3 +214,9 @@
   var y = document.getElementById('year');
   if (y) y.textContent = new Date().getFullYear();
 })();
+
+// Píxel de Meta: cada clic en un enlace a WhatsApp cuenta como "Contact".
+document.addEventListener('click', function (e) {
+  var a = e.target.closest && e.target.closest('a[href*="wa.me"]');
+  if (a && window.fbq) fbq('track', 'Contact', { content_name: 'WhatsApp', content_category: location.pathname });
+});

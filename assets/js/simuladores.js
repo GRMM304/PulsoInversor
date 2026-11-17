@@ -111,6 +111,7 @@
     if (!contacto) return;
     st.className = st.className.replace(/\s?is-(ok|err)/g, '');
     st.textContent = 'Enviando a ' + contacto.email + '…'; btn.disabled = true;
+    if (window.fbq) fbq('trackCustom', 'EnviarSimulacion', { simulador: tipo });
     var b64 = doc.output('datauristring').split(',')[1];
     var archivo = prefijo + '_' + (doc.__folio || folioPI()) + '_' + slugNombre() + '.pdf';
     fetch(API_CORREO, { method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -142,6 +143,7 @@
     contacto = { nombre: nombre, email: email, telefono: tel };
     ses.set('pulsoContacto', contacto);
     brevo(nombre, email, tel, 'Desbloqueó los simuladores del sitio (1.pulsoinversor.cl). Acepta términos y recibir contenido: Sí.');
+    if (window.fbq) fbq('track', 'Lead', { content_name: 'Desbloqueó simuladores' });
     setLocked(false);
     stage.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
