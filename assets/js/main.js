@@ -108,6 +108,38 @@
     });
   }
 
+  // Cómo funciona: tarjetas que se dan vuelta (clic o toque; con mouse también al pasar)
+  document.querySelectorAll('.flip').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var on = b.classList.toggle('is-flipped');
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+  });
+
+  // Cómo funciona: carrusel de pasos
+  document.querySelectorAll('[data-ruta]').forEach(function (r) {
+    var slides = r.querySelectorAll('.ruta-slide'), dots = r.querySelectorAll('.ruta-dot');
+    var i = 0, timer = null, quietoR = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function ir(n) {
+      i = (n + slides.length) % slides.length;
+      slides.forEach(function (s, k) { s.classList.toggle('is-active', k === i); s.setAttribute('aria-hidden', k === i ? 'false' : 'true'); });
+      dots.forEach(function (d, k) { d.classList.toggle('is-active', k === i); });
+    }
+    function auto() { if (quietoR) return; clearInterval(timer); timer = setInterval(function () { ir(i + 1); }, 6500); }
+    r.querySelector('[data-prev]').addEventListener('click', function () { ir(i - 1); auto(); });
+    r.querySelector('[data-next]').addEventListener('click', function () { ir(i + 1); auto(); });
+    dots.forEach(function (d) { d.addEventListener('click', function () { ir(+d.getAttribute('data-go')); auto(); }); });
+    r.addEventListener('mouseenter', function () { clearInterval(timer); });
+    r.addEventListener('mouseleave', auto);
+    var x0 = null;
+    r.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+    r.addEventListener('touchend', function (e) {
+      if (x0 === null) return; var dx = e.changedTouches[0].clientX - x0; x0 = null;
+      if (Math.abs(dx) > 40) { ir(i + (dx < 0 ? 1 : -1)); auto(); }
+    });
+    ir(0); auto();
+  });
+
   // Año del pie de página
   var y = document.getElementById('year');
   if (y) y.textContent = new Date().getFullYear();

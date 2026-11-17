@@ -238,28 +238,19 @@ page('index.html', 'Inicio',
     </form>
     <p class="hero-form-note">Se abrirá WhatsApp para agendar una reunión con un asesor. Sin apuro y sin compromiso.</p>
   </div>
-  {P("CIFRAS entregadas por la usuaria el 2026-11-16: cartera aprox. $1.100 millones en propiedades; rentabilidades desde 0,8%. CONFIRMAR el período de la tasa (mensual o anual) para indicarlo junto al número.")}
-  <div class="hero-stats">
-    <div class="stat">
-      <span class="stat-kicker">Cartera en propiedades</span>
-      <strong class="stat-num">$<span data-count="1100">1.100</span> <small>millones</small></strong>
-      <span class="stat-label">aproximadamente</span>
+  {P("CIFRAS retiradas a pedido de la usuaria (2026-11-16): cartera aprox. $1.100 millones; rentabilidades desde 0,8%.")}
+  {P("ASESORES: 3 fotos y 3 espacios. Para sumar a alguien, reemplazar un <span class='avatar-slot'> por <img src='assets/img/asesores/nombre.webp' alt='Nombre'>.")}
+  <div class="hero-team">
+    <div class="avatars">
+      <img src="assets/img/asesores/felipe.webp" alt="Felipe" width="240" height="240" loading="lazy">
+      <img src="assets/img/asesores/gloria.webp" alt="Gloria" width="240" height="240" loading="lazy">
+      <img src="assets/img/asesores/pamela.webp" alt="Pamela" width="240" height="240" loading="lazy">
+      <span class="avatar-slot" aria-hidden="true"></span>
+      <span class="avatar-slot" aria-hidden="true"></span>
+      <span class="avatar-slot" aria-hidden="true"></span>
     </div>
-    <div class="stat">
-      <span class="stat-kicker">Rentabilidades</span>
-      <strong class="stat-num"><small>desde</small> <span data-count="0.8" data-decimals="1">0,8</span>%</strong>
-      <span class="stat-label">según alternativa y plazo*</span>
-    </div>
-    <div class="stat stat-team">
-      <div class="avatars">
-        <img src="assets/img/asesores/felipe.webp" alt="Felipe" width="240" height="240" loading="lazy">
-        <img src="assets/img/asesores/gloria.webp" alt="Gloria" width="240" height="240" loading="lazy">
-        <img src="assets/img/asesores/pamela.webp" alt="Pamela" width="240" height="240" loading="lazy">
-      </div>
-      <div><strong>Te acompañan personas, no una app</strong><span class="stat-label">Felipe, Gloria y Pamela, tus asesores en todo el proceso</span></div>
-    </div>
+    <strong>Quienes te acompañan</strong>
   </div>
-  <p class="hero-stats-note">*Rentabilidad referencial. Las condiciones de cada operación quedan en su contrato.</p>
   </div>
 </section>
 
@@ -341,43 +332,110 @@ page('index.html', 'Inicio',
 ''' + cta_final())
 
 # ---------------- 2.1 Cómo funciona ----------------
+PILARES = [
+    ('escudo', 'Respaldo inmobiliario', 'Cada operación está vinculada a un inmueble identificado, con tasación y antecedentes verificables.',
+     'Puedes evaluar el valor del inmueble frente al dinero que inviertes y conocer qué activo respalda la operación.'),
+    ('documento', 'Estructura legal', 'La operación se formaliza mediante contratos y garantías, según el instrumento de inversión.',
+     'Sabes quién tiene la obligación de pagarte, qué derechos te corresponden y qué mecanismos existen ante un incumplimiento.'),
+    ('calendario', 'Retorno y plazo', 'La rentabilidad, el vencimiento y las condiciones de pago quedan establecidos por contrato.',
+     'Puedes planificar tus próximos movimientos financieros, sabiendo cuánto tienes pactado recibir y cuándo corresponde cada pago.'),
+]
+pilares = ''.join(f'''<button class="flip" type="button" aria-pressed="false">
+      <span class="flip-inner">
+        <span class="flip-face flip-front">{icon(ic)}<span class="flip-num">0{i+1}</span><strong>{t}</strong><span class="flip-text">{d}</span><span class="flip-hint">¿Qué significa para ti? <span aria-hidden="true">↻</span></span></span>
+        <span class="flip-face flip-back"><span class="flip-kicker">¿Qué significa para ti?</span><strong>{t}</strong><span class="flip-text">{b}</span></span>
+      </span>
+    </button>''' for i, (ic, t, d, b) in enumerate(PILARES))
+
+PASOS_CAMINO = [
+    ('Simula tu inversión', 'Explora nuestras soluciones y conoce una estimación de rentabilidad según el monto y plazo.',
+     'Tus números, primero.', [('Exploras', 'Nuestras soluciones'), ('Defines', 'Monto y plazo'), ('Obtienes', 'Una estimación de rentabilidad')]),
+    ('Conversemos sobre tus objetivos', 'Un asesor conoce tu perfil, resuelve tus dudas y te orienta sobre las alternativas disponibles.',
+     'Hablamos contigo.', [('Conocemos', 'Tu perfil'), ('Resolvemos', 'Tus dudas'), ('Te orientamos', 'Sobre las alternativas disponibles')]),
+    ('Evalúa una operación concreta', 'Recibe información del inmueble, su tasación, las condiciones financieras y la estructura de la inversión.',
+     'Una operación real.', [('El inmueble', 'Información y tasación'), ('Las condiciones', 'Financieras'), ('La inversión', 'Su estructura')]),
+    ('Revisa y formaliza', 'Analiza los documentos, consulta con tu abogado si lo deseas y formaliza la operación ante notario.',
+     'A tu ritmo.', [('Analizas', 'Los documentos'), ('Consultas', 'Con tu abogado, si lo deseas'), ('Formalizas', 'Ante notario')]),
+    ('Recibe tus pagos y seguimiento', 'Accede a los pagos y reportes conforme al contrato. Al vencimiento se realiza el cierre de la operación, según las condiciones pactadas.',
+     'Hasta el cierre.', [('Recibes', 'Pagos según contrato'), ('Accedes', 'A tus reportes'), ('Al vencimiento', 'El cierre de la operación')]),
+]
+pasos_slides = ''.join(f'''<div class="ruta-slide{' is-active' if i == 0 else ''}" data-slide="{i}" role="group" aria-roledescription="paso" aria-label="Paso {i+1} de {len(PASOS_CAMINO)}">
+      <div class="ruta-text"><span class="ruta-num">0{i+1}</span><h3>{t}</h3><p>{d}</p></div>
+      <div class="ruta-card"><div class="ruta-card-inner">
+        <div class="ruta-head"><span>Paso {i+1} de {len(PASOS_CAMINO)}</span><strong>{h}</strong></div>
+        <div class="ruta-rows">''' + ''.join(f'<div class="ruta-row"><span>{l}</span><strong>{v}</strong></div>' for l, v in rows) + '''</div>
+      </div></div>
+    </div>''' for i, (t, d, h, rows) in enumerate(PASOS_CAMINO))
+ruta_dots = ''.join(f'<button type="button" class="ruta-dot{" is-active" if i == 0 else ""}" data-go="{i}" aria-label="Ir al paso {i+1}"></button>' for i in range(len(PASOS_CAMINO)))
+
 page('como-funciona.html', 'Cómo funciona',
-     'Inversiones privadas vinculadas a bienes raíces con el modelo IGR. Te mostramos el respaldo, los números y los riesgos antes de que decidas.',
-     hero('Cómo invertir / Cómo funciona', 'Invertir también puede cambiarle la historia a alguien',
-          'Estructuramos inversiones privadas vinculadas a bienes raíces con el modelo IGR, Inversión con Garantía Real. Tu inversión se conecta con propietarios que necesitan liquidez, y tú tienes una relación directa con nosotros.', 'Modelo IGR') + f'''
-{P("VALIDAR INTERNAMENTE: compromisos de entrega de documentos antes de firmar, acompañamiento y atención expresados en esta página; confirmar que coinciden con la práctica real.")}
-<section class="section"><div class="container">
-  <div class="title"><span class="eyebrow">Antes de invertir</span><h2>Lo que vas a conocer antes de dar el paso</h2></div>
-  <div class="grid-3">
-    <article class="card">{icon('escudo')}<h3>Tu respaldo</h3><p>Qué documentos corresponden a tu inversión y qué derechos te dan.</p></article>
-    <article class="card">{icon('billetera')}<h3>Tus números</h3><p>Cuánto aportas, qué pagos están previstos y qué costos hay, para que planifiques sin sorpresas.</p></article>
-    <article class="card">{icon('reloj')}<h3>Tu plazo</h3><p>Un horizonte que calce con tus planes y las condiciones para recuperar tu dinero.</p></article>
+     'Invertir también puede generar impacto. Así funciona el Modelo IGR: respaldo inmobiliario, estructura legal y retorno y plazo definidos por contrato.', f'''
+<section class="page-hero cf-hero"><div class="container cf-hero-grid">
+  <div>
+    <div class="breadcrumb"><a href="index.html">Inicio</a> / Cómo invertir / Cómo funciona</div>
+    <span class="eyebrow dark">Modelo IGR</span>
+    <h1>Porque invertir también puede generar impacto</h1>
+    <p>Estructuramos inversiones privadas vinculadas a bienes raíces mediante el modelo IGR, Inversión con Garantía Real. Conectamos objetivos de inversión con soluciones de liquidez para propietarios, a través de una relación directa con cada inversionista.</p>
   </div>
-  <p class="note" style="margin-top:24px">También hablamos de los riesgos. Preferimos que los conozcas antes de firmar, junto con las medidas que existen para abordarlos. <a href="verifica-a-pulso.html#riesgos">Ver cómo se gestionan los riesgos</a></p>
+  <figure class="cf-video">
+    {P("VIDEO de Felipe Rojas (de newpulso). En newpulso estaba marcado: 'confirmar uso; el video dice «doble garantía real»'.")}
+    <video controls playsinline preload="none" poster="assets/media/felipe-que-es-igr.jpg"><source src="assets/media/felipe-que-es-igr.mp4" type="video/mp4"></video>
+    <figcaption><strong>Felipe Rojas</strong> te explica el Modelo IGR</figcaption>
+  </figure>
+</div></section>
+{P("VALIDAR INTERNAMENTE: compromisos de entrega de documentos antes de firmar, acompañamiento y atención expresados en esta página; confirmar que coinciden con la práctica real.")}
+
+<section class="section"><div class="container">
+  <div class="title center"><span class="eyebrow">Los tres pilares del Modelo IGR</span><h2>Tres pilares para invertir con mayor claridad</h2>
+    <p class="lead">Cada operación se estructura sobre tres elementos que te permiten conocer dónde inviertes, qué derechos tienes y bajo qué condiciones recuperarás tu capital.</p></div>
+  <div class="flip-grid">{pilares}</div>
 </div></section>
 
-<section class="section section-soft"><div class="container">
-  <div class="title"><span class="eyebrow">Paso a paso</span><h2>Tu camino con nosotros, a tu ritmo</h2></div>
-  <ol class="steps">
-    {PASOS}
-  </ol>
+<section class="section ruta-section"><div class="container">
+  <div class="title"><span class="eyebrow dark">Tu experiencia con Pulso</span><h2>Así es tu camino con Pulso</h2>
+    <p class="lead">Desde la primera evaluación hasta el cierre de tu inversión, conoces las condiciones de cada etapa.</p></div>
+  <div class="ruta" data-ruta>
+    <div class="ruta-track">{pasos_slides}</div>
+    <div class="ruta-nav">
+      <span class="ruta-caption">Desde tu primera simulación hasta el cierre.</span>
+      <div class="ruta-controls">
+        <button type="button" class="ruta-arrow" data-prev aria-label="Paso anterior">←</button>
+        <div class="ruta-dots">{ruta_dots}</div>
+        <button type="button" class="ruta-arrow" data-next aria-label="Paso siguiente">→</button>
+      </div>
+    </div>
+  </div>
 </div></section>
 
 <section class="section"><div class="container">
-  <div class="title"><span class="eyebrow">Nuestra palabra</span><h2>Lo que puedes esperar de nosotros</h2></div>
+  <div class="title center"><span class="eyebrow">Nuestra forma de trabajar</span><h2>Claridad desde el primer contacto</h2>
+    <p class="lead">Queremos que tomes decisiones informadas, a tu ritmo y con acompañamiento directo.</p></div>
   <div class="yesno">
     <div class="card"><h3>Lo que sí hacemos</h3><ul class="yes">
-      <li>Te entregamos los antecedentes y documentos antes de firmar.</li>
-      <li>Te explicamos con calma las condiciones, el respaldo y los riesgos.</li>
-      <li>Mantenemos una relación directa contigo.</li></ul></div>
-    <div class="card"><h3>Lo que nunca vamos a hacer</h3><ul class="no">
-      <li>Pedirte que decidas en la primera reunión.</li>
-      <li>Hablarte de rentabilidad sin mostrarte qué hay detrás.</li>
+      <li>Te entregamos los antecedentes antes de firmar.</li>
+      <li>Te explicamos los beneficios, riesgos y condiciones de cada operación.</li>
+      <li>Te acompañamos mediante una relación directa y personalizada.</li></ul></div>
+    <div class="card"><h3>Lo que no hacemos</h3><ul class="no">
+      <li>Presionarte para decidir en la primera reunión.</li>
+      <li>Prometer rentabilidad sin explicar la operación y sus riesgos.</li>
       <li>Operar como una plataforma de crowdfunding o financiamiento colectivo.</li></ul></div>
   </div>
-  <div class="actions"><a class="btn btn-dark" href="inversiones.html#comparar">Comparar las alternativas</a></div>
 </div></section>
-''' + cta(*CTA_GENERAL))
+
+<section class="cta-final">
+  <div class="container">
+    <span class="eyebrow dark">Tu siguiente paso</span>
+    <h2>Ahora que sabes cómo funciona, <span class="accent">mira tus números</span></h2>
+    <p>Simula tu inversión o cuéntanos si es tu primera vez y te llevamos a lo que te sirve.</p>
+    <div class="cta-final-actions">
+      <a class="btn btn-primary btn-xl" href="simuladores.html">Simular mi inversión <span aria-hidden="true">→</span></a>
+      <a class="btn btn-secondary" href="mi-primera-inversion.html">Es mi primera vez</a>
+      <a class="btn btn-secondary" href="ya-tengo-experiencia.html">Ya he invertido</a>
+    </div>
+    <p class="cta-final-small">No te pedimos decidir en la reunión. Puedes venir con tu pareja, un socio o tu abogado.</p>
+  </div>
+</section>
+''')
 
 # ---------------- 2.2 Inversiones ----------------
 def product(anchor, num, title, text):
