@@ -576,13 +576,12 @@ page('garantias-y-documentos.html', 'Garantías y respaldo',
   </div>
 </div></section>
 
-<section class="port-section" id="portafolio">
+<section class="port-section port-light" id="portafolio">
   <div class="container port-intro">
-    <span class="eyebrow dark">El respaldo detrás de nuestras operaciones</span>
+    <span class="eyebrow">El respaldo detrás de nuestras operaciones</span>
     {P("CIFRA: la referencia decía 'Más de $1.300 millones' (pendiente de validar). Se usa la cifra que entregó la usuaria el 2026-11-16: aprox. $1.100 millones. CONFIRMAR valor vigente y qué activos incluye.")}
     {P("PRECISIÓN: no todas las propiedades del portafolio garantizan necesariamente todas las inversiones. Distinguir entre activos que garantizan obligaciones y propiedades disponibles para nuevas operaciones.")}
-    <h2 class="port-title">Cerca de <span class="port-num">$<span data-count="1100" data-when-visible>1.100</span> millones</span> en portafolio inmobiliario</h2>
-    <p class="lead">Detrás de cada operación hay activos que puedes conocer. Las garantías legales son una parte del resguardo: también importa conocer el valor de los inmuebles, sus condiciones de adquisición y la cobertura que representan frente al capital invertido.</p>
+    <h2 class="port-title">Actualmente contamos con más de <span class="port-num">$<span data-count="1100" data-when-visible>1.100</span> millones</span> listos para estructurar tu garantía</h2>
   </div>
   {P("PROPIEDADES DE EJEMPLO con ilustraciones generadas (assets/img/portafolio/*.svg, se regeneran con scripts/ilustraciones.py). Reemplazar por fotos reales. Porcentajes bajo tasación (Puerto Varas 42%, Las Condes 44%, Osorno 39%) tomados del diseño de referencia: VALIDAR.")}
   <div class="marquee" aria-label="Propiedades del portafolio (ejemplos)">
@@ -658,7 +657,7 @@ EQUIPO = [
     ('Jessica Valenzuela', 'Jefa comercial', None),
     ('Felipe Jaña', 'Jefe de operaciones', None),
     ('William Rojas', 'Jefe de contabilidad', None),
-    ('Gloria', 'Asesora', 'assets/img/asesores/gloria.webp'),
+    ('Gloria Cepeda', 'Asesora', 'assets/img/asesores/gloria.webp'),
     ('Pamela Herrera', 'Asesora', 'assets/img/asesores/pamela.webp'),
     ('Renato Vargas', 'Asesor', None),
     ('Santiago Fernández', 'Asesor internacional', None),
@@ -692,7 +691,7 @@ page('nosotros.html', 'Nosotros',
 
 <section class="section section-dark enfoque"><div class="container">
   <span class="eyebrow dark">Nuestro enfoque</span>
-  <p class="enfoque-quote">Buscamos facilitar el acceso al mercado de activos alternativos, conectando a quienes necesitan soluciones de liquidez con inversionistas que buscan <span class="accent">diversificar, proteger y hacer crecer su patrimonio</span>.</p>
+  <p class="enfoque-quote" data-words>Buscamos facilitar el acceso al mercado de activos alternativos, conectando a quienes necesitan soluciones de liquidez con inversionistas que buscan <span class="accent">diversificar, proteger y hacer crecer su patrimonio</span>.</p>
   <div class="enfoque-cols">
     <p>Creemos en un modelo de financiamiento privado que, junto con generar retornos estables y muy atractivos, entrega herramientas reales para que los propietarios puedan reorganizar sus finanzas de manera sostenible.</p>
     <p>Nuestro propósito es consolidarnos como un actor de referencia en el mercado, con una estructura de inversión transparente, directa y completamente desconectada de la volatilidad bursátil.</p>
@@ -710,7 +709,7 @@ page('nosotros.html', 'Nosotros',
       <h3>Felipe Rojas</h3><span class="team-role">Cofundador y estratega financiero</span>
       <p>Lleva 16 años liderando áreas de finanzas y control de gestión en compañías como LATAM, Iansa y Transbank, y suma esa visión corporativa y rigor analítico a la empresa. Su vínculo con el proyecto nació de la confianza en el modelo: comenzó como cliente, validando la rentabilidad y seguridad de las operaciones con su propio patrimonio. Hoy estructura financieramente los productos para que cada operación sea directa, segura y competitiva.</p></div></article>
   </div>
-  {P("EQUIPO entregado por la usuaria el 2026-11-17. Fotos: hay de Gloria y Pamela; el resto muestra iniciales. Falta el apellido de Gloria.")}
+  {P("EQUIPO entregado por la usuaria el 2026-11-17. Fotos: hay de Gloria y Pamela; el resto muestra iniciales.")}
   <h3 class="team-sub">El equipo que te acompaña</h3>
   <div class="crew">{crew}</div>
 </div></section>
@@ -728,66 +727,113 @@ page('nosotros.html', 'Nosotros',
 """ + cta_final())
 
 # ---------------- 3.2 Verifica ----------------
+SENALES = [
+    ('No te explican de dónde sale la rentabilidad', 'En Pulso:', 'cada retorno está ligado a una operación concreta y queda escrito en el contrato que revisas antes de firmar.'),
+    ('No te dicen en qué está tu dinero', 'En Pulso:', 'te mostramos una operación real, con la propiedad, su tasación y su precio de compra.'),
+    ('Te apuran para firmar', 'En Pulso:', 'no te pedimos decidir en la reunión. Te llevas los documentos y lo piensas con calma.'),
+]
+senales = ''.join(f'<article class="senal"><span class="senal-tag">Señal {i+1}</span><h3>{t}</h3><p><strong>{k}</strong> {d}</p></article>' for i, (t, k, d) in enumerate(SENALES))
+
+FICHA = [
+    (None, 'Inmueble', 'Casa · Puerto Varas'),
+    (1, 'Valor comercial (tasación)', '9.800 UF <small>Tasador independiente · marzo 2026</small>'),
+    (2, 'Precio de compra', '5.900 UF <small>40% bajo la tasación</small>'),
+    (3, 'Qué queda a favor del inversionista', 'Hipoteca inscrita en el Conservador de Bienes Raíces'),
+    (4, 'Plazo y calendario', '18 meses <small>Intereses trimestrales · capital al vencimiento</small>'),
+    (None, 'Estado', '<span class="ficha-estado">En curso</span>'),
+]
+ficha = ''.join(f'<div class="ficha-row">{f"<span class=ficha-mark>{n}</span>" if n else "<span></span>"}<span class="ficha-label">{l}</span><strong>{v}</strong></div>' for n, l, v in FICHA)
+REVISAR = [
+    'Que la tasación sea reciente y diga quién la hizo.',
+    'La diferencia entre el precio de compra y el valor comercial.',
+    'Qué documento queda a tu favor y dónde se inscribe.',
+    'Cuándo te pagan y cuándo vuelve tu capital.',
+]
+revisar = ''.join(f'<li><span class="ficha-mark">{i+1}</span>{t}</li>' for i, t in enumerate(REVISAR))
+
+RIESGOS = [
+    ('Que un pago se atrase o no se cumpla', 'Cada operación tiene garantías según su instrumento: acciones de cobro con el pagaré, venta voluntaria o ejecución de la hipoteca, o exigir la recompra cuando la propiedad está a tu nombre.'),
+    ('Que la propiedad baje de valor', 'Las operaciones se estructuran con una diferencia entre el precio de compra y la tasación, que puedes revisar antes de invertir. Ese margen amortigua una baja, pero no la elimina.'),
+    ('Que necesites tu dinero antes', 'Antes de invertir revisamos contigo el plazo y cuánto puedes destinar sin tocar tu fondo de emergencia. Una salida anticipada depende de las condiciones de tu contrato.'),
+    ('Problemas legales del inmueble', 'Los documentos se firman ante notario y la garantía o el título se inscriben en el Conservador de Bienes Raíces. Puedes pedir los certificados y revisarlos con tu abogado.'),
+    ('Poner todo en un mismo lugar', 'Te recomendamos invertir una parte de tu patrimonio, no todo. El resto debería seguir en alternativas que puedas usar cuando lo necesites.'),
+]
+riesgos = ''.join(f'<article class="riesgo"><div class="riesgo-q"><span class="riesgo-ico" aria-hidden="true">!</span><h3>{q}</h3></div><div class="riesgo-a"><span class="riesgo-k">Cómo lo mitigamos</span><p>{a_}</p></div></article>' for q, a_ in RIESGOS)
+
+OFICINA_DIR = None   # PENDIENTE: dirección de la oficina (activa el mapa de Google)
+RUT = None           # PENDIENTE: RUT de Pulso Inversor SpA
+if OFICINA_DIR:
+    _mapa = f'<iframe class="of-map" title="Mapa de la oficina de Pulso Inversor" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q={urllib.parse.quote(OFICINA_DIR)}&output=embed"></iframe>'
+else:
+    _mapa = '<div class="of-map of-map-ilus" role="img" aria-label="Mapa ilustrativo"><span class="of-pin" aria-hidden="true"></span></div>'
+_datos = [('Razón social', 'Pulso Inversor SpA')]
+if RUT: _datos.append(('RUT', RUT))
+if OFICINA_DIR: _datos.append(('Oficina', OFICINA_DIR + '. Puedes venir a conocernos.'))
+_datos += [('WhatsApp', f'<a href="https://wa.me/{WHATSAPP}" target="_blank" rel="noopener">+56 9 8355 4676</a>'), ('Correo', f'<a href="mailto:{EMAIL}">{EMAIL}</a>'), ('Grupo', 'Una empresa de Grupo Matchmaking')]
+datos = ''.join(f'<div class="of-row"><span>{k}</span><strong>{v}</strong></div>' for k, v in _datos)
+
 page('verifica-a-pulso.html', 'Verifica a Pulso',
-     'Desconfiar antes de invertir es sano. Revisa nuestra situación ante la CMF, una operación real, los riesgos y cómo verificarnos por tu cuenta.',
-     hero('Conócenos / Verifica a Pulso', 'Revísanos con toda libertad',
-          'Desconfiar antes de invertir es sano. Aquí tienes lo necesario para comprobar quiénes somos y cómo trabajamos, por tu cuenta.', 'Verifica a Pulso') + f'''
-<section class="section"><div class="container split">
-  <div><span class="eyebrow">Situación regulatoria</span><h2>¿Por qué no estamos en la CMF?</h2></div>
-  <div><p class="lead">Pulso Inversor no requiere certificación CMF bajo esta estructura privada, contractual y personalizada. No opera como banco, corredora, administradora de fondos ni plataforma de financiamiento colectivo regulada.</p></div>
-</div></section>
-
-<section class="section section-soft" id="operacion-abierta"><div class="container">
-  <div class="title"><span class="eyebrow">Operación abierta</span><h2>Así se documenta una operación real</h2>
-    <p class="lead">Te mostramos un caso de principio a fin: sus documentos y la información para seguir cada etapa.</p></div>
-  {P("Caso candidato: Fundo Alhué, Curacaví (tasación 12.580 UF; inversión 3.034,6 UF según portafolio de octubre). CONFIRMAR autorización y estado. COMPLETAR partes, antecedentes reales anonimizados y seguimiento (hitos, fecha, pagos previstos y realizados) antes de publicar el detalle.")}
-  <div class="grid-4">
-    <article class="card">{icon('casa')}<h3>El caso</h3><p>La operación y el inmueble detrás de ella.</p></article>
-    <article class="card">{icon('manos')}<h3>Las partes</h3><p>Quién invierte, quién recibe los recursos, quién debe pagar y quién figura como dueño o acreedor.</p></article>
-    <article class="card">{icon('documento')}<h3>Los antecedentes</h3><p>Tasación, ficha, contratos e inscripciones.</p></article>
-    <article class="card">{icon('grafico')}<h3>El seguimiento</h3><p>Hitos, pagos previstos y realizados, novedades y cómo va hoy.</p></article>
-  </div>
-  <div class="actions"><a class="btn btn-outline" href="#" aria-disabled="true">Ver documentos del caso</a><a class="btn btn-dark" href="{mail('la operación abierta')}" target="_blank" rel="noopener">Preguntar por esta operación</a></div>
-  <p class="disclaimer">Las condiciones y resultados de este caso corresponden a una operación específica.</p>
-</div></section>
-
-<section class="section" id="riesgos"><div class="container">
-  <div class="title"><span class="eyebrow">Riesgos y cómo se gestionan</span><h2>Hablemos también de los riesgos</h2>
-    <p class="lead">Toda inversión los tiene. Preferimos que los conozcas ahora, junto con las medidas que existen para abordarlos.</p></div>
-  {P("COMPLETAR la medida que se informa para cada situación: atrasos/insolvencia y cobro; valoración y escenarios de flujos; salida anticipada; revisión jurídica y prioridad de derechos; orientación sobre concentración.")}
-  <div class="table-wrap"><table>
-    <thead><tr><th>Situación</th><th>Lo que debes conocer</th></tr></thead>
-    <tbody>
-      <tr><td>Atrasos o dificultades de la contraparte</td><td>Cómo se evalúa, cómo te informamos y qué acciones de cobro aplican, incluido el efecto de una eventual insolvencia.</td></tr>
-      <tr><td>Cambios en el valor del inmueble o en los flujos</td><td>Escenarios de ingresos y gastos, incluido qué pasa si los resultados son menores a lo previsto.</td></tr>
-      <tr><td>Si necesitas tu dinero antes</td><td>Las condiciones y costos de salida que establece la documentación de tu alternativa.</td></tr>
-      <tr><td>Situación jurídica del inmueble</td><td>Formalización ante notario e inscripción del título o la hipoteca, según la modalidad.</td></tr>
-      <tr><td>Concentración de tu inversión</td><td>Cuánto de tu patrimonio quedaría en una empresa, propiedad o estrategia.</td></tr>
-    </tbody></table></div>
-  <p class="disclaimer">Las medidas de gestión ayudan a abordar los riesgos. Su alcance depende de cada operación y no elimina la posibilidad de pérdidas.</p>
-</div></section>
-
-<section class="section section-soft"><div class="container">
-  <div class="title"><span class="eyebrow">Verificación independiente</span><h2>Compruébalo con fuentes que no dependen de nosotros</h2></div>
-  <div class="table-wrap"><table>
-    <thead><tr><th>Qué revisar</th><th>Cómo hacerlo</th></tr></thead>
-    <tbody>
-      <tr><td>La empresa y sus canales</td><td>Contrasta razón social, RUT, domicilio y datos de contacto.</td></tr>
-      <tr><td>La situación regulatoria</td><td>Busca la razón social en los registros y alertas oficiales de la CMF.</td></tr>
-      <tr><td>La propiedad y sus documentos</td><td>Revisa los antecedentes en el Conservador que corresponda y pide la opinión de un abogado independiente.</td></tr>
-      <tr><td>Las condiciones y el pago</td><td>Comprueba que los compromisos y quién recibe los fondos coincidan con la documentación.</td></tr>
-    </tbody></table></div>
-  <p class="note" style="margin-top:24px">Tómate tu tiempo. Si alguien te presiona para transferir, te promete ganancias sin riesgo o no te quiere entregar antecedentes, detente y pide explicaciones. Vale para cualquier inversión, también para la nuestra. Y que no aparezcan alertas no significa que exista una autorización.</p>
-  <ul class="facts" style="margin-top:24px">
-    <li><strong>Razón social:</strong> Pulso Inversor SpA</li>
-    <li><strong>Correo:</strong> <a href="mailto:{EMAIL}">{EMAIL}</a></li>
-  </ul>
-  {P("COMPLETAR RUT, domicilio, teléfono y demás canales oficiales; identificar la contraparte contractual de cada modalidad si fuera otra entidad.")}
+     'Por qué Pulso Inversor no está en la CMF, cómo reconocer una estafa, cómo revisar una operación, qué riesgos existen y cómo los mitigamos, y los datos de la empresa.',
+     f"""<section class="page-hero v-hero"><div class="container">
+  <div class="breadcrumb"><a href="index.html">Inicio</a> / Conócenos / Verifica a Pulso</div>
+  <span class="eyebrow dark">Verifica a Pulso</span>
+  <h1>¿Por qué no estamos en la CMF?</h1>
+  <p class="v-answer">Pulso Inversor no requiere certificación CMF bajo esta estructura privada, contractual y personalizada. No opera como banco, corredora, administradora de fondos ni plataforma de financiamiento colectivo regulada.</p>
+  <p>Tu respaldo está en los documentos que firmas. Por eso, aquí te damos lo necesario para revisarnos por tu cuenta.</p>
+  <div class="actions"><a class="btn btn-secondary" href="https://www.cmfchile.cl" target="_blank" rel="noopener">Consultar registros y alertas de la CMF</a></div>
   {P("INCORPORAR enlaces oficiales directos a los registros y alertas de la CMF; por ahora se enlaza el sitio general.")}
-  {P("INCORPORAR enlace al perfil oficial de Google: 'Lee las opiniones de nuestros clientes en Google'.")}
-  <div class="actions"><a class="btn btn-outline" href="https://www.cmfchile.cl" target="_blank" rel="noopener">Consultar registros y alertas de la CMF</a></div>
 </div></section>
-''' + cta('Pregúntanos lo que necesites', 'Ninguna pregunta está de más antes de invertir. Te ayudamos a conseguir los antecedentes que te falten.', 'Tengo una duda', 'Quiero resolver una duda'))
+
+<section class="section section-soft estafa"><div class="container estafa-grid">
+  <figure class="estafa-video">
+    <video controls playsinline preload="none" poster="assets/media/ivan-es-una-estafa.jpg"><source src="assets/media/ivan-es-una-estafa.mp4" type="video/mp4"></video>
+    <figcaption><strong>«¿Esto es una estafa?»</strong> Iván Barboza responde</figcaption>
+  </figure>
+  <div>
+    <span class="eyebrow">Para que te cuides de todos, incluidos nosotros</span>
+    <h2>Tres señales de una estafa. Mídenos con ellas.</h2>
+    <div class="senales">{senales}</div>
+  </div>
+</div></section>
+
+<section class="section" id="operacion-abierta"><div class="container">
+  <div class="title center"><span class="eyebrow">Operación abierta</span><h2>Cómo revisar una operación</h2>
+    <p class="lead">Cada operación tiene su ficha. Con este ejemplo te mostramos qué mirar en cada dato antes de invertir.</p></div>
+  {P("FICHA DE EJEMPLO con datos ficticios. Reemplazar por una operación real autorizada (candidata: Fundo Alhué, Curacaví) cuando se apruebe su publicación.")}
+  <div class="ficha-grid">
+    <article class="ficha">
+      <div class="ficha-img" style="background-image:url(assets/img/portafolio/puerto-varas.svg)"><span class="ficha-badge">Ejemplo ilustrativo · datos ficticios</span></div>
+      <div class="ficha-body"><span class="ficha-kicker">Ficha de la operación</span><h3>Operación de ejemplo · Puerto Varas</h3>{ficha}</div>
+    </article>
+    <div class="ficha-guide">
+      <span class="eyebrow">Cómo leer esta ficha</span>
+      <h3>Lo que deberías revisar en cualquier operación</h3>
+      <ol class="ficha-check">{revisar}</ol>
+      <p class="muted">Pide los certificados al Conservador de Bienes Raíces que corresponda, compara la tasación con propiedades parecidas y lleva los documentos a tu abogado antes de firmar.</p>
+      <div class="actions"><a class="btn btn-dark" href="{mail('una operación real')}" target="_blank" rel="noopener">Quiero ver una operación real</a></div>
+    </div>
+  </div>
+</div></section>
+
+<section class="section section-soft" id="riesgos"><div class="container">
+  <div class="title center"><span class="eyebrow">Riesgos y cómo los mitigamos</span><h2>Lo que puede salir mal, y qué hacemos al respecto</h2>
+    <p class="lead">Toda inversión tiene riesgos. Preferimos que los conozcas ahora, junto con lo que hacemos para acotarlos.</p></div>
+  {P("VALIDAR internamente que las medidas descritas coinciden con la práctica de cada operación.")}
+  <div class="riesgos">{riesgos}</div>
+</div></section>
+
+<section class="oficina"><div class="container of-grid">
+  <div class="of-info">
+    <span class="eyebrow dark">Conócenos en persona</span>
+    <h2>Datos de la empresa, a la vista</h2>
+    <p>Sin intermediarios ni nombres de fantasía. Estos son nuestros datos para que los compruebes, y la invitación a reunirnos.</p>
+    {P("COMPLETAR RUT y dirección de la oficina en scripts/build.py (variables RUT y OFICINA_DIR). Con la dirección se activa el mapa de Google.")}
+    <div class="of-data">{datos}</div>
+    <a class="btn btn-primary btn-xl" href="{mail('reunión en la oficina')}" target="_blank" rel="noopener">Agendar una reunión <span aria-hidden="true">→</span></a>
+  </div>
+  {_mapa}
+</div></section>
+""")
 
 # ---------------- 4.1 Mi primera inversión ----------------
 page('mi-primera-inversion.html', 'Mi primera inversión',

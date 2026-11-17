@@ -175,6 +175,30 @@
     ir(0); auto();
   });
 
+  // Textos que aparecen palabra por palabra (data-words)
+  var conPalabras = document.querySelectorAll('[data-words]');
+  if (conPalabras.length && 'IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.documentElement.classList.add('js-words');
+    conPalabras.forEach(function (el) {
+      var k = 0;
+      (function partir(nodo) {
+        Array.prototype.slice.call(nodo.childNodes).forEach(function (n) {
+          if (n.nodeType === 3) {
+            var frag = document.createDocumentFragment();
+            n.textContent.split(/(\s+)/).forEach(function (t) {
+              if (!t) return;
+              if (/^\s+$/.test(t)) { frag.appendChild(document.createTextNode(t)); return; }
+              var sp = document.createElement('span'); sp.className = 'w'; sp.style.setProperty('--k', k++); sp.textContent = t; frag.appendChild(sp);
+            });
+            nodo.replaceChild(frag, n);
+          } else if (n.nodeType === 1) { partir(n); }
+        });
+      })(el);
+      var ow = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { el.classList.add('is-in'); ow.disconnect(); } }, { threshold: .4 });
+      ow.observe(el);
+    });
+  }
+
   // Animaciones al aparecer en pantalla
   var rev = document.querySelectorAll('[data-reveal]');
   if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
