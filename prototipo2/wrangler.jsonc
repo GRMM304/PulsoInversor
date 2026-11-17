@@ -1,11 +1,11 @@
 // Prototipo 2: contenido del sitio V5 con el diseño del Prototipo 1.
-// Se publica aparte del Prototipo 1 (rama main) en pulsoinversor-prototipo2.<cuenta>.workers.dev.
+// Se publica aparte del Prototipo 1 (rama main), solo en 2.pulsoinversor.cl.
 // Regenerar: python3 aplicar_diseno.py  ·  Publicar: npx wrangler deploy
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "pulsoinversor-prototipo2",
   "compatibility_date": "2025-09-01",
-  "workers_dev": true,
+  "workers_dev": false,
   "routes": [
     { "pattern": "2.pulsoinversor.cl", "custom_domain": true }
   ],
