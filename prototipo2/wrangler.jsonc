@@ -6,6 +6,9 @@
   "name": "pulsoinversor-prototipo2",
   "compatibility_date": "2025-09-01",
   "workers_dev": true,
+  "routes": [
+    { "pattern": "2.pulsoinversor.cl", "custom_domain": true }
+  ],
   "assets": {
     "directory": "./public",
     "html_handling": "auto-trailing-slash",

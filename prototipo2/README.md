@@ -2,7 +2,7 @@
 
 Contenido y estructura del sitio V5 (el borrador que estaba en newpulso.netlify.app: 14 páginas, simuladores, operación abierta y las dos landings) con el diseño del Prototipo 1 (rama `main`): cabecera blanca con logo a color, menú, tipografía Inter, colores, botones, tarjetas, héroes con degradado verde y pie.
 
-- **Ver:** https://pulsoinversor-prototipo2.sesubasta-prototipo-dinamico.workers.dev (no se indexa en Google)
+- **Ver:** https://2.pulsoinversor.cl (también https://pulsoinversor-prototipo2.sesubasta-prototipo-dinamico.workers.dev). No se indexa en Google.
 - **Proyecto en Cloudflare:** Worker `pulsoinversor-prototipo2` (aparte del Prototipo 1).
 
 ## Carpetas
