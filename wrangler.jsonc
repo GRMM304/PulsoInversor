@@ -1,9 +1,12 @@
-// Cloudflare Workers: sirve el sitio estático desde la raíz del repositorio.
-// Los archivos que no se publican están en .assetsignore.
+// Prototipo 1 (rama main): sitio estático servido desde la raíz del repositorio.
+// Se publica en 1.pulsoinversor.cl. Los archivos que no se publican están en .assetsignore.
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "pulsoinversor",
   "compatibility_date": "2025-09-01",
+  "routes": [
+    { "pattern": "1.pulsoinversor.cl", "custom_domain": true }
+  ],
   "assets": {
     "directory": "./",
     "html_handling": "auto-trailing-slash"
