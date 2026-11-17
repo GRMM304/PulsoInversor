@@ -37,14 +37,20 @@ async function leer(env, token) {
     return d;
   } catch (e) { return null; }
 }
+// Registra en la base lo que hizo la persona (solo si el enlace trae el id de la simulación).
+async function registrar(env, d, sql, ...vals) {
+  if (!env.DB || !d.i) return;
+  try { await env.DB.prepare(sql).bind(...vals, d.i).run(); } catch (e) { console.error('db', e); }
+}
+const ahora = () => new Date().toISOString();
 const personasDe = (d) => (ASESORES[d.g] || ASESORES[0]).personas;
 const nombres = (ps) => ps.map((a) => a.nombre).join(' y ');
 const cortos = (ps) => ps.map((a) => a.nombre.split(' ')[0]).join(' y ');
 
 /* ---------- Correo de seguimiento (48 h) ---------- */
-export async function programarSeguimiento(env, { nombre, email, telefono, tipo, monto, grupo }) {
+export async function programarSeguimiento(env, { id, nombre, email, telefono, tipo, monto, grupo }) {
   if (!env.FIRMA_SEGUIMIENTO) return 'sin_firma';
-  const t = await firmar(env, { n: nombre, e: email, p: telefono, s: tipo, m: Math.round(monto || 0), g: grupo, f: Date.now() });
+  const t = await firmar(env, { i: id, n: nombre, e: email, p: telefono, s: tipo, m: Math.round(monto || 0), g: grupo, f: Date.now() });
   const ps = ASESORES[grupo].personas, varios = ps.length > 1, quien = cortos(ps);
   const html = plantilla({
     preheader: `¿Te quedó alguna duda con tu simulación de ${tipo}? ${quien} puede ayudarte.`,
@@ -116,12 +122,21 @@ async function agendar(request, env, url) {
     if (!d) return enlaceVencido();
     // Si el tramo tiene agenda de Brevo, se redirige allí (el enlace del correo no cambia aunque se cambie la agenda).
     const agendas = (AGENDA_BREVO[d.g] || []).filter((a) => a.url);
-    if (agendas.length === 1) return Response.redirect(agendas[0].url, 302);
+    await registrar(env, d, 'UPDATE simulaciones SET agenda_click = COALESCE(agenda_click, ?) WHERE id = ?', ahora());
+    const con = parseInt(url.searchParams.get('con'), 10);
+    if (agendas[con]) {
+      await registrar(env, d, 'UPDATE simulaciones SET agenda_con = ? WHERE id = ?', agendas[con].nombre);
+      return Response.redirect(agendas[con].url, 302);
+    }
+    if (agendas.length === 1) {
+      await registrar(env, d, 'UPDATE simulaciones SET agenda_con = ? WHERE id = ?', agendas[0].nombre);
+      return Response.redirect(agendas[0].url, 302);
+    }
     if (agendas.length > 1) {
       return pagina('Agendar reunión', `<p class="eyebrow">Agendar reunión · ${esc(d.s)}</p>
 <h1>Hola ${esc(d.n.split(' ')[0])}, elige con quién quieres reunirte</h1>
 <p>${esc(agendas.map((a) => a.nombre).join(' y '))} son los cofundadores de Pulso. Elige a uno y luego el día y la hora que te acomoden. Puedes venir con tu pareja, tu socio o tu abogado.</p>
-${agendas.map((a) => `<p><a href="${esc(a.url)}" style="display:inline-block;background:${C.lima};color:${C.verde};font-weight:700;text-decoration:none;padding:14px 24px;border-radius:999px">Agendar con ${esc(a.nombre)} →</a></p>`).join('')}
+${agendas.map((a, i) => `<p><a href="/seguimiento/agendar?t=${esc(t)}&amp;con=${i}" style="display:inline-block;background:${C.lima};color:${C.verde};font-weight:700;text-decoration:none;padding:14px 24px;border-radius:999px">Agendar con ${esc(a.nombre)} →</a></p>`).join('')}
 <p class="nota">No te vamos a pedir que decidas en la reunión.</p>`);
     }
     const ps = personasDe(d), varios = ps.length > 1;
@@ -141,6 +156,7 @@ ${agendas.map((a) => `<p><a href="${esc(a.url)}" style="display:inline-block;bac
   const d = await leer(env, f.t);
   if (!d) return enlaceVencido();
   if (!f.dia || !FRANJAS.includes(f.franja) || !MODALIDADES.includes(f.modalidad)) return pagina('Agendar reunión', `<p class="err">Faltan datos. Vuelve atrás y completa el día, el horario y la modalidad.</p>`);
+  await registrar(env, d, 'UPDATE simulaciones SET agenda_form = ? WHERE id = ?', JSON.stringify({ fecha: ahora(), dia: f.dia, franja: f.franja, modalidad: f.modalidad, comentario: f.comentario || '' }));
   const ps = personasDe(d), varios = ps.length > 1;
   const diaTxt = new Date(f.dia + 'T12:00:00').toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long' });
   const sender = { name: 'Pulso Inversor', email: env.SENDER_EMAIL || DEFAULT_SENDER };
@@ -190,6 +206,7 @@ async function encuesta(request, env, url) {
     const t = url.searchParams.get('t');
     const d = await leer(env, t);
     if (!d) return enlaceVencido();
+    await registrar(env, d, 'UPDATE simulaciones SET contactado_click = COALESCE(contactado_click, ?) WHERE id = ?', ahora());
     const ps = personasDe(d);
     const quienes = [...ps.map((a) => a.nombre), 'Otra persona del equipo'];
     return pagina('Cuéntanos tu experiencia', `<p class="eyebrow">Tu experiencia · ${esc(d.s)}</p>
@@ -212,6 +229,8 @@ async function encuesta(request, env, url) {
   if (!f.quien || !MEDIOS.includes(f.medio) || !n(f.satisfaccion, 5) || +f.satisfaccion < 1 || !DUDAS.includes(f.dudas) || !n(f.recomienda, 10) || !ETAPAS.includes(f.etapa)) {
     return pagina('Encuesta', `<p class="err">Falta responder alguna pregunta. Vuelve atrás y complétala, por favor.</p>`);
   }
+  await registrar(env, d, 'UPDATE simulaciones SET encuesta = ?, encuesta_json = ?, satisfaccion = ?, recomienda = ?, contactado_click = COALESCE(contactado_click, ?) WHERE id = ?',
+    ahora(), JSON.stringify({ quien: f.quien, medio: f.medio, satisfaccion: +f.satisfaccion, dudas: f.dudas, recomienda: +f.recomienda, etapa: f.etapa, comentario: f.comentario || '' }), +f.satisfaccion, +f.recomienda, ahora());
   const ps = personasDe(d);
   const nps = +f.recomienda, tipoNps = nps >= 9 ? 'Promotor' : nps >= 7 ? 'Neutro' : 'Detractor';
   await brevo(env, {

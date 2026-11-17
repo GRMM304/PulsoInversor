@@ -14,7 +14,8 @@
 // Además programa el correo de seguimiento a las 48 horas y atiende /seguimiento/agendar y /seguimiento/encuesta.
 
 import { DEFAULT_SENDER, EQUIPO, MAX_PDF_BYTES, ORIGENES, TIPOS, ASESORES, asesoresPara, json, esc, clp, brevo, plantilla, boton, bloqueResumen, P, C, WHATSAPP } from './comun.js';
-import { programarSeguimiento, rutaSeguimiento } from './seguimiento.js';
+import { programarSeguimiento, rutaSeguimiento, HORAS_SEGUIMIENTO } from './seguimiento.js';
+import { rutaPanel } from './panel.js';
 
 
 function correoInversionista({ tipo, nombre, lineas, personas }) {
@@ -86,6 +87,17 @@ async function enviarSimulacion(request, env) {
   const paraAsesores = personas.map((a) => a.email.toLowerCase());
   const copias = [...new Set([...todosAsesores, ...equipo])].filter((e) => !paraAsesores.includes(e));
 
+  // 0) Registro en la base (para el panel). Si falla, igual se envían los correos.
+  const grupo = ASESORES.findIndex((g) => g.personas === personas);
+  let id = null;
+  if (env.DB) {
+    try {
+      const r = await env.DB.prepare('INSERT INTO simulaciones (creado, nombre, email, telefono, tipo, monto, grupo, asesor) VALUES (?,?,?,?,?,?,?,?) RETURNING id')
+        .bind(new Date().toISOString(), nombre, email, telefono, tipo, Math.round(monto), grupo, personas.map((a) => a.nombre).join(' y ')).first();
+      id = r && r.id;
+    } catch (e) { console.error('db insert', e); }
+  }
+
   // 1) Correo al inversionista (responde directo a su asesor)
   await brevo(env, {
     sender, to: [{ email, name: nombre }],
@@ -111,10 +123,14 @@ async function enviarSimulacion(request, env) {
   // 3) Correo de seguimiento programado a las 48 horas (si falla, no afecta lo anterior)
   let seguimiento = 'no';
   try {
-    const grupo = ASESORES.findIndex((g) => g.personas === personas);
-    seguimiento = await programarSeguimiento(env, { nombre, email, telefono, tipo, monto, grupo });
-  } catch (e) { console.error('seguimiento', e); seguimiento = 'error'; }
-  console.log('simulacion', d.tipo, 'seguimiento', seguimiento);
+    seguimiento = await programarSeguimiento(env, { id, nombre, email, telefono, tipo, monto, grupo });
+  } catch (e) { console.error('seguimiento', e); seguimiento = 'error: ' + String(e.message || e).slice(0, 150); }
+  console.log('simulacion', d.tipo, id, 'seguimiento', seguimiento);
+  if (env.DB && id) {
+    const ok = !/^(error|sin_firma)/.test(seguimiento);
+    await env.DB.prepare('UPDATE simulaciones SET seguimiento_estado = ?, seguimiento_para = ? WHERE id = ?')
+      .bind(ok ? 'programado' : seguimiento, ok ? new Date(Date.now() + HORAS_SEGUIMIENTO * 3600e3).toISOString() : null, id).run().catch((e) => console.error('db seg', e));
+  }
 
   return json({ ok: true, asesor: personas.map((a) => a.nombre).join(' y ') });
 }
@@ -127,6 +143,7 @@ export default {
       try { return await enviarSimulacion(request, env); }
       catch (e) { console.error(e); return json({ ok: false, error: 'envio_fallido' }, 502); }
     }
+    if (url.pathname === '/panel' || url.pathname.startsWith('/panel/')) return rutaPanel(request, env, url);
     if (url.pathname.startsWith('/seguimiento/')) {
       try { const r = await rutaSeguimiento(request, env, url); if (r) return r; }
       catch (e) { console.error(e); return new Response('No pudimos procesar tu solicitud. Escríbenos por WhatsApp al +56 9 8355 4676.', { status: 502, headers: { 'content-type': 'text/plain; charset=utf-8' } }); }

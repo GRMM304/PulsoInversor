@@ -11,10 +11,14 @@
   "routes": [
     { "pattern": "1.pulsoinversor.cl", "custom_domain": true }
   ],
+  // Base de simulaciones y seguimiento (panel en /panel). Esquema en worker/schema.sql.
+  "d1_databases": [
+    { "binding": "DB", "database_name": "pulso-simulaciones", "database_id": "fbeffb74-286a-4f0f-8e71-6695e7a079f2" }
+  ],
   "assets": {
     "directory": "./",
     "binding": "ASSETS",
     "html_handling": "auto-trailing-slash",
-    "run_worker_first": ["/api/*", "/seguimiento/*"]
+    "run_worker_first": ["/api/*", "/seguimiento/*", "/panel", "/panel/*"]
   }
 }
