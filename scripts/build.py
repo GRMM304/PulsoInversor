@@ -56,7 +56,7 @@ def footer():
         <p>Inversiones privadas vinculadas a bienes raíces mediante el modelo IGR, Inversión con Garantía Real.</p>
         <p><strong>Pulso Inversor SpA</strong><br><a href="mailto:{EMAIL}">{EMAIL}</a></p>
         {P("RUT, domicilio, teléfono y demás canales oficiales.")}
-        <img class="logo-gmm" src="assets/img/logo-gmm-blanco.webp" alt="Una empresa de Grupo Matchmaking" width="380" height="100">
+        <img class="logo-gmm" src="assets/img/logo-gmm-blanco.png" alt="Una empresa de Grupo Matchmaking" width="700" height="108">
       </div>
       {cols}
     </div>
@@ -282,15 +282,17 @@ page('index.html', 'Inicio',
     </form>
   </div>
   {P("CIFRAS retiradas a pedido de la usuaria (2026-11-16): cartera aprox. $1.100 millones; rentabilidades desde 0,8%.")}
-  {P("ASESORES: 3 fotos y 3 espacios. Para sumar a alguien, reemplazar un <span class='avatar-slot'> por <img src='assets/img/asesores/nombre.webp' alt='Nombre'>.")}
   <div class="hero-team">
     <div class="avatars">
-      <img src="assets/img/asesores/felipe.webp" alt="Felipe" width="240" height="240" loading="lazy">
-      <img src="assets/img/asesores/gloria.webp" alt="Gloria" width="240" height="240" loading="lazy">
-      <img src="assets/img/asesores/pamela.webp" alt="Pamela" width="240" height="240" loading="lazy">
-      <span class="avatar-slot" aria-hidden="true"></span>
-      <span class="avatar-slot" aria-hidden="true"></span>
-      <span class="avatar-slot" aria-hidden="true"></span>
+      <img src="assets/img/equipo/ivan-barboza-avatar.jpg" alt="Iván Barboza" title="Iván Barboza" width="240" height="240" loading="lazy">
+      <img src="assets/img/equipo/felipe-rojas-avatar.jpg" alt="Felipe Rojas" title="Felipe Rojas" width="240" height="240" loading="lazy">
+      <img src="assets/img/equipo/jessica-valenzuela.jpg" alt="Jessica Valenzuela" title="Jessica Valenzuela" width="240" height="240" loading="lazy">
+      <img src="assets/img/equipo/felipe-jana.jpg" alt="Felipe Jaña" title="Felipe Jaña" width="240" height="240" loading="lazy">
+      <img src="assets/img/equipo/william-rojas.jpg" alt="William Rojas" title="William Rojas" width="240" height="240" loading="lazy">
+      <img src="assets/img/asesores/gloria.webp" alt="Gloria Cepeda" title="Gloria Cepeda" width="240" height="240" loading="lazy">
+      <img src="assets/img/asesores/pamela.webp" alt="Pamela Herrera" title="Pamela Herrera" width="240" height="240" loading="lazy">
+      <img src="assets/img/equipo/renato-vargas.jpg" alt="Renato Vargas" title="Renato Vargas" width="240" height="240" loading="lazy">
+      <img src="assets/img/equipo/santiago-fernandez.jpg" alt="Santiago Fernández" title="Santiago Fernández" width="240" height="240" loading="lazy">
     </div>
     <strong>Quienes te acompañan</strong>
   </div>
@@ -921,7 +923,7 @@ PILARES_N = [
 ]
 EQUIPO = [
     ('Jessica Valenzuela', 'Jefa comercial', 'assets/img/equipo/jessica-valenzuela.jpg'),
-    ('Felipe Jaña', 'Jefe de operaciones', None),
+    ('Felipe Jaña', 'Jefe de operaciones', 'assets/img/equipo/felipe-jana.jpg'),
     ('William Rojas', 'Jefe de contabilidad', 'assets/img/equipo/william-rojas.jpg'),
     ('Gloria Cepeda', 'Asesora', 'assets/img/asesores/gloria.webp'),
     ('Pamela Herrera', 'Asesora', 'assets/img/asesores/pamela.webp'),
@@ -965,7 +967,6 @@ page('nosotros.html', 'Nosotros',
 
 <section class="section"><div class="container">
   <div class="title center"><span class="eyebrow">Nuestro equipo</span><h2>Las personas detrás de Pulso</h2></div>
-  {P("FOTOS provisorias tomadas de las portadas de los videos de newpulso. Reemplazar por fotografías aprobadas.")}
   <div class="team">
     <article class="team-card"><div class="team-photo" style="background-image:url(assets/img/equipo/ivan-barboza.jpg)"></div><div class="team-body">
       <h3>Iván Barboza</h3><span class="team-role">Cofundador y experto inmobiliario</span>
@@ -974,7 +975,7 @@ page('nosotros.html', 'Nosotros',
       <h3>Felipe Rojas</h3><span class="team-role">Cofundador y estratega financiero</span>
       <p>Lleva 16 años liderando áreas de finanzas y control de gestión en compañías como LATAM, Iansa y Transbank, y suma esa visión corporativa y rigor analítico a la empresa. Su vínculo con el proyecto nació de la confianza en el modelo: comenzó como cliente, validando los intereses y la seguridad de las operaciones con su propio patrimonio. Hoy estructura financieramente los productos para que cada operación sea directa, segura y competitiva.</p></div></article>
   </div>
-  {P("EQUIPO entregado por la usuaria el 2026-11-17. Fotos de Jessica, William, Renato y Santiago entregadas el 2026-11-17; Felipe Jaña sigue con iniciales.")}
+  {P("EQUIPO y fotos entregados por la usuaria el 2026-11-17.")}
   <h3 class="team-sub">El equipo que te acompaña</h3>
   <div class="crew">{crew}</div>
 </div></section>

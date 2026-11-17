@@ -1530,3 +1530,4 @@ button.tipo{font:inherit;text-align:left;cursor:pointer;width:100%}
 .rx-hero h1{font-size:clamp(34px,4.4vw,54px)}
 .rx-hero-actions{gap:12px}
 .rx-hero-actions .btn-xl{padding:15px 22px}
+.footer .logo-gmm{width:240px;height:auto;opacity:.85;margin-top:18px}
