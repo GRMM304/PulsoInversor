@@ -13,15 +13,14 @@
       docTxt: 'La propiedad se compra con tu capital y se inscribe a tu nombre en el Conservador de Bienes Raíces. Eres el dueño del inmueble durante toda la operación.',
       peor: 'La propiedad está inscrita a tu nombre: si Pulso dejara de funcionar, sigue siendo tuya.' }
   };
-  var MARGEN = 0.4;
   var $ = function (id) { return document.getElementById(id); };
   var rango = $('sim-monto'), plazoSel = null;
   var mm = function (n) { return '$' + Math.round(n).toLocaleString('es-CL') + ' MM'; };
 
-  function propiedad(modo, monto) {
-    if (modo === 'T') { var pre = monto; return { pre: pre, tas: pre / (1 - MARGEN) }; }
-    if (modo === 'H') { var tas = Math.max(120, Math.ceil(monto * 1.8 / 10) * 10); return { tas: tas, pre: tas * (1 - MARGEN) }; }
-    return { tas: 160, pre: 160 * (1 - MARGEN) };
+  // Tasación de la propiedad de ejemplo que respalda la operación.
+  function tasacion(modo, monto) {
+    var f = modo === 'T' ? 1.6 : modo === 'H' ? 1.8 : 1.6;
+    return Math.max(modo === 'A' ? 160 : 120, Math.ceil(monto * f / 10) * 10);
   }
 
   function linea(n) {
@@ -48,12 +47,12 @@
     $('sim-plazos').innerHTML = d.plazos.map(function (p) {
       return '<button type="button" data-p="' + p + '" class="' + (p === plazoSel ? 'on' : '') + '" aria-pressed="' + (p === plazoSel) + '">' + p + ' meses</button>';
     }).join('');
-    var pr = propiedad(modo, monto);
+    var tas = tasacion(modo, monto), pct = Math.round(monto / tas * 100);
     $('sim-prop').textContent = d.prop;
-    $('sim-tas').textContent = mm(pr.tas);
-    $('sim-pre').textContent = mm(pr.pre);
-    $('sim-barra-pre').style.width = (100 - MARGEN * 100) + '%';
-    $('sim-margen').textContent = Math.round(MARGEN * 100) + '% bajo la tasación';
+    $('sim-tas').textContent = mm(tas);
+    $('sim-pre').textContent = mm(monto);
+    $('sim-barra-pre').style.width = pct + '%';
+    $('sim-margen').textContent = 'Tu capital es el ' + pct + '% del valor de la propiedad';
     $('sim-doc').textContent = d.doc;
     $('sim-doc-txt').textContent = d.docTxt;
     $('sim-peor').textContent = d.peor;
