@@ -14,10 +14,14 @@ export const TIPOS = {
 
 // Enlaces de agendamiento de Brevo Meetings por tramo (pegar la URL de la página de reservas de cada asesor).
 // Si un tramo no tiene enlace, el correo de seguimiento usa el formulario propio de /seguimiento/agendar.
+// Con un enlace se redirige directo; con varios, la persona elige con quién agendar.
 export const AGENDA_BREVO = {
-  0: '', // Renato Vargas · hasta $25 MM
-  1: '', // Pamela Herrera · $25 a $50 MM
-  2: '', // Iván Barboza y Felipe Rojas · $50 MM o más
+  0: [{ nombre: 'Renato Vargas', url: 'https://meet.brevo.com/pulsoinversor/renato-vargas' }], // hasta $25 MM
+  1: [{ nombre: 'Pamela Herrera', url: 'https://meet.brevo.com/pulsoinversor/pamela-herrera' }], // $25 a $50 MM
+  2: [ // $50 MM o más
+    { nombre: 'Iván Barboza', url: 'https://meet.brevo.com/pulsoinversor/ivan-barboza' },
+    { nombre: 'Felipe Rojas', url: 'https://meet.brevo.com/pulsoinversor/felipe-rojas' },
+  ],
 };
 
 // Asesor según el monto simulado (en pesos).
