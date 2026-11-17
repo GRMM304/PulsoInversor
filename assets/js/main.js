@@ -116,29 +116,44 @@
     });
   });
 
-  // Cómo funciona: carrusel de pasos
-  document.querySelectorAll('[data-ruta]').forEach(function (r) {
-    var slides = r.querySelectorAll('.ruta-slide'), dots = r.querySelectorAll('.ruta-dot');
-    var i = 0, timer = null, quietoR = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Cómo funciona: etapas del camino. Clic en cualquier etapa; avanza sola mientras nadie interactúa.
+  document.querySelectorAll('[data-r2]').forEach(function (r) {
+    var steps = r.querySelectorAll('.r2-step'), cards = r.querySelectorAll('.r2-card');
+    var i = 0, timer = null, DUR = 6000, tocado = false;
+    var quietoR = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var movil = window.matchMedia('(max-width:900px)');
     function ir(n) {
-      i = (n + slides.length) % slides.length;
-      slides.forEach(function (s, k) { s.classList.toggle('is-active', k === i); s.setAttribute('aria-hidden', k === i ? 'false' : 'true'); });
-      dots.forEach(function (d, k) { d.classList.toggle('is-active', k === i); });
+      i = (n + steps.length) % steps.length;
+      steps.forEach(function (s, k) { var on = k === i; s.classList.toggle('is-active', on); s.setAttribute('aria-expanded', on ? 'true' : 'false'); });
+      cards.forEach(function (c, k) { var on = k === i; c.classList.toggle('is-active', on); c.setAttribute('aria-hidden', on ? 'false' : 'true'); });
+      r.style.setProperty('--r2-dur', DUR + 'ms');
+      r.classList.remove('r2-run'); void r.offsetWidth; if (!tocado && !quietoR && !movil.matches) r.classList.add('r2-run');
     }
-    function auto() { if (quietoR) return; clearInterval(timer); timer = setInterval(function () { ir(i + 1); }, 6500); }
-    r.querySelector('[data-prev]').addEventListener('click', function () { ir(i - 1); auto(); });
-    r.querySelector('[data-next]').addEventListener('click', function () { ir(i + 1); auto(); });
-    dots.forEach(function (d) { d.addEventListener('click', function () { ir(+d.getAttribute('data-go')); auto(); }); });
-    r.addEventListener('mouseenter', function () { clearInterval(timer); });
-    r.addEventListener('mouseleave', auto);
-    var x0 = null;
-    r.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
-    r.addEventListener('touchend', function (e) {
-      if (x0 === null) return; var dx = e.changedTouches[0].clientX - x0; x0 = null;
-      if (Math.abs(dx) > 40) { ir(i + (dx < 0 ? 1 : -1)); auto(); }
+    function auto() {
+      clearInterval(timer);
+      if (tocado || quietoR || movil.matches) return;
+      timer = setInterval(function () { ir(i + 1); }, DUR);
+    }
+    steps.forEach(function (s) {
+      s.addEventListener('click', function () { tocado = true; clearInterval(timer); ir(+s.getAttribute('data-i')); });
     });
-    ir(0); auto();
+    r.addEventListener('mouseenter', function () { clearInterval(timer); r.classList.add('r2-paused'); });
+    r.addEventListener('mouseleave', function () { r.classList.remove('r2-paused'); if (!tocado) { ir(i); auto(); } });
+    // Empieza a avanzar solo cuando la sección se ve en pantalla
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (es, o) { if (es[0].isIntersecting) { if (!tocado) { ir(i); auto(); } o.disconnect(); } }, { threshold: .35 }).observe(r);
+    } else { ir(0); auto(); }
   });
+
+  // Animaciones al aparecer en pantalla
+  var rev = document.querySelectorAll('[data-reveal]');
+  if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.documentElement.classList.add('js-reveal');
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } });
+    }, { threshold: .3 });
+    rev.forEach(function (el) { io.observe(el); });
+  }
 
   // Año del pie de página
   var y = document.getElementById('year');

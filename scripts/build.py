@@ -359,14 +359,21 @@ PASOS_CAMINO = [
     ('Recibe tus pagos y seguimiento', 'Accede a los pagos y reportes conforme al contrato. Al vencimiento se realiza el cierre de la operación, según las condiciones pactadas.',
      'Hasta el cierre.', [('Recibes', 'Pagos según contrato'), ('Accedes', 'A tus reportes'), ('Al vencimiento', 'El cierre de la operación')]),
 ]
-pasos_slides = ''.join(f'''<div class="ruta-slide{' is-active' if i == 0 else ''}" data-slide="{i}" role="group" aria-roledescription="paso" aria-label="Paso {i+1} de {len(PASOS_CAMINO)}">
-      <div class="ruta-text"><span class="ruta-num">0{i+1}</span><h3>{t}</h3><p>{d}</p></div>
-      <div class="ruta-card"><div class="ruta-card-inner">
-        <div class="ruta-head"><span>Paso {i+1} de {len(PASOS_CAMINO)}</span><strong>{h}</strong></div>
-        <div class="ruta-rows">''' + ''.join(f'<div class="ruta-row"><span>{l}</span><strong>{v}</strong></div>' for l, v in rows) + '''</div>
-      </div></div>
-    </div>''' for i, (t, d, h, rows) in enumerate(PASOS_CAMINO))
-ruta_dots = ''.join(f'<button type="button" class="ruta-dot{" is-active" if i == 0 else ""}" data-go="{i}" aria-label="Ir al paso {i+1}"></button>' for i in range(len(PASOS_CAMINO)))
+_CHECK = '<svg class="ico-check" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>'
+_CROSS = '<svg class="ico-cross" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17"/></svg>'
+ruta_steps = ''.join(f'''<li><button type="button" class="r2-step{' is-active' if i == 0 else ''}" data-i="{i}" aria-expanded="{'true' if i == 0 else 'false'}">
+        <span class="r2-num">{i+1}</span>
+        <span class="r2-body">
+          <span class="r2-title">{t}</span>
+          <span class="r2-desc"><span class="r2-desc-in"><span class="r2-text">{d}</span>
+            <span class="r2-rows-m">''' + ''.join(f'<span><em>{l}</em>{v}</span>' for l, v in rows) + f'''</span></span></span>
+          <span class="r2-bar" aria-hidden="true"><i></i></span>
+        </span>
+      </button></li>''' for i, (t, d, h, rows) in enumerate(PASOS_CAMINO))
+ruta_cards = ''.join(f'''<div class="r2-card{' is-active' if i == 0 else ''}" data-card="{i}" aria-hidden="{'false' if i == 0 else 'true'}">
+        <div class="r2-head"><span>Paso {i+1} de {len(PASOS_CAMINO)}</span><strong>{h}</strong></div>
+        <div class="r2-rows">''' + ''.join(f'<div class="r2-row"><span>{l}</span><strong>{v}</strong></div>' for l, v in rows) + '''</div>
+      </div>''' for i, (t, d, h, rows) in enumerate(PASOS_CAMINO))
 
 page('como-funciona.html', 'Cómo funciona',
      'Invertir también puede generar impacto. Así funciona el Modelo IGR: respaldo inmobiliario, estructura legal y retorno y plazo definidos por contrato.', f'''
@@ -392,33 +399,29 @@ page('como-funciona.html', 'Cómo funciona',
 </div></section>
 
 <section class="section ruta-section"><div class="container">
-  <div class="title"><span class="eyebrow dark">Tu experiencia con Pulso</span><h2>Así es tu camino con Pulso</h2>
+  <div class="title center"><span class="eyebrow dark">Tu experiencia con Pulso</span><h2>Así es tu camino con Pulso</h2>
     <p class="lead">Desde la primera evaluación hasta el cierre de tu inversión, conoces las condiciones de cada etapa.</p></div>
-  <div class="ruta" data-ruta>
-    <div class="ruta-track">{pasos_slides}</div>
-    <div class="ruta-nav">
-      <span class="ruta-caption">Desde tu primera simulación hasta el cierre.</span>
-      <div class="ruta-controls">
-        <button type="button" class="ruta-arrow" data-prev aria-label="Paso anterior">←</button>
-        <div class="ruta-dots">{ruta_dots}</div>
-        <button type="button" class="ruta-arrow" data-next aria-label="Paso siguiente">→</button>
-      </div>
+  <div class="r2" data-r2>
+    <ol class="r2-list">{ruta_steps}</ol>
+    <div class="r2-stage" aria-live="polite">
+      <div class="r2-frame">{ruta_cards}</div>
+      <p class="r2-caption">Toca cada etapa para ver qué pasa en ella.</p>
     </div>
   </div>
 </div></section>
 
-<section class="section"><div class="container">
+<section class="section" id="forma-de-trabajar"><div class="container">
   <div class="title center"><span class="eyebrow">Nuestra forma de trabajar</span><h2>Claridad desde el primer contacto</h2>
     <p class="lead">Queremos que tomes decisiones informadas, a tu ritmo y con acompañamiento directo.</p></div>
-  <div class="yesno">
-    <div class="card"><h3>Lo que sí hacemos</h3><ul class="yes">
-      <li>Te entregamos los antecedentes antes de firmar.</li>
-      <li>Te explicamos los beneficios, riesgos y condiciones de cada operación.</li>
-      <li>Te acompañamos mediante una relación directa y personalizada.</li></ul></div>
-    <div class="card"><h3>Lo que no hacemos</h3><ul class="no">
-      <li>Presionarte para decidir en la primera reunión.</li>
-      <li>Prometer rentabilidad sin explicar la operación y sus riesgos.</li>
-      <li>Operar como una plataforma de crowdfunding o financiamiento colectivo.</li></ul></div>
+  <div class="yn" data-reveal>
+    <div class="yn-card yn-yes"><span class="yn-kicker">Lo que sí hacemos</span><ul>
+      <li>{_CHECK}<div><span>Te entregamos los antecedentes antes de firmar.</span></div></li>
+      <li>{_CHECK}<div><span>Te explicamos los beneficios, riesgos y condiciones de cada operación.</span></div></li>
+      <li>{_CHECK}<div><span>Te acompañamos mediante una relación directa y personalizada.</span></div></li></ul></div>
+    <div class="yn-card yn-no"><span class="yn-kicker">Lo que no hacemos</span><ul>
+      <li>{_CROSS}<div><span>Presionarte para decidir en la primera reunión.</span></div></li>
+      <li>{_CROSS}<div><span>Prometer rentabilidad sin explicar la operación y sus riesgos.</span></div></li>
+      <li>{_CROSS}<div><span>Operar como una plataforma de crowdfunding o financiamiento colectivo.</span></div></li></ul></div>
   </div>
 </div></section>
 
