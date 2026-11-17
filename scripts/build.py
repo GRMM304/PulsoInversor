@@ -453,7 +453,7 @@ ESTRATEGIAS = [
      'Para inversionistas que buscan menor ticket de entrada y una estructura documentada.'),
     ('H', 'Hipoteca', 'Inversión respaldada por garantía hipotecaria.', 'Desde $25MM', 'Hipoteca',
      'Para inversionistas que priorizan respaldo inmobiliario mediante hipoteca.'),
-    ('T', 'Título', 'Máximo respaldo mediante título de propiedad.', 'Desde $150MM', 'Título',
+    ('T', 'Título', 'Máximo respaldo mediante título de propiedad.', 'Desde $100MM', 'Título',
      'Para inversionistas que buscan una estructura de mayor resguardo.'),
 ]
 estrategias = ''.join(f"""<article class="aht" id="estrategia-{n.lower().replace('í','i').replace('ó','o')}">
@@ -491,7 +491,7 @@ PASOS_IC = [
 PERFILES = [
     ('Quiero empezar con un monto acotado', 'Acción', 'Desde $5MM · Pagaré', '#estrategia-accion'),
     ('Busco que mi inversión tenga respaldo inmobiliario', 'Hipoteca', 'Desde $25MM · Hipoteca a tu favor', '#estrategia-hipoteca'),
-    ('Quiero el mayor resguardo: una propiedad a mi nombre', 'Título', 'Desde $150MM · Título de propiedad', '#estrategia-titulo'),
+    ('Quiero el mayor resguardo: una propiedad a mi nombre', 'Título', 'Desde $100MM · Título de propiedad', '#estrategia-titulo'),
     ('Tengo capacidad de crédito y quiero construir patrimonio', 'Hipoteca Inteligente', 'Desde 2.000 UF de crédito', '#hipoteca-inteligente'),
     ('Tengo una propiedad y quiero que su capital trabaje', 'Inversión Circular', 'Flujo mensual con tu propiedad', '#inversion-circular'),
 ]
@@ -513,7 +513,7 @@ page('inversiones.html', 'Inversiones',
   <div class="title center"><span class="eyebrow">01 · Para invertir tu capital</span><h2>Proyecta un Hogar</h2>
     <p class="lead">Pon tu capital a trabajar en operaciones que ayudan a familias que enfrentan un remate a mantener su hogar. Elige la estrategia que va contigo.</p></div>
   <div class="ahts">{estrategias}</div>
-  {P("Montos y textos de las estrategias según la imagen entregada el 2026-11-17 (Título desde $150MM; antes figuraba $100MM). Plazos por estrategia en la tabla: VALIDAR.")}
+  {P("Montos y textos de las estrategias según la imagen entregada el 2026-11-17 (Título desde $100MM según la tabla de condiciones del 2026-11-17). Plazos por estrategia en la tabla: VALIDAR.")}
 </div></section>
 
 <section class="section inv-sec" id="hipoteca-inteligente"><div class="container inv-split">
@@ -541,7 +541,7 @@ page('inversiones.html', 'Inversiones',
     <tbody>
       <tr><td>Proyecta un Hogar · Acción</td><td>$5 millones</td><td>Contrato de mutuo y pagaré</td><td>12, 18 o 24 meses</td></tr>
       <tr><td>Proyecta un Hogar · Hipoteca</td><td>$25 millones</td><td>Hipoteca inscrita a tu favor</td><td>15, 21 o 27 meses</td></tr>
-      <tr><td>Proyecta un Hogar · Título</td><td>$150 millones</td><td>La propiedad inscrita a tu nombre</td><td>15, 21 o 27 meses</td></tr>
+      <tr><td>Proyecta un Hogar · Título</td><td>$100 millones</td><td>La propiedad inscrita a tu nombre</td><td>15, 21 o 27 meses</td></tr>
       <tr><td>Hipoteca Inteligente</td><td>2.000 UF de capacidad de crédito, o capital propio</td><td>La propiedad a tu nombre, arrendada con opción de recompra</td><td>2 a 5 años</td></tr>
       <tr><td>Inversión Inmobiliaria Circular</td><td>El capital de tu propiedad</td><td>Inversión en Pulso con rentabilidad fija mensual</td><td>Según tu contrato</td></tr>
     </tbody></table></div>
@@ -684,7 +684,7 @@ page('simuladores.html', 'Simuladores',
         <div class="pro-series">
           <button type="button" data-serie="A"><b>A</b><span>Acción<small>Desde $5MM · Pagaré</small></span></button>
           <button type="button" data-serie="H"><b>H</b><span>Hipoteca<small>Desde $25MM · Hipoteca</small></span></button>
-          <button type="button" data-serie="T"><b>T</b><span>Título<small>Desde $150MM · Título</small></span></button>
+          <button type="button" data-serie="T"><b>T</b><span>Título<small>Desde $100MM · Título</small></span></button>
         </div>
         <label class="pro-label" for="p-monto">Monto a invertir</label>
         <input id="p-monto" class="pro-monto" type="text" inputmode="numeric" autocomplete="off">
@@ -693,27 +693,42 @@ page('simuladores.html', 'Simuladores',
         <p class="pro-warn" id="p-warn" hidden>El monto está bajo el mínimo; se calcula con el mínimo de la estrategia.</p>
         <span class="pro-label">Plazo</span>
         <div class="pro-chips" id="p-plazos"></div>
-        <label class="check pro-retiro" id="p-retiro-wrap"><input type="checkbox" id="p-retiro"><span>Quiero la opción de retiro anticipado (tasa 0,1 punto menor)</span></label>
-      </div>
-      <aside class="pro-result">
-        <span class="eyebrow dark">Resultado referencial</span>
-        <div class="pro-total"><small>Total a recibir</small><strong id="r-total">—</strong><span>Ganancia estimada <b id="r-ganancia">—</b></span></div>
-        <ul class="pro-list">
-          <li><span>Estrategia</span><strong id="r-estrategia">—</strong></li>
-          <li><span>Monto</span><strong id="r-monto">—</strong></li>
-          <li><span>Plazo</span><strong id="r-plazo">—</strong></li>
-          <li><span>Tasa</span><strong id="r-tasa">—</strong></li>
-        </ul>
-        <div class="dap">
-          <h4>Pulso vs. depósito a plazo</h4>
-          <div class="dap-bar"><span>Con Pulso</span><div><i id="d-bar-pulso"></i></div><b id="d-pulso">—</b></div>
-          <div class="dap-bar dap-bank"><span>Depósito a plazo</span><div><i id="d-bar-dap"></i></div><b id="d-dap">—</b></div>
-          <p class="dap-veces">Tu ganancia sería <strong id="d-veces">—</strong> la de un depósito a plazo: <strong id="d-dif">—</strong> más.</p>
+        <div class="pro-retiro" id="p-retiro-wrap">
+          <span class="pro-label">¿Quieres la opción de retiro anticipado?</span>
+          <div class="pro-yesno" role="group" aria-label="Retiro anticipado"><button type="button" class="chip-opt" data-retiro="0">No</button><button type="button" class="chip-opt" data-retiro="1">Sí</button></div>
+          <p class="pro-help">Si eliges Sí, puedes retirar antes del plazo, y la tasa mensual baja 0,1 punto (por ejemplo, de 1,0% a 0,9%).</p>
         </div>
-        <div class="pro-actions"><button type="button" class="btn btn-primary" id="p-enviar">Enviar mi simulación a un asesor</button><button type="button" class="btn btn-secondary" id="p-whatsapp">Enviar por WhatsApp</button></div>
+      </div>
+      <div class="pro-out">
+        <div class="pro-cols">
+          <div class="pro-result">
+            <span class="pro-tag">Con Pulso</span>
+            <div class="pro-total"><small>Total a recibir</small><strong id="r-total">—</strong></div>
+            <div class="pro-gain"><small>Ganas</small><strong id="r-ganancia">—</strong></div>
+            <ul class="pro-list">
+              <li><span>Estrategia</span><strong id="r-estrategia">—</strong></li>
+              <li><span>Monto</span><strong id="r-monto">—</strong></li>
+              <li><span>Plazo</span><strong id="r-plazo">—</strong></li>
+              <li><span>Tasa</span><strong id="r-tasa">—</strong></li>
+            </ul>
+          </div>
+          <div class="pro-dap">
+            <span class="pro-tag bank">En un depósito a plazo</span>
+            <div class="pro-total"><small>Total a recibir</small><strong id="d-total">—</strong></div>
+            <div class="pro-gain bank"><small>Ganas</small><strong id="d-dap">—</strong></div>
+            <ul class="pro-list">
+              <li><span>Monto</span><strong id="d-monto">—</strong></li>
+              <li><span>Plazo</span><strong id="d-plazo">—</strong></li>
+              <li><span>Tasa</span><strong><span id="d-tasa">—</span> mensual</strong></li>
+            </ul>
+          </div>
+        </div>
+        <div class="pro-diff"><span>Con Pulso ganas</span><strong id="d-dif">—</strong><span>más que en un depósito a plazo · <b id="d-veces">—</b> su ganancia</span></div>
+        <p class="pro-pref" id="p-pref" hidden>Sobre $250.000.000 puedes acceder a condiciones preferentes. Pregúntale a tu asesor.</p>
+        <div class="pro-actions"><button type="button" class="btn btn-primary" id="p-enviar">Enviar mi simulación a un asesor</button><button type="button" class="btn btn-outline" id="p-whatsapp">Enviar por WhatsApp</button></div>
         <p class="pro-status" id="p-status" role="status"></p>
-        <p class="pro-note">Referencial. Depósito a plazo calculado con una tasa de <span id="d-tasa">—</span> mensual a 30 días, renovado cada mes. <span id="r-nota-uf">Hipoteca y Título se reajustan en UF (UF de hoy <span id="r-uf">—</span>, IPC estimado 4,5% anual).</span> Las condiciones finales dependen de la evaluación y del contrato.</p>
-      </aside>
+        <p class="pro-note">Referencial. Depósito a plazo calculado a 30 días, renovado cada mes. <span id="r-nota-uf">Hipoteca y Título se reajustan en UF (UF de hoy <span id="r-uf">—</span>, IPC estimado 4,5% anual).</span> Las condiciones finales dependen de la evaluación y del contrato.</p>
+      </div>
     </div>
     {P("TASA del depósito a plazo (DAP_MENSUAL en assets/js/simuladores.js): 0,40% mensual referencial; CONFIRMAR el valor a usar.")}
   </div></div>

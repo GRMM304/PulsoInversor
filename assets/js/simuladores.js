@@ -104,8 +104,8 @@
      ========================================================= */
   var SERIES = {
     A: { nombre: 'Acción', garantia: 'Pagaré', plazos: [12, 18, 24], retiro: true, minimo: 5000000, interes: [1, 1.1, 1.2], uf: false },
-    H: { nombre: 'Hipoteca', garantia: 'Hipoteca', plazos: [15, 21, 27], retiro: false, minimo: 25000000, interes: [0.3, 0.4, 0.5], uf: true },
-    T: { nombre: 'Título', garantia: 'Título', plazos: [15, 21, 27], retiro: false, minimo: 150000000, interes: [0.4, 0.5, 0.6], uf: true }
+    H: { nombre: 'Hipoteca', garantia: 'Hipoteca', plazos: [15, 21, 27], retiro: false, minimo: 25000000, interes: [0.7, 0.8, 0.9], uf: true },
+    T: { nombre: 'Título', garantia: 'Título', plazos: [15, 21, 27], retiro: false, minimo: 100000000, interes: [0.8, 0.9, 1.0], uf: true }
   };
   var P = { serie: 'A', monto: 5000000, plazo: 12, retiro: false };
   var q = new URLSearchParams(location.search).get('serie');
@@ -129,11 +129,11 @@
     $$('[data-serie]').forEach(function (b) { var on = b.getAttribute('data-serie') === P.serie; b.classList.toggle('is-active', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
     var s = SERIES[P.serie];
     $('#p-plazos').innerHTML = s.plazos.map(function (p) { return '<button type="button" class="chip-opt' + (p === P.plazo ? ' is-active' : '') + '" data-plazo="' + p + '" aria-pressed="' + (p === P.plazo) + '">' + p + ' meses</button>'; }).join('');
-    $('#p-quick').innerHTML = [5000000, 10000000, 25000000, 50000000, 150000000].filter(function (v) { return v >= s.minimo; })
+    $('#p-quick').innerHTML = [5000000, 10000000, 25000000, 50000000, 100000000, 250000000].filter(function (v) { return v >= s.minimo; })
       .map(function (v) { return '<button type="button" class="chip-opt" data-monto="' + v + '">' + (v / 1e6) + ' millones</button>'; }).join('');
     $('#p-min').textContent = 'Mínimo para esta estrategia: ' + fmtCLP(s.minimo);
     $('#p-retiro-wrap').hidden = !s.retiro;
-    $('#p-retiro').checked = P.retiro;
+    $$('[data-retiro]').forEach(function (b) { var on = (b.getAttribute('data-retiro') === '1') === P.retiro; b.classList.toggle('is-active', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
   }
   function render(enEdicion) {
     var r = calcular(), s = SERIES[P.serie];
@@ -146,11 +146,11 @@
     $('#r-tasa').textContent = fmtPct(tasa(), 1) + ' mensual' + (s.uf ? ' + UF' : '');
     $('#r-total').textContent = fmtCLP(r.total);
     $('#r-ganancia').textContent = '+' + fmtCLP(r.ganancia);
-    $('#d-pulso').textContent = '+' + fmtCLP(r.ganancia);
+    $('#d-total').textContent = fmtCLP(r.dapTotal);
     $('#d-dap').textContent = '+' + fmtCLP(r.dapGanancia);
-    var max = Math.max(r.ganancia, r.dapGanancia, 1);
-    $('#d-bar-pulso').style.width = Math.max(4, r.ganancia / max * 100) + '%';
-    $('#d-bar-dap').style.width = Math.max(4, r.dapGanancia / max * 100) + '%';
+    $('#d-monto').textContent = fmtCLP(r.monto);
+    $('#d-plazo').textContent = P.plazo + ' meses';
+    $('#p-pref').hidden = r.monto < 250000000;
     var veces = r.dapGanancia > 0 ? r.ganancia / r.dapGanancia : 0;
     $('#d-veces').textContent = veces ? veces.toLocaleString('es-CL', { maximumFractionDigits: 1 }) + ' veces' : '—';
     $('#d-dif').textContent = '+' + fmtCLP(r.ganancia - r.dapGanancia);
@@ -171,6 +171,7 @@
     if ((b = e.target.closest('[data-serie]'))) { P.serie = b.getAttribute('data-serie'); var s = SERIES[P.serie]; P.plazo = s.plazos[0]; P.monto = Math.max(P.monto, s.minimo); P.retiro = false; renderSeries(); render(); }
     else if ((b = e.target.closest('[data-plazo]'))) { P.plazo = +b.getAttribute('data-plazo'); renderSeries(); render(); }
     else if ((b = e.target.closest('[data-monto]'))) { P.monto = +b.getAttribute('data-monto'); render(); }
+    else if ((b = e.target.closest('[data-retiro]'))) { P.retiro = b.getAttribute('data-retiro') === '1'; renderSeries(); render(); }
   });
   $('#p-monto').addEventListener('input', function (e) {
     P.monto = parseInt(e.target.value.replace(/\D/g, ''), 10) || 0;
@@ -178,7 +179,6 @@
     render(true);
   });
   $('#p-monto').addEventListener('blur', function () { P.monto = montoEf(); render(); });
-  $('#p-retiro').addEventListener('change', function (e) { P.retiro = e.target.checked; render(); });
   $('#p-enviar').addEventListener('click', function () {
     var st = $('#p-status');
     if (!contacto) return;

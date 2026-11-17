@@ -70,7 +70,7 @@
         <div class="pro-series">
           <button type="button" data-serie="A"><b>A</b><span>Acción<small>Desde $5MM · Pagaré</small></span></button>
           <button type="button" data-serie="H"><b>H</b><span>Hipoteca<small>Desde $25MM · Hipoteca</small></span></button>
-          <button type="button" data-serie="T"><b>T</b><span>Título<small>Desde $150MM · Título</small></span></button>
+          <button type="button" data-serie="T"><b>T</b><span>Título<small>Desde $100MM · Título</small></span></button>
         </div>
         <label class="pro-label" for="p-monto">Monto a invertir</label>
         <input id="p-monto" class="pro-monto" type="text" inputmode="numeric" autocomplete="off">
@@ -79,27 +79,42 @@
         <p class="pro-warn" id="p-warn" hidden>El monto está bajo el mínimo; se calcula con el mínimo de la estrategia.</p>
         <span class="pro-label">Plazo</span>
         <div class="pro-chips" id="p-plazos"></div>
-        <label class="check pro-retiro" id="p-retiro-wrap"><input type="checkbox" id="p-retiro"><span>Quiero la opción de retiro anticipado (tasa 0,1 punto menor)</span></label>
-      </div>
-      <aside class="pro-result">
-        <span class="eyebrow dark">Resultado referencial</span>
-        <div class="pro-total"><small>Total a recibir</small><strong id="r-total">—</strong><span>Ganancia estimada <b id="r-ganancia">—</b></span></div>
-        <ul class="pro-list">
-          <li><span>Estrategia</span><strong id="r-estrategia">—</strong></li>
-          <li><span>Monto</span><strong id="r-monto">—</strong></li>
-          <li><span>Plazo</span><strong id="r-plazo">—</strong></li>
-          <li><span>Tasa</span><strong id="r-tasa">—</strong></li>
-        </ul>
-        <div class="dap">
-          <h4>Pulso vs. depósito a plazo</h4>
-          <div class="dap-bar"><span>Con Pulso</span><div><i id="d-bar-pulso"></i></div><b id="d-pulso">—</b></div>
-          <div class="dap-bar dap-bank"><span>Depósito a plazo</span><div><i id="d-bar-dap"></i></div><b id="d-dap">—</b></div>
-          <p class="dap-veces">Tu ganancia sería <strong id="d-veces">—</strong> la de un depósito a plazo: <strong id="d-dif">—</strong> más.</p>
+        <div class="pro-retiro" id="p-retiro-wrap">
+          <span class="pro-label">¿Quieres la opción de retiro anticipado?</span>
+          <div class="pro-yesno" role="group" aria-label="Retiro anticipado"><button type="button" class="chip-opt" data-retiro="0">No</button><button type="button" class="chip-opt" data-retiro="1">Sí</button></div>
+          <p class="pro-help">Si eliges Sí, puedes retirar antes del plazo, y la tasa mensual baja 0,1 punto (por ejemplo, de 1,0% a 0,9%).</p>
         </div>
-        <div class="pro-actions"><button type="button" class="btn btn-primary" id="p-enviar">Enviar mi simulación a un asesor</button><button type="button" class="btn btn-secondary" id="p-whatsapp">Enviar por WhatsApp</button></div>
+      </div>
+      <div class="pro-out">
+        <div class="pro-cols">
+          <div class="pro-result">
+            <span class="pro-tag">Con Pulso</span>
+            <div class="pro-total"><small>Total a recibir</small><strong id="r-total">—</strong></div>
+            <div class="pro-gain"><small>Ganas</small><strong id="r-ganancia">—</strong></div>
+            <ul class="pro-list">
+              <li><span>Estrategia</span><strong id="r-estrategia">—</strong></li>
+              <li><span>Monto</span><strong id="r-monto">—</strong></li>
+              <li><span>Plazo</span><strong id="r-plazo">—</strong></li>
+              <li><span>Tasa</span><strong id="r-tasa">—</strong></li>
+            </ul>
+          </div>
+          <div class="pro-dap">
+            <span class="pro-tag bank">En un depósito a plazo</span>
+            <div class="pro-total"><small>Total a recibir</small><strong id="d-total">—</strong></div>
+            <div class="pro-gain bank"><small>Ganas</small><strong id="d-dap">—</strong></div>
+            <ul class="pro-list">
+              <li><span>Monto</span><strong id="d-monto">—</strong></li>
+              <li><span>Plazo</span><strong id="d-plazo">—</strong></li>
+              <li><span>Tasa</span><strong><span id="d-tasa">—</span> mensual</strong></li>
+            </ul>
+          </div>
+        </div>
+        <div class="pro-diff"><span>Con Pulso ganas</span><strong id="d-dif">—</strong><span>más que en un depósito a plazo · <b id="d-veces">—</b> su ganancia</span></div>
+        <p class="pro-pref" id="p-pref" hidden>Sobre $250.000.000 puedes acceder a condiciones preferentes. Pregúntale a tu asesor.</p>
+        <div class="pro-actions"><button type="button" class="btn btn-primary" id="p-enviar">Enviar mi simulación a un asesor</button><button type="button" class="btn btn-outline" id="p-whatsapp">Enviar por WhatsApp</button></div>
         <p class="pro-status" id="p-status" role="status"></p>
-        <p class="pro-note">Referencial. Depósito a plazo calculado con una tasa de <span id="d-tasa">—</span> mensual a 30 días, renovado cada mes. <span id="r-nota-uf">Hipoteca y Título se reajustan en UF (UF de hoy <span id="r-uf">—</span>, IPC estimado 4,5% anual).</span> Las condiciones finales dependen de la evaluación y del contrato.</p>
-      </aside>
+        <p class="pro-note">Referencial. Depósito a plazo calculado a 30 días, renovado cada mes. <span id="r-nota-uf">Hipoteca y Título se reajustan en UF (UF de hoy <span id="r-uf">—</span>, IPC estimado 4,5% anual).</span> Las condiciones finales dependen de la evaluación y del contrato.</p>
+      </div>
     </div>
     <!-- PENDIENTE: TASA del depósito a plazo (DAP_MENSUAL en assets/js/simuladores.js): 0,40% mensual referencial; CONFIRMAR el valor a usar. -->
   </div></div>

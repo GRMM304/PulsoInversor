@@ -1181,3 +1181,36 @@ select{appearance:none;-webkit-appearance:none;padding-right:40px;background:#ff
 @media (max-width:620px){.sim-stage>.gate{top:10px;padding:24px 18px}.sim-stage .gate-form{grid-template-columns:1fr}.sim-stage{min-height:760px}}
 .gate-form input:not([type=checkbox]){font-weight:500}
 .gate-form input::placeholder,.hi-capfield input::placeholder{color:var(--gray-500);font-weight:400}
+
+/* ===== Proyecta un Hogar: Pulso vs depósito a plazo en columnas ===== */
+.pro{grid-template-columns:.95fr 1.25fr}
+.pro-out{display:flex;flex-direction:column;gap:14px}
+.pro-cols{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:stretch}
+.pro-result{position:static;padding:24px 22px}
+.pro-dap{border-radius:var(--radius-xl);padding:24px 22px;background:#fff;border:1px solid var(--gray-200);box-shadow:var(--shadow-soft)}
+.pro-tag{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:5px 11px;border-radius:999px;background:rgba(199,217,93,.2);color:var(--lime);margin-bottom:14px}
+.pro-tag.bank{background:var(--gray-100);color:var(--gray-700)}
+.pro-total strong{font-size:clamp(24px,2.6vw,32px)}
+.pro-dap .pro-total small{color:var(--gray-500)}
+.pro-dap .pro-total strong{color:var(--gray-900)}
+.pro-gain{margin-top:12px;padding:12px 14px;border-radius:14px;background:rgba(199,217,93,.16)}
+.pro-gain small{display:block;font-size:12px;font-weight:700;color:rgba(255,255,255,.75)}
+.pro-gain strong{display:block;font-size:24px;font-weight:900;color:var(--lime);font-variant-numeric:tabular-nums}
+.pro-gain.bank{background:#fdecea;border:1px solid #f4c4bd}
+.pro-gain.bank small{color:#9b2f20}
+.pro-gain.bank strong{color:#c62828}
+.pro-dap .pro-list li{border-bottom-color:var(--gray-100);color:var(--gray-500)}
+.pro-dap .pro-list strong{color:var(--gray-900)}
+.pro-result .pro-total span{display:none}
+.pro-diff{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px;padding:18px 22px;border-radius:var(--radius-lg);background:linear-gradient(135deg,var(--lime),var(--gold));color:var(--green-900)}
+.pro-diff>span{font-weight:700;font-size:15px}
+.pro-diff strong{font-size:clamp(24px,2.8vw,32px);font-weight:900;font-variant-numeric:tabular-nums}
+.pro-pref{margin:0;padding:12px 16px;border-radius:14px;background:rgba(199,217,93,.2);font-weight:700;color:var(--green-900);font-size:14px}
+.pro-out .pro-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0}
+.pro-out .pro-status{color:var(--green-700)}
+.pro-out .pro-note{color:var(--gray-500);margin:0}
+.pro-yesno{display:flex;gap:8px}
+.pro-yesno .chip-opt{min-width:80px}
+@media (max-width:1100px){.pro{grid-template-columns:1fr}}
+@media (max-width:620px){.pro-cols,.pro-out .pro-actions{grid-template-columns:1fr}}
+@media (min-width:621px){.pro-series button{flex-direction:column;align-items:flex-start;gap:8px}}
