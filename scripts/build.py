@@ -20,7 +20,7 @@ def P(text):
 
 NAV = [
     ('Cómo invertir', [('como-funciona.html', 'Cómo funciona'), ('inversiones.html', 'Inversiones'),
-                       ('garantias-y-documentos.html', 'Garantías y documentos'), ('simuladores.html', 'Simuladores')]),
+                       ('garantias-y-documentos.html', 'Garantías y respaldo'), ('simuladores.html', 'Simuladores')]),
     ('Conócenos', [('nosotros.html', 'Nosotros'), ('verifica-a-pulso.html', 'Verifica a Pulso')]),
     ('Recursos', [('mi-primera-inversion.html', 'Mi primera inversión'),
                   ('ya-tengo-experiencia.html', 'Ya tengo experiencia invirtiendo'),
@@ -514,35 +514,60 @@ page('inversiones.html', 'Inversiones',
 </div></section>
 ''' + cta('¿Te ves en más de una?', 'Pasa más de lo que crees. Revisémoslo juntos.', 'Ayúdenme a elegir', 'Ayúdenme a encontrar mi alternativa'))
 
-# ---------------- 2.3 Garantías ----------------
-page('garantias-y-documentos.html', 'Garantías y documentos',
-     'Qué aporta cada documento de tu inversión y qué puedes revisar por tu cuenta: mutuo, pagaré, hipoteca y título de dominio.',
-     hero('Cómo invertir / Garantías y documentos', 'Tu tranquilidad está en los documentos',
-          'Cada documento cumple una función. Aquí te contamos qué aporta cada uno y qué puedes revisar por tu cuenta.', 'Respaldo') + f'''
+# ---------------- 2.3 Garantías y respaldo ----------------
+_ICONS['pagare'] = '<path d="M6 3h9l3 3v15H6z"/><path d="M15 3v3h3"/><path d="M9 10h6M9 13h4"/><path d="M8.5 18c1-1.4 1.8-1.4 2.4 0s1.4 1.4 2.4-.4"/>'
+_ICONS['hipoteca'] = '<path d="M3.5 11L12 4.5l8.5 6.5"/><path d="M5.5 9.8V20h13V9.8"/><rect x="9.5" y="13" width="5" height="4" rx="1"/><path d="M10.5 13v-1.3a1.5 1.5 0 0 1 3 0V13"/>'
+_ICONS['llave'] = '<circle cx="8" cy="15" r="4"/><path d="M11 12l8-8"/><path d="M16 7l2.5 2.5M14 9l1.5 1.5"/>'
+GARANTIAS = [
+    ('pagare', 'Pagaré', 'Un compromiso de pago exigible legalmente.', 'Respalda la obligación de pago y permite ejercer acciones de cobro si no se cumple lo acordado.'),
+    ('hipoteca', 'Hipoteca', 'Una propiedad queda vinculada al cumplimiento de la deuda.', 'Te entrega un derecho real de garantía sobre un inmueble identificado e inscrito.'),
+    ('llave', 'Título de propiedad', 'El inmueble queda legalmente a tu nombre.', 'Adquieres derechos de propietario sobre un bien raíz inscrito a tu nombre, según la operación.'),
+    ('documento', 'Contrato de mutuo', 'Las condiciones financieras quedan establecidas por escrito.', 'Determina las obligaciones de las partes, el monto, los intereses y los plazos de devolución.'),
+]
+garantias = ''.join(f'''<article class="g-card">{icon(ic)}<h3>{t}</h3><p class="g-tag">{tag}</p><p>{d}</p></article>''' for ic, t, tag, d in GARANTIAS)
+PROPIEDADES = [('Puerto Varas', 42), ('Las Condes', 44), ('Osorno', 39)]
+propiedades = ''.join(f'''<article class="prop-card">
+      <div class="prop-img prop-img-{i+1}" role="img" aria-label="Propiedad en {c}">{P(f"FOTO real de la propiedad en {c}. Reemplazar este bloque por <img src='assets/img/portafolio/....jpg' alt='Propiedad en {c}'>.")}</div>
+      <div class="prop-info"><span class="prop-city">{c}</span><strong><span>{pct}%</span> bajo tasación*</strong></div>
+    </article>''' for i, (c, pct) in enumerate(PROPIEDADES))
+MECANISMOS = [
+    ('Obligaciones respaldadas por pagaré', 'El inversionista puede iniciar acciones de cobro contra los obligados y, cuando corresponda, contra los avales que hayan asumido formalmente esa responsabilidad.'),
+    ('Operaciones respaldadas por hipoteca', 'Se puede buscar una venta voluntaria del inmueble para pagar la deuda. Si no resulta viable, existen mecanismos judiciales para hacer efectiva la garantía.'),
+    ('Operaciones con propiedad a nombre del inversionista', 'El inversionista conserva sus derechos sobre el inmueble y puede exigir las obligaciones de recompra asumidas contractualmente, de acuerdo con las condiciones de la operación.'),
+]
+mecanismos = ''.join(f'''<article class="mec-card"><span class="mec-num">0{i+1}</span><h3>{t}</h3><p>{d}</p></article>''' for i, (t, d) in enumerate(MECANISMOS))
+
+page('garantias-y-documentos.html', 'Garantías y respaldo',
+     'Qué protege tu inversión con Pulso: pagaré, hipoteca, título de propiedad y contrato de mutuo, los inmuebles detrás de las operaciones y cómo funcionan los resguardos ante un incumplimiento.',
+     hero('Cómo invertir / Garantías y respaldo', 'Tu inversión cuenta con resguardos concretos',
+          'Conoce los instrumentos legales, los activos y los mecanismos que resguardan tu capital.', 'Garantías y respaldo') + f'''
 <section class="section"><div class="container">
-  <div class="table-wrap"><table>
-    <thead><tr><th>Documento</th><th>Qué aporta</th><th>Qué puedes revisar</th></tr></thead>
-    <tbody>
-      <tr><td>Contrato de mutuo</td><td>Fija las obligaciones del préstamo y cómo se te devuelve lo acordado.</td><td>Partes, monto, plazo y condiciones pactadas.</td></tr>
-      <tr><td>Pagaré</td><td>Deja por escrito el compromiso de pago, según sus términos y requisitos legales.</td><td>Quién debe pagar, cuánto y cuándo vence.</td></tr>
-      <tr><td>Hipoteca</td><td>Es una garantía real sobre un inmueble, a favor del acreedor que aparece en la inscripción.</td><td>La propiedad, el beneficiario, la inscripción y su prioridad.</td></tr>
-      <tr><td>Título e inscripción de dominio</td><td>Acreditan la compra y permiten verificar quién es el dueño inscrito.</td><td>Titularidad y antecedentes registrales.</td></tr>
-    </tbody></table></div>
-  <p class="note" style="margin-top:24px">Cada alternativa indica qué documentos aplican y su alcance. Si tienes una hipoteca a tu favor, eres el acreedor; si compras con crédito hipotecario, la hipoteca queda a favor del banco. El pagaré deja constancia de una deuda, pero por sí solo no es una garantía real sobre un inmueble.</p>
+  <div class="title center"><span class="eyebrow">Garantías y respaldo legal</span><h2>¿Qué protege tu inversión con Pulso?</h2>
+    <p class="lead">Cada operación cuenta con una estructura legal definida para establecer tus derechos, las obligaciones de pago y los mecanismos de resguardo de tu capital. Estos varían según la solución de inversión.</p></div>
+  <div class="g-grid">{garantias}</div>
 </div></section>
 
-<section class="section section-soft"><div class="container">
-  <details open><summary>Antecedentes que suman respaldo</summary><div class="details-body">
-    <ul><li><strong>Dominio vigente:</strong> muestra quién figura como dueño.</li>
-      <li><strong>Gravámenes y prohibiciones:</strong> informa si el inmueble tiene cargas o restricciones.</li>
-      <li><strong>Tasación:</strong> estima su valor, con fecha y metodología.</li>
-      <li><strong>Estudio de títulos:</strong> reúne la revisión jurídica que corresponda a la operación.</li></ul>
-    <p style="margin-top:14px">En nuestro material comercial también encontrarás fichas de las propiedades y acceso a sus tasaciones.</p>
-  </div></details>
-  {P("COMPLETAR listado definitivo de antecedentes entregables por modalidad y momento de entrega. Confirmar seguros contra incendio y sismo (pólizas, inmuebles, beneficiarios, vigencia, exclusiones) antes de incorporarlos.")}
-  <div class="actions"><a class="btn btn-dark" href="verifica-a-pulso.html#operacion-abierta">Ver cómo se documenta una operación real</a></div>
+<section class="section section-soft" id="portafolio"><div class="container">
+  <div class="port-head">
+    <div><span class="eyebrow">El respaldo detrás de nuestras operaciones</span><h2>Detrás de cada operación hay activos que puedes conocer</h2>
+      <p class="lead">Las garantías legales son una parte del resguardo. En las operaciones vinculadas a inmuebles, también importa conocer el valor de los activos, sus condiciones de adquisición y la cobertura que representan frente al capital invertido.</p>
+      <p class="muted">Por eso, te mostramos las propiedades y los antecedentes inmobiliarios que forman parte de nuestro portafolio.</p></div>
+    {P("CIFRA: la referencia decía 'Más de $1.300 millones' (pendiente de validar). Se usa la cifra que entregó la usuaria el 2026-11-16: aprox. $1.100 millones. CONFIRMAR valor vigente y qué activos incluye.")}
+    {P("PRECISIÓN: no todas las propiedades del portafolio garantizan necesariamente todas las inversiones. Distinguir entre activos que garantizan obligaciones y propiedades disponibles para nuevas operaciones antes de presentar la cifra como respaldo.")}
+    <div class="port-stat"><span>Cerca de</span><strong>$<span data-count="1100">1.100</span></strong><span>millones en portafolio inmobiliario</span></div>
+  </div>
+  {P("PORCENTAJES bajo tasación tomados del diseño de referencia: VALIDAR con cada operación. FOTOS: reemplazar por imágenes reales del portafolio.")}
+  <div class="prop-row" tabindex="0" aria-label="Propiedades del portafolio">{propiedades}</div>
+  <p class="disclaimer">*Diferencia entre el precio de compra y la tasación de cada inmueble. Cifras referenciales de operaciones específicas; no aseguran resultados futuros.</p>
 </div></section>
-''' + cta('Si algo no queda claro, pregúntanos', 'Te ayudamos a conseguir los antecedentes que necesitas para evaluar tranquilo.', 'Tengo una duda', 'Consulta sobre garantías y documentos'))
+
+<section class="section"><div class="container">
+  <div class="title center"><span class="eyebrow">Mecanismos de respuesta</span><h2>¿Cómo funcionan tus resguardos ante un incumplimiento?</h2>
+    <p class="lead">Las operaciones contemplan mecanismos de respuesta según la estructura contratada. Su objetivo es exigir el cumplimiento de las obligaciones y buscar la recuperación de los fondos.</p></div>
+  <div class="mec-grid">{mecanismos}</div>
+  <p class="note mec-note">Los resguardos no eliminan el riesgo ni aseguran que la recuperación sea inmediata o total. Su efectividad depende de las condiciones legales, patrimoniales y comerciales de cada caso.</p>
+</div></section>
+''' + cta('Si algo no queda claro, pregúntanos', 'Te ayudamos a conseguir los antecedentes que necesitas para evaluar tranquilo.', AGENDAR, 'garantías y respaldo'))
 
 # ---------------- 2.4 Simuladores ----------------
 SOON = '<span class="pill soon">Próximamente</span>'
@@ -741,7 +766,7 @@ page('ya-tengo-experiencia.html', 'Ya tengo experiencia invirtiendo',
   <div class="title"><span class="eyebrow">Para profundizar</span><h2>Todo lo que necesitas para evaluar</h2></div>
   <div class="grid-3">
     <article class="card"><h3>Tabla comparativa</h3><p>Mínimos, respaldo y plazos de cada alternativa.</p><a class="link-arrow" href="inversiones.html#comparar">Ver la tabla</a></article>
-    <article class="card"><h3>Garantías y documentos</h3><p>Qué aporta cada documento y qué puedes revisar.</p><a class="link-arrow" href="garantias-y-documentos.html">Ver garantías</a></article>
+    <article class="card"><h3>Garantías y respaldo</h3><p>Qué protege tu inversión y cómo funcionan sus resguardos.</p><a class="link-arrow" href="garantias-y-documentos.html">Ver garantías</a></article>
     <article class="card"><h3>Operación abierta</h3><p>Cómo se documenta una operación real.</p><a class="link-arrow" href="verifica-a-pulso.html#operacion-abierta">Ver la operación</a></article>
   </div>
 </div></section>

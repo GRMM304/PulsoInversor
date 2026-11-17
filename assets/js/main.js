@@ -90,7 +90,9 @@
   var quieto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (nums.length && !quieto) {
     var fmt = function (v, dec) {
-      return v.toLocaleString('es-CL', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+      var p = v.toFixed(dec).split('.');
+      p[0] = p[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+      return p.join(',');
     };
     nums.forEach(function (el) {
       var fin = parseFloat(el.getAttribute('data-count'));
