@@ -12,6 +12,14 @@ export const TIPOS = {
   circular: 'Inversión Inmobiliaria Circular',
 };
 
+// Enlaces de agendamiento de Brevo Meetings por tramo (pegar la URL de la página de reservas de cada asesor).
+// Si un tramo no tiene enlace, el correo de seguimiento usa el formulario propio de /seguimiento/agendar.
+export const AGENDA_BREVO = {
+  0: '', // Renato Vargas · hasta $25 MM
+  1: '', // Pamela Herrera · $25 a $50 MM
+  2: '', // Iván Barboza y Felipe Rojas · $50 MM o más
+};
+
 // Asesor según el monto simulado (en pesos).
 //   hasta $25 MM        → Renato Vargas
 //   $25 MM a $50 MM     → Pamela Herrera
