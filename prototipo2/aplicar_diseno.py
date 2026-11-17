@@ -109,6 +109,13 @@ def pagina(nombre, s):
         assert i > 0 and a > 0, 'no se encontró la sección de testimonios'
         s = s[:a] + open(os.path.join(DIS, 'personas-reales.html'), encoding='utf-8').read().strip() + s[b:]
 
+    # Inicio: «Si llegaste hasta aquí» rediseñada (dudas y respuestas)
+    if nombre == 'index.html':
+        i = s.find('<span class="eyebrow">Si llegaste hasta aquí</span>')
+        a, b = s.rfind('<section', 0, i), s.find('</section>', i) + len('</section>')
+        assert i > 0 and a > 0, 'no se encontró la sección de dudas'
+        s = s[:a] + open(os.path.join(DIS, 'empatia.html'), encoding='utf-8').read().strip() + s[b:]
+
     # Inicio: «Así es el camino, a tu ritmo» rediseñado con línea de tiempo
     if nombre == 'index.html':
         i = s.find('Así es el camino, a tu ritmo')
