@@ -14,8 +14,6 @@
 
   /* ---------- Configuración ---------- */
   var WHATSAPP = '56983554676';
-  // Formulario de Brevo que usa hoy www.pulsoinversor.cl (Proyecta un Hogar).
-  var BREVO_URL = 'https://6912d61f.sibforms.com/serve/MUIFAMdok-hweDUSCZKpYN85FoRmXiamVuJvU9LoD_8cT7tPPR4f4D_cIBVel0WmV42FLrrNepn04zmJoPb-p8YiswC6nVPxB56-JJzv_ily2_zCHb09WHkCel7uooE4Vg4xV3kCdLQg12ccnDGOd6gKnb6UbcOEVeHklU1PAxBvDUr808wAe3lY2odjjt_vcAdAg_Nrj-eHtltp';
   // Planilla de Google (Apps Script) que usa hoy el simulador de Hipoteca Inteligente.
   var SHEET_URL = 'https://script.google.com/macros/s/AKfycby1He4sHgOoqwfI5Zc0hJ8Ux3SlESniUs3vZEkC0PvcZxFHhmalKODK4v-pEKjrWBPH/exec';
   // Tasa mensual referencial de un depósito a plazo a 30 días, renovado cada mes. PENDIENTE: confirmar.
@@ -59,17 +57,6 @@
   }
   tabs.forEach(function (t) { t.addEventListener('click', function () { var id = t.getAttribute('data-sim-tab'); abrir(id, true); history.replaceState(null, '', location.search + '#' + id); }); });
 
-  function brevo(nombreCompleto, email, tel, mensaje) {
-    var partes = nombreCompleto.trim().split(/\s+/);
-    var nombre = partes.shift(), apellidos = partes.join(' ') || '-';
-    var monto = window.__pulsoMonto || 0;
-    var tramo = monto < 25000000 ? 1 : monto < 50000000 ? 2 : monto < 100000000 ? 3 : 4;
-    var data = ['NOMBRE=' + encodeURIComponent(nombre), 'APELLIDOS=' + encodeURIComponent(apellidos), 'EMAIL=' + encodeURIComponent(email),
-      'SMS__COUNTRY_CODE=%2B56', 'SMS=' + encodeURIComponent(tel), 'MONTO_DE_INVERSION=' + tramo,
-      'MENSAJE=' + encodeURIComponent(mensaje), 'email_address_check=', 'locale=es', 'OPT_IN=1'];
-    return fetch(BREVO_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: data.join('&') })
-      .then(function () { return true; }, function () { return false; });
-  }
   function sheet(type, payload) {
     var body = JSON.stringify(Object.assign({ type: type, website: '', pageUrl: location.href.split('?')[0].split('#')[0], referrer: document.referrer || '' }, payload));
     return fetch(SHEET_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: body })
@@ -178,7 +165,6 @@
     if (msg) return;
     contacto = { nombre: nombre, email: email, telefono: tel };
     ses.set('pulsoContacto', contacto);
-    brevo(nombre, email, tel, 'Desbloqueó los simuladores del sitio (1.pulsoinversor.cl). Acepta términos y recibir contenido: Sí.');
     if (window.fbq) fbq('track', 'Lead', { content_name: 'Desbloqueó simuladores' });
     setLocked(false);
     stage.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -287,7 +273,6 @@
     if (!contacto || !jspdfListo(st)) return;
     var r = calcular(), sr = SERIES[P.serie];
     var resumenTxt = resumen();
-    brevo(contacto.nombre, contacto.email, contacto.telefono, '--- Simulación Proyecta un Hogar ---\n' + resumenTxt);
     var doc = pdfSimple('Simulación Proyecta un Hogar', 'Resultado referencial', [
       { t: 'Tu simulación', rows: [['Alternativa', 'Estrategia ' + sr.nombre + ' · ' + sr.garantia], ['Monto a invertir', fmtCLP(r.monto)], ['Plazo', P.plazo + ' meses'],
         ['Tasa', fmtPct(tasa(), 1) + ' mensual' + (sr.uf ? ' + UF' : '')]].concat(sr.retiro ? [['Retiro anticipado', P.retiro ? 'Sí' : 'No']] : []) },
@@ -698,7 +683,6 @@
         { t: 'Tus próximos pasos', proximos: true },
         { t: 'Supuestos', small: true, text: $('#ic-base').textContent + ' Venta 15% bajo el valor comercial; inflación 3% anual; arriendo reajustado 3% anual; mantención, vacancia y reparaciones estimadas. Proyectar diez años exige continuidad de tasa, condiciones y cumplimiento de pagos. La nueva compra es opcional y se evalúa por separado. Simulación referencial, no constituye una oferta vinculante.' }
       ], { tipo: 'Inversión Inmobiliaria Circular', monto: c.net });
-      brevo(contacto.nombre, contacto.email, contacto.telefono, '--- Simulación Inversión Circular ---\n' + resumenIC.join('\n'));
       enviarCorreo('circular', doc, 'Simulacion_InversionCircular', resumenIC, st, btn, c.net);
     });
   })();
