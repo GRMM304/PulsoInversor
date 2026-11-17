@@ -1,7 +1,8 @@
 // Pulso Inversor · Worker
 // Sirve el sitio estático y atiende POST /api/enviar-simulacion:
 //   1) envía al inversionista su simulación en PDF (adjunto), con un correo de marca que le presenta a su asesor;
-//   2) envía al equipo (dirección comercial + asesor según el monto) un aviso con los datos y el mismo PDF.
+//   2) envía a todos los asesores y a la dirección comercial un aviso con los datos y el mismo PDF;
+//      el asesor asignado según el monto va como destinatario principal.
 // Los correos salen por la API transaccional de Brevo.
 //
 // Configuración en Cloudflare (Workers > pulsoinversor > Settings > Variables and Secrets):
@@ -171,8 +172,10 @@ async function enviarSimulacion(request, env) {
   const sender = { name: 'Pulso Inversor', email: env.SENDER_EMAIL || DEFAULT_SENDER };
   const adjunto = [{ content: pdf, name: archivo }];
   const equipo = (env.EQUIPO_EMAIL ? env.EQUIPO_EMAIL.split(',') : EQUIPO).map((s) => s.trim().toLowerCase()).filter(Boolean);
+  // Todos los asesores reciben el PDF para prepararse; el asignado va en "Para" y el resto en copia.
+  const todosAsesores = ASESORES.flatMap((g) => g.personas.map((a) => a.email.toLowerCase()));
   const paraAsesores = personas.map((a) => a.email.toLowerCase());
-  const copias = equipo.filter((e) => !paraAsesores.includes(e));
+  const copias = [...new Set([...todosAsesores, ...equipo])].filter((e) => !paraAsesores.includes(e));
 
   // 1) Correo al inversionista (responde directo a su asesor)
   await brevo(env, {
