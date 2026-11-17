@@ -81,7 +81,8 @@ def _etiquetar_tablas(html):
                 return f'<td data-label="{lab}"'
             return _re.sub(r'<td(?=[ >])', celda, r.group(0))
         return _re.sub(r'<tr>.*?</tr>', fila, t, flags=_re.S)
-    return _re.sub(r'<table>.*?</table>', una, html, flags=_re.S)
+    html = _re.sub(r'<table>.*?</table>', una, html, flags=_re.S)
+    return _re.sub(r'(<div class="table-wrap[^"]*"><table>.*?</table></div>)', r'\1<p class="tabla-hint" aria-hidden="true">Desliza para ver toda la tabla →</p>', html, flags=_re.S)
 
 def _sin_punto(inner):
     """Quita el punto final y separa en dos líneas (con distinto grosor) un título de dos frases."""
@@ -149,6 +150,7 @@ src="https://www.facebook.com/tr?id=4384764601785320&ev=PageView&noscript=1"
 <main id="contenido">
 {body}
 </main>
+<button class="to-top" type="button" aria-label="Volver arriba"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
 {footer()}
 <script src="assets/js/main.js"></script>{scripts}
 </body>
@@ -1031,7 +1033,7 @@ RUT = None           # PENDIENTE: RUT de Pulso Inversor SpA
 if OFICINA_DIR:
     _mapa = f'<iframe class="of-map" title="Mapa de la oficina de Pulso Inversor" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q={urllib.parse.quote(OFICINA_DIR)}&output=embed"></iframe>'
 else:
-    _mapa = '<div class="of-map of-map-ilus" role="img" aria-label="Mapa ilustrativo"><span class="of-pin" aria-hidden="true"></span></div>'
+    _mapa = '<div class="of-map of-foto" role="img" aria-label="Edificio de la oficina de Pulso Inversor" style="background-image:url(assets/img/oficina.jpg)"></div>'
 _datos = [('Razón social', 'Pulso Inversor SpA')]
 if RUT: _datos.append(('RUT', RUT))
 if OFICINA_DIR: _datos.append(('Oficina', OFICINA_DIR + '. Puedes venir a conocernos.'))

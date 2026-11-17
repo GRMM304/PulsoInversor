@@ -402,20 +402,18 @@ details.camino[open] .camino-toggle::after{content:"–"}
 .testimonio-avatar{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:14px;color:var(--green-900);background:linear-gradient(135deg,var(--lime),var(--gold))}
 @media (max-width:620px){.testimonio{padding:56px 20px 20px}.testimonio .review-quote{left:20px;top:10px}}
 
-/* Tablas: en celular cada fila se vuelve una ficha */
+/* Tablas: en celular se mantienen completas y se desplazan hacia la derecha */
 @media (max-width:620px){
-  .table-wrap{overflow:visible;border:0;box-shadow:none;background:transparent}
-  .table-wrap table,.compare table{min-width:0}
-  .table-wrap thead{display:none}
-  .table-wrap tbody,.table-wrap tr,.table-wrap td{display:block;width:100%}
-  .table-wrap tr{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius-md);margin-bottom:12px;box-shadow:var(--shadow-soft);overflow:hidden}
-  .table-wrap tbody tr:nth-child(even) td{background:#fff}
-  .table-wrap td{border-bottom:1px solid var(--gray-100);padding:12px 16px}
-  .table-wrap td:last-child{border-bottom:0}
-  .table-wrap td:first-child{background:var(--green-900)!important;color:#fff;font-size:16px}
-  .table-wrap td:not(:first-child)::before{content:attr(data-label);display:block;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--gray-500);margin-bottom:4px}
-  .table-wrap td:first-child a{color:var(--lime)}
+  .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;position:relative}
+  .table-wrap table{min-width:640px}
+  .table-wrap th:first-child,.table-wrap td:first-child{position:sticky;left:0;z-index:1}
+  .table-wrap td:first-child{background:#fff}
+  .table-wrap tbody tr:nth-child(even) td:first-child{background:#fafbf9}
+  .table-wrap th:first-child{background:var(--green-900)}
+  .table-wrap::after{content:"";display:block}
+  .tabla-hint{display:flex}
 }
+.tabla-hint{display:none;align-items:center;justify-content:flex-end;gap:6px;margin:8px 2px 0;font-size:12.5px;font-weight:700;color:var(--gray-500)}
 
 /* Encabezado en tablets horizontales y laptops chicos */
 @media (min-width:901px) and (max-width:1180px){
@@ -1531,3 +1529,27 @@ button.tipo{font:inherit;text-align:left;cursor:pointer;width:100%}
 .rx-hero-actions{gap:12px}
 .rx-hero-actions .btn-xl{padding:15px 22px}
 .footer .logo-gmm{width:240px;height:auto;opacity:.85;margin-top:18px}
+
+/* ---------------- Correcciones móvil 2026-11-17 ---------------- */
+@media (max-width:900px){
+  .menu{bottom:auto;height:calc(100vh - var(--header-h));height:calc(100dvh - var(--header-h))}
+  .menu .submenu,.menu>li:hover .submenu{display:block}
+  .menu>li>button{pointer-events:none;color:var(--green-900);font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:18px 8px 6px;border-bottom:0}
+  .menu>li>button::after{content:none}
+  .menu .submenu a{font-size:16.5px;padding:12px 10px}
+  .menu>li.has-sub{border-bottom:1px solid var(--gray-200);padding-bottom:6px}
+}
+@media (max-width:620px){
+  .why-compare{grid-template-columns:repeat(2,minmax(230px,1fr));overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .ic-tablewrap .ic-table{min-width:520px}
+  main p,main li,main blockquote{text-align:justify;-webkit-hyphens:auto;hyphens:auto}
+  .title.center p,.cta-final p,.disclaimer,.why-cta span,.cta-final-small,.hero-form-note,.r2-caption,.port-title,.gate-sub{text-align:justify;text-align-last:center}
+  .btn,.chip-opt,.rx-chips span,.tipo-chip,.aht-chips span{text-align:center;text-align-last:auto}
+}
+.of-foto{background-size:cover;background-position:center}
+.to-top{position:fixed;right:18px;bottom:18px;z-index:60;width:50px;height:50px;border-radius:50%;border:0;display:grid;place-items:center;cursor:pointer;
+  background:var(--green-900);color:var(--lime);box-shadow:0 12px 30px rgba(0,0,0,.28);opacity:0;visibility:hidden;transform:translateY(12px);transition:opacity .25s,transform .25s,visibility .25s}
+.to-top.show{opacity:1;visibility:visible;transform:none}
+.to-top:hover{background:var(--green-800)}
+.to-top svg{width:22px;height:22px}
+@media (max-width:620px){.why-col p{text-align:left;-webkit-hyphens:manual;hyphens:manual}}

@@ -284,6 +284,14 @@
     rev.forEach(function (el) { io.observe(el); });
   }
 
+  // Botón flotante para volver arriba
+  var top = document.querySelector('.to-top');
+  if (top) {
+    var ver = function () { top.classList.toggle('show', window.scrollY > 600); };
+    window.addEventListener('scroll', ver, { passive: true }); ver();
+    top.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); });
+  }
+
   // Año del pie de página
   var y = document.getElementById('year');
   if (y) y.textContent = new Date().getFullYear();
