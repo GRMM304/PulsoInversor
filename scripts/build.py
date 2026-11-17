@@ -527,16 +527,17 @@ GARANTIAS = [
     ('documento', 'Contrato de mutuo', 'Las condiciones financieras quedan establecidas por escrito.', 'Determina las obligaciones de las partes, el monto, los intereses y los plazos de devolución.'),
 ]
 GAR_IMG = {'pagare': 'pagare', 'hipoteca': 'hipoteca', 'llave': 'titulo', 'documento': 'mutuo'}
-garantias = ''.join(f"""<article class="stack-card" style="--i:{i}">
-      <div class="stack-bg" style="background-image:url(assets/img/garantias/{GAR_IMG[ic]}.svg)" aria-hidden="true"></div>
-      <div class="stack-content">
-        <span class="stack-num">0{i+1} <small>/ 0{len(GARANTIAS)}</small></span>
-        {icon(ic)}
-        <h3>{t}</h3>
-        <p class="stack-tag">{tag}</p>
-        <p class="stack-desc">{d}</p>
-      </div>
-    </article>""" for i, (ic, t, tag, d) in enumerate(GARANTIAS))
+_tabs = ''.join(f'<button type="button" class="gdeck-tab{" is-active" if i == 0 else ""}" data-go="{i}">{t}</button>' for i, (ic, t, tag, d) in enumerate(GARANTIAS))
+garantias = ''.join(f"""<article class="gdeck-card{' is-active' if i == 0 else ''}" data-card="{i}" aria-hidden="{'false' if i == 0 else 'true'}">
+        <div class="gdeck-bg" style="background-image:url(assets/img/garantias/{GAR_IMG[ic]}.svg)" aria-hidden="true"></div>
+        <div class="gdeck-content">
+          <span class="gdeck-num">0{i+1} <small>/ 0{len(GARANTIAS)}</small></span>
+          {icon(ic)}
+          <h3>{t}</h3>
+          <p class="gdeck-tag">{tag}</p>
+          <p class="gdeck-desc">{d}</p>
+        </div>
+      </article>""" for i, (ic, t, tag, d) in enumerate(GARANTIAS))
 
 PROPIEDADES = [
     ('puerto-varas', 'Puerto Varas', 'Casa', 42),
@@ -561,10 +562,18 @@ mecanismos = ''.join(f'<article class="mec-card"><span class="mec-num">0{i+1}</s
 
 page('garantias-y-documentos.html', 'Garantías y respaldo',
      'Qué protege tu inversión con Pulso: pagaré, hipoteca, título de propiedad y contrato de mutuo, el portafolio inmobiliario detrás de las operaciones y cómo funcionan los resguardos ante un incumplimiento.',
-     hero('Cómo invertir / Garantías y respaldo', '¿Qué protege tu inversión con Pulso?',
-          'Cada operación cuenta con una estructura legal definida para establecer tus derechos, las obligaciones de pago y los mecanismos de resguardo de tu capital. Estos varían según la solución de inversión.', 'Garantías y respaldo legal') + f"""
-<section class="section stack-section"><div class="container">
-  <div class="stack">{garantias}</div>
+     f"""<section class="page-hero g-hero"><div class="container g-hero-grid">
+  <div>
+    <div class="breadcrumb"><a href="index.html">Inicio</a> / Cómo invertir / Garantías y respaldo</div>
+    <span class="eyebrow dark">Garantías y respaldo legal</span>
+    <h1>¿Qué protege tu inversión con Pulso?</h1>
+    <p>Cada operación cuenta con una estructura legal definida para establecer tus derechos, las obligaciones de pago y los mecanismos de resguardo de tu capital. Estos varían según la solución de inversión.</p>
+    <div class="gdeck-tabs" role="tablist" aria-label="Garantías">{_tabs}</div>
+  </div>
+  <div class="gdeck" data-gdeck>
+    <div class="gdeck-stage">{garantias}</div>
+    <div class="gdeck-bar" aria-hidden="true"><i></i></div>
+  </div>
 </div></section>
 
 <section class="port-section" id="portafolio">
@@ -572,7 +581,7 @@ page('garantias-y-documentos.html', 'Garantías y respaldo',
     <span class="eyebrow dark">El respaldo detrás de nuestras operaciones</span>
     {P("CIFRA: la referencia decía 'Más de $1.300 millones' (pendiente de validar). Se usa la cifra que entregó la usuaria el 2026-11-16: aprox. $1.100 millones. CONFIRMAR valor vigente y qué activos incluye.")}
     {P("PRECISIÓN: no todas las propiedades del portafolio garantizan necesariamente todas las inversiones. Distinguir entre activos que garantizan obligaciones y propiedades disponibles para nuevas operaciones.")}
-    <h2 class="port-title"><span class="port-big">$<span data-count="1100" data-when-visible>1.100</span> millones</span> <span class="port-sub">en portafolio inmobiliario</span></h2>
+    <h2 class="port-title">Cerca de <span class="port-num">$<span data-count="1100" data-when-visible>1.100</span> millones</span> en portafolio inmobiliario</h2>
     <p class="lead">Detrás de cada operación hay activos que puedes conocer. Las garantías legales son una parte del resguardo: también importa conocer el valor de los inmuebles, sus condiciones de adquisición y la cobertura que representan frente al capital invertido.</p>
   </div>
   {P("PROPIEDADES DE EJEMPLO con ilustraciones generadas (assets/img/portafolio/*.svg, se regeneran con scripts/ilustraciones.py). Reemplazar por fotos reales. Porcentajes bajo tasación (Puerto Varas 42%, Las Condes 44%, Osorno 39%) tomados del diseño de referencia: VALIDAR.")}
@@ -645,6 +654,21 @@ PILARES_N = [
     ('Rentabilidad', 'Búsqueda constante de retornos atractivos que superen a los instrumentos de ahorro convencionales.'),
     ('Inversión con sentido', 'Generamos valor más allá del dinero, con soluciones que ayudan a los propietarios frente a escenarios de pérdida patrimonial y abren nuevas oportunidades financieras.'),
 ]
+EQUIPO = [
+    ('Jessica Valenzuela', 'Jefa comercial', None),
+    ('Felipe Jaña', 'Jefe de operaciones', None),
+    ('William Rojas', 'Jefe de contabilidad', None),
+    ('Gloria', 'Asesora', 'assets/img/asesores/gloria.webp'),
+    ('Pamela Herrera', 'Asesora', 'assets/img/asesores/pamela.webp'),
+    ('Renato Vargas', 'Asesor', None),
+    ('Santiago Fernández', 'Asesor internacional', None),
+]
+def _ini(n):
+    partes = n.split()
+    return (partes[0][0] + (partes[-1][0] if len(partes) > 1 else '')).upper()
+crew = ''.join(
+    f'''<article class="crew-card">{f'<img src="{foto}" alt="{n}" width="240" height="240" loading="lazy">' if foto else f'<span class="crew-ini" aria-hidden="true">{_ini(n)}</span>'}<strong>{n}</strong><span>{r}</span></article>'''
+    for n, r, foto in EQUIPO)
 pilares_n = ''.join(f'<article class="pilar"><span class="pilar-num">0{i+1}</span><h3>{t}</h3><p>{d}</p></article>' for i, (t, d) in enumerate(PILARES_N))
 _ICONS['onda'] = '<path d="M3 12h3l2-5 4 10 3-7 2 2h4"/>'
 _ICONS['flecha-up'] = '<path d="M4 18l6-6 4 4 6-8"/><path d="M15 8h5v5"/>'
@@ -686,6 +710,9 @@ page('nosotros.html', 'Nosotros',
       <h3>Felipe Rojas</h3><span class="team-role">Cofundador y estratega financiero</span>
       <p>Lleva 16 años liderando áreas de finanzas y control de gestión en compañías como LATAM, Iansa y Transbank, y suma esa visión corporativa y rigor analítico a la empresa. Su vínculo con el proyecto nació de la confianza en el modelo: comenzó como cliente, validando la rentabilidad y seguridad de las operaciones con su propio patrimonio. Hoy estructura financieramente los productos para que cada operación sea directa, segura y competitiva.</p></div></article>
   </div>
+  {P("EQUIPO entregado por la usuaria el 2026-11-17. Fotos: hay de Gloria y Pamela; el resto muestra iniciales. Falta el apellido de Gloria.")}
+  <h3 class="team-sub">El equipo que te acompaña</h3>
+  <div class="crew">{crew}</div>
 </div></section>
 
 <section class="section section-soft"><div class="container">

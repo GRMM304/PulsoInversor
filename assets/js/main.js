@@ -154,6 +154,27 @@
     } else { ir(0); auto(); }
   });
 
+  // Garantías: las cuatro tarjetas de la apertura, una a la vez
+  document.querySelectorAll('[data-gdeck]').forEach(function (deck) {
+    var cards = deck.querySelectorAll('.gdeck-card');
+    var tabs = document.querySelectorAll('.gdeck-tab');
+    var i = 0, timer = null, DUR = 5500;
+    var quietoG = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function ir(n) {
+      i = (n + cards.length) % cards.length;
+      cards.forEach(function (c, k) { var on = k === i; c.classList.toggle('is-active', on); c.setAttribute('aria-hidden', on ? 'false' : 'true'); });
+      tabs.forEach(function (t, k) { var on = k === i; t.classList.toggle('is-active', on); t.setAttribute('aria-selected', on ? 'true' : 'false'); });
+      deck.style.setProperty('--gdur', DUR + 'ms');
+      deck.classList.remove('is-running'); void deck.offsetWidth;
+      if (!quietoG) deck.classList.add('is-running');
+    }
+    function auto() { clearInterval(timer); if (quietoG) return; timer = setInterval(function () { ir(i + 1); }, DUR); }
+    tabs.forEach(function (t) { t.addEventListener('click', function () { ir(+t.getAttribute('data-go')); auto(); }); });
+    deck.addEventListener('mouseenter', function () { clearInterval(timer); deck.classList.add('is-paused'); });
+    deck.addEventListener('mouseleave', function () { deck.classList.remove('is-paused'); ir(i); auto(); });
+    ir(0); auto();
+  });
+
   // Animaciones al aparecer en pantalla
   var rev = document.querySelectorAll('[data-reveal]');
   if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
