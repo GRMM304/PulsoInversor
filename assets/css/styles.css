@@ -1154,3 +1154,30 @@ select{appearance:none;-webkit-appearance:none;padding-right:40px;background:#ff
 .hero-form input{border:0!important;box-shadow:none!important;min-height:0!important;padding:12px 0!important;background:transparent!important}
 .hi-dec select{min-height:38px;padding:6px 34px 6px 10px;font-size:13.5px;border-radius:10px;background-position:right 10px center}
 .hi-capfield input{padding-right:46px}
+
+/* ===== Simuladores v2: 3 cajas + formulario sobre el simulador ===== */
+.sim-picks{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.sim-pick{appearance:none;font:inherit;text-align:left;cursor:pointer;position:relative;display:flex;flex-direction:column;gap:8px;padding:28px 26px 24px;border-radius:var(--radius-xl);background:#fff;border:2px solid var(--gray-200);box-shadow:var(--shadow-soft);color:var(--gray-700);transition:transform .25s,box-shadow .25s,border-color .25s,background .25s}
+.sim-pick:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:rgba(199,217,93,.7)}
+.sim-pick-ico{display:grid;place-items:center;width:56px;height:56px;border-radius:16px;background:var(--green-900);color:var(--lime);font-weight:900;font-size:15px;letter-spacing:.02em;margin-bottom:8px}
+.sim-pick strong{font-size:22px;color:var(--green-900)}
+.sim-pick>span:not(.sim-pick-ico):not(.sim-pick-go){font-size:15px}
+.sim-pick em{align-self:flex-start;font-style:normal;font-size:13px;font-weight:800;padding:5px 11px;border-radius:999px;background:rgba(199,217,93,.28);color:var(--green-900)}
+.sim-pick-go{margin-top:auto;padding-top:10px;font-weight:800;font-size:14px;color:var(--green-700)}
+.sim-pick-go i{display:inline-block;font-style:normal;transition:transform .3s}
+.sim-pick.is-active{border-color:var(--green-700);background:linear-gradient(180deg,rgba(199,217,93,.16),#fff 60%);box-shadow:var(--shadow)}
+.sim-pick.is-active::after{content:"";position:absolute;left:50%;bottom:-12px;width:22px;height:22px;background:#fff;border-right:2px solid var(--green-700);border-bottom:2px solid var(--green-700);transform:translateX(-50%) rotate(45deg)}
+.sim-pick.is-active .sim-pick-go i{transform:rotate(180deg)}
+.sim-stage{position:relative;margin-top:40px;padding-top:8px;scroll-margin-top:calc(var(--header-h) + 16px);min-height:560px}
+.sim-stage.is-locked .sim-panel-body{filter:blur(7px);opacity:.4;pointer-events:none;user-select:none;max-height:900px;overflow:hidden}
+#sim-area.is-locked .sim-lock{display:none}
+.sim-stage>.gate{position:absolute;z-index:6;left:50%;top:40px;transform:translateX(-50%);width:min(560px,calc(100% - 24px));display:block;padding:32px 30px;background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius-xl);box-shadow:0 30px 80px rgba(14,44,40,.28)}
+.sim-stage>.gate[hidden]{display:none}
+.gate-lock{display:block;font-size:26px;margin-bottom:6px}
+.gate h3{font-size:24px;margin-bottom:4px}
+.gate-sub{color:var(--gray-700);margin-bottom:18px}
+.sim-stage .gate-form{grid-template-columns:1fr 1fr}
+@media (max-width:900px){.sim-picks{grid-template-columns:1fr}.sim-pick.is-active::after{display:none}}
+@media (max-width:620px){.sim-stage>.gate{top:10px;padding:24px 18px}.sim-stage .gate-form{grid-template-columns:1fr}.sim-stage{min-height:760px}}
+.gate-form input:not([type=checkbox]){font-weight:500}
+.gate-form input::placeholder,.hi-capfield input::placeholder{color:var(--gray-500);font-weight:400}

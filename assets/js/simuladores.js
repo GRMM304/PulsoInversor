@@ -39,26 +39,26 @@
     }).catch(function () {});
   } catch (e) {}
 
-  /* ---------- Pestañas ---------- */
+  /* ---------- Selección de simulador (3 cajas) y acceso con datos ---------- */
   var tabs = $$('[data-sim-tab]'), panels = $$('[data-sim-panel]');
-  function abrir(id) {
+  var stage = $('#sim-stage'), gate = $('#sim-gate');
+  var contacto = ses.get('pulsoContacto');
+  function setLocked(locked) {
+    stage.classList.toggle('is-locked', locked);
+    gate.hidden = !locked;
+    $$('.sim-panel-body', stage).forEach(function (el) { if (locked) el.setAttribute('inert', ''); else el.removeAttribute('inert'); });
+  }
+  function abrir(id, desplazar) {
     if (!$('[data-sim-panel="' + id + '"]')) return;
+    stage.hidden = false;
     tabs.forEach(function (t) { var on = t.getAttribute('data-sim-tab') === id; t.classList.toggle('is-active', on); t.setAttribute('aria-selected', on ? 'true' : 'false'); });
     panels.forEach(function (p) { p.hidden = p.getAttribute('data-sim-panel') !== id; });
+    setLocked(!contacto);
+    if (desplazar) stage.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (!contacto) setTimeout(function () { var n = $('#gate-nombre'); if (n) n.focus({ preventScroll: true }); }, 450);
   }
-  tabs.forEach(function (t) { t.addEventListener('click', function () { abrir(t.getAttribute('data-sim-tab')); history.replaceState(null, '', '#' + t.getAttribute('data-sim-tab')); }); });
-  var inicial = (location.hash || '').replace('#', '');
-  abrir(inicial === 'sim-hipoteca' ? 'sim-hipoteca' : inicial === 'sim-circular' ? 'sim-circular' : 'sim-proyecta');
+  tabs.forEach(function (t) { t.addEventListener('click', function () { var id = t.getAttribute('data-sim-tab'); abrir(id, true); history.replaceState(null, '', location.search + '#' + id); }); });
 
-  /* ---------- Acceso (datos de contacto) ---------- */
-  var contacto = ses.get('pulsoContacto');
-  var gate = $('#sim-gate'), area = $('#sim-area');
-  function setLocked(locked) {
-    area.classList.toggle('is-locked', locked);
-    $$('.sim-panel-body', area).forEach(function (el) { if (locked) el.setAttribute('inert', ''); else el.removeAttribute('inert'); });
-    gate.classList.toggle('is-done', !locked);
-    if (!locked && contacto) $('#gate-ok-name').textContent = contacto.nombre.split(' ')[0];
-  }
   function brevo(nombreCompleto, email, tel, mensaje) {
     var partes = nombreCompleto.trim().split(/\s+/);
     var nombre = partes.shift(), apellidos = partes.join(' ') || '-';
@@ -94,11 +94,10 @@
     ses.set('pulsoContacto', contacto);
     brevo(nombre, email, tel, 'Desbloqueó los simuladores del sitio (1.pulsoinversor.cl). Acepta términos y recibir contenido: Sí.');
     setLocked(false);
-    var activo = panels.filter(function (p) { return !p.hidden; })[0];
-    if (activo) activo.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    stage.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
-  $$('[data-go-gate]').forEach(function (b) { b.addEventListener('click', function () { gate.scrollIntoView({ behavior: 'smooth', block: 'center' }); setTimeout(function () { $('#gate-nombre').focus({ preventScroll: true }); }, 400); }); });
-  setLocked(!contacto);
+  var inicial = (location.hash || '').replace('#', '');
+  if (/^sim-(proyecta|hipoteca|circular)$/.test(inicial)) abrir(inicial, false);
 
   /* =========================================================
      Proyecta un Hogar (estrategias Acción, Hipoteca, Título)

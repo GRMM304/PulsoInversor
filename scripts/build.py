@@ -644,36 +644,39 @@ page('garantias-y-documentos.html', 'Garantías y respaldo',
 page('simuladores.html', 'Simuladores',
      'Simula tu inversión en Proyecta un Hogar (Acción, Hipoteca o Título) y compárala con un depósito a plazo, o arma tu configuración de Hipoteca Inteligente.',
      hero('Cómo invertir / Simuladores', 'Mira tus números antes de decidir',
-          'Completa tus datos una vez y usa los simuladores con calma. Los resultados son referenciales.', 'Simuladores') + f"""
+          'Elige un simulador, completa tus datos una vez y revisa tus números con calma. Los resultados son referenciales.', 'Simuladores') + f"""
 <div data-simuladores>
-<section class="section section-soft" id="datos"><div class="container">
-  <div class="gate" id="sim-gate">
-    <div class="gate-intro"><span class="eyebrow">Paso previo</span><h2>Completa tus datos para simular</h2>
-      <p class="lead">Así un asesor puede revisar tus números contigo si lo necesitas. Los usamos según nuestra <a href="privacidad.html" target="_blank">Política de privacidad</a>.</p></div>
+<section class="section" id="sim-area"><div class="container">
+  <div class="title center"><span class="eyebrow">Elige tu simulador</span><h2>¿Qué quieres simular?</h2>
+    <p class="lead">Toca una opción para abrir su simulador.</p></div>
+  <div class="sim-picks" role="tablist" aria-label="Simuladores">
+    <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-proyecta" aria-selected="false">
+      <span class="sim-pick-ico">A·H·T</span><strong>Proyecta un Hogar</strong><span>Invierte tu capital con Acción, Hipoteca o Título y compáralo con un depósito a plazo.</span><em>Desde $5MM</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
+    <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-hipoteca" aria-selected="false">
+      <span class="sim-pick-ico">HI</span><strong>Hipoteca Inteligente</strong><span>Arma tu configuración con tu capacidad de crédito y mira cómo termina.</span><em>Desde 2.000 UF de crédito</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
+    <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-circular" aria-selected="false">
+      <span class="sim-pick-ico">IC</span><strong>Inversión Circular</strong><span>Transforma el capital de tu propiedad en flujo mensual.</span><em>Próximamente</em><span class="sim-pick-go">Ver más <i aria-hidden="true">↓</i></span></button>
+  </div>
+
+  <div class="sim-stage" id="sim-stage" hidden>
+  <div class="gate" id="sim-gate" aria-labelledby="gate-title">
+    <span class="gate-lock" aria-hidden="true">🔒</span>
+    <h3 id="gate-title">Completa tus datos para ver tu simulación</h3>
+    <p class="gate-sub">Te los pedimos una sola vez y quedan listos para todos los simuladores.</p>
     <form class="gate-form" id="gate-form" novalidate>
       <label>Nombre y apellido<input id="gate-nombre" name="nombre" autocomplete="name" placeholder="Tu nombre" required></label>
       <label>Correo electrónico<input name="email" type="email" autocomplete="email" placeholder="nombre@correo.cl" required></label>
       <label>Teléfono / WhatsApp<span class="gate-tel"><span>+56</span><input name="telefono" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="9 1234 5678" required></span></label>
-      <label class="check"><input type="checkbox" name="terminos" required><span>Acepto los términos y condiciones y la <a href="privacidad.html" target="_blank">Política de privacidad</a> de Pulso Inversor.</span></label>
+      <label class="check"><input type="checkbox" name="terminos" required><span>Acepto los términos y condiciones y la <a href="privacidad.html" target="_blank">Política de privacidad</a>.</span></label>
       <label class="check"><input type="checkbox" name="contenido" required><span>Acepto que Pulso Inversor me envíe contenido e información sobre inversiones por correo y WhatsApp.</span></label>
       <div class="hp" aria-hidden="true"><label>No completar<input name="website" tabindex="-1" autocomplete="off"></label></div>
       <p class="gate-err" id="gate-err" role="alert"></p>
-      <button class="btn btn-primary btn-xl" type="submit">Ver los simuladores <span aria-hidden="true">→</span></button>
+      <button class="btn btn-primary" type="submit">Ver mi simulación <span aria-hidden="true">→</span></button>
     </form>
-    <div class="gate-ok"><span class="gate-check" aria-hidden="true">✓</span><div><strong>Listo, <span id="gate-ok-name"></span>.</strong><p>Ya puedes usar los simuladores.</p></div></div>
   </div>
-  {P("CASILLAS: ambas obligatorias a pedido de la usuaria. Ojo: la Política de privacidad del sitio actual decía que la casilla de contenido/publicidad era opcional; conviene revisarlo con legal. FALTA el documento de Términos y condiciones (hoy el enlace va a la Política de privacidad).")}
-</div></section>
+  {P("CASILLAS: ambas obligatorias a pedido de la usuaria. La Política de privacidad del sitio actual decía que la casilla de contenido era opcional; revisar con legal. FALTA el documento de Términos y condiciones (hoy el enlace va a la Política de privacidad).")}
 
-<section class="section" id="sim-area"><div class="container">
-  <div class="sim-tabs" role="tablist" aria-label="Simuladores">
-    <button type="button" role="tab" data-sim-tab="sim-proyecta">Proyecta un Hogar</button>
-    <button type="button" role="tab" data-sim-tab="sim-hipoteca">Hipoteca Inteligente</button>
-    <button type="button" role="tab" data-sim-tab="sim-circular">Inversión Circular <small>Próximamente</small></button>
-  </div>
-  <div class="sim-lock"><span class="sim-lock-ico" aria-hidden="true">🔒</span><strong>Completa tus datos para ver los simuladores</strong><p>Nombre, correo, teléfono y las dos casillas de autorización.</p><button type="button" class="btn btn-dark" data-go-gate>Completar mis datos</button></div>
-
-  <div class="sim-panel" id="sim-proyecta" data-sim-panel="sim-proyecta"><div class="sim-panel-body">
+<div class="sim-panel" id="sim-proyecta" data-sim-panel="sim-proyecta"><div class="sim-panel-body">
     <div class="sim-head"><h2>Proyecta un Hogar</h2><p class="muted">Elige tu estrategia, el monto y el plazo, y compara con lo que te daría un depósito a plazo.</p></div>
     <div class="pro">
       <div class="pro-form">
@@ -754,6 +757,7 @@ page('simuladores.html', 'Simuladores',
     <div class="sim-soon"><span class="pill soon">Próximamente</span><h2>Inversión Inmobiliaria Circular</h2><p class="muted">Estamos preparando este simulador. Mientras tanto, un asesor puede revisar tu caso contigo.</p>
       <a class="btn btn-dark" href="{mail('Inversión Inmobiliaria Circular')}" target="_blank" rel="noopener">Agendar una reunión</a></div>
   </div></div>
+  </div>
 </div></section>
 </div>
 <section class="section section-soft"><div class="container"><p class="disclaimer" style="text-align:center;margin:0">Los resultados son referenciales y dependen de los datos y supuestos utilizados. Las condiciones de una operación se revisan en su documentación; la simulación no asegura rentabilidad.</p></div></section>
