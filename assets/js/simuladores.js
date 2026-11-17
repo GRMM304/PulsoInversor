@@ -81,7 +81,41 @@
   function folioPI() { var d = new Date(), p = function (n) { return String(n).padStart(2, '0'); }; return 'PI-' + String(d.getFullYear()).slice(2) + p(d.getMonth() + 1) + p(d.getDate()) + '-' + p(d.getHours()) + p(d.getMinutes()) + '-' + Math.random().toString(36).slice(2, 5).toUpperCase(); }
   function slugNombre() { return String(contacto ? contacto.nombre : 'cliente').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40) || 'cliente'; }
   // PDF sencillo: encabezado de marca + secciones de filas clave/valor y párrafos.
-  function pdfSimple(titulo, subtitulo, secciones) {
+  // Asesor según el monto simulado (los correos viven en el Worker).
+  function asesoresPara(monto) {
+    if ((monto || 0) < 25e6) return ['Renato Vargas'];
+    if (monto < 50e6) return ['Pamela Herrera'];
+    return ['Iván Barboza', 'Felipe Rojas'];
+  }
+  var primerNombre = function () { return String(contacto ? contacto.nombre : '').trim().split(/\s+/)[0] || ''; };
+  // Bloques con empatía, comunes a todos los PDF.
+  function pdfIntro(doc, y, M, CW, tipo) {
+    var txt = 'Hola ' + primerNombre() + ', gracias por darte el tiempo de simular. Aquí tienes tus números de ' + tipo + ' para revisarlos con calma, compartirlos con tu familia o mostrárselos a tu abogado. Invertir tus ahorros es una decisión importante y queremos que la tomes con la información en la mano, sin apuro.';
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(10); var l = doc.splitTextToSize(txt, CW - 12), h = l.length * 4.1 + 8;
+    doc.setFillColor(244, 248, 226); doc.roundedRect(M, y, CW, h, 2.5, 2.5, 'F'); doc.setFillColor(191, 212, 30); doc.rect(M, y, 1.6, h, 'F');
+    doc.setTextColor(20, 63, 55); doc.text(l, M + 7, y + 6.2);
+    return y + h + 2;
+  }
+  function pdfProximos(doc, y, M, CW, monto) {
+    var nombres = asesoresPara(monto), varios = nombres.length > 1, quien = nombres.join(' y ');
+    var pasos = ['1. ' + quien + (varios ? ' te escribirán' : ' te escribirá') + ' en las próximas horas hábiles para resolver tus dudas.',
+      '2. Si quieres, te mostramos una operación real: la propiedad, su tasación y el documento que queda a tu favor.',
+      '3. Revisas todo con calma, con tu abogado si lo prefieres. No te pedimos decidir en la reunión.'];
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5);
+    var lineas = pasos.map(function (p) { return doc.splitTextToSize(p, CW - 14); });
+    var h = 26 + lineas.reduce(function (a, l) { return a + l.length * 4.5 + 1.5; }, 0) + 10;
+    if (y + h > 276) { doc.addPage(); y = 18; }
+    doc.setFillColor(24, 76, 63); doc.roundedRect(M, y, CW, h, 3, 3, 'F');
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(8); doc.setTextColor(199, 217, 93); doc.text((varios ? 'QUIENES TE ACOMPAÑAN' : 'QUIEN TE ACOMPAÑA'), M + 7, y + 8);
+    doc.setFontSize(14); doc.setTextColor(255, 255, 255); doc.text(quien, M + 7, y + 15.5);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(207, 224, 217); doc.text(varios ? 'Cofundadores de Pulso Inversor' : (nombres[0] === 'Pamela Herrera' ? 'Asesora' : 'Asesor') + ' de inversiones · Pulso Inversor', M + 7, y + 20.5);
+    var yy = y + 28; doc.setFontSize(9.5); doc.setTextColor(255, 255, 255);
+    lineas.forEach(function (l) { doc.text(l, M + 7, yy); yy += l.length * 4.5 + 1.5; });
+    doc.setFont('helvetica', 'bold'); doc.setTextColor(199, 217, 93); doc.text('WhatsApp +56 9 8355 4676  ·  contacto@pulsoinversor.cl  ·  Los Militares 5890, of. 304, Las Condes', M + 7, yy + 3);
+    return y + h + 4;
+  }
+  function pdfSimple(titulo, subtitulo, secciones, opc) {
+    opc = opc || {};
     var doc = new window.jspdf.jsPDF({ unit: 'mm', format: 'a4' });
     var C = { deep: [24, 76, 63], lime: [191, 212, 30], text: [20, 63, 55], muted: [107, 125, 119], line: [221, 228, 224], red: [198, 40, 40], pos: [42, 107, 79] };
     var W = 210, M = 16, CW = W - 2 * M, y = 0, fol = folioPI();
@@ -94,8 +128,10 @@
     doc.setFillColor.apply(doc, C.deep); doc.rect(0, 28, W, 20, 'F'); doc.setFillColor.apply(doc, C.lime); doc.rect(0, 48, W, 1.6, 'F');
     font(17, 'bold'); doc.setTextColor(255, 255, 255); doc.text(titulo, M, 39.5);
     font(9, 'normal'); doc.setTextColor(207, 224, 217); doc.text(subtitulo, W - M, 39.5, { align: 'right' }); y = 56;
+    if (opc.tipo) y = pdfIntro(doc, y, M, CW, opc.tipo);
     var secs = [{ t: 'Preparada para', rows: [['Nombre', contacto ? contacto.nombre : ''], ['Correo electrónico', contacto ? contacto.email : ''], ['Teléfono', contacto ? '+56 ' + contacto.telefono : '']] }].concat(secciones);
     secs.forEach(function (sec) {
+      if (sec.proximos) { y = pdfProximos(doc, y + 6, M, CW, opc.monto); return; }
       ensure(22); y += 4; doc.setFillColor.apply(doc, C.lime); doc.rect(M, y, 12, 1.4, 'F'); y += 6; font(12, 'bold'); doc.text(sec.t, M, y); y += 5;
       (sec.rows || []).forEach(function (r) {
         ensure(8); font(9.5, 'normal', 'muted'); doc.text(String(r[0]), M, y + 4.5); font(9.5, 'bold', r[2] || 'text'); doc.text(String(r[1]).replace(/−/g, '-'), M + CW, y + 4.5, { align: 'right' });
@@ -107,7 +143,7 @@
     doc.__folio = fol;
     return doc;
   }
-  function enviarCorreo(tipo, doc, prefijo, resumen, st, btn) {
+  function enviarCorreo(tipo, doc, prefijo, resumen, st, btn, monto) {
     if (!contacto) return;
     st.className = st.className.replace(/\s?is-(ok|err)/g, '');
     st.textContent = 'Enviando a ' + contacto.email + '…'; btn.disabled = true;
@@ -115,11 +151,11 @@
     var b64 = doc.output('datauristring').split(',')[1];
     var archivo = prefijo + '_' + (doc.__folio || folioPI()) + '_' + slugNombre() + '.pdf';
     fetch(API_CORREO, { method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ tipo: tipo, cliente: { nombre: contacto.nombre, email: contacto.email, telefono: contacto.telefono }, pdfBase64: b64, archivo: archivo, resumen: resumen, website: '' }) })
+      body: JSON.stringify({ tipo: tipo, cliente: { nombre: contacto.nombre, email: contacto.email, telefono: contacto.telefono }, pdfBase64: b64, archivo: archivo, resumen: resumen, monto: Math.round(monto || 0), website: '' }) })
       .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return r.ok && j.ok; }); })
       .then(function (ok) {
         st.classList.add(ok ? 'is-ok' : 'is-err');
-        st.textContent = ok ? '✓ Te enviamos la simulación a ' + contacto.email + '. Si no la ves, revisa tu carpeta de spam.'
+        st.textContent = ok ? '✓ Te enviamos la simulación a ' + contacto.email + '. ' + asesoresPara(monto).join(' y ') + (asesoresPara(monto).length > 1 ? ' te escribirán' : ' te escribirá') + ' pronto. Si no ves el correo, revisa tu carpeta de spam.'
           : 'No pudimos enviar el correo en este momento. Ya recibimos tu simulación y un asesor te la hará llegar.';
       }, function () { st.classList.add('is-err'); st.textContent = 'No pudimos enviar el correo en este momento. Ya recibimos tu simulación y un asesor te la hará llegar.'; })
       .then(function () { btn.disabled = false; });
@@ -227,7 +263,7 @@
   window.__pulsoProyectaRender = render;
   function resumen() {
     var r = calcular(), s = SERIES[P.serie];
-    return 'Estrategia: ' + s.nombre + ' (' + s.garantia + ')\nMonto: ' + fmtCLP(r.monto) + '\nPlazo: ' + P.plazo + ' meses' +
+    return 'Alternativa: Estrategia ' + s.nombre + ' · ' + s.garantia + '\nMonto: ' + fmtCLP(r.monto) + '\nPlazo: ' + P.plazo + ' meses' +
       (s.retiro ? '\nRetiro anticipado: ' + (P.retiro ? 'Sí' : 'No') : '') + '\nTasa mensual: ' + fmtPct(tasa(), 1) +
       '\nTotal a recibir (referencial): ' + fmtCLP(r.total) + '\nGanancia: ' + fmtCLP(r.ganancia) +
       '\nDepósito a plazo a 365 días (' + fmtPct(DAP_ANUAL, 2) + ' anual): ' + fmtCLP(r.dapGanancia);
@@ -253,13 +289,14 @@
     var resumenTxt = resumen();
     brevo(contacto.nombre, contacto.email, contacto.telefono, '--- Simulación Proyecta un Hogar ---\n' + resumenTxt);
     var doc = pdfSimple('Simulación Proyecta un Hogar', 'Resultado referencial', [
-      { t: 'Tu simulación', rows: [['Estrategia', sr.nombre + ' · ' + sr.garantia], ['Monto a invertir', fmtCLP(r.monto)], ['Plazo', P.plazo + ' meses'],
+      { t: 'Tu simulación', rows: [['Alternativa', 'Estrategia ' + sr.nombre + ' · ' + sr.garantia], ['Monto a invertir', fmtCLP(r.monto)], ['Plazo', P.plazo + ' meses'],
         ['Tasa', fmtPct(tasa(), 1) + ' mensual' + (sr.uf ? ' + UF' : '')]].concat(sr.retiro ? [['Retiro anticipado', P.retiro ? 'Sí' : 'No']] : []) },
       { t: 'Con Pulso', rows: [['Total a recibir', fmtCLP(r.total)], ['Ganancia', '+' + fmtCLP(r.ganancia), 'pos']] },
       { t: 'En un depósito a plazo a 365 días', rows: [['Tasa referencial', fmtPct(DAP_ANUAL, 2) + ' anual'], ['Total a recibir', fmtCLP(r.dapTotal)], ['Ganancia', '+' + fmtCLP(r.dapGanancia), 'red']] },
+      { t: 'Tus próximos pasos', proximos: true },
       { t: 'Supuestos', small: true, text: 'Simulación referencial. Depósito a plazo a 365 días, renovado al vencimiento con interés compuesto; los meses que no completan un año se calculan en proporción.' + (sr.uf ? ' Hipoteca y Título se reajustan en UF (UF ' + fmtCLP(UF) + ', IPC estimado 4,5% anual).' : '') + ' Las condiciones finales dependen de la evaluación y del contrato de cada operación. Este documento no constituye una oferta vinculante.' }
-    ]);
-    enviarCorreo('proyecta', doc, 'Simulacion_ProyectaUnHogar', resumenTxt.split('\n'), st, btn);
+    ], { tipo: 'Proyecta un Hogar', monto: r.monto });
+    enviarCorreo('proyecta', doc, 'Simulacion_ProyectaUnHogar', resumenTxt.split('\n'), st, btn, r.monto);
   });
   renderSeries(); render();
 
@@ -453,6 +490,8 @@
     doc.setFillColor.apply(doc, C.deep); doc.rect(0, 28, W, 20, 'F'); doc.setFillColor.apply(doc, C.lime); doc.rect(0, 48, W, 1.6, 'F');
     font(17, 'bold'); doc.setTextColor(255, 255, 255); doc.text('Cotización Hipoteca Inteligente', M, 39.5);
     font(9, 'normal'); doc.setTextColor(207, 224, 217); doc.text('Simulación referencial en UF', W - M, 39.5, { align: 'right' }); y = 56;
+    var montoHI = Math.round(t.fin * UF);
+    y = pdfIntro(doc, y, M, CW, 'Hipoteca Inteligente');
     section('Preparada para'); kv('Nombre', contacto ? contacto.nombre : ''); kv('Teléfono', contacto ? '+56 ' + contacto.telefono : ''); kv('Correo electrónico', contacto ? contacto.email : ''); kv('Capacidad financiera declarada', uf(H.capacity) + ' por crédito');
     section('Portafolio Tracción · genera el retorno'); kv('Propiedad', t.name + ' · ' + t.comuna); kv('Tasación', uf(t.tas)); kv('Monto de inversión · 80%', uf(t.fin)); kv('Interés', '5% anual simple'); kv('Plazo', H.years + ' años'); kv('Retorno acumulado', signed(qd.ret), 'pos');
     if (qd.tractionOnly) { section('Portafolio Patrimonio', 10); para('El cliente no seleccionó propiedades del Portafolio Patrimonio. La simulación considera solo el retorno del Portafolio Tracción.', 9.5, 'text'); }
@@ -482,13 +521,14 @@
       kv('Retorno disponible', signed(qd.available)); if (qd.soldAmort) kv('Recompra · 50% de la amortización', signed(qd.investorAmort)); kv('Capital líquido estimado', signed(qd.realized), 'pos'); if (qd.kept) kv('Equity conservado', signed(qd.kept));
     }
     section('Conclusión'); para(qd.conclusionText, 9.5, 'text');
-    section('Supuestos y condiciones');
+    y = pdfProximos(doc, y + 6, M, CW, montoHI);
+    section('Supuestos y condiciones', 22);
     para('Simulación referencial en UF. Considera una vacancia promedio de 1 mes por año, contribuciones estimadas en 0,08% anual de la tasación y mantención y reparaciones estimadas en 0,04% anual. En la recompra, la amortización acumulada se distribuye en partes iguales entre el inversionista y Pulso. Los valores definitivos dependen de cada propiedad y de la tabla bancaria aplicable. Este documento no constituye una oferta vinculante ni una aprobación de crédito.', 8.5);
     var n = doc.getNumberOfPages(); for (var i = 1; i <= n; i++) { doc.setPage(i); doc.setDrawColor.apply(doc, C.line); doc.setLineWidth(.2); doc.line(M, 286, W - M, 286); font(7.5, 'normal', 'muted'); doc.text('Pulso Inversor · Cotización ' + fol, M, 291); doc.text('Página ' + i + ' de ' + n, W - M, 291, { align: 'right' }); }
     doc.__folio = fol;
     var resumenHI = ['Propiedad Tracción: ' + t.name + ' (' + t.comuna + ')', 'Plazo: ' + H.years + ' años', 'Capacidad declarada: ' + uf(H.capacity) + ' por crédito',
       'Retorno disponible: ' + pt(signed(qd.available)), 'Capital líquido estimado: ' + pt(signed(qd.realized))].concat(qd.picks.map(function (x) { return 'Patrimonio: ' + x.p.name + ' · ' + (x.d === 'keep' ? 'Conservar' : 'Activar recompra'); }));
-    enviarCorreo('hipoteca', doc, 'Cotizacion_HipotecaInteligente', resumenHI, status, $('#hi-pdf'));
+    enviarCorreo('hipoteca', doc, 'Cotizacion_HipotecaInteligente', resumenHI, status, $('#hi-pdf'), montoHI);
     var pk = qd.picks.map(function (x) { return { name: x.p.name, financingUF: x.p.fin, decision: x.d === 'keep' ? 'Conservar' : 'Activar recompra' }; });
     if (contacto) sheet('quote', Object.assign({ name: contacto.nombre, phone: contacto.telefono, email: contacto.email, capacityUF: H.capacity, consent: true, folio: fol, traction: t.name, tractionComuna: t.comuna, years: H.years, p1: pk[0] || null, p2: pk[1] || null }, H.summary || {}));
   }
@@ -655,10 +695,11 @@
         { t: 'Resumen', text: $('#ic-summary').textContent },
         { t: '¿Con cuánto terminas en ' + x.years + ' años?', rows: [['Si conservas y arriendas', compact(c.end[0] + c.totals[0])], ['Si vendes e inviertes en Pulso', compact(c.end[1] + c.totals[1])]].concat(u.n === 3 && u.cicloOk ? [['Si vendes, inviertes y compras otra', compact(c.end[2] + c.totals[2])]] : []).concat([['Mayor resultado', u.best, 'pos']]) },
         { t: 'TIR anual efectiva', rows: filasTir },
+        { t: 'Tus próximos pasos', proximos: true },
         { t: 'Supuestos', small: true, text: $('#ic-base').textContent + ' Venta 15% bajo el valor comercial; inflación 3% anual; arriendo reajustado 3% anual; mantención, vacancia y reparaciones estimadas. Proyectar diez años exige continuidad de tasa, condiciones y cumplimiento de pagos. La nueva compra es opcional y se evalúa por separado. Simulación referencial, no constituye una oferta vinculante.' }
-      ]);
+      ], { tipo: 'Inversión Inmobiliaria Circular', monto: c.net });
       brevo(contacto.nombre, contacto.email, contacto.telefono, '--- Simulación Inversión Circular ---\n' + resumenIC.join('\n'));
-      enviarCorreo('circular', doc, 'Simulacion_InversionCircular', resumenIC, st, btn);
+      enviarCorreo('circular', doc, 'Simulacion_InversionCircular', resumenIC, st, btn, c.net);
     });
   })();
 
