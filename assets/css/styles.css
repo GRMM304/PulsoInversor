@@ -1619,5 +1619,4 @@ main p,main li,main blockquote{-webkit-hyphens:manual!important;hyphens:manual!i
   #sim-area.has-open .sim-pick.is-active{background:var(--green-900);border-color:var(--green-900)}
   #sim-area.has-open .sim-pick.is-active strong{color:var(--lime)}
   #sim-area.has-open .sim-stage{margin-top:16px}
-  #sim-area.has-open .title{display:none}
 }
