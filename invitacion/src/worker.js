@@ -20,6 +20,7 @@ function urlsAsistente(env, token) {
   const base = env.URL_BASE || EVENTO.sitio;
   return {
     cancelar: `${base}/cancelar?t=${encodeURIComponent(token)}`,
+    datos: `${base}/datos?t=${encodeURIComponent(token)}`,
     ics: `${base}/calendario.ics`,
     panel: `${base}/panel`,
   };
@@ -170,6 +171,50 @@ async function cancelar(request, env, ctx) {
   }
   return paginaSimple('¿No podrás asistir?', `<p>${esc(a.nombre)}, si confirmas, liberamos tu cupo para otra persona y dejamos de enviarte recordatorios del ${esc(EVENTO.titulo)}.</p>
     <form method="post" action="/cancelar?t=${encodeURIComponent(token)}"><button class="b" type="submit">Sí, no podré asistir</button><a class="b b2" href="/">Mantener mi asistencia</a></form>`);
+}
+
+// ---------------------------------------------------------------------------
+// Completar datos (celular, estacionamiento y patente) desde el enlace del correo
+// ---------------------------------------------------------------------------
+
+async function completarDatos(request, env, ctx) {
+  const url = new URL(request.url);
+  const token = url.searchParams.get('t') || '';
+  const a = token && await env.DB.prepare('SELECT * FROM asistentes WHERE token = ?').bind(token).first();
+  if (!a) return paginaSimple('Enlace no válido', '<p>No encontramos tu registro. Si necesitas ayuda, escríbenos por WhatsApp.</p>', 404);
+  if (a.estado === 'cancelado') return paginaSimple('Tu asistencia está cancelada', `<p>${esc(a.nombre)}, tu asistencia figura como cancelada. Si quieres volver a confirmar, hazlo aquí.</p><a class="b" href="/?confirmar=1">Volver a confirmar</a>`);
+
+  let error = '';
+  let tel = a.telefono || '';
+  let est = a.estacionamiento ? 1 : 0;
+  let pat = a.patente || '';
+  if (request.method === 'POST') {
+    const f = await request.formData();
+    tel = String(f.get('telefono') ?? '').replace(/[^\d+]/g, '').slice(0, 20);
+    est = f.get('estacionamiento') ? 1 : 0;
+    pat = est ? String(f.get('patente') ?? '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 8) : '';
+    if (tel.replace(/\D/g, '').length < 8) error = 'Ingresa tu celular (mínimo 8 dígitos).';
+    else if (est && !/^[A-Z0-9]{5,8}$/.test(pat)) error = 'Ingresa la patente de tu auto (ej: ABCD12).';
+    if (!error) {
+      if (!tel.startsWith('+')) tel = '+56' + tel.replace(/^0+/, '');
+      const fila = await env.DB.prepare('UPDATE asistentes SET telefono = ?, estacionamiento = ?, patente = ?, actualizado = ? WHERE id = ? RETURNING *')
+        .bind(tel, est, pat || null, ahoraIso(env), a.id).first();
+      ctx.waitUntil(avisarEquipo(env, 'actualizacion', fila));
+      return paginaSimple('¡Listo, gracias!', `<p>${esc(a.nombre)}, guardamos tus datos.</p><p>${est ? `Te esperamos con estacionamiento para tu auto patente <strong>${esc(pat)}</strong>.` : 'Registramos que no necesitas estacionamiento.'}</p><p>Nos vemos el ${esc(EVENTO.fechaTexto.toLowerCase())} a las 09:30.</p>`);
+    }
+  }
+  const t = encodeURIComponent(token);
+  return paginaSimple('Completa tus datos', `<p>${esc(a.nombre)}, para recibirte de la mejor forma el ${esc(EVENTO.fechaTexto.toLowerCase())}, déjanos tu celular y cuéntanos si necesitas estacionamiento.</p>
+    ${error ? `<p style="color:#B42318;font-weight:700">${esc(error)}</p>` : ''}
+    <form method="post" action="/datos?t=${t}" style="display:grid;gap:14px;margin-top:18px">
+      <label style="display:grid;gap:6px;font-weight:700;color:#0E2C28">Celular (WhatsApp)
+        <input name="telefono" type="tel" inputmode="tel" autocomplete="tel" required placeholder="+56 9 1234 5678" value="${esc(tel)}" style="font:inherit;padding:12px 14px;border:1px solid #dfe5dc;border-radius:12px"></label>
+      <label style="display:flex;gap:10px;align-items:center;font-weight:700;color:#0E2C28"><input type="checkbox" name="estacionamiento" id="est" value="1" ${est ? 'checked' : ''} style="width:20px;height:20px"> Necesito estacionamiento para mi auto</label>
+      <label id="cp" ${est ? '' : 'hidden'} style="display:grid;gap:6px;font-weight:700;color:#0E2C28">Patente del auto
+        <input name="patente" id="pat" maxlength="10" placeholder="Ej: ABCD12" value="${esc(pat)}" style="font:inherit;padding:12px 14px;border:1px solid #dfe5dc;border-radius:12px;text-transform:uppercase"></label>
+      <div><button class="b" type="submit">Guardar mis datos</button></div>
+    </form>
+    <script>document.getElementById('est').addEventListener('change',function(e){var c=document.getElementById('cp');c.hidden=!e.target.checked;document.getElementById('pat').required=e.target.checked;if(e.target.checked)document.getElementById('pat').focus();});document.getElementById('pat').required=document.getElementById('est').checked;</script>`);
 }
 
 // ---------------------------------------------------------------------------
@@ -365,6 +410,7 @@ export default {
 
     if (p === '/api/confirmar' && m === 'POST') return confirmar(request, env, ctx);
     if (p === '/cancelar') return cancelar(request, env, ctx);
+    if (p === '/datos') return completarDatos(request, env, ctx);
     if (p === '/calendario.ics') {
       return new Response(archivoIcs(), { headers: { 'content-type': 'text/calendar; charset=utf-8', 'content-disposition': 'attachment; filename="desayuno-inversionistas-igr.ics"' } });
     }

@@ -80,12 +80,14 @@ export function correoConfirmacion(a, urls) {
 }
 
 export function correoRecordatorio(tipo, a, urls) {
+  // A quienes el equipo inscribió sin celular, el recordatorio de 2 días les pide celular, estacionamiento y patente.
+  const faltanDatos = !a.telefono;
   const textos = {
     r2d: {
       asunto: 'Faltan 2 días para el Desayuno de Inversionistas Modelo IGR',
       eyebrow: 'Faltan 2 días',
       titulo: `${esc(a.nombre)}, nos vemos este viernes`,
-      cuerpo: `<p style="margin:0 0 12px">Te recordamos que este <strong>viernes 20 de noviembre a las 09:30</strong> compartiremos el estado actual de Pulso Inversor, sus resultados y las nuevas oportunidades que vienen.</p><p style="margin:0">Si aún no lo agregas a tu calendario, puedes hacerlo aquí abajo.</p>`,
+      cuerpo: `<p style="margin:0 0 12px">Te recordamos que este <strong>viernes 20 de noviembre a las 09:30</strong> compartiremos el estado actual de Pulso Inversor, sus resultados y las nuevas oportunidades que vienen.</p>${faltanDatos ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF7E0;border:1px solid ${C.oro};border-radius:14px;margin:4px 0 14px"><tr><td style="padding:16px 18px;font-family:${FUENTE};font-size:15px;line-height:1.5;color:${C.texto}"><strong style="color:${C.verde}">🚗 ¿Necesitas estacionamiento?</strong><br>Déjanos tu <strong>celular</strong> y, si vienes en auto, la <strong>patente</strong>, para tener tu estacionamiento listo.<br><a href="${esc(urls.datos)}" target="_blank" style="display:inline-block;margin-top:10px;background:${C.lima};color:${C.verde};font-weight:bold;text-decoration:none;padding:11px 20px;border-radius:999px">Completar mis datos</a></td></tr></table>` : ''}<p style="margin:0">Si aún no lo agregas a tu calendario, puedes hacerlo aquí abajo.</p>`,
       botones: botonesCalendario(urls.ics),
     },
     r12h: {
