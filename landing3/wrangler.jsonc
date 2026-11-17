@@ -1,0 +1,33 @@
+// Landing de campaña "Invierte con Respaldo Inmobiliario" (Pulso Inversor).
+// Worker + D1, publicado solo en 3.pulsoinversor.cl.
+// Secretos (no van en este archivo): BREVO_API_KEY y CLAVE_PANEL → `npx wrangler secret put NOMBRE`.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "pulso-landing-respaldo",
+  "main": "src/worker.js",
+  "compatibility_date": "2025-09-01",
+  "workers_dev": false,
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "html_handling": "auto-trailing-slash"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "pulso-landing-respaldo",
+      "database_id": "9e5ab16f-08cd-4a1e-9c1c-9498d09e70d1"
+    }
+  ],
+  "routes": [
+    { "pattern": "3.pulsoinversor.cl", "custom_domain": true }
+  ],
+  "vars": {
+    "REMITENTE_NOMBRE": "Pulso Inversor",
+    "REMITENTE_EMAIL": "contacto@pulsoinversor.cl",
+    "RESPONDER_A": "contacto@pulsoinversor.cl",
+    // Aviso de cada nuevo interesado al equipo (separar con coma).
+    "AVISO_EQUIPO_EMAIL": "ibarboza@grupomm.cl, frojas@grupomm.cl, jvalenzuela@grupomm.cl, eorrego@grupomm.cl, ibarboza@pulsoinversor.cl, frojas@pulsoinversor.cl"
+  },
+  "observability": { "enabled": true }
+}
