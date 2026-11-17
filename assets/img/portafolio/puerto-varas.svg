@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f2b37a"/><stop offset="1" stop-color="#f7dcc0"/></linearGradient><linearGradient id="lago" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7fa7b5"/><stop offset="1" stop-color="#4f7f8f"/></linearGradient></defs>
+<rect width="800" height="600" fill="url(#s)"/>
+<circle cx="610" cy="170" r="46" fill="#ffd27a" opacity=".9"/>
+<path d="M120 360L330 120L380 150L420 120L620 360Z" fill="#6b7f8c"/>
+<path d="M300 152L330 120L380 150L420 120L452 160L410 172L380 160L350 176Z" fill="#f4f1ea"/>
+<rect y="340" width="800" height="120" fill="url(#lago)"/>
+<path d="M0 450C160 420 300 470 460 440S700 430 800 450V600H0Z" fill="#3e6b4f"/>
+<g><rect x="420" y="390" width="150" height="90" fill="#8a5a3c"/><path d="M408 392L495.0 340.5L582 392Z" fill="#3b2a22"/><rect x="483.0" y="430.5" width="24.0" height="49.50000000000001" fill="#3b2f26"/><rect x="438.0" y="412.5" width="27.0" height="19.8" fill="#ffd98a"/><rect x="525.0" y="412.5" width="27.0" height="19.8" fill="#ffd98a"/></g>
+<g transform="translate(110 470) scale(1.4)"><rect x="-3" y="0" width="6" height="22" fill="#4a3b2c"/><path d="M0-58L-22 4H22Z" fill="#2f5d46"/><path d="M0-40L-18 -6H18Z" fill="#2f5d46" opacity=".85"/></g><g transform="translate(170 480) scale(1.1)"><rect x="-3" y="0" width="6" height="22" fill="#4a3b2c"/><path d="M0-58L-22 4H22Z" fill="#264d3b"/><path d="M0-40L-18 -6H18Z" fill="#264d3b" opacity=".85"/></g><g transform="translate(660 470) scale(1.3)"><rect x="-3" y="0" width="6" height="22" fill="#4a3b2c"/><path d="M0-58L-22 4H22Z" fill="#264d3b"/><path d="M0-40L-18 -6H18Z" fill="#264d3b" opacity=".85"/></g><g transform="translate(720 485) scale(1.0)"><rect x="-3" y="0" width="6" height="22" fill="#4a3b2c"/><path d="M0-58L-22 4H22Z" fill="#2f5d46"/><path d="M0-40L-18 -6H18Z" fill="#2f5d46" opacity=".85"/></g>
+<path d="M0 520C200 500 400 540 800 510V600H0Z" fill="#2c5440"/></svg>

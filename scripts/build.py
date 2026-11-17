@@ -127,13 +127,15 @@ def cta(h, p, label, subject):
 <div><h2>{h}</h2><p>{p}</p></div>
 <a class="btn btn-primary" href="{mail(subject)}" target="_blank" rel="noopener">{label}</a></div></div></section>'''
 
-def cta_final():
+def cta_final(eyebrow='Tu siguiente paso', titulo='Cuéntanos qué quieres <span class="accent">construir</span>',
+              texto='Una conversación para conocernos y ver por dónde partir. Sin apuro.', boton=None, tema=None):
+    boton = boton or AGENDAR
     return f'''<section class="cta-final">
   <div class="container">
-    <span class="eyebrow dark">Tu siguiente paso</span>
-    <h2>Cuéntanos qué quieres <span class="accent">construir</span></h2>
-    <p>Una conversación para conocernos y ver por dónde partir. Sin apuro.</p>
-    <a class="btn btn-primary btn-xl" href="{mail()}" target="_blank" rel="noopener">{AGENDAR} <span aria-hidden="true">→</span></a>
+    <span class="eyebrow dark">{eyebrow}</span>
+    <h2>{titulo}</h2>
+    <p>{texto}</p>
+    <a class="btn btn-primary btn-xl" href="{mail(tema)}" target="_blank" rel="noopener">{boton} <span aria-hidden="true">→</span></a>
     <ul class="cta-final-notes">
       <li>Te responde una persona del equipo</li>
       <li>No te pedimos decidir en la reunión</li>
@@ -524,50 +526,70 @@ GARANTIAS = [
     ('llave', 'Título de propiedad', 'El inmueble queda legalmente a tu nombre.', 'Adquieres derechos de propietario sobre un bien raíz inscrito a tu nombre, según la operación.'),
     ('documento', 'Contrato de mutuo', 'Las condiciones financieras quedan establecidas por escrito.', 'Determina las obligaciones de las partes, el monto, los intereses y los plazos de devolución.'),
 ]
-garantias = ''.join(f'''<article class="g-card">{icon(ic)}<h3>{t}</h3><p class="g-tag">{tag}</p><p>{d}</p></article>''' for ic, t, tag, d in GARANTIAS)
-PROPIEDADES = [('Puerto Varas', 42), ('Las Condes', 44), ('Osorno', 39)]
-propiedades = ''.join(f'''<article class="prop-card">
-      <div class="prop-img prop-img-{i+1}" role="img" aria-label="Propiedad en {c}">{P(f"FOTO real de la propiedad en {c}. Reemplazar este bloque por <img src='assets/img/portafolio/....jpg' alt='Propiedad en {c}'>.")}</div>
-      <div class="prop-info"><span class="prop-city">{c}</span><strong><span>{pct}%</span> bajo tasación*</strong></div>
-    </article>''' for i, (c, pct) in enumerate(PROPIEDADES))
+GAR_IMG = {'pagare': 'pagare', 'hipoteca': 'hipoteca', 'llave': 'titulo', 'documento': 'mutuo'}
+garantias = ''.join(f"""<article class="stack-card" style="--i:{i}">
+      <div class="stack-bg" style="background-image:url(assets/img/garantias/{GAR_IMG[ic]}.svg)" aria-hidden="true"></div>
+      <div class="stack-content">
+        <span class="stack-num">0{i+1} <small>/ 0{len(GARANTIAS)}</small></span>
+        {icon(ic)}
+        <h3>{t}</h3>
+        <p class="stack-tag">{tag}</p>
+        <p class="stack-desc">{d}</p>
+      </div>
+    </article>""" for i, (ic, t, tag, d) in enumerate(GARANTIAS))
+
+PROPIEDADES = [
+    ('puerto-varas', 'Puerto Varas', 'Casa', 42),
+    ('las-condes', 'Las Condes', 'Departamento', 44),
+    ('osorno', 'Osorno', 'Casa', 39),
+    ('vina-del-mar', 'Viña del Mar', 'Departamento', None),
+    ('providencia', 'Providencia', 'Departamento', None),
+    ('chicureo', 'Chicureo', 'Casa', None),
+]
+def _prop(slug, c, tipo, pct):
+    dato = f'<strong><span>{pct}%</span> bajo tasación*</strong>' if pct else '<strong class="prop-ej">Ejemplo</strong>'
+    return f"""<article class="prop-card"><div class="prop-img" style="background-image:url(assets/img/portafolio/{slug}.svg)"></div>
+      <div class="prop-info"><span><span class="prop-city">{c}</span><span class="prop-type">{tipo}</span></span>{dato}</div></article>"""
+propiedades = ''.join(_prop(*x) for x in PROPIEDADES)
+
 MECANISMOS = [
     ('Obligaciones respaldadas por pagaré', 'El inversionista puede iniciar acciones de cobro contra los obligados y, cuando corresponda, contra los avales que hayan asumido formalmente esa responsabilidad.'),
     ('Operaciones respaldadas por hipoteca', 'Se puede buscar una venta voluntaria del inmueble para pagar la deuda. Si no resulta viable, existen mecanismos judiciales para hacer efectiva la garantía.'),
     ('Operaciones con propiedad a nombre del inversionista', 'El inversionista conserva sus derechos sobre el inmueble y puede exigir las obligaciones de recompra asumidas contractualmente, de acuerdo con las condiciones de la operación.'),
 ]
-mecanismos = ''.join(f'''<article class="mec-card"><span class="mec-num">0{i+1}</span><h3>{t}</h3><p>{d}</p></article>''' for i, (t, d) in enumerate(MECANISMOS))
+mecanismos = ''.join(f'<article class="mec-card"><span class="mec-num">0{i+1}</span><h3>{t}</h3><p>{d}</p></article>' for i, (t, d) in enumerate(MECANISMOS))
 
 page('garantias-y-documentos.html', 'Garantías y respaldo',
-     'Qué protege tu inversión con Pulso: pagaré, hipoteca, título de propiedad y contrato de mutuo, los inmuebles detrás de las operaciones y cómo funcionan los resguardos ante un incumplimiento.',
-     hero('Cómo invertir / Garantías y respaldo', 'Tu inversión cuenta con resguardos concretos',
-          'Conoce los instrumentos legales, los activos y los mecanismos que resguardan tu capital.', 'Garantías y respaldo') + f'''
-<section class="section"><div class="container">
-  <div class="title center"><span class="eyebrow">Garantías y respaldo legal</span><h2>¿Qué protege tu inversión con Pulso?</h2>
-    <p class="lead">Cada operación cuenta con una estructura legal definida para establecer tus derechos, las obligaciones de pago y los mecanismos de resguardo de tu capital. Estos varían según la solución de inversión.</p></div>
-  <div class="g-grid">{garantias}</div>
+     'Qué protege tu inversión con Pulso: pagaré, hipoteca, título de propiedad y contrato de mutuo, el portafolio inmobiliario detrás de las operaciones y cómo funcionan los resguardos ante un incumplimiento.',
+     hero('Cómo invertir / Garantías y respaldo', '¿Qué protege tu inversión con Pulso?',
+          'Cada operación cuenta con una estructura legal definida para establecer tus derechos, las obligaciones de pago y los mecanismos de resguardo de tu capital. Estos varían según la solución de inversión.', 'Garantías y respaldo legal') + f"""
+<section class="section stack-section"><div class="container">
+  <div class="stack">{garantias}</div>
 </div></section>
 
-<section class="section section-soft" id="portafolio"><div class="container">
-  <div class="port-head">
-    <div><span class="eyebrow">El respaldo detrás de nuestras operaciones</span><h2>Detrás de cada operación hay activos que puedes conocer</h2>
-      <p class="lead">Las garantías legales son una parte del resguardo. En las operaciones vinculadas a inmuebles, también importa conocer el valor de los activos, sus condiciones de adquisición y la cobertura que representan frente al capital invertido.</p>
-      <p class="muted">Por eso, te mostramos las propiedades y los antecedentes inmobiliarios que forman parte de nuestro portafolio.</p></div>
+<section class="port-section" id="portafolio">
+  <div class="container port-intro">
+    <span class="eyebrow dark">El respaldo detrás de nuestras operaciones</span>
     {P("CIFRA: la referencia decía 'Más de $1.300 millones' (pendiente de validar). Se usa la cifra que entregó la usuaria el 2026-11-16: aprox. $1.100 millones. CONFIRMAR valor vigente y qué activos incluye.")}
-    {P("PRECISIÓN: no todas las propiedades del portafolio garantizan necesariamente todas las inversiones. Distinguir entre activos que garantizan obligaciones y propiedades disponibles para nuevas operaciones antes de presentar la cifra como respaldo.")}
-    <div class="port-stat"><span>Cerca de</span><strong>$<span data-count="1100">1.100</span></strong><span>millones en portafolio inmobiliario</span></div>
+    {P("PRECISIÓN: no todas las propiedades del portafolio garantizan necesariamente todas las inversiones. Distinguir entre activos que garantizan obligaciones y propiedades disponibles para nuevas operaciones.")}
+    <h2 class="port-title"><span class="port-big">$<span data-count="1100" data-when-visible>1.100</span> millones</span> <span class="port-sub">en portafolio inmobiliario</span></h2>
+    <p class="lead">Detrás de cada operación hay activos que puedes conocer. Las garantías legales son una parte del resguardo: también importa conocer el valor de los inmuebles, sus condiciones de adquisición y la cobertura que representan frente al capital invertido.</p>
   </div>
-  {P("PORCENTAJES bajo tasación tomados del diseño de referencia: VALIDAR con cada operación. FOTOS: reemplazar por imágenes reales del portafolio.")}
-  <div class="prop-row" tabindex="0" aria-label="Propiedades del portafolio">{propiedades}</div>
-  <p class="disclaimer">*Diferencia entre el precio de compra y la tasación de cada inmueble. Cifras referenciales de operaciones específicas; no aseguran resultados futuros.</p>
-</div></section>
+  {P("PROPIEDADES DE EJEMPLO con ilustraciones generadas (assets/img/portafolio/*.svg, se regeneran con scripts/ilustraciones.py). Reemplazar por fotos reales. Porcentajes bajo tasación (Puerto Varas 42%, Las Condes 44%, Osorno 39%) tomados del diseño de referencia: VALIDAR.")}
+  <div class="marquee" aria-label="Propiedades del portafolio (ejemplos)">
+    <div class="marquee-track">{propiedades}<div class="marquee-dup" aria-hidden="true">{propiedades}</div></div>
+  </div>
+  <div class="container"><p class="port-note">Imágenes ilustrativas. *Diferencia entre el precio de compra y la tasación de cada inmueble; cifras de operaciones específicas que no aseguran resultados futuros.</p></div>
+</section>
 
 <section class="section"><div class="container">
   <div class="title center"><span class="eyebrow">Mecanismos de respuesta</span><h2>¿Cómo funcionan tus resguardos ante un incumplimiento?</h2>
     <p class="lead">Las operaciones contemplan mecanismos de respuesta según la estructura contratada. Su objetivo es exigir el cumplimiento de las obligaciones y buscar la recuperación de los fondos.</p></div>
   <div class="mec-grid">{mecanismos}</div>
-  <p class="note mec-note">Los resguardos no eliminan el riesgo ni aseguran que la recuperación sea inmediata o total. Su efectividad depende de las condiciones legales, patrimoniales y comerciales de cada caso.</p>
 </div></section>
-''' + cta('Si algo no queda claro, pregúntanos', 'Te ayudamos a conseguir los antecedentes que necesitas para evaluar tranquilo.', AGENDAR, 'garantías y respaldo'))
+""" + cta_final('¿Te quedó alguna duda?', 'Pregúntanos lo que <span class="accent">necesites</span>',
+                'Ninguna pregunta está de más cuando se trata de tus ahorros. Te respondemos de frente, antes de cualquier decisión.',
+                'Resolver mis dudas', 'garantías y respaldo'))
 
 # ---------------- 2.4 Simuladores ----------------
 SOON = '<span class="pill soon">Próximamente</span>'
@@ -610,42 +632,73 @@ page('simuladores.html', 'Simuladores',
 ''' + cta('¿Prefieres ver los números con alguien?', 'Te acompañamos a leerlos y a resolver tus dudas.', AGENDAR, 'Consulta sobre simuladores'))
 
 # ---------------- 3.1 Nosotros ----------------
+HITOS = [
+    ('2016', 'Los orígenes', 'Bajo el origen empresarial de Partners &amp; Advisers y la gestión de Iván Barboza, nace el modelo Inversión Remate Seguro (IRS), que permitía a los inversionistas participar en oportunidades de remates judiciales con respaldo de activos inmobiliarios.'),
+    ('2016 – 2023', 'Experiencia y especialización', 'Se consolida una profunda experiencia en evaluación comercial, análisis jurídico y gestión inmobiliaria, y el horizonte se amplía hacia el financiamiento privado.'),
+    ('Fines de 2023', 'Nace Pulso Inversor SpA', 'Con la entrada en vigor de la Ley Fintech y la especialización de las actividades de Partners &amp; Advisers, se constituye oficialmente Pulso Inversor SpA y el modelo evoluciona hacia la Inversión con Garantía Real (IGR).'),
+    ('Hoy', 'Parte de Grupo Matchmaking', 'Ese desarrollo impulsó la creación de Grupo Matchmaking, el grupo de empresas del que Pulso Inversor hoy forma parte fundamental.'),
+]
+hitos = ''.join(f'<li><span class="hito-year">{y}</span><strong>{t}</strong><p>{d}</p></li>' for y, t, d in HITOS)
+PILARES_N = [
+    ('Transparencia y simplicidad', 'Un modelo directo que no complica al inversionista, con condiciones contractuales claras y resultados previamente pactados.'),
+    ('Seguridad y respaldo', 'Toda operación está sustentada en garantías reales (activos inmobiliarios subyacentes) o instrumentos legales sólidos.'),
+    ('Rentabilidad', 'Búsqueda constante de retornos atractivos que superen a los instrumentos de ahorro convencionales.'),
+    ('Inversión con sentido', 'Generamos valor más allá del dinero, con soluciones que ayudan a los propietarios frente a escenarios de pérdida patrimonial y abren nuevas oportunidades financieras.'),
+]
+pilares_n = ''.join(f'<article class="pilar"><span class="pilar-num">0{i+1}</span><h3>{t}</h3><p>{d}</p></article>' for i, (t, d) in enumerate(PILARES_N))
+_ICONS['onda'] = '<path d="M3 12h3l2-5 4 10 3-7 2 2h4"/>'
+_ICONS['flecha-up'] = '<path d="M4 18l6-6 4 4 6-8"/><path d="M15 8h5v5"/>'
+DIFERENCIAS = [
+    ('onda', 'Descorrelación del mercado bursátil', 'Al centrarse en activos alternativos inmobiliarios, las inversiones no se ven afectadas por la volatilidad diaria de la bolsa, las fluctuaciones de acciones o los conflictos macroeconómicos.'),
+    ('flecha-up', 'Rentabilidad superior a la banca tradicional', 'El modelo busca al menos duplicar las tasas de los depósitos a plazo comunes, apuntando a rentabilidades desde el 0,8% mensual.'),
+    ('escudo', 'Garantías tangibles', 'El capital se respalda con propiedades a nombre del inversionista, contratos de mutuo, hipotecas o pagarés, con un nivel de seguridad igual o superior al de las garantías estatales bancarias.'),
+]
+diferencias = ''.join(f'<article class="dif">{icon(ic)}<h3>{t}</h3><p>{d}</p></article>' for ic, t, d in DIFERENCIAS)
+
 page('nosotros.html', 'Nosotros',
-     'Detrás de cada inversión hay personas. Conoce la historia, la forma de trabajar y el equipo de Pulso Inversor, parte de Grupo Matchmaking.',
-     hero('Conócenos / Nosotros', 'Detrás de cada inversión hay personas',
-          'Desde 2016 acompañamos a quienes quieren invertir en algo que pueden ver y entender.', 'Quiénes somos') + f'''
+     'Desde 2016 estructuramos inversiones respaldadas por activos inmobiliarios. Conoce la historia, el enfoque, el equipo y los pilares de Pulso Inversor, parte de Grupo Matchmaking.',
+     hero('Conócenos / Nosotros', 'Garantías identificables, evaluables y jurídicamente constituidas',
+          'Es el principio con que nacimos en 2016 y el que sigue guiando cada operación de Pulso Inversor.', 'Quiénes somos') + f"""
+{P("TEXTOS de marca entregados por la usuaria el 2026-11-16. REVISIÓN LEGAL sugerida antes de publicar: 'nivel de seguridad igual o superior al de las garantías estatales bancarias', 'no se ven afectadas por… conflictos macroeconómicos', 'inversiones seguras', 'garantizando que cada operación sea… segura', 'retornos estables', 'completamente desconectada de la volatilidad bursátil'.")}
 <section class="section"><div class="container split">
-  <div><span class="eyebrow">Nuestra historia</span><h2>Una historia que empezó en 2016</h2>
-    <p class="muted">Ese camino también dio origen a Grupo Matchmaking, el grupo de empresas del que hoy somos parte.</p></div>
-  <ol class="timeline">
-    <li><strong>2016 · Los comienzos</strong><span class="muted">Bajo el alero de Partners &amp; Advisers y con Iván Barboza a la cabeza, nace el modelo Inversión Remate Seguro (IRS), ligado a oportunidades en remates judiciales.</span></li>
-    <li><strong>2016–2023 · Aprendiendo en cada operación</strong><span class="muted">Sumamos experiencia en evaluación comercial, análisis jurídico y gestión inmobiliaria, y se abrió el camino hacia el financiamiento privado.</span></li>
-    <li><strong>2023 · Nace Pulso Inversor SpA</strong><span class="muted">A fines de ese año se constituye la empresa y el modelo da el paso a la Inversión con Garantía Real (IGR).</span></li>
-  </ol>
+  <div class="sticky-col"><span class="eyebrow">Nuestra historia</span><h2>Una trayectoria que empezó en 2016</h2>
+    <p class="muted">De los remates judiciales a la Inversión con Garantía Real, siempre con el mismo principio fundacional.</p></div>
+  <ol class="hitos">{hitos}</ol>
 </div></section>
 
-<section class="section section-dark"><div class="container">
-  <div class="title"><span class="eyebrow dark">Lo que hacemos</span><h2>Unimos dos necesidades que se encuentran</h2>
-    <p class="lead">Hay personas que quieren diversificar y hacer crecer su patrimonio, y propietarios que necesitan liquidez para reorganizar sus finanzas. Nuestro trabajo es unirlas con inversiones alternativas vinculadas al mercado inmobiliario, buscando retornos atractivos y soluciones que les sirvan a ambos.</p></div>
-  <div class="grid-4">
-    <article class="card"><div class="card-num">01</div><h3>Transparencia y simplicidad</h3><p>Condiciones que se entienden y acuerdos por escrito desde el primer día.</p></article>
-    <article class="card"><div class="card-num">02</div><h3>Seguridad y respaldo</h3><p>Tus derechos quedan definidos en garantías inmobiliarias o instrumentos contractuales, según la alternativa.</p></article>
-    <article class="card"><div class="card-num">03</div><h3>Rentabilidad</h3><p>Buscamos retornos atractivos, siempre de acuerdo con el plazo y las condiciones de cada operación.</p></article>
-    <article class="card"><div class="card-num">04</div><h3>Inversión con sentido</h3><p>Tu inversión también abre nuevas posibilidades para los propietarios y su patrimonio.</p></article>
+<section class="section section-dark enfoque"><div class="container">
+  <span class="eyebrow dark">Nuestro enfoque</span>
+  <p class="enfoque-quote">Buscamos facilitar el acceso al mercado de activos alternativos, conectando a quienes necesitan soluciones de liquidez con inversionistas que buscan <span class="accent">diversificar, proteger y hacer crecer su patrimonio</span>.</p>
+  <div class="enfoque-cols">
+    <p>Creemos en un modelo de financiamiento privado que, junto con generar retornos estables y muy atractivos, entrega herramientas reales para que los propietarios puedan reorganizar sus finanzas de manera sostenible.</p>
+    <p>Nuestro propósito es consolidarnos como un actor de referencia en el mercado, con una estructura de inversión transparente, directa y completamente desconectada de la volatilidad bursátil.</p>
   </div>
 </div></section>
 
 <section class="section"><div class="container">
-  <div class="title"><span class="eyebrow">Nuestro equipo</span><h2>Las personas que te van a acompañar</h2></div>
-  {P("INCORPORAR fotografías aprobadas de Iván y Felipe (reemplazar el círculo con iniciales por <img class='avatar'>) y nombres, cargos, fotos y biografías de los demás integrantes.")}
-  <div class="grid-2">
-    <article class="card person"><div class="avatar" aria-hidden="true">IB</div><div><h3>Iván Barboza</h3><div class="role">Cofundador y experto inmobiliario</div>
-      <p>Conoce el mercado inmobiliario desde adentro y ha desarrollado modelos de inversión. Su foco está en evaluar bien cada oportunidad, gestionarla con profesionalismo y dejar todo respaldado por contrato.</p></div></article>
-    <article class="card person"><div class="avatar" aria-hidden="true">FR</div><div><h3>Felipe Rojas</h3><div class="role">Cofundador y estratega financiero</div>
-      <p>Lleva 16 años en finanzas y control de gestión, en compañías como LATAM, Iansa y Transbank. Aporta mirada corporativa y rigor al diseño financiero de nuestras alternativas. Llegó a Pulso como cliente e inversionista.</p></div></article>
+  <div class="title center"><span class="eyebrow">Nuestro equipo</span><h2>Las personas detrás de Pulso</h2></div>
+  {P("FOTOS provisorias tomadas de las portadas de los videos de newpulso. Reemplazar por fotografías aprobadas.")}
+  <div class="team">
+    <article class="team-card"><div class="team-photo" style="background-image:url(assets/img/equipo/ivan-barboza.jpg)"></div><div class="team-body">
+      <h3>Iván Barboza</h3><span class="team-role">Cofundador y experto inmobiliario</span>
+      <p>Con más de una década desarrollando modelos de inversión alternativa, Iván es el arquitecto detrás de Pulso Inversor. En 2016, al alero de Partners &amp; Advisers, comenzó a estructurar operaciones respaldadas por activos inmobiliarios, buscando más transparencia, gestión profesional y solidez contractual para los inversionistas. Ese conocimiento le permitió evolucionar el modelo hacia la Inversión con Garantía Real (IGR) y liderar en 2023 el nacimiento de Pulso Inversor SpA, con el propósito de acercar a las personas a inversiones seguras y respaldadas.</p></div></article>
+    <article class="team-card"><div class="team-photo" style="background-image:url(assets/img/equipo/felipe-rojas.jpg)"></div><div class="team-body">
+      <h3>Felipe Rojas</h3><span class="team-role">Cofundador y estratega financiero</span>
+      <p>Lleva 16 años liderando áreas de finanzas y control de gestión en compañías como LATAM, Iansa y Transbank, y suma esa visión corporativa y rigor analítico a la empresa. Su vínculo con el proyecto nació de la confianza en el modelo: comenzó como cliente, validando la rentabilidad y seguridad de las operaciones con su propio patrimonio. Hoy estructura financieramente los productos para que cada operación sea directa, segura y competitiva.</p></div></article>
   </div>
 </div></section>
-''' + cta(*CTA_GENERAL))
+
+<section class="section section-soft"><div class="container">
+  <div class="title center"><span class="eyebrow">Nuestros pilares</span><h2>Lo que guía cada operación</h2></div>
+  <div class="pilares">{pilares_n}</div>
+</div></section>
+
+<section class="section"><div class="container">
+  <div class="title center"><span class="eyebrow">Qué nos diferencia del mercado</span><h2>Una alternativa que se sostiene en activos reales</h2></div>
+  <div class="difs">{diferencias}</div>
+  <p class="disclaimer" style="text-align:center">Toda inversión tiene riesgos. Las condiciones de cada operación quedan establecidas en su contrato.</p>
+</div></section>
+""" + cta_final())
 
 # ---------------- 3.2 Verifica ----------------
 page('verifica-a-pulso.html', 'Verifica a Pulso',

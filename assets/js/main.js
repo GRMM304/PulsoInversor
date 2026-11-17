@@ -94,7 +94,7 @@
       p[0] = p[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
       return p.join(',');
     };
-    nums.forEach(function (el) {
+    var animar = function (el) {
       var fin = parseFloat(el.getAttribute('data-count'));
       var dec = parseInt(el.getAttribute('data-decimals') || '0', 10);
       var dur = 1800, t0 = null;
@@ -107,6 +107,13 @@
         if (k < 1) requestAnimationFrame(paso); else el.textContent = fmt(fin, dec);
       };
       setTimeout(function () { requestAnimationFrame(paso); }, 350);
+    };
+    nums.forEach(function (el) {
+      // Las cifras más abajo en la página se animan cuando aparecen en pantalla
+      if (el.hasAttribute('data-when-visible') && 'IntersectionObserver' in window) {
+        var o = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { o.disconnect(); animar(el); } }, { threshold: .6 });
+        o.observe(el);
+      } else { animar(el); }
     });
   }
 
