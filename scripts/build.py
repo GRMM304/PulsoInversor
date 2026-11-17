@@ -224,10 +224,10 @@ _ICONS['doc-check'] = '<path d="M6 3h9l3 3v8"/><path d="M6 3v18h7"/><path d="M9 
 
 # Tres caminos: a primera vista, nombre y frase; al abrir, qué activas y qué logras.
 CAMINOS = [
-    ('proyecta-un-hogar', 'Proyecta un Hogar', 'Haz crecer tu capital y ayuda a que una familia que enfrenta un remate tenga una nueva oportunidad.',
+    ('proyecta-un-hogar', 'Proyecta un Hogar', 'Tres formas de invertir, una oportunidad para hacer crecer tu capital. Desde inversiones accesibles con respaldo notarial hasta operaciones con garantía hipotecaria o título de propiedad. Tú eliges cómo participar.',
      ('Capital disponible', 'Desde $5.000.000'),
      ('Renta periódica', 'Flujos mensuales o trimestrales con factibilidad de interés')),
-    ('hipoteca-inteligente', 'Hipoteca Inteligente', 'Invierte sin capital: usa tu capacidad de crédito para comprar una propiedad, sin preocuparte de pagar los dividendos.',
+    ('hipoteca-inteligente', 'Hipoteca Inteligente', 'Tu capacidad de crédito es tu capital de oportunidad. Sin necesidad de desembolsar dinero propio, puedes acceder a una inversión inmobiliaria financiada, donde la estructura del negocio está diseñada para cubrir los dividendos y gestionar la operación.',
      ('Capacidad financiera', 'Desde 2.000 UF de crédito hipotecario'),
      ('Capital y patrimonio', 'Tu capacidad bancaria genera retorno y activos')),
     ('inversion-circular', 'Inversión Inmobiliaria Circular', 'Convierte una deuda hipotecaria que te ahoga en una inversión que te da flujo cada mes.',
@@ -521,8 +521,8 @@ estrategias = ''.join(f"""<article class="aht" id="estrategia-{n.lower().replace
     </article>""" for l, n, tag, mn, doc, d in ESTRATEGIAS)
 
 TIPOS = [
-    ('proyecta-un-hogar', 'Proyecta un Hogar', 'Invierte tu capital con respaldo y elige la estrategia que va contigo: Acción, Hipoteca o Título.', 'Desde $5MM'),
-    ('hipoteca-inteligente', 'Hipoteca Inteligente', 'Invierte sin capital: usa tu capacidad de crédito para comprar una propiedad y despreocúpate de los dividendos.', 'Desde 2.000 UF de crédito'),
+    ('proyecta-un-hogar', 'Proyecta un Hogar', 'Tres formas de invertir, una oportunidad para hacer crecer tu capital. Desde inversiones accesibles con respaldo notarial hasta operaciones con garantía hipotecaria o título de propiedad. Tú eliges cómo participar.', 'Desde $5MM'),
+    ('hipoteca-inteligente', 'Hipoteca Inteligente', 'Tu capacidad de crédito es tu capital de oportunidad. Sin necesidad de desembolsar dinero propio, puedes acceder a una inversión inmobiliaria financiada, donde la estructura del negocio está diseñada para cubrir los dividendos y gestionar la operación.', 'Desde 2.000 UF de crédito'),
     ('inversion-circular', 'Inversión Inmobiliaria Circular', 'Transforma el capital detenido en tu propiedad en una inversión que te da flujo cada mes.', 'Con tu propiedad'),
 ]
 tipos = ''.join(f"""<button type="button" class="tipo" data-inv-tab="{a_}" aria-expanded="false" aria-controls="{a_}">
@@ -559,7 +559,7 @@ page('inversiones.html', 'Inversiones',
 
   <div class="inv-panel" id="proyecta-un-hogar" data-inv-panel="proyecta-un-hogar" hidden>
     <div class="title center"><span class="eyebrow">01 · Para invertir tu capital</span><h2>Proyecta un Hogar</h2>
-      <p class="lead">Pon tu capital a trabajar en operaciones que ayudan a familias que enfrentan un remate a mantener su hogar. Elige la estrategia que va contigo.</p></div>
+      <p class="lead">Tres formas de invertir, una oportunidad para hacer crecer tu capital. Desde inversiones accesibles con respaldo notarial hasta operaciones con garantía hipotecaria o título de propiedad. Tú eliges cómo participar.</p></div>
     <div class="ahts">{estrategias}</div>
     {P("Montos y textos de las estrategias según la imagen entregada el 2026-11-17 (Título desde $100MM según la tabla de condiciones del 2026-11-17). Plazos por estrategia en la tabla: VALIDAR.")}
   </div>
@@ -568,7 +568,7 @@ page('inversiones.html', 'Inversiones',
     <div class="inv-split">
       <div class="inv-side">
         <span class="eyebrow">02 · Para quien tiene capacidad de crédito</span><h2>Hipoteca Inteligente</h2>
-        <p class="lead">No necesitas tener el dinero ni preocuparte de pagar dividendos. Usas tu capacidad de crédito para comprar una propiedad que requiere financiamiento, y la operación hace el resto.</p>
+        <p class="lead">Tu capacidad de crédito es tu capital de oportunidad. Sin necesidad de desembolsar dinero propio, puedes acceder a una inversión inmobiliaria financiada, donde la estructura del negocio está diseñada para cubrir los dividendos y gestionar la operación.</p>
         <ul class="inv-facts"><li><span>Desde</span><strong>2.000 UF de capacidad de crédito</strong></li><li><span>Capital</span><strong>No necesitas capital propio</strong></li><li><span>Plazo</span><strong>2 a 5 años</strong></li></ul>
         <div class="actions"><a class="btn btn-primary" href="simuladores.html#sim-hipoteca">Simular Hipoteca Inteligente</a></div>
       </div>
