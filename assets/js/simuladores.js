@@ -46,6 +46,8 @@
   var tabs = $$('[data-sim-tab]'), panels = $$('[data-sim-panel]');
   var stage = $('#sim-stage'), gate = $('#sim-gate');
   var contacto = ses.get('pulsoContacto');
+  // Página del equipo (/panel/simuladores): ya entró con la clave, así que no se piden datos.
+  var EQUIPO = root.hasAttribute('data-equipo');
   function setLocked(locked) {
     stage.classList.toggle('is-locked', locked);
     gate.hidden = !locked;
@@ -58,9 +60,9 @@
     tabs.forEach(function (t) { var on = t.getAttribute('data-sim-tab') === id; t.classList.toggle('is-active', on); t.setAttribute('aria-selected', on ? 'true' : 'false'); });
     panels.forEach(function (p) { p.hidden = p.getAttribute('data-sim-panel') !== id; });
     var pnl = $('[data-sim-panel="' + id + '"]'), asistido = pnl.hasAttribute('data-asistido');
-    setLocked(!contacto && !asistido);
+    setLocked(!contacto && !asistido && !EQUIPO);
     if (desplazar) stage.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    if (!contacto && !asistido) setTimeout(function () { var n = $('#gate-nombre'); if (n) n.focus({ preventScroll: true }); }, 450);
+    if (!contacto && !asistido && !EQUIPO) setTimeout(function () { var n = $('#gate-nombre'); if (n) n.focus({ preventScroll: true }); }, 450);
   }
   tabs.forEach(function (t) { t.addEventListener('click', function () { var id = t.getAttribute('data-sim-tab'); abrir(id, true); history.replaceState(null, '', location.search + '#' + id); }); });
 
@@ -138,7 +140,10 @@
     return doc;
   }
   function enviarCorreo(tipo, doc, prefijo, resumen, st, btn, monto) {
-    if (!contacto) return;
+    if (!contacto) {
+      if (EQUIPO) { doc.save(prefijo + '_' + (doc.__folio || folioPI()) + '.pdf'); st.className = st.className.replace(/\s?is-(ok|err)/g, '') + ' is-ok'; st.textContent = '✓ PDF descargado. Compártelo con el cliente.'; }
+      return;
+    }
     st.className = st.className.replace(/\s?is-(ok|err)/g, '');
     st.textContent = 'Enviando a ' + contacto.email + '…'; btn.disabled = true;
     if (window.fbq) fbq('trackCustom', 'EnviarSimulacion', { simulador: tipo });
@@ -280,7 +285,7 @@
   $('#p-correo').addEventListener('click', function () {
     var st = $('#p-status'), btn = $('#p-correo');
     if (!completo()) { st.textContent = 'Completa estrategia, monto y plazo antes de enviar.'; return; }
-    if (!contacto || !jspdfListo(st)) return;
+    if ((!contacto && !EQUIPO) || !jspdfListo(st)) return;
     var r = calcular(), sr = SERIES[P.serie];
     var resumenTxt = resumen();
     var doc = pdfSimple('Simulación Renta de Capital', 'Resultado referencial', [
@@ -792,7 +797,7 @@
 
     $('#sp-enviar').addEventListener('click', function () {
       var st = $('#sp-status'), btn = $('#sp-enviar'), r = calc();
-      if (!contacto || !r.listo) { st.textContent = 'Completa el portafolio, el descuento y el financiamiento antes de enviar.'; return; }
+      if ((!contacto && !EQUIPO) || !r.listo) { st.textContent = 'Completa el portafolio, el descuento y el financiamiento antes de enviar.'; return; }
       if (!jspdfListo(st)) return;
       var monto = r.tas * UF;
       var filasEvo = r.evol.map(function (e) { return [e.y + ' años', 'Deuda ' + ufs(e.deuda) + ' · Patrimonio ' + ufs(e.pat)]; });

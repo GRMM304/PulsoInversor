@@ -2108,3 +2108,17 @@ a.sim-pick{text-decoration:none}
 /* Verifica: nota de ejemplo */
 .ficha-nota{margin:12px 0 4px;padding:10px 12px;border-radius:12px;background:#FFF4CC;color:#6B5200;font-size:13.5px;font-weight:600}
 @media (min-width:901px){.estafa-video figcaption{gap:6px}}
+
+/* ===== Lorenzo circular con ilustración (2026-11-18) ===== */
+.lz-launcher{width:66px;height:66px;padding:0;border-radius:50%;justify-content:center;gap:0;background:#fff;box-shadow:0 14px 34px rgba(14,44,40,.3),0 0 0 3px #fff,0 0 0 5px var(--lime)}
+.lz-launcher-label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.lz-launcher-ico{width:66px;height:66px;background:none}
+.lz-launcher-ico .lz-ilu{width:66px;height:66px;display:block}
+.lz-ico-chat::after{right:3px;top:3px;width:14px;height:14px;border:2.5px solid #fff}
+.lz.is-open .lz-launcher{padding:0}
+.lz-ico-x{width:66px;height:66px;border-radius:50%;background:var(--green-900);color:var(--lime)}
+.lz-ico-x svg{width:24px;height:24px}
+.lz-av{background:none;overflow:hidden}
+.lz-av .lz-ilu{width:100%;height:100%;display:block}
+.lz-msg .lz-av .lz-ilu{width:100%;height:100%}
+@media (max-width:760px){.lz-launcher{width:58px;height:58px;padding:0}.lz-launcher-ico,.lz-launcher-ico .lz-ilu,.lz-ico-x{width:58px;height:58px}}

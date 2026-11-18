@@ -1009,10 +1009,10 @@ _sim_page('simuladores.html', 'Simuladores',
 # Simuladores asistidos: solo para el equipo. Se sirven en /panel/simuladores (con la clave del panel);
 # el Worker bloquea el acceso directo a /simuladores-equipo.
 _sim_page('simuladores-equipo.html', 'Simuladores asistidos', 'Uso interno del equipo de Pulso Inversor.',
-          'Simuladores asistidos', 'Uso interno del equipo de Pulso Inversor. Simula junto al cliente: los datos de contacto que ingreses son los del cliente y la simulación le llega a su correo.',
+          'Simuladores asistidos', 'Uso interno del equipo de Pulso Inversor. Simula junto al cliente; al final, el botón descarga el PDF para que se lo compartas.',
           PICKS_EQUIPO, _PANELES_EQUIPO, '')
 _fe = os.path.join(R, 'simuladores-equipo.html')
-_he = open(_fe).read().replace('<head>\n', '<head>\n<meta name="robots" content="noindex">\n', 1)
+_he = open(_fe).read().replace('<head>\n', '<head>\n<meta name="robots" content="noindex">\n', 1).replace('<div data-simuladores>', '<div data-simuladores data-equipo>', 1)
 _he = re.sub(r'((?:href|src)=")(?!https?:|/|#|mailto:|tel:|data:|javascript:)', r'\1/', _he)
 open(_fe, 'w').write(_he)
 
@@ -1326,7 +1326,7 @@ page('verifica-a-pulso.html', 'Verifica a Pulso',
       <div class="ficha-img" style="background-image:url(assets/img/operacion/maitencillo-casa.jpg)"><span class="ficha-badge">Ejemplo ilustrativo</span></div>
       <div class="ficha-body"><span class="ficha-kicker">Ficha de ejemplo</span><h3>Casa en Maitencillo</h3>{ficha}
         <div class="ficha-bar" aria-label="La inversión equivale al 47% de la tasación"><i style="width:47%">Inversión 47%</i><span>Respaldo 53%</span></div>
-        <figure class="ficha-tas"><img src="assets/img/operacion/maitencillo-tasacion.png" alt="Extracto de un informe de tasación de ejemplo: 10.000 UF" width="560" height="225" loading="lazy"><figcaption>Extracto de un informe de tasación, como referencia</figcaption></figure>
+        <figure class="ficha-tas"><img src="assets/img/operacion/maitencillo-tasacion.jpg" alt="Extracto de un informe de tasación de ejemplo: 10.000 UF" width="1448" height="590" loading="lazy"><figcaption>Extracto de un informe de tasación, como referencia</figcaption></figure>
         <p class="ficha-nota">Ejemplo ilustrativo para mostrarte cómo leer una ficha. Los datos no corresponden a una operación real.</p>
       </div>
     </article>
