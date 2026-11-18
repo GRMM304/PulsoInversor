@@ -36,6 +36,16 @@ export const ASESORES = [
     { nombre: 'Felipe Rojas', cargo: 'Cofundador', email: 'frojas@grupomm.cl' },
   ] },
 ];
+// Reconoce al asesor por el nombre de la reunión de Brevo (ej. "Renato Vargas", "Reunión con Pamela").
+const sinTildes = (t) => String(t || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+export function asesorDeReunion(nombreReunion) {
+  const t = sinTildes(nombreReunion);
+  for (let g = 0; g < ASESORES.length; g++) for (const a of ASESORES[g].personas) {
+    const ape = sinTildes(a.nombre).split(' ')[1];   // por apellido, para no confundir a dos personas con el mismo nombre
+    if (t.includes(sinTildes(a.nombre)) || (ape && new RegExp('\\b' + ape + '\\b').test(t))) return { grupo: g, asesor: a };
+  }
+  return null;
+}
 export const asesoresPara = (monto) => ASESORES.find((a) => (monto || 0) < a.hasta).personas;
 
 export const json = (obj, status = 200) => new Response(JSON.stringify(obj), {

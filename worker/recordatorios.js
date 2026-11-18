@@ -6,7 +6,7 @@
 // Cada correo trae el enlace a la videollamada y el enlace oficial de Brevo para reagendar o cancelar
 // (al cancelar, Brevo libera el cupo y nos avisa: los recordatorios pendientes se detienen).
 
-import { DEFAULT_SENDER, ASESORES, SITIO, WHATSAPP, C, P, esc, brevo, boton, bloqueResumen, plantilla } from './comun.js';
+import { asesorDeReunion, DEFAULT_SENDER, ASESORES, SITIO, WHATSAPP, C, P, esc, brevo, boton, bloqueResumen, plantilla } from './comun.js';
 import { firmar } from './seguimiento.js';
 
 const ETAPAS = [
@@ -44,11 +44,13 @@ export async function cancelarReserva(env, m) {
 }
 
 function asesorPorNombre(nombre) {
-  for (const g of ASESORES) for (const a of g.personas) if (a.nombre === nombre) return a;
-  return null;
+  const x = asesorDeReunion(nombre);
+  return x ? x.asesor : null;
 }
 
 function correo(r, col) {
+  const rec = asesorDeReunion(r.asesor);
+  if (rec) r = { ...r, asesor: rec.asesor.nombre };
   const primer = esc((r.nombre || '').split(' ')[0] || 'Hola');
   const quien = esc(r.asesor || 'tu asesor de Pulso');
   const cuando = fechaLarga(r.inicio);
@@ -91,22 +93,18 @@ function correo(r, col) {
 }
 
 /* ---------- Después de la reunión ---------- */
-function grupoDe(asesor) {
-  const i = ASESORES.findIndex((g) => g.personas.some((a) => a.nombre === asesor));
-  return i < 0 ? null : i;
-}
 
 async function correoPosterior(env, r, col) {
   // Si la persona viene de un simulador, se enlaza con su simulación (panel y encuesta quedan en su fila).
   const sim = await env.DB.prepare('SELECT * FROM simulaciones WHERE lower(email) = ? ORDER BY creado DESC LIMIT 1').bind(r.email).first().catch(() => null);
-  let g = grupoDe(r.asesor);
-  if (g === null) g = sim && sim.grupo != null ? sim.grupo : 0;
-  const ps = ASESORES[g].personas;
-  const asesor = ps.find((a) => a.nombre === r.asesor) || ps[0];
+  // El asesor sale del nombre de la reunión en Brevo; si no se reconoce, se usa el de su simulación.
+  const x = asesorDeReunion(r.asesor);
+  const g = x ? x.grupo : (sim && sim.grupo != null ? sim.grupo : 0);
+  const asesor = x ? x.asesor : ASESORES[g].personas[0];
   const nombre = r.nombre || (sim && sim.nombre) || '';
   const primer = esc(nombre.split(' ')[0] || 'Hola');
   const quien = esc(asesor.nombre.split(' ')[0]);
-  const t = await firmar(env, { i: sim ? sim.id : null, n: nombre || r.email, e: r.email, p: sim ? sim.telefono : '', s: sim ? sim.tipo : 'Reunión con Pulso', m: sim ? sim.monto : 0, g, f: Date.now() });
+  const t = await firmar(env, { a: asesor.nombre, i: sim ? sim.id : null, n: nombre || r.email, e: r.email, p: sim ? sim.telefono : '', s: sim ? sim.tipo : 'Reunión con Pulso', m: sim ? sim.monto : 0, g, f: Date.now() });
   const wa = 'https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(`Hola, soy ${nombre || r.email}. Conversé con ${asesor.nombre} y quiero seguir avanzando.`);
   if (col === 'p1h') return {
     asunto: `Gracias por conversar con ${asesor.nombre}`,

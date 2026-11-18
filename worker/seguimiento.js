@@ -123,7 +123,9 @@ async function agendar(request, env, url) {
     // Si el tramo tiene agenda de Brevo, se redirige allí (el enlace del correo no cambia aunque se cambie la agenda).
     const agendas = (AGENDA_BREVO[d.g] || []).filter((a) => a.url);
     await registrar(env, d, 'UPDATE simulaciones SET agenda_click = COALESCE(agenda_click, ?) WHERE id = ?', ahora());
-    const con = parseInt(url.searchParams.get('con'), 10);
+    let con = parseInt(url.searchParams.get('con'), 10);
+    // Si el enlace viene de una reunión con un asesor concreto, va directo a su agenda.
+    if (!agendas[con] && d.a) con = agendas.findIndex((x) => x.nombre === d.a);
     if (agendas[con]) {
       await registrar(env, d, 'UPDATE simulaciones SET agenda_con = ? WHERE id = ?', agendas[con].nombre);
       return Response.redirect(agendas[con].url, 302);
