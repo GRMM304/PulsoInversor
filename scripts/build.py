@@ -602,7 +602,7 @@ def _rect(kicker, titulo, filas=()):
     return f'<article class="est-rect"><span class="est-rect-k">{kicker}</span><h4>{titulo}</h4>{dl}</article>'
 ESTRATEGIAS_IGR = [
     ('renta-de-capital', 'Renta de Capital',
-     'Porque es una estrategia para poner a trabajar tu capital disponible y generar una renta periódica alta, segura y con respaldo real.',
+     'Una estrategia para poner a trabajar tu capital disponible y generar una renta periódica alta, segura y con respaldo real.',
      'Inversionistas con capital disponible desde $5.000.000.',
      [('estrategia-titulo', 'Garantía real', 'Título', [('Plazo', '15, 21 o 27 meses'), ('Interés mensual', '0,8% · 0,9% · 1,0% + UF'), ('Retiros', 'No'), ('Ticket mínimo', '$100.000.000')]),
       ('estrategia-hipoteca', 'Garantía real', 'Hipoteca', [('Plazo', '15, 21 o 27 meses'), ('Interés mensual', '0,7% · 0,8% · 0,9% + UF'), ('Retiros', 'No'), ('Ticket mínimo', '$25.000.000')]),
@@ -610,13 +610,13 @@ ESTRATEGIAS_IGR = [
      'Renta periódica, con garantía real y una rentabilidad muy superior a la de un depósito a plazo.',
      '<a class="btn btn-primary btn-xl" href="simuladores.html#sim-proyecta">Simular Renta de Capital <span aria-hidden="true">→</span></a>'),
     ('produccion-de-capital', 'Producción de Capital',
-     'Porque utiliza tu capacidad financiera (scoring) para generar un activo que produce capital, combinando financiamiento bancario, control del arriendo y valorización del inmueble.',
+     'Utiliza tu capacidad financiera (scoring) para generar un activo que produce capital, combinando financiamiento bancario, control del arriendo y valorización del inmueble.',
      'Personas con capacidad de crédito hipotecario y buen comportamiento financiero.',
      [('', 'Propiedades', 'Desde 2.000 UF', []), ('', 'Retorno', '5% + UF anual', []), ('', 'Horizonte', '2 a 5 años', [])],
      'Produces capital con financiamiento del banco, generas flujo por arriendo y construyes patrimonio.',
      f'<a class="btn btn-primary btn-xl" href="{AGENDA_URL}" target="_blank" rel="noopener">Solicitar una simulación asistida <span aria-hidden="true">→</span></a><p class="inv-asist">Esta simulación la haces junto a un asesor de Pulso Inversor.</p>'),
     ('arquitectura-de-capital', 'Arquitectura de Capital',
-     'Porque te permite diseñar una estructura integral de inversión y patrimonio, combinando tus bienes, ingresos y ahorros, según tus objetivos, plazos y necesidades especiales (tributarias, sucesorias o familiares).',
+     'Te permite diseñar una estructura integral de inversión y patrimonio, combinando tus bienes, ingresos y ahorros, según tus objetivos, plazos y necesidades especiales (tributarias, sucesorias o familiares).',
      'Personas con bienes, ingresos y/o ahorros que buscan una estrategia patrimonial integral.',
      [('', 'Diseño a medida', 'Opciones de inversión', []), ('', 'Diseño a medida', 'Opciones de financiamiento', []), ('', 'Diseño a medida', 'Estructura legal', [])],
      'Protección, eficiencia, continuidad y crecimiento de tu patrimonio, con una configuración personalizada.',
@@ -630,7 +630,7 @@ def _panel(i, a_, t, porque, quien, rects, logras, cta):
     return f"""<div class="inv-panel" id="{a_}" data-inv-panel="{a_}" hidden>
     <div class="est">
       <div class="est-head"><span class="eyebrow">0{i+1}</span><h2>{t}</h2>
-        <h3 class="est-porque">¿Por qué se llama {t}?</h3><p class="lead">{porque}</p></div>
+        <p class="lead">{porque}</p></div>
       <div class="est-row"><span class="est-k">A quiénes</span><p>{quien}</p></div>
       <div class="est-row"><span class="est-k">Condiciones</span><div class="est-rects">{rs}</div></div>
       <div class="est-row"><span class="est-k">Qué logras</span><p>{logras}</p></div>
@@ -735,10 +735,10 @@ def _prop(slug, c, tipo, sector):
       <div class="prop-info"><span class="prop-city">{c}</span><span class="prop-type">{tipo}</span></div></article>"""
 propiedades = ''.join(_prop(*x) for x in PROPIEDADES)
 
-MECANISMOS = [
-    ('Obligaciones respaldadas por pagaré', 'El pagaré es un título ejecutivo. Si no se paga, se inicia directamente un juicio ejecutivo, sin necesidad de declarar responsabilidades antes, y se pueden embargar los bienes de la empresa.'),
-    ('Operaciones respaldadas por hipoteca', 'La hipoteca te da la misma garantía que tiene un banco sobre un bien raíz. Si no se cumple lo pactado, se puede iniciar un juicio ejecutivo para recuperar el capital mediante el remate del inmueble de la compañía.'),
-    ('Operaciones con propiedad a nombre del inversionista', 'La propiedad queda inscrita a tu nombre en el respectivo Conservador de Bienes Raíces. Conservas tus derechos sobre el inmueble y puedes exigir la recompra pactada en el contrato.'),
+MECANISMOS = [   # texto entregado por la usuaria el 2026-11-18
+    ('Obligaciones caucionadas mediante pagaré', 'El inversionista queda facultado para iniciar las acciones de cobro pertinentes, tanto en contra de los deudores directos como, de ser procedente, en contra de los fiadores y avalistas que se hubieren constituido como codeudores solidarios o que hubieren asumido formalmente dicha responsabilidad.'),
+    ('Operaciones caucionadas con garantía hipotecaria', 'Las partes podrán acordar la enajenación voluntaria del bien raíz hipotecado con el objeto de extinguir íntegramente la obligación caucionada. En caso de que dicha alternativa no resulte viable, el acreedor conservará todas las acciones y los procedimientos judiciales conducentes a la realización forzada de la garantía para la satisfacción de su crédito.'),
+    ('Operaciones sobre bienes raíces inscritos a nombre del inversionista', 'El inversionista conservará plenamente su dominio sobre el inmueble, quedando facultado para exigir el cumplimiento de las obligaciones de recompra estipuladas contractualmente, con estricta sujeción a los términos, modalidades y condiciones previstos en la respectiva convención.'),
 ]
 mecanismos = ''.join(f'<article class="mec-card"><span class="mec-num">0{i+1}</span><h3>{t}</h3><p>{d}</p></article>' for i, (t, d) in enumerate(MECANISMOS))
 
@@ -883,7 +883,7 @@ _PANELES_EQUIPO = f"""  <div class="sim-panel" id="sim-hipoteca" data-sim-panel=
   </div></div>
 """
 
-def _sim_page(slug, titulo, desc, h1, lead, picks, paneles_extra, cierre):
+def _sim_page(slug, titulo, desc, h1, lead, picks, paneles_extra, cierre, acceso=''):
   page(slug, titulo, desc,
 f"""
 <div data-simuladores>
@@ -893,25 +893,26 @@ f"""
   <div class="sim-picks" role="tablist" aria-label="Simuladores">
 {picks}
   </div>
+  {acceso}
 
   <div class="sim-stage" id="sim-stage" hidden>
   {GATE}
 
 <div class="sim-panel" id="sim-proyecta" data-sim-panel="sim-proyecta"><div class="sim-panel-body">
-    <div class="sim-head"><h2>Renta de Capital</h2><p class="muted">Elige tu estrategia, el monto y el plazo, y compara con lo que te daría un depósito a plazo.</p></div>
+    <div class="sim-head"><span class="sim-ufr">UF + Rentabilidad</span><h2>Renta de Capital</h2><p class="muted">Tu capital se reajusta en UF y además gana la rentabilidad pactada. Elige la garantía, el monto y el plazo, y compara con lo que te daría un depósito a plazo.</p></div>
     <div class="pro">
       <div class="pro-form">
-        <span class="pro-label">Estrategia</span>
+        <span class="pro-label">Garantía real</span>
         <div class="pro-series">
-          <button type="button" data-serie="A"><b>A</b><span>Acción<small>Desde $5MM · Pagaré</small></span></button>
-          <button type="button" data-serie="H"><b>H</b><span>Hipoteca<small>Desde $25MM · Hipoteca</small></span></button>
-          <button type="button" data-serie="T"><b>T</b><span>Título<small>Desde $100MM · Título</small></span></button>
+          <button type="button" data-serie="T"><span>Título<small>Desde $100MM · UF + 0,8% a 1,0% mensual</small></span></button>
+          <button type="button" data-serie="H"><span>Hipoteca<small>Desde $25MM · UF + 0,7% a 0,9% mensual</small></span></button>
+          <button type="button" data-serie="A"><span>Pagaré<small>Desde $5MM · 1,0% a 1,2% mensual</small></span></button>
         </div>
         <label class="pro-label" for="p-monto">Monto a invertir</label>
         <input id="p-monto" class="pro-monto" type="text" inputmode="numeric" autocomplete="off">
         <div class="pro-chips" id="p-quick"></div>
         <p class="pro-help" id="p-min"></p>
-        <p class="pro-warn" id="p-warn" hidden>El monto está bajo el mínimo; se calcula con el mínimo de la estrategia.</p>
+        <p class="pro-warn" id="p-warn" hidden>El monto está bajo el mínimo; se calcula con el mínimo de esta garantía.</p>
         <span class="pro-label">Plazo</span>
         <div class="pro-chips" id="p-plazos"></div>
         <div class="pro-retiro" id="p-retiro-wrap">
@@ -921,17 +922,17 @@ f"""
         </div>
       </div>
       <div class="pro-out">
-        <p class="pro-falta" id="p-falta">Elige la estrategia, el monto y el plazo para ver tu resultado</p>
+        <p class="pro-falta" id="p-falta">Elige la garantía, el monto y el plazo para ver tu resultado</p>
         <div class="pro-cols">
           <div class="pro-result">
             <span class="pro-tag">Con Pulso Inversor</span>
             <div class="pro-total"><small>Total a recibir</small><strong id="r-total">—</strong></div>
             <div class="pro-gain"><small>Ganas</small><strong id="r-ganancia">—</strong></div>
             <ul class="pro-list">
-              <li><span>Estrategia</span><strong id="r-estrategia">—</strong></li>
+              <li><span>Garantía</span><strong id="r-estrategia">—</strong></li>
               <li><span>Monto</span><strong id="r-monto">—</strong></li>
               <li><span>Plazo</span><strong id="r-plazo">—</strong></li>
-              <li><span>Tasa</span><strong id="r-tasa">—</strong></li>
+              <li><span>Rentabilidad</span><strong id="r-tasa">—</strong></li>
             </ul>
           </div>
           <div class="pro-dap">
@@ -964,24 +965,46 @@ f"""
 
 
 PICKS_PUBLICO = f'''    <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-proyecta" aria-selected="false">
-      <span class="sim-pick-ico">A·H·T</span><strong>Renta de Capital</strong><span>Invierte tu capital con pagaré, hipoteca o título y compáralo con un depósito a plazo.</span><em>Desde $5MM</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
-    <a class="sim-pick sim-pick-asist" href="{AGENDA_URL}" target="_blank" rel="noopener">
-      <span class="sim-pick-ico">PC</span><strong>Producción de Capital</strong><span>Tu capacidad de crédito genera retorno y patrimonio. La simulas junto a un asesor.</span><em>Simulación asistida</em><span class="sim-pick-go">Agendar con un asesor <i aria-hidden="true">→</i></span></a>
-    <a class="sim-pick sim-pick-asist" href="{AGENDA_URL}" target="_blank" rel="noopener">
-      <span class="sim-pick-ico">AC</span><strong>Arquitectura de Capital</strong><span>Una estructura a la medida de tus bienes, ingresos y ahorros. La simulas junto a un asesor.</span><em>Simulación asistida</em><span class="sim-pick-go">Agendar con un asesor <i aria-hidden="true">→</i></span></a>'''
+      <span class="sim-pick-ico">RC</span><strong>Renta de Capital</strong><span>Invierte tu capital con título, hipoteca o pagaré y compáralo con un depósito a plazo.</span><em>UF + Rentabilidad</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
+    <button type="button" class="sim-pick sim-pick-asist" role="tab" data-sim-tab="sim-asistido-pc" aria-selected="false">
+      <span class="sim-pick-ico">PC</span><strong>Producción de Capital</strong><span>Tu capacidad de crédito genera retorno y patrimonio. La simulas junto a un asesor.</span><em>Simulación asistida</em><span class="sim-pick-go">Ver simulador <i aria-hidden="true">↓</i></span></button>
+    <button type="button" class="sim-pick sim-pick-asist" role="tab" data-sim-tab="sim-asistido-ac" aria-selected="false">
+      <span class="sim-pick-ico">AC</span><strong>Arquitectura de Capital</strong><span>Una estructura a la medida de tus bienes, ingresos y ahorros. La simulas junto a un asesor.</span><em>Simulación asistida</em><span class="sim-pick-go">Ver simulador <i aria-hidden="true">↓</i></span></button>'''
 PICKS_EQUIPO = '''    <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-proyecta" aria-selected="false">
-      <span class="sim-pick-ico">A·H·T</span><strong>Renta de Capital</strong><span>Invierte tu capital con pagaré, hipoteca o título y compáralo con un depósito a plazo.</span><em>Desde $5MM</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
+      <span class="sim-pick-ico">RC</span><strong>Renta de Capital</strong><span>Invierte tu capital con título, hipoteca o pagaré y compáralo con un depósito a plazo.</span><em>UF + Rentabilidad</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
     <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-hipoteca" aria-selected="false">
       <span class="sim-pick-ico">PC</span><strong>Producción de Capital</strong><span>Hipoteca Inteligente: arma la configuración con la capacidad de crédito del cliente.</span><em>Desde 2.000 UF</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
     <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-patrimonial" aria-selected="false">
       <span class="sim-pick-ico">AC</span><strong>Simulador Patrimonial</strong><span>Hipoteca Inteligente Empresarial: portafolio de propiedades con descuento para empresas y sus socios.</span><em>Arquitectura de Capital</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>'''
 
+def _asistido(id_, t, img, texto):
+    return f"""<div class="sim-panel sim-asistido" id="{id_}" data-sim-panel="{id_}" data-asistido hidden><div class="sim-panel-body">
+    <div class="sim-head"><span class="sim-ufr">Simulación asistida</span><h2>{t}</h2></div>
+    <div class="asist">
+      <img class="asist-img" src="assets/img/sim/{img}" alt="" width="1160" height="760" loading="lazy">
+      <div class="asist-card">
+        <span class="asist-lock" aria-hidden="true">🔒</span>
+        <h3>Este simulador lo usas junto a un asesor</h3>
+        <p>{texto}</p>
+        <a class="btn btn-primary" href="{AGENDA_URL}" target="_blank" rel="noopener">Agendar hora con un asesor <span aria-hidden="true">→</span></a>
+        <a class="asist-acceso" href="/panel/simuladores">¿Eres asesor de Pulso Inversor? Ingresa aquí</a>
+      </div>
+    </div>
+  </div></div>
+"""
+PANELES_ASISTIDOS = (_asistido('sim-asistido-pc', 'Producción de Capital', 'asistido-produccion.jpg',
+                               'Para ver tus números, agenda una hora con un asesor. Lo revisan juntos, con tu capacidad de crédito y tus objetivos.') +
+                     _asistido('sim-asistido-ac', 'Arquitectura de Capital', 'asistido-arquitectura.jpg',
+                               'Para ver tus números, agenda una hora con un asesor. Lo revisan juntos, con tus bienes, ingresos y ahorros.'))
+ACCESO_ASESORES = '<p class="sim-acceso"><a href="/panel/simuladores">Acceso asesores <span aria-hidden="true">→</span></a></p>'
+
 _sim_page('simuladores.html', 'Simuladores',
           'Simula tu inversión en Renta de Capital (Acción, Hipoteca o Título) y compárala con un depósito a plazo. Producción y Arquitectura de Capital se simulan junto a un asesor.',
           '¿Qué quieres simular?', 'Elige un simulador, completa tus datos una vez y revisa tus números con calma. Los resultados son referenciales.',
-          PICKS_PUBLICO, '',
+          PICKS_PUBLICO, PANELES_ASISTIDOS,
           cta_final('¿Prefieres ver los números con alguien?', 'Revisemos tu simulación <span class="accent">juntos</span>',
-                    'Un asesor te acompaña a leer los resultados y a resolver tus dudas.', AGENDAR, 'mi simulación'))
+                    'Un asesor te acompaña a leer los resultados y a resolver tus dudas.', AGENDAR, 'mi simulación'),
+          ACCESO_ASESORES)
 
 # Simuladores asistidos: solo para el equipo. Se sirven en /panel/simuladores (con la clave del panel);
 # el Worker bloquea el acceso directo a /simuladores-equipo.
@@ -1002,7 +1025,13 @@ page('inversion-circular.html', 'Inversión Inmobiliaria Circular',
   <div class="inv-split">
     <div class="inv-side">
       <span class="eyebrow">Para propietarios</span><h2>Cómo funciona</h2>
-      <p class="lead">Si tu propiedad te da más preocupaciones que ingresos, o el dividendo se lleva casi todo el arriendo, puedes liberar ese capital y hacerlo trabajar con intereses fijos cada mes.</p>
+      <p class="lead">Convierte una deuda hipotecaria que te ahoga en una inversión que te da flujo cada mes. Si tu propiedad te da más preocupaciones que ingresos, o el dividendo se lleva casi todo el arriendo, puedes liberar ese capital y hacerlo trabajar con intereses fijos cada mes.</p>
+      <ul class="inv-facts">
+        <li><span>Qué activas</span><strong>El capital que hoy está detenido en tu propiedad</strong></li>
+        <li><span>Qué logras</span><strong>Flujo mensual, sin deuda, con intereses fijos y tu capacidad de crédito recuperada</strong></li>
+        <li><span>A tu favor</span><strong>Una inversión en Pulso Inversor con intereses fijos mensuales</strong></li>
+        <li><span>Plazo</span><strong>Según tu contrato</strong></li>
+      </ul>
       <div class="actions"><a class="btn btn-primary" href="#simulador">Simular mi caso <span aria-hidden="true">↓</span></a></div>
     </div>
     {pasos(PASOS_IC)}
@@ -1148,9 +1177,9 @@ EQUIPO = [
     ('Felipe Jaña', 'Jefe de operaciones', 'assets/img/equipo/felipe-jana.jpg'),
     ('William Rojas', 'Jefe de contabilidad', 'assets/img/equipo/william-rojas.jpg'),
 ]
-def _crew(lista, cmf=False):
-    return ''.join(f'''<article class="crew-card"><img src="{foto}" alt="{n}" width="240" height="240" loading="lazy"><strong>{n}</strong><span class="crew-role">{r}</span>{'<span class="crew-cmf">Certificado CMF</span>' if cmf else ''}</article>''' for n, r, foto in lista)
-crew_asesores = _crew(ASESORES, True)
+def _crew(lista):
+    return ''.join(f'''<li><img src="{foto}" alt="" width="240" height="240" loading="lazy"><span><strong>{n}</strong><small>{r}</small></span></li>''' for n, r, foto in lista)
+crew_asesores = _crew(ASESORES)
 crew = _crew(EQUIPO)
 pilares_n = ''.join(f'<article class="pilar"><span class="pilar-num">0{i+1}</span><h3>{t}</h3><p>{d}</p></article>' for i, (t, d) in enumerate(PILARES_N))
 _ICONS['onda'] = '<path d="M3 12h3l2-5 4 10 3-7 2 2h4"/>'
@@ -1174,10 +1203,10 @@ page('nosotros.html', 'Nosotros',
 
 <section class="section section-dark enfoque" data-enfoque><div class="container">
   <span class="eyebrow dark">Nuestro enfoque</span>
-  <p class="enfoque-quote" data-scrub>Buscamos facilitar el acceso al mercado de activos alternativos, conectando a quienes necesitan soluciones de liquidez con inversionistas que buscan <span class="accent">diversificar, proteger y hacer crecer su patrimonio</span>.</p>
+  <p class="enfoque-quote" data-scrub>Facilitamos el acceso a activos alternativos inmobiliarios y deuda privada, conectando a quienes necesitan liquidez con inversionistas que buscan <span class="accent">diversificar, proteger y hacer crecer su patrimonio</span>.</p>
   <div class="enfoque-cols">
-    <p>Creemos en un modelo de financiamiento privado que, junto con generar retornos estables y muy atractivos, entrega herramientas reales para que los propietarios puedan reorganizar sus finanzas de manera sostenible.</p>
-    <p>Nuestro propósito es consolidarnos como un actor de referencia en el mercado, con una estructura de inversión transparente, directa y completamente desconectada de la volatilidad bursátil.</p>
+    <p>Con nuestro modelo de financiamiento privado, puedes adquirir una propiedad como inversión o financiar una operación inmobiliaria a cambio de intereses pactados, sin tener que comprar ni administrar la propiedad en este último caso. Al mismo tiempo, los propietarios pueden acceder a recursos para reorganizar sus finanzas de manera sostenible.</p>
+    <p>Queremos ser un referente en este mercado con alternativas que buscan ofrecer retornos atractivos y condiciones claras desde el inicio, para que puedas revisar los plazos, el respaldo y la forma de pago de cada operación antes de decidir si se ajusta a tus objetivos.</p>
   </div>
 </div></section>
 
@@ -1192,14 +1221,16 @@ page('nosotros.html', 'Nosotros',
       <p>Lleva 16 años liderando áreas de finanzas y control de gestión en compañías como LATAM, Iansa y Transbank. Esa visión corporativa, con rigor analítico, es la que aporta a la empresa. Su vínculo con el proyecto nació de la confianza en el modelo: comenzó como cliente, validando con su propio patrimonio los intereses y el respaldo de las operaciones. Hoy estructura financieramente los productos para que cada operación sea directa, transparente y competitiva.</p></div></article>
   </div>
   {P("EQUIPO y fotos entregados por la usuaria el 2026-11-17.")}
-  <div class="crew-block crew-block-cmf">
-    <div class="crew-head"><span class="eyebrow">Asesores certificados por la CMF</span><h3>Quienes te acompañan en tu inversión</h3>
-      <p>Te atienden, te explican cada operación y te acompañan hasta el cierre. La certificación de la CMF corresponde a nuestros asesores de inversión.</p></div>
-    <div class="crew crew-lg">{crew_asesores}</div>
-  </div>
-  <div class="crew-block">
-    <div class="crew-head"><h3>Gestión, operaciones y contabilidad</h3><p>El equipo que sostiene cada operación por dentro.</p></div>
-    <div class="crew crew-lg">{crew}</div>
+  <h3 class="team-sub">El equipo que te acompaña</h3>
+  <div class="eq2">
+    <div class="eq2-col eq2-cmf">
+      <div class="eq2-h"><span class="eq2-badge">✓ Certificados por la CMF</span><strong>Asesores de inversión</strong></div>
+      <ul>{crew_asesores}</ul>
+    </div>
+    <div class="eq2-col">
+      <div class="eq2-h"><strong>Gestión y operaciones</strong></div>
+      <ul>{crew}</ul>
+    </div>
   </div>
 </div></section>
 
@@ -1223,13 +1254,13 @@ SENALES = [
 ]
 senales = ''.join(f'<article class="senal"><span class="senal-tag">Señal {i+1}</span><h3>{t}</h3><p><strong>{k}</strong> {d}</p></article>' for i, (t, k, d) in enumerate(SENALES))
 
+# Operación real (Maitencillo), entregada por la usuaria el 2026-11-18: solo los datos necesarios.
 FICHA = [
-    (None, 'Inmueble', 'Casa · Puerto Varas'),
-    (1, 'Valor comercial (tasación)', '9.800 UF <small>Tasador independiente · marzo 2026</small>'),
-    (2, 'Precio de compra', '5.900 UF <small>40% bajo la tasación</small>'),
-    (3, 'Qué queda a favor del inversionista', 'Hipoteca inscrita en el Conservador de Bienes Raíces'),
-    (4, 'Plazo y calendario', '18 meses <small>Intereses trimestrales · capital al vencimiento</small>'),
-    (None, 'Estado', '<span class="ficha-estado">En curso</span>'),
+    (None, 'Inmueble', 'Casa · Maitencillo, Puchuncaví'),
+    (1, 'Tasación comercial', '10.000 UF <small>Tasador independiente · octubre 2024</small>'),
+    (2, 'Inversión', '4.744,2 UF <small>47% de la tasación · cobertura de capital de 211%</small>'),
+    (3, 'Qué queda a favor del inversionista', 'Título de propiedad <small>Inscrito en el Conservador de Bienes Raíces</small>'),
+    (4, 'Plazo y pago', '15 meses · 0,5% mensual + UF <small>Al vencimiento: 5.100 UF (inversión + 355,8 UF de interés)</small>'),
 ]
 ficha = ''.join(f'<div class="ficha-row">{f"<span class=ficha-mark>{n}</span>" if n else "<span></span>"}<span class="ficha-label">{l}</span><strong>{v}</strong></div>' for n, l, v in FICHA)
 REVISAR = [
@@ -1266,10 +1297,19 @@ page('verifica-a-pulso.html', 'Verifica a Pulso',
   <span class="eyebrow dark">Verifica a Pulso</span>
   <h1>¿Por qué no estamos en la CMF?</h1>
   <p class="v-answer">Pulso Inversor no requiere certificación CMF bajo esta estructura privada, contractual y personalizada. No opera como banco, corredora, administradora de fondos ni plataforma de financiamiento colectivo regulada.</p>
-  <div class="v-somos">
-    <span class="v-somos-k">Lo que sí somos</span>
-    <p>Pulso Inversor es una compañía especializada en ingeniería financiera y estructuración de inversiones alternativas respaldadas por activos reales.</p>
-    <p>Conectamos a inversionistas que buscan rentabilizar su capital con personas y empresas que necesitan soluciones financieras, y diseñamos operaciones que integran rentabilidad, garantías y oportunidades de desarrollo patrimonial.</p>
+  <div class="somos">
+    <div class="somos-top">
+      <span class="somos-k">Lo que sí somos</span>
+      <p class="somos-t">Una compañía especializada en <strong>ingeniería financiera</strong> y estructuración de <strong>inversiones alternativas respaldadas por activos reales</strong>.</p>
+    </div>
+    <div class="somos-flow">
+      <div class="somos-node"><strong>Inversionistas</strong><span>que buscan rentabilizar su capital</span></div>
+      <span class="somos-link" aria-hidden="true"></span>
+      <div class="somos-hub"><strong>Pulso Inversor</strong><span>diseña cada operación</span></div>
+      <span class="somos-link" aria-hidden="true"></span>
+      <div class="somos-node"><strong>Personas y empresas</strong><span>que requieren soluciones financieras</span></div>
+    </div>
+    <div class="somos-tags"><span>Rentabilidad</span><span>Garantías</span><span>Desarrollo patrimonial</span></div>
   </div>
   <p>Tu respaldo está en los documentos que firmas. Por eso, aquí te damos lo necesario para revisarnos por tu cuenta.</p>
 </div></section>
@@ -1289,11 +1329,14 @@ page('verifica-a-pulso.html', 'Verifica a Pulso',
 <section class="section" id="operacion-abierta"><div class="container">
   <div class="title center"><span class="eyebrow">Operación abierta</span><h2>Cómo revisar una operación</h2>
     <p class="lead">Cada operación tiene su ficha. Con este ejemplo te mostramos qué mirar en cada dato antes de invertir.</p></div>
-  {P("FICHA DE EJEMPLO con datos ficticios. Reemplazar por una operación real autorizada (candidata: Fundo Alhué, Curacaví) cuando se apruebe su publicación.")}
+  {P("OPERACIÓN REAL de Maitencillo (imagen del 2026-11-18): foto y extracto de tasación reales. CONFIRMAR autorización para publicarla.")}
   <div class="ficha-grid">
     <article class="ficha">
-      <div class="ficha-img" style="background-image:url(assets/img/portafolio/puerto-varas.svg)"><span class="ficha-badge">Ejemplo ilustrativo · datos ficticios</span></div>
-      <div class="ficha-body"><span class="ficha-kicker">Ficha de la operación</span><h3>Operación de ejemplo · Puerto Varas</h3>{ficha}</div>
+      <div class="ficha-img" style="background-image:url(assets/img/operacion/maitencillo-casa.jpg)"><span class="ficha-badge">Operación real · Foto del inmueble</span></div>
+      <div class="ficha-body"><span class="ficha-kicker">Ficha de la operación</span><h3>Casa en Maitencillo</h3>{ficha}
+        <div class="ficha-bar" aria-label="La inversión equivale al 47% de la tasación"><i style="width:47%">Inversión 47%</i><span>Respaldo 53%</span></div>
+        <figure class="ficha-tas"><img src="assets/img/operacion/maitencillo-tasacion.png" alt="Extracto del informe de tasación: 10.000 UF ($379.522.672) al 16 de octubre de 2024" width="560" height="225" loading="lazy"><figcaption>Extracto real del informe de tasación</figcaption></figure>
+      </div>
     </article>
     <div class="ficha-guide">
       <span class="eyebrow">Cómo leer esta ficha</span>

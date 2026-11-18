@@ -8,7 +8,7 @@ export const RESENAS_GOOGLE = 'https://g.page/r/CV1wmi0Qf_B7EAE/review';
 export const MAX_PDF_BYTES = 3 * 1024 * 1024;
 export const ORIGENES = ['https://1.pulsoinversor.cl', 'http://localhost:8787', 'http://127.0.0.1:8787'];
 export const TIPOS = {
-  proyecta: 'Rescate Inmobiliario',
+  proyecta: 'Renta de Capital',
   hipoteca: 'Hipoteca Inteligente',
   circular: 'Inversión Inmobiliaria Circular',
   patrimonial: 'Simulador Patrimonial',

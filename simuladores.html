@@ -58,12 +58,13 @@ src="https://www.facebook.com/tr?id=4384764601785320&ev=PageView&noscript=1"
     <p class="lead">Elige un simulador, completa tus datos una vez y revisa tus números con calma. Los resultados son referenciales.</p></div>
   <div class="sim-picks" role="tablist" aria-label="Simuladores">
     <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-proyecta" aria-selected="false">
-      <span class="sim-pick-ico">A·H·T</span><strong>Renta de Capital</strong><span>Invierte tu capital con pagaré, hipoteca o título y compáralo con un depósito a plazo.</span><em>Desde $5MM</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
-    <a class="sim-pick sim-pick-asist" href="https://meet.brevo.com/pulsoinversor/renato-vargas" target="_blank" rel="noopener">
-      <span class="sim-pick-ico">PC</span><strong>Producción de Capital</strong><span>Tu capacidad de crédito genera retorno y patrimonio. La simulas junto a un asesor.</span><em>Simulación asistida</em><span class="sim-pick-go">Agendar con un asesor <i aria-hidden="true">→</i></span></a>
-    <a class="sim-pick sim-pick-asist" href="https://meet.brevo.com/pulsoinversor/renato-vargas" target="_blank" rel="noopener">
-      <span class="sim-pick-ico">AC</span><strong>Arquitectura de Capital</strong><span>Una estructura a la medida de tus bienes, ingresos y ahorros. La simulas junto a un asesor.</span><em>Simulación asistida</em><span class="sim-pick-go">Agendar con un asesor <i aria-hidden="true">→</i></span></a>
+      <span class="sim-pick-ico">RC</span><strong>Renta de Capital</strong><span>Invierte tu capital con título, hipoteca o pagaré y compáralo con un depósito a plazo.</span><em>UF + Rentabilidad</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
+    <button type="button" class="sim-pick sim-pick-asist" role="tab" data-sim-tab="sim-asistido-pc" aria-selected="false">
+      <span class="sim-pick-ico">PC</span><strong>Producción de Capital</strong><span>Tu capacidad de crédito genera retorno y patrimonio. La simulas junto a un asesor.</span><em>Simulación asistida</em><span class="sim-pick-go">Ver simulador <i aria-hidden="true">↓</i></span></button>
+    <button type="button" class="sim-pick sim-pick-asist" role="tab" data-sim-tab="sim-asistido-ac" aria-selected="false">
+      <span class="sim-pick-ico">AC</span><strong>Arquitectura de Capital</strong><span>Una estructura a la medida de tus bienes, ingresos y ahorros. La simulas junto a un asesor.</span><em>Simulación asistida</em><span class="sim-pick-go">Ver simulador <i aria-hidden="true">↓</i></span></button>
   </div>
+  <p class="sim-acceso"><a href="/panel/simuladores">Acceso asesores <span aria-hidden="true">→</span></a></p>
 
   <div class="sim-stage" id="sim-stage" hidden>
     <div class="gate" id="sim-gate" aria-labelledby="gate-title">
@@ -86,20 +87,20 @@ src="https://www.facebook.com/tr?id=4384764601785320&ev=PageView&noscript=1"
 
 
 <div class="sim-panel" id="sim-proyecta" data-sim-panel="sim-proyecta"><div class="sim-panel-body">
-    <div class="sim-head"><h2>Renta de Capital</h2><p class="muted">Elige tu estrategia, el monto y el plazo, y compara con lo que te daría un depósito a plazo.</p></div>
+    <div class="sim-head"><span class="sim-ufr">UF + Rentabilidad</span><h2>Renta de Capital</h2><p class="muted">Tu capital se reajusta en UF y además gana la rentabilidad pactada. Elige la garantía, el monto y el plazo, y compara con lo que te daría un depósito a plazo.</p></div>
     <div class="pro">
       <div class="pro-form">
-        <span class="pro-label">Estrategia</span>
+        <span class="pro-label">Garantía real</span>
         <div class="pro-series">
-          <button type="button" data-serie="A"><b>A</b><span>Acción<small>Desde $5MM · Pagaré</small></span></button>
-          <button type="button" data-serie="H"><b>H</b><span>Hipoteca<small>Desde $25MM · Hipoteca</small></span></button>
-          <button type="button" data-serie="T"><b>T</b><span>Título<small>Desde $100MM · Título</small></span></button>
+          <button type="button" data-serie="T"><span>Título<small>Desde $100MM · UF + 0,8% a 1,0% mensual</small></span></button>
+          <button type="button" data-serie="H"><span>Hipoteca<small>Desde $25MM · UF + 0,7% a 0,9% mensual</small></span></button>
+          <button type="button" data-serie="A"><span>Pagaré<small>Desde $5MM · 1,0% a 1,2% mensual</small></span></button>
         </div>
         <label class="pro-label" for="p-monto">Monto a invertir</label>
         <input id="p-monto" class="pro-monto" type="text" inputmode="numeric" autocomplete="off">
         <div class="pro-chips" id="p-quick"></div>
         <p class="pro-help" id="p-min"></p>
-        <p class="pro-warn" id="p-warn" hidden>El monto está bajo el mínimo; se calcula con el mínimo de la estrategia.</p>
+        <p class="pro-warn" id="p-warn" hidden>El monto está bajo el mínimo; se calcula con el mínimo de esta garantía.</p>
         <span class="pro-label">Plazo</span>
         <div class="pro-chips" id="p-plazos"></div>
         <div class="pro-retiro" id="p-retiro-wrap">
@@ -109,17 +110,17 @@ src="https://www.facebook.com/tr?id=4384764601785320&ev=PageView&noscript=1"
         </div>
       </div>
       <div class="pro-out">
-        <p class="pro-falta" id="p-falta">Elige la estrategia, el monto y el plazo para ver tu resultado</p>
+        <p class="pro-falta" id="p-falta">Elige la garantía, el monto y el plazo para ver tu resultado</p>
         <div class="pro-cols">
           <div class="pro-result">
             <span class="pro-tag">Con Pulso Inversor</span>
             <div class="pro-total"><small>Total a recibir</small><strong id="r-total">—</strong></div>
             <div class="pro-gain"><small>Ganas</small><strong id="r-ganancia">—</strong></div>
             <ul class="pro-list">
-              <li><span>Estrategia</span><strong id="r-estrategia">—</strong></li>
+              <li><span>Garantía</span><strong id="r-estrategia">—</strong></li>
               <li><span>Monto</span><strong id="r-monto">—</strong></li>
               <li><span>Plazo</span><strong id="r-plazo">—</strong></li>
-              <li><span>Tasa</span><strong id="r-tasa">—</strong></li>
+              <li><span>Rentabilidad</span><strong id="r-tasa">—</strong></li>
             </ul>
           </div>
           <div class="pro-dap">
@@ -143,6 +144,32 @@ src="https://www.facebook.com/tr?id=4384764601785320&ev=PageView&noscript=1"
     <!-- PENDIENTE: TASA del depósito a plazo a 365 días (DAP_ANUAL en assets/js/simuladores.js): 4,8% anual referencial; CONFIRMAR el valor vigente a usar. -->
   </div></div>
 
+<div class="sim-panel sim-asistido" id="sim-asistido-pc" data-sim-panel="sim-asistido-pc" data-asistido hidden><div class="sim-panel-body">
+    <div class="sim-head"><span class="sim-ufr">Simulación asistida</span><h2>Producción de Capital</h2></div>
+    <div class="asist">
+      <img class="asist-img" src="assets/img/sim/asistido-produccion.jpg" alt="" width="1160" height="760" loading="lazy">
+      <div class="asist-card">
+        <span class="asist-lock" aria-hidden="true">🔒</span>
+        <h3>Este simulador lo usas junto a un asesor</h3>
+        <p>Para ver tus números, agenda una hora con un asesor. Lo revisan juntos, con tu capacidad de crédito y tus objetivos.</p>
+        <a class="btn btn-primary" href="https://meet.brevo.com/pulsoinversor/renato-vargas" target="_blank" rel="noopener">Agendar hora con un asesor <span aria-hidden="true">→</span></a>
+        <a class="asist-acceso" href="/panel/simuladores">¿Eres asesor de Pulso Inversor? Ingresa aquí</a>
+      </div>
+    </div>
+  </div></div>
+<div class="sim-panel sim-asistido" id="sim-asistido-ac" data-sim-panel="sim-asistido-ac" data-asistido hidden><div class="sim-panel-body">
+    <div class="sim-head"><span class="sim-ufr">Simulación asistida</span><h2>Arquitectura de Capital</h2></div>
+    <div class="asist">
+      <img class="asist-img" src="assets/img/sim/asistido-arquitectura.jpg" alt="" width="1160" height="760" loading="lazy">
+      <div class="asist-card">
+        <span class="asist-lock" aria-hidden="true">🔒</span>
+        <h3>Este simulador lo usas junto a un asesor</h3>
+        <p>Para ver tus números, agenda una hora con un asesor. Lo revisan juntos, con tus bienes, ingresos y ahorros.</p>
+        <a class="btn btn-primary" href="https://meet.brevo.com/pulsoinversor/renato-vargas" target="_blank" rel="noopener">Agendar hora con un asesor <span aria-hidden="true">→</span></a>
+        <a class="asist-acceso" href="/panel/simuladores">¿Eres asesor de Pulso Inversor? Ingresa aquí</a>
+      </div>
+    </div>
+  </div></div>
   </div>
 </div></section>
 </div>

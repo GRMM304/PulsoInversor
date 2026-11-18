@@ -80,7 +80,7 @@
     var grupo = function (a, b) { var w = document.createElement('div'); w.className = 'wz-group'; hijos.slice(a, b).forEach(function (n) { w.appendChild(n); }); pf.appendChild(w); return w; };
     var g1 = grupo(0, iMonto), g2 = grupo(iMonto, iPlazo), g3 = grupo(iPlazo, hijos.length);
     asistente($('#sim-proyecta'), [
-      { titulo: '¿Qué estrategia prefieres?', nodos: function () { return [pf, g1]; }, valido: function () { return !!$('#sim-proyecta [data-serie].is-active'); }, autoAvance: '[data-serie]' },
+      { titulo: '¿Qué garantía prefieres?', nodos: function () { return [pf, g1]; }, valido: function () { return !!$('#sim-proyecta [data-serie].is-active'); }, autoAvance: '[data-serie]' },
       { titulo: '¿Cuánto quieres invertir?', nodos: function () { return [pf, g2]; }, valido: function () { return (parseInt(($('#p-monto').value || '').replace(/\D/g, ''), 10) || 0) > 0; } },
       { titulo: '¿A qué plazo?', nodos: function () { return [pf, g3]; }, valido: function () { return !$('#p-correo').disabled; }, siguiente: 'Ver mi resultado →' },
       { titulo: 'Tu resultado', nodos: function () { return [$('#sim-proyecta .pro-out'), $('#sim-proyecta .pro-note')]; } },
