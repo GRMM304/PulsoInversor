@@ -305,3 +305,57 @@ document.addEventListener('click', function (e) {
   var ag = e.target.closest && e.target.closest('a[href*="meet.brevo.com"]');
   if (ag && window.fbq) fbq('track', 'Schedule', { content_name: 'Agenda Brevo', content_category: location.pathname });
 });
+
+// Celular estilo app: las filas de tarjetas se deslizan con el dedo y muestran puntos de avance.
+(function () {
+  var mq = window.matchMedia('(max-width:760px)');
+  var SEL = '.choice-grid,.igr-list,.caminos-acc,.review-list,.flip-grid,.pilares,.difs,.mec-grid';
+  function armar() {
+    if (!mq.matches) return;
+    document.querySelectorAll(SEL).forEach(function (fila) {
+      if (fila.dataset.swipe) return;
+      var items = Array.prototype.filter.call(fila.children, function (c) { return c.offsetParent !== null || getComputedStyle(c).display !== 'none'; });
+      if (items.length < 2) return;
+      fila.dataset.swipe = '1';
+      var dots = document.createElement('div'); dots.className = 'm-dots'; dots.setAttribute('aria-hidden', 'true');
+      items.forEach(function (it, i) {
+        var b = document.createElement('button'); b.type = 'button'; b.tabIndex = -1;
+        b.addEventListener('click', function () { fila.scrollTo({ left: it.offsetLeft - fila.offsetLeft - 16, behavior: 'smooth' }); });
+        dots.appendChild(b);
+      });
+      fila.insertAdjacentElement('afterend', dots);
+      var marcar = function () {
+        var centro = fila.scrollLeft + fila.clientWidth / 2, mejor = 0, dist = Infinity;
+        items.forEach(function (it, i) { var c = it.offsetLeft - fila.offsetLeft + it.offsetWidth / 2, d = Math.abs(c - centro); if (d < dist) { dist = d; mejor = i; } });
+        Array.prototype.forEach.call(dots.children, function (b, i) { b.classList.toggle('on', i === mejor); });
+      };
+      fila.addEventListener('scroll', function () { window.requestAnimationFrame(marcar); }, { passive: true });
+      marcar();
+    });
+    // En celular las tarjetas de "Tres caminos" se ven abiertas.
+    document.querySelectorAll('[data-camino]').forEach(function (c) { c.classList.add('is-open'); });
+  }
+  armar();
+  mq.addEventListener ? mq.addEventListener('change', armar) : mq.addListener(armar);
+})();
+
+// Celular estilo app: plegables "Ver más" para textos largos.
+(function () {
+  if (!window.matchMedia('(max-width:760px)').matches) return;
+  function plegar(el, texto, textoMenos) {
+    el.classList.add('m-plegado');
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'm-mas'; b.textContent = texto;
+    b.setAttribute('aria-expanded', 'false');
+    b.addEventListener('click', function () {
+      var abierto = el.classList.toggle('m-plegado') === false;
+      b.textContent = abierto ? textoMenos : texto; b.setAttribute('aria-expanded', abierto ? 'true' : 'false');
+    });
+    return b;
+  }
+  document.querySelectorAll('.why-m').forEach(function (w) {
+    if (w.querySelectorAll('.why-m-item').length > 1) w.appendChild(plegar(w, 'Ver las otras diferencias ↓', 'Ver menos ↑'));
+  });
+  document.querySelectorAll('.review-quote').forEach(function (q) {
+    if (q.scrollHeight > 190) q.insertAdjacentElement('afterend', plegar(q, 'Leer testimonio completo', 'Leer menos'));
+  });
+})();

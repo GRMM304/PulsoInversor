@@ -1676,3 +1676,47 @@ main p,main li,main blockquote{-webkit-hyphens:manual!important;hyphens:manual!i
   .table-wrap.compare td:first-child::before{content:none}
   .table-wrap.compare+.tabla-hint{display:none}
 }
+
+/* ===================== Celular estilo app (paso 2): tarjetas que se deslizan ===================== */
+@media (max-width:760px){
+  .choice-grid,.igr-list,.caminos-acc,.review-list,.flip-grid,.pilares,.difs,.mec-grid{
+    display:flex!important;flex-direction:row!important;grid-template-columns:none!important;height:auto!important;
+    overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;
+    gap:12px!important;margin-left:-16px;margin-right:-16px;padding:6px 16px 10px;scroll-padding:0 16px}
+  .choice-grid::-webkit-scrollbar,.igr-list::-webkit-scrollbar,.caminos-acc::-webkit-scrollbar,.review-list::-webkit-scrollbar,
+  .flip-grid::-webkit-scrollbar,.pilares::-webkit-scrollbar,.difs::-webkit-scrollbar,.mec-grid::-webkit-scrollbar{display:none}
+  .choice-grid>*,.igr-list>*,.caminos-acc>*,.review-list>*,.flip-grid>*,.pilares>*,.difs>*,.mec-grid>*{
+    flex:0 0 86%!important;max-width:86%;scroll-snap-align:center;margin:0!important}
+  .caminos-acc>.camino{min-height:430px}
+  .caminos-acc .camino .camino-detail{grid-template-rows:1fr;opacity:1}
+  .review-list>*{align-self:stretch}
+  /* Puntos que indican en qué tarjeta vas */
+  .m-dots{display:flex;justify-content:center;gap:7px;margin:4px 0 0}
+  .m-dots button{width:8px;height:8px;border-radius:999px;border:0;padding:0;background:var(--gray-200);transition:width .25s,background .25s}
+  .m-dots button.on{width:22px;background:var(--green-700)}
+  .cta-final .m-dots button,.section-dark .m-dots button{background:rgba(255,255,255,.3)}
+}
+@media (min-width:761px){.m-dots{display:none}}
+@media (max-width:760px){
+  /* Evita que las filas deslizables ensanchen la columna que las contiene */
+  .why,.reviews,.why-igr,.estafa-grid{grid-template-columns:minmax(0,1fr)!important;min-width:0}
+  .why>*,.reviews>*,.why-igr>*{min-width:0}
+  .choice-grid,.igr-list,.caminos-acc,.review-list,.flip-grid,.pilares,.difs,.mec-grid{min-width:0}
+}
+@media (max-width:760px){
+  /* Plegables: se muestra lo esencial y el resto con "Ver más" */
+  .why-m.m-plegado .why-m-item:nth-of-type(n+2){display:none}
+  .review-quote.m-plegado{display:-webkit-box;-webkit-line-clamp:7;-webkit-box-orient:vertical;overflow:hidden}
+  .m-mas{display:inline-flex;align-items:center;gap:6px;margin:10px 0 0;padding:8px 14px;border-radius:999px;border:1px solid var(--gray-200);
+    background:#fff;color:var(--green-900);font:inherit;font-size:13.5px;font-weight:800;cursor:pointer}
+  .why-m .m-mas{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.2);color:var(--lime)}
+  .video-testimonio video{max-height:440px;object-fit:cover}
+}
+@media (max-width:760px){
+  /* Ritmo más compacto, como en una app */
+  .section{padding:44px 0}
+  .cta-final{padding:56px 0}
+  .title{margin-bottom:22px}
+  .video-testimonio video{max-height:360px}
+  .to-top{display:none!important}   /* la barra inferior ya da acceso a todo */
+}
