@@ -192,6 +192,7 @@ src="https://www.facebook.com/tr?id=4384764601785320&ev=PageView&noscript=1"
 <button class="to-top" type="button" aria-label="Volver arriba"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
 {footer()}
 <script src="assets/js/main.js"></script>{scripts}
+<script src="assets/js/lorenzo.js" defer></script>
 </body>
 </html>
 '''
