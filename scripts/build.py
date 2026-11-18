@@ -8,6 +8,10 @@ WHATSAPP = '56983554676'
 AGENDAR = 'Agendar una reunión'
 # Botón "Agendar una reunión" del menú: agenda de Brevo Meetings (hoy, la de Renato Vargas).
 AGENDA_URL = 'https://meet.brevo.com/pulsoinversor/renato-vargas'
+# Páginas cuyos botones de agendar (menú incluido) van a otra agenda.
+AGENDA_POR_PAGINA = {
+    'ya-tengo-experiencia.html': 'https://meet.brevo.com/pulsoinversor/pamela-herrera',  # Pamela Herrera
+}
 
 def mail(subject=None):
     """Enlace de contacto de los botones: abre WhatsApp con un mensaje que conserva el tema."""
@@ -160,6 +164,8 @@ src="https://www.facebook.com/tr?id=4384764601785320&ev=PageView&noscript=1"
 '''
     html = html.replace(' hidden-desktop', ' data-mobile-only')
     html = _etiquetar_tablas(html)
+    if slug in AGENDA_POR_PAGINA:
+        html = html.replace(AGENDA_URL, AGENDA_POR_PAGINA[slug])
     open(os.path.join(R, slug), 'w').write(html)
 
 def hero(crumb, h1, p, eyebrow=None):
@@ -1214,7 +1220,8 @@ page('ya-tengo-experiencia.html', 'Ya tengo experiencia invirtiendo',
              'Ya probaste fondos, acciones o crowdfunding. Esta vez, <span class="accent">mira la propiedad antes de firmar.</span>',
              'Operaciones desde $25 millones con una propiedad identificada y una hipoteca a tu favor o la propiedad a tu nombre. Te mostramos la ficha completa y la revisas con tu abogado.',
              'Quiero una conversación sin compromiso', 'Ya tengo experiencia invirtiendo', 'Ver cómo se estructura', 'verifica-a-pulso.html#operacion-abierta',
-             ['Desde $25 millones', 'Hipoteca inscrita o propiedad a tu nombre'], _card2)
+             ['Desde $25 millones', 'Hipoteca inscrita o propiedad a tu nombre'], _card2,
+             agenda=AGENDA_URL)  # se cambia a la agenda de Pamela Herrera (AGENDA_POR_PAGINA)
      + rx_fit('tu-patrimonio', 'Antes de la operación, tu patrimonio',
               'Saber cuánto tienes no es lo mismo que saber cuánto puedes mover',
               'Tu empresa, tu salud y tu familia definen cuánto capital puede quedar comprometido 15, 21 o 27 meses. Quien invierte sin ese análisis puede terminar comprometiendo dinero que va a necesitar, o dejando sin trabajar dinero que podría estar rindiendo.',
