@@ -99,7 +99,50 @@
     burbuja(esc(texto), 'yo');
     responder(texto);
   }
+  // ---- Chat real de Lorenzo en respond.io (Website Chat). Si no carga, queda el panel con WhatsApp como respaldo. ----
+  var RESPOND_CID = '0ca5efecc5619168ecc1d304c2c5bee';
+  var rio = document.createElement('script');
+  rio.id = 'respondio__widget'; rio.async = true;
+  rio.src = 'https://cdn.respond.io/webchat/widget/widget.js?cId=' + RESPOND_CID;
+  document.body.appendChild(rio);
+  var rioEscucha = false;
+  function rioListo() {
+    var r = window.$respond;
+    return !!(r && typeof r.do === 'function' && !r.is('error') && document.querySelector('iframe[title="Webchat Widget"]'));
+  }
+  function abrirRespond() {
+    if (!rioListo()) return false;
+    if (!rioEscucha) {
+      rioEscucha = true;
+      window.$respond.on('chat:closed', function () { raiz.classList.remove('lz-rio'); document.body.classList.remove('lz-rio-abierto'); launcher.focus(); });
+    }
+    panel.hidden = true; raiz.classList.remove('is-open'); teaser.hidden = true;
+    raiz.classList.add('lz-rio'); document.body.classList.add('lz-rio-abierto');
+    window.$respond.do('chat:open');
+    if (window.fbq) fbq('track', 'Contact', { content_name: 'Chat Lorenzo (respond.io)', content_category: location.pathname });
+    try { sessionStorage.setItem('lzVisto', '1'); } catch (e) {}
+    return true;
+  }
+
+  var rioFallo = false, esperando = false;
+  rio.onerror = function () { rioFallo = true; };
   function abrir(on) {
+    if (on && abrirRespond()) return;
+    // El chat de respond.io puede tardar unos segundos en cargar: espera hasta 3 s antes de usar el respaldo.
+    if (on && !rioFallo && !(window.$respond && window.$respond.is && window.$respond.is('error'))) {
+      if (esperando) return;
+      esperando = true; launcher.classList.add('lz-cargando');
+      var t0 = Date.now();
+      (function intentar() {
+        if (abrirRespond()) { esperando = false; launcher.classList.remove('lz-cargando'); return; }
+        if (Date.now() - t0 > 3000) { esperando = false; launcher.classList.remove('lz-cargando'); abrirPanel(true); return; }
+        setTimeout(intentar, 150);
+      })();
+      return;
+    }
+    abrirPanel(on);
+  }
+  function abrirPanel(on) {
     panel.hidden = !on;
     raiz.classList.toggle('is-open', on);
     launcher.setAttribute('aria-expanded', on ? 'true' : 'false');

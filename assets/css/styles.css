@@ -2141,3 +2141,9 @@ body.gate-abierto{overflow:hidden}
 .lz.is-open .lz-launcher{padding:6px}
 .lz-av{box-shadow:0 0 0 2.5px var(--lime)}
 @media (max-width:760px){.lz-launcher{width:66px;height:66px;padding:5px}.lz-launcher-ico,.lz-launcher-ico .lz-ilu,.lz-ico-x{width:56px;height:56px}}
+
+/* Lorenzo en respond.io: se usa el botón propio; el de respond.io solo se ve con el chat abierto */
+iframe[title="Webchat Widget"][state="widgetClose"],iframe[title="Webchat Widget"][state="widgetClose"] ~ div{display:none!important}
+.lz.lz-rio{display:none!important}
+iframe[title="Webchat Widget"]{z-index:2147483000!important}
+.lz-launcher.lz-cargando{opacity:.75;cursor:progress}
