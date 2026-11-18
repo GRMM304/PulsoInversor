@@ -1637,3 +1637,42 @@ main p,main li,main blockquote{-webkit-hyphens:manual!important;hyphens:manual!i
 .gate-aut,.sim-aut{font-size:12.5px;line-height:1.5;color:var(--gray-500);margin:10px 0 0}
 .gate-aut a,.sim-aut a{color:var(--green-700);text-decoration:underline}
 .gate-form .gate-aut{grid-column:1/-1}
+
+/* ===================== Celular estilo app (paso 1) ===================== */
+.tabbar{display:none}
+@media (max-width:760px){
+  /* Barra inferior fija */
+  .tabbar{display:grid;grid-template-columns:repeat(4,1fr);position:fixed;left:0;right:0;bottom:0;z-index:70;
+    background:rgba(255,255,255,.97);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+    border-top:1px solid var(--gray-200);box-shadow:0 -6px 24px rgba(14,44,40,.08);
+    padding:6px 8px calc(6px + env(safe-area-inset-bottom))}
+  .tab{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:52px;border-radius:14px;
+    color:var(--gray-500);font-size:11.5px;font-weight:700;text-decoration:none;-webkit-tap-highlight-color:transparent}
+  .tab svg{width:24px;height:24px}
+  .tab.is-active{color:var(--green-900)}
+  .tab.is-active svg{stroke-width:2.3}
+  .tab:active{background:var(--gray-100)}
+  .tab-agendar{color:var(--green-900)}
+  .tab-agendar svg{background:var(--lime);border-radius:12px;padding:4px;width:34px;height:30px;margin-top:-2px}
+  body{padding-bottom:calc(70px + env(safe-area-inset-bottom))}
+  .to-top{bottom:calc(84px + env(safe-area-inset-bottom));right:14px;width:44px;height:44px}
+
+  /* Pie de página compacto: la navegación ya está en el menú y en la barra inferior */
+  .footer{padding:40px 0 24px}
+  .footer-grid>div:not(:first-child){display:none}
+  .footer .logo-foot{width:150px}
+  .footer-review{margin-top:24px}
+  .footer-bottom{margin-top:24px}
+
+  /* Tabla comparativa de Inversiones: una tarjeta por alternativa */
+  .table-wrap.compare{overflow:visible;background:transparent;box-shadow:none;border:0}
+  .table-wrap.compare table{min-width:0;display:block;border:0;background:transparent}
+  .table-wrap.compare thead{display:none}
+  .table-wrap.compare tbody{display:grid;gap:12px}
+  .table-wrap.compare tr{display:block;background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:16px 18px;box-shadow:var(--shadow-soft)}
+  .table-wrap.compare td{display:flex;justify-content:space-between;gap:14px;padding:8px 0;border:0;border-top:1px solid var(--gray-100);font-size:14px;text-align:right;position:static;background:none!important}
+  .table-wrap.compare td::before{content:attr(data-label);color:var(--gray-500);font-weight:600;text-align:left;flex:0 0 42%}
+  .table-wrap.compare td:first-child{display:block;border-top:0;padding:0 0 8px;font-size:17px;font-weight:800;color:var(--green-900);text-align:left}
+  .table-wrap.compare td:first-child::before{content:none}
+  .table-wrap.compare+.tabla-hint{display:none}
+}
