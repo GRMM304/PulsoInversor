@@ -1,8 +1,8 @@
 // Pulso Inversor · Service worker mínimo para instalar el sitio como app.
 // Siempre va primero a la red (así nunca muestra contenido viejo); solo si no hay conexión
 // responde con la última versión guardada de la página o con el inicio.
-const CACHE = 'pulso-v1';
-const BASE = ['/', '/assets/css/styles.css', '/assets/js/main.js', '/assets/img/logo-pulso-gmm.webp', '/assets/img/favicon.svg'];
+const CACHE = 'pulso-v2';
+const BASE = ['/', '/assets/css/styles.css', '/assets/js/main.js', '/assets/img/logo-pulso-gmm.webp', '/assets/img/favicon-48.png'];
 
 self.addEventListener('install', (e) => { e.waitUntil(caches.open(CACHE).then((c) => c.addAll(BASE)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', (e) => {

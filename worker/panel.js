@@ -112,7 +112,7 @@ async function panel(env, url) {
   const opciones = [['', 'Todos los asesores']].concat(ASESORES.map((g, i) => [String(i), g.personas.map((a) => a.nombre).join(' y ')]))
     .map(([v, t]) => `<option value="${v}"${v === asesorSel ? ' selected' : ''}>${esc(t)}</option>`).join('');
 
-  return html(`<!DOCTYPE html><html lang="es-CL"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Simulaciones y seguimiento · Pulso Inversor</title><link rel="icon" href="/assets/img/favicon.svg"><style>${ESTILO}</style></head><body>
+  return html(`<!DOCTYPE html><html lang="es-CL"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Simulaciones y seguimiento · Pulso Inversor</title><link rel="icon" href="/assets/img/favicon-48.png" type="image/png"><style>${ESTILO}</style></head><body>
 <header><h1>Simulaciones y seguimiento</h1><p>Simuladores de 1.pulsoinversor.cl · correo de seguimiento a las 48 horas · agenda Brevo · encuesta · <a href="/panel/simuladores" style="color:#C7D95D;font-weight:800">Abrir simuladores asistidos →</a></p></header>
 <div class="wrap">
   <div class="kpis">
@@ -180,7 +180,7 @@ async function sesionSim(request, env) {
   return firma === await firmaSim(env, exp);
 }
 function loginSim(error = '') {
-  return html(`<!DOCTYPE html><html lang="es-CL"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Simuladores asistidos · Pulso Inversor</title><link rel="icon" href="/assets/img/favicon.svg"><style>${ESTILO}</style></head><body>
+  return html(`<!DOCTYPE html><html lang="es-CL"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Simuladores asistidos · Pulso Inversor</title><link rel="icon" href="/assets/img/favicon-48.png" type="image/png"><style>${ESTILO}</style></head><body>
 <div class="card"><h1 style="margin:0 0 8px;font-size:22px;color:#0E2C28">Simuladores asistidos</h1>
 ${error ? `<p style="color:#b3261e;font-weight:700">${esc(error)}</p>` : '<p>Acceso para el equipo de Pulso Inversor. Ingresa la clave para usar los simuladores de Producción y Arquitectura de Capital.</p>'}
 <form method="post" action="/panel/simuladores/entrar"><input type="password" name="clave" required autocomplete="current-password" placeholder="Clave" style="width:100%;min-height:48px;border:1px solid #dfe5dc;border-radius:14px;padding:12px 14px;font:inherit;margin:6px 0 10px;box-sizing:border-box"><button class="b" type="submit">Entrar</button></form>
