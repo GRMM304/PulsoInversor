@@ -54,6 +54,8 @@ CREATE TABLE IF NOT EXISTS recordatorios (
   cancelada TEXT,
   r24 TEXT,                         -- fecha de envío, 'omitido' o 'error: ...'
   r1h TEXT,
-  r1m TEXT
+  r1m TEXT,
+  p1h TEXT,                         -- agradecimiento + encuesta, 1 h después de terminada
+  p48 TEXT                          -- seguimiento (remarketing), 48 h después de terminada
 );
 CREATE INDEX IF NOT EXISTS idx_rec_inicio ON recordatorios(inicio);
