@@ -1,4 +1,6 @@
-import os, re, urllib.parse
+import os, re, sys, urllib.parse
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import seo
 R = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 EMAIL = 'contacto@pulsoinversor.cl'
 
@@ -152,7 +154,7 @@ def _titulos(html):
 
 def page(slug, title, desc, body, scripts=''):
     body = _titulos(body)
-    full = 'Pulso Inversor · Inversiones con garantía real' if slug == 'index.html' else f'{title} · Pulso Inversor'
+    full, desc = seo.titulo_y_desc(slug, title, desc)  # títulos y descripciones para Google: scripts/seo.py
     html = f'''<!doctype html>
 <html lang="es">
 <head>
@@ -160,9 +162,7 @@ def page(slug, title, desc, body, scripts=''):
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>{full}</title>
 <meta name="description" content="{desc}">
-<meta property="og:title" content="{full}">
-<meta property="og:description" content="{desc}">
-<meta property="og:image" content="assets/media/hero-poster.jpg">
+{seo.cabecera(slug, full, desc, title)}
 <meta name="theme-color" content="#0E2C28">
 <link rel="icon" href="assets/img/favicon-48.png" sizes="48x48" type="image/png"><link rel="icon" href="assets/img/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="manifest" href="/manifest.webmanifest">
@@ -210,6 +210,7 @@ src="https://www.facebook.com/tr?id=4384764601785320&ev=PageView&noscript=1"
     html = _etiquetar_tablas(html)
     if slug in AGENDA_POR_PAGINA:
         html = html.replace(AGENDA_URL, AGENDA_POR_PAGINA[slug])
+    html = seo.html_final(html, slug)
     open(os.path.join(R, slug), 'w').write(html)
 
 def hero(crumb, h1, p, eyebrow=None):
@@ -1515,10 +1516,17 @@ page('preguntas-frecuentes.html', 'Preguntas frecuentes',
                                 href=whatsapp('Hola, tengo una pregunta sobre Pulso Inversor')))
 print('ok')
 
+# ---------------- Página 404 ----------------
+page('404.html', 'Página no encontrada', 'La página que buscas no existe o cambió de dirección.',
+     '''<section class="page-hero"><div class="container">
+<h1>No encontramos esta página</h1><p>Puede que el enlace haya cambiado. Te dejamos los caminos más usados:</p>
+<p style="display:flex;gap:12px;flex-wrap:wrap;margin-top:22px"><a class="btn btn-primary" href="index.html">Ir al inicio</a> <a class="btn btn-secondary" href="simuladores.html">Simular mi inversión</a> <a class="btn btn-secondary" href="inversiones.html">Ver inversiones</a></p>
+</div></section>''')
+
 # ---------------- sitemap.xml y robots.txt (Google Search Console) ----------------
 import datetime as _dt
 _DOMINIO = 'https://www.pulsoinversor.cl'
-_NO_INDEXAR = {'simuladores-equipo.html', '404.html'}
+_NO_INDEXAR = seo.NO_INDEXAR
 _hoy = _dt.date.today().isoformat()
 _paginas = sorted(f for f in os.listdir(R) if f.endswith('.html') and f not in _NO_INDEXAR)
 _urls = ''.join(

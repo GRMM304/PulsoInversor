@@ -148,6 +148,12 @@ export default {
     if (url.hostname === 'pulsoinversor.cl' || (url.hostname === '1.pulsoinversor.cl' && !interno && request.method === 'GET')) {
       return Response.redirect('https://www.pulsoinversor.cl' + url.pathname + url.search, 301);
     }
+    // Una sola dirección por página (SEO): /nosotros.html → /nosotros y /index.html → / con 301.
+    const html = url.pathname.match(/^\/(?:([a-z0-9-]+)\.html|index)$/);
+    if (html && request.method === 'GET' && !/^\/simuladores-equipo/.test(url.pathname)) {
+      const limpio = html[1] && html[1] !== 'index' ? '/' + html[1] : '/';
+      return Response.redirect(url.origin + limpio + url.search, 301);
+    }
     if (url.pathname === '/api/enviar-simulacion') {
       if (request.method !== 'POST') return json({ ok: false, error: 'metodo_no_permitido' }, 405);
       try { return await enviarSimulacion(request, env); }
