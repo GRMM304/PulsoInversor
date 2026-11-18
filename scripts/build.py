@@ -1514,3 +1514,17 @@ page('preguntas-frecuentes.html', 'Preguntas frecuentes',
 ''' + cta('¿Tienes otra pregunta?', 'Escríbenos. Te responde una persona del equipo.', 'Hacer mi pregunta', None,
                                 href=whatsapp('Hola, tengo una pregunta sobre Pulso Inversor')))
 print('ok')
+
+# ---------------- sitemap.xml y robots.txt (Google Search Console) ----------------
+import datetime as _dt
+_DOMINIO = 'https://www.pulsoinversor.cl'
+_NO_INDEXAR = {'simuladores-equipo.html', '404.html'}
+_hoy = _dt.date.today().isoformat()
+_paginas = sorted(f for f in os.listdir(R) if f.endswith('.html') and f not in _NO_INDEXAR)
+_urls = ''.join(
+    f'  <url><loc>{_DOMINIO}/{"" if f == "index.html" else f[:-5]}</loc><lastmod>{_hoy}</lastmod><priority>{"1.0" if f == "index.html" else ("0.3" if f == "privacidad.html" else "0.8")}</priority></url>\n'
+    for f in _paginas)
+open(os.path.join(R, 'sitemap.xml'), 'w').write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + _urls + '</urlset>\n')
+open(os.path.join(R, 'robots.txt'), 'w').write(
+    'User-agent: *\nAllow: /\nDisallow: /panel\nDisallow: /api/\nDisallow: /seguimiento/\nDisallow: /simuladores-equipo\n\n'
+    f'Sitemap: {_DOMINIO}/sitemap.xml\n')

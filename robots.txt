@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /panel
+Disallow: /api/
+Disallow: /seguimiento/
+Disallow: /simuladores-equipo
+
+Sitemap: https://www.pulsoinversor.cl/sitemap.xml
