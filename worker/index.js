@@ -54,7 +54,7 @@ function correoEquipo({ tipo, nombre, email, telefono, monto, lineas, personas, 
       + bloqueResumen(lineas)
       + P('El PDF que recibió va adjunto. Si respondes este correo, le escribes directamente.'),
     botones: waCliente ? boton('Escribirle por WhatsApp', waCliente) : '',
-    pie: 'Aviso interno de los simuladores de 1.pulsoinversor.cl.',
+    pie: 'Aviso interno de los simuladores de pulsoinversor.cl.',
   });
 }
 
@@ -142,6 +142,12 @@ async function enviarSimulacion(request, env) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    // El sitio vive en www.pulsoinversor.cl. pulsoinversor.cl redirige siempre; 1.pulsoinversor.cl redirige las páginas
+    // pero sigue atendiendo /api, /seguimiento y /panel (webhooks de Brevo y enlaces de correos ya enviados).
+    const interno = /^\/(api|seguimiento|panel)(\/|$)/.test(url.pathname);
+    if (url.hostname === 'pulsoinversor.cl' || (url.hostname === '1.pulsoinversor.cl' && !interno && request.method === 'GET')) {
+      return Response.redirect('https://www.pulsoinversor.cl' + url.pathname + url.search, 301);
+    }
     if (url.pathname === '/api/enviar-simulacion') {
       if (request.method !== 'POST') return json({ ok: false, error: 'metodo_no_permitido' }, 405);
       try { return await enviarSimulacion(request, env); }

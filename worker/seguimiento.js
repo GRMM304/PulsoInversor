@@ -176,7 +176,7 @@ ${agendas.map((a, i) => `<p><a href="/seguimiento/agendar?t=${esc(t)}&amp;con=${
         + bloqueResumen([`Día preferido: ${diaTxt}`, `Horario: ${f.franja}`, `Modalidad: ${f.modalidad}`, `Comentario: ${f.comentario || '—'}`])
         + bloqueResumen([`Nombre: ${d.n}`, `Correo: ${d.e}`, `Teléfono: ${d.p ? '+56 ' + d.p : '—'}`, `Simulador: ${d.s}`, `Monto simulado: ${d.m ? clp(d.m) : '—'}`, `Asesor asignado: ${nombres(ps)}`]),
       botones: waCliente ? boton('Confirmarle por WhatsApp', waCliente) : '',
-      pie: 'Aviso interno del seguimiento de simulaciones de 1.pulsoinversor.cl.',
+      pie: 'Aviso interno del seguimiento de simulaciones de pulsoinversor.cl.',
     }),
     tags: ['seguimiento-agenda'],
   }, d.e);
@@ -246,7 +246,7 @@ async function encuesta(request, env, url) {
       cuerpo: P(`Confirmó que ya fue contactado y respondió la encuesta del correo de seguimiento.`)
         + bloqueResumen([`Quién lo contactó: ${f.quien}`, `Medio: ${f.medio}`, `Satisfacción con la atención: ${f.satisfaccion} de 5`, `Dudas resueltas: ${f.dudas}`, `Recomendaría Pulso: ${nps} de 10 (${tipoNps})`, `En qué está hoy: ${f.etapa}`, `Comentario: ${f.comentario || '—'}`])
         + bloqueResumen([`Nombre: ${d.n}`, `Correo: ${d.e}`, `Teléfono: ${d.p ? '+56 ' + d.p : '—'}`, `Simulador: ${d.s}`, `Monto simulado: ${d.m ? clp(d.m) : '—'}`, `Asesor asignado: ${nombres(ps)}`, `Fecha de la simulación: ${new Date(d.f).toLocaleDateString('es-CL', { timeZone: 'America/Santiago', dateStyle: 'long' })}`]),
-      pie: 'Aviso interno del seguimiento de simulaciones de 1.pulsoinversor.cl.',
+      pie: 'Aviso interno del seguimiento de simulaciones de pulsoinversor.cl.',
     }),
     tags: ['seguimiento-encuesta'],
   }, d.e);
