@@ -1,7 +1,7 @@
 /* Pulso Inversor · Simuladores
  * - Acceso: los simuladores parten bloqueados hasta completar nombre, correo, teléfono y aceptar las casillas.
  *   Hipoteca Inteligente pide además la capacidad financiera por crédito.
- * - Proyecta un Hogar: réplica del simulador de www.pulsoinversor.cl + comparación con depósito a plazo.
+ * - Rescate Inmobiliario: réplica del simulador de www.pulsoinversor.cl + comparación con depósito a plazo.
  * - Hipoteca Inteligente: réplica del simulador de simuladorpulsoinversor.netlify.app.
  * Los datos de contacto viven solo en memoria y en sessionStorage (se borran al cerrar la pestaña).
  */
@@ -176,7 +176,7 @@
   if (/^sim-(proyecta|hipoteca|circular)$/.test(inicial)) abrir(inicial, false);
 
   /* =========================================================
-     Proyecta un Hogar (estrategias Acción, Hipoteca, Título)
+     Rescate Inmobiliario (estrategias Acción, Hipoteca, Título)
      ========================================================= */
   var SERIES = {
     A: { nombre: 'Acción', garantia: 'Pagaré', plazos: [12, 18, 24], retiro: true, minimo: 5000000, interes: [1, 1.1, 1.2], uf: false },
@@ -276,15 +276,15 @@
     if (!contacto || !jspdfListo(st)) return;
     var r = calcular(), sr = SERIES[P.serie];
     var resumenTxt = resumen();
-    var doc = pdfSimple('Simulación Proyecta un Hogar', 'Resultado referencial', [
+    var doc = pdfSimple('Simulación Rescate Inmobiliario', 'Resultado referencial', [
       { t: 'Tu simulación', rows: [['Alternativa', 'Estrategia ' + sr.nombre + ' · ' + sr.garantia], ['Monto a invertir', fmtCLP(r.monto)], ['Plazo', P.plazo + ' meses'],
         ['Tasa', fmtPct(tasa(), 1) + ' mensual' + (sr.uf ? ' + UF' : '')]].concat(sr.retiro ? [['Retiro anticipado', P.retiro ? 'Sí' : 'No']] : []) },
       { t: 'Con Pulso Inversor', rows: [['Total a recibir', fmtCLP(r.total)], ['Ganancia', '+' + fmtCLP(r.ganancia), 'pos']] },
       { t: 'En un depósito a plazo a 365 días', rows: [['Tasa referencial', fmtPct(DAP_ANUAL, 2) + ' anual'], ['Total a recibir', fmtCLP(r.dapTotal)], ['Ganancia', '+' + fmtCLP(r.dapGanancia), 'red']] },
       { t: 'Tus próximos pasos', proximos: true },
       { t: 'Supuestos', small: true, text: DISCLAIMER + ' Depósito a plazo: a 365 días, renovado al vencimiento con interés compuesto; para plazos que no son años completos, el último período se calcula en proporción al tiempo.' + (sr.uf ? ' Hipoteca y Título se reajustan en UF (UF ' + fmtCLP(UF) + ', IPC estimado 4,5% anual).' : '') }
-    ], { tipo: 'Proyecta un Hogar', monto: r.monto });
-    enviarCorreo('proyecta', doc, 'Simulacion_ProyectaUnHogar', resumenTxt.split('\n'), st, btn, r.monto);
+    ], { tipo: 'Rescate Inmobiliario', monto: r.monto });
+    enviarCorreo('proyecta', doc, 'Simulacion_RescateInmobiliario', resumenTxt.split('\n'), st, btn, r.monto);
   });
   renderSeries(); render();
 

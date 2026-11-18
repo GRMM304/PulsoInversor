@@ -257,7 +257,7 @@ PASOS = '''<li><strong>Nos cuentas qué buscas</strong><span>Partimos por escuch
 CTA_GENERAL = ('Cuéntanos qué quieres construir', 'Una conversación para conocernos y ver por dónde partir. Sin apuro.', AGENDAR, None)
 
 PRODUCTS = [
-    ('Proyecta un Hogar', 'Haz crecer tu capital y ayuda a que una familia que enfrenta un remate tenga una nueva oportunidad.', 'proyecta-un-hogar'),
+    ('Rescate Inmobiliario', 'Haz crecer tu capital y ayuda a que una familia que enfrenta un remate tenga una nueva oportunidad.', 'rescate-inmobiliario'),
     ('Hipoteca Inteligente', 'Usa tu capacidad de crédito para empezar a construir tu patrimonio inmobiliario.', 'hipoteca-inteligente'),
     ('Configuración Patrimonial', 'Ordena lo que has construido pensando en tu familia y en lo que quieres dejar.', 'configuracion-patrimonial'),
     ('Inversión Inmobiliaria Circular', 'Dale una nueva vida al capital de tu propiedad, con menos preocupaciones de arriendo.', 'inversion-circular'),
@@ -269,7 +269,7 @@ _ICONS['doc-check'] = '<path d="M6 3h9l3 3v8"/><path d="M6 3v18h7"/><path d="M9 
 
 # Tres caminos: a primera vista, nombre y frase; al abrir, qué activas y qué logras.
 CAMINOS = [
-    ('proyecta-un-hogar', 'Proyecta un Hogar', 'Tres formas de invertir, una oportunidad para hacer crecer tu capital. Desde inversiones accesibles con respaldo notarial hasta operaciones con garantía hipotecaria o título de propiedad. Tú eliges cómo participar.',
+    ('rescate-inmobiliario', 'Rescate Inmobiliario', 'Oportunidad para hacer crecer tu capital. Desde inversiones accesibles con respaldo notarial hasta operaciones con garantía hipotecaria o título de propiedad. Tú eliges cómo participar.',
      ('Capital disponible', 'Desde $5.000.000'),
      ('Renta periódica', 'Flujos mensuales o trimestrales con factibilidad de interés')),
     ('hipoteca-inteligente', 'Hipoteca Inteligente', 'Tu capacidad de crédito es tu capital de oportunidad. Sin necesidad de desembolsar dinero propio, puedes acceder a una inversión inmobiliaria financiada, donde la estructura del negocio está diseñada para cubrir los dividendos y gestionar la operación.',
@@ -336,7 +336,6 @@ page('index.html', 'Inicio',
       <img src="assets/img/equipo/jessica-valenzuela.jpg" alt="Jessica Valenzuela" title="Jessica Valenzuela" width="240" height="240" loading="lazy">
       <img src="assets/img/equipo/felipe-jana.jpg" alt="Felipe Jaña" title="Felipe Jaña" width="240" height="240" loading="lazy">
       <img src="assets/img/equipo/william-rojas.jpg" alt="William Rojas" title="William Rojas" width="240" height="240" loading="lazy">
-      <img src="assets/img/asesores/gloria.webp" alt="Gloria Cepeda" title="Gloria Cepeda" width="240" height="240" loading="lazy">
       <img src="assets/img/asesores/pamela.webp" alt="Pamela Herrera" title="Pamela Herrera" width="240" height="240" loading="lazy">
       <img src="assets/img/equipo/renato-vargas.jpg" alt="Renato Vargas" title="Renato Vargas" width="240" height="240" loading="lazy">
       <img src="assets/img/equipo/santiago-fernandez.jpg" alt="Santiago Fernández" title="Santiago Fernández" width="240" height="240" loading="lazy">
@@ -541,7 +540,7 @@ page('como-funciona.html', 'Cómo funciona',
 # ---------------- 2.2 Inversiones ----------------
 _ICONS['hipoteca'] = '<path d="M3.5 11L12 4.5l8.5 6.5"/><path d="M5.5 9.8V20h13V9.8"/><rect x="9.5" y="13" width="5" height="4" rx="1"/><path d="M10.5 13v-1.3a1.5 1.5 0 0 1 3 0V13"/>'
 _ICONS['llave'] = '<circle cx="8" cy="15" r="4"/><path d="M11 12l8-8"/><path d="M16 7l2.5 2.5M14 9l1.5 1.5"/>'
-# Mecánica entregada por la usuaria el 2026-11-17. "Proyecta un Hogar" = estrategias de participación (Acción, Hipoteca, Título).
+# Mecánica entregada por la usuaria el 2026-11-17. "Rescate Inmobiliario" = estrategias de participación (Acción, Hipoteca, Título).
 def pasos(lista):
     def li(i, x):
         t, d = x[0], x[1]
@@ -564,11 +563,10 @@ estrategias = ''.join(f"""<article class="aht" id="estrategia-{n.lower().replace
       <p class="aht-tag">{tag}</p>
       <div class="aht-chips"><span>{mn}</span><span>{doc}</span></div>
       <p class="aht-desc">{d}</p>
-      <div class="aht-btns"><a class="btn btn-primary" href="simuladores.html?serie={l}#sim-proyecta">Simular {n}</a></div>
     </article>""" for l, n, tag, mn, doc, d in ESTRATEGIAS)
 
 TIPOS = [
-    ('proyecta-un-hogar', 'Proyecta un Hogar', 'Tres formas de invertir, una oportunidad para hacer crecer tu capital. Desde inversiones accesibles con respaldo notarial hasta operaciones con garantía hipotecaria o título de propiedad. Tú eliges cómo participar.', 'Desde $5MM'),
+    ('rescate-inmobiliario', 'Rescate Inmobiliario', 'Oportunidad para hacer crecer tu capital. Desde inversiones accesibles con respaldo notarial hasta operaciones con garantía hipotecaria o título de propiedad. Tú eliges cómo participar.', 'Desde $5MM'),
     ('hipoteca-inteligente', 'Hipoteca Inteligente', 'Tu capacidad de crédito es tu capital de oportunidad. Sin necesidad de desembolsar dinero propio, puedes acceder a una inversión inmobiliaria financiada, donde la estructura del negocio está diseñada para cubrir los dividendos y gestionar la operación.', 'Desde 2.000 UF de crédito'),
     ('inversion-circular', 'Inversión Inmobiliaria Circular', 'Transforma el capital detenido en tu propiedad en una inversión que te da flujo cada mes.', 'Con tu propiedad'),
 ]
@@ -598,16 +596,17 @@ PERFILES = [
 perfiles = ''.join(f"""<a class="perfil" href="{h}"><span class="perfil-q">“{q}”</span><span class="perfil-arrow" aria-hidden="true">→</span><span class="perfil-a"><small>Te recomendamos</small><strong>{r}</strong><em>{m}</em></span></a>""" for q, r, m, h in PERFILES)
 
 page('inversiones.html', 'Inversiones',
-     'Las tres formas de invertir con Pulso Inversor: Proyecta un Hogar (estrategias Acción, Hipoteca y Título), Hipoteca Inteligente e Inversión Inmobiliaria Circular.',
+     'Las tres formas de invertir con Pulso Inversor: Rescate Inmobiliario (estrategias Acción, Hipoteca y Título), Hipoteca Inteligente e Inversión Inmobiliaria Circular.',
      hero('Cómo invertir / Inversiones', 'Encuentra la alternativa que va contigo',
           'Tres formas de invertir, cada una pensada para un momento distinto. Toca la tuya para ver cómo funciona.', 'Inversiones') + f"""
 <section class="section tipos-sec" data-inv><div class="container">
   <div class="tipos">{tipos}</div>
 
-  <div class="inv-panel" id="proyecta-un-hogar" data-inv-panel="proyecta-un-hogar" hidden>
-    <div class="title center"><span class="eyebrow">01 · Para invertir tu capital</span><h2>Proyecta un Hogar</h2>
-      <p class="lead">Tres formas de invertir, una oportunidad para hacer crecer tu capital. Desde inversiones accesibles con respaldo notarial hasta operaciones con garantía hipotecaria o título de propiedad. Tú eliges cómo participar.</p></div>
+  <div class="inv-panel" id="rescate-inmobiliario" data-inv-panel="rescate-inmobiliario" hidden>
+    <div class="title center"><span class="eyebrow">01 · Para invertir tu capital</span><h2>Rescate Inmobiliario</h2>
+      <p class="lead">Oportunidad para hacer crecer tu capital. Desde inversiones accesibles con respaldo notarial hasta operaciones con garantía hipotecaria o título de propiedad. Tú eliges cómo participar.</p></div>
     <div class="ahts">{estrategias}</div>
+    <div class="actions" style="justify-content:center"><a class="btn btn-primary btn-xl" href="simuladores.html#sim-proyecta">Simular Rescate Inmobiliario <span aria-hidden="true">→</span></a></div>
     {P("Montos y textos de las estrategias según la imagen entregada el 2026-11-17 (Título desde $100MM según la tabla de condiciones del 2026-11-17). Plazos por estrategia en la tabla: VALIDAR.")}
   </div>
 
@@ -640,9 +639,9 @@ page('inversiones.html', 'Inversiones',
   <div class="table-wrap compare"><table>
     <thead><tr><th>Alternativa</th><th>Desde</th><th>Qué queda a tu favor</th><th>Plazos</th></tr></thead>
     <tbody>
-      <tr><td>Proyecta un Hogar · Acción</td><td>$5 millones</td><td>Contrato de mutuo y pagaré</td><td>12, 18 o 24 meses</td></tr>
-      <tr><td>Proyecta un Hogar · Hipoteca</td><td>$25 millones</td><td>Hipoteca inscrita a tu favor</td><td>15, 21 o 27 meses</td></tr>
-      <tr><td>Proyecta un Hogar · Título</td><td>$100 millones</td><td>La propiedad inscrita a tu nombre</td><td>15, 21 o 27 meses</td></tr>
+      <tr><td>Rescate Inmobiliario · Acción</td><td>$5 millones</td><td>Contrato de mutuo y pagaré</td><td>12, 18 o 24 meses</td></tr>
+      <tr><td>Rescate Inmobiliario · Hipoteca</td><td>$25 millones</td><td>Hipoteca inscrita a tu favor</td><td>15, 21 o 27 meses</td></tr>
+      <tr><td>Rescate Inmobiliario · Título</td><td>$100 millones</td><td>La propiedad inscrita a tu nombre</td><td>15, 21 o 27 meses</td></tr>
       <tr><td>Hipoteca Inteligente</td><td>2.000 UF de capacidad de crédito</td><td>La propiedad a tu nombre durante la operación, con recompra al cierre</td><td>2 a 5 años</td></tr>
       <tr><td>Inversión Inmobiliaria Circular</td><td>El capital de tu propiedad</td><td>Inversión en Pulso Inversor con intereses fijos mensuales</td><td>Según tu contrato</td></tr>
     </tbody></table></div>
@@ -739,10 +738,10 @@ page('garantias-y-documentos.html', 'Garantías y respaldo',
                 'Resolver mis dudas', 'garantías y respaldo'))
 
 # ---------------- 2.4 Simuladores ----------------
-# Lógica en assets/js/simuladores.js. Proyecta un Hogar replica www.pulsoinversor.cl (con comparación vs depósito a plazo);
+# Lógica en assets/js/simuladores.js. Rescate Inmobiliario replica www.pulsoinversor.cl (con comparación vs depósito a plazo);
 # Hipoteca Inteligente replica simuladorpulsoinversor.netlify.app.
 page('simuladores.html', 'Simuladores',
-     'Simula tu inversión en Proyecta un Hogar (Acción, Hipoteca o Título) y compárala con un depósito a plazo, o arma tu configuración de Hipoteca Inteligente.',
+     'Simula tu inversión en Rescate Inmobiliario (Acción, Hipoteca o Título) y compárala con un depósito a plazo, o arma tu configuración de Hipoteca Inteligente.',
 f"""
 <div data-simuladores>
 <section class="section sim-top" id="sim-area"><div class="container">
@@ -750,7 +749,7 @@ f"""
     <p class="lead">Elige un simulador, completa tus datos una vez y revisa tus números con calma. Los resultados son referenciales.</p></div>
   <div class="sim-picks" role="tablist" aria-label="Simuladores">
     <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-proyecta" aria-selected="false">
-      <span class="sim-pick-ico">A·H·T</span><strong>Proyecta un Hogar</strong><span>Invierte tu capital con Acción, Hipoteca o Título y compáralo con un depósito a plazo.</span><em>Desde $5MM</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
+      <span class="sim-pick-ico">A·H·T</span><strong>Rescate Inmobiliario</strong><span>Invierte tu capital con Acción, Hipoteca o Título y compáralo con un depósito a plazo.</span><em>Desde $5MM</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
     <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-hipoteca" aria-selected="false">
       <span class="sim-pick-ico">HI</span><strong>Hipoteca Inteligente</strong><span>Arma tu configuración con tu capacidad de crédito y mira cómo termina.</span><em>Desde 2.000 UF de crédito</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
     <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-circular" aria-selected="false">
@@ -777,7 +776,7 @@ f"""
   {P("CASILLAS (revisión 17-11-2026): Política de privacidad obligatoria; publicidad OPCIONAL y sin marcar. Términos y condiciones pendientes de validación legal.")}
 
 <div class="sim-panel" id="sim-proyecta" data-sim-panel="sim-proyecta"><div class="sim-panel-body">
-    <div class="sim-head"><h2>Proyecta un Hogar</h2><p class="muted">Elige tu estrategia, el monto y el plazo, y compara con lo que te daría un depósito a plazo.</p></div>
+    <div class="sim-head"><h2>Rescate Inmobiliario</h2><p class="muted">Elige tu estrategia, el monto y el plazo, y compara con lo que te daría un depósito a plazo.</p></div>
     <div class="pro">
       <div class="pro-form">
         <span class="pro-label">Estrategia</span>
@@ -939,7 +938,7 @@ f"""
 # ---------------- Política de privacidad ----------------
 page('privacidad.html', 'Política de privacidad',
      'Qué datos personales recoge Pulso Inversor, para qué los usa y cómo ejercer tus derechos.',
-     hero('Política de privacidad', 'Política de privacidad', 'Última actualización: 17 de noviembre de 2026', 'Tus datos') + f"""
+     hero('Política de privacidad', 'Política de privacidad', 'Última actualización: 17 de noviembre de 2025', 'Tus datos') + f"""
 {P("Texto basado en la Política de privacidad publicada en www.pulsoinversor.cl (16-11-2026), adaptada a los simuladores de este sitio. REVISAR con legal, en especial el punto 2 (contenido obligatorio para usar los simuladores).")}
 <section class="section"><div class="container legal-text">
   <p>En Pulso Inversor, empresa de Grupo Matchmaking, cuidamos los datos personales que nos entregas a través de este sitio. Aquí te contamos qué datos recogemos, para qué los usamos y cómo puedes ejercer tus derechos, conforme a la Ley N° 19.628 sobre protección de la vida privada y sus modificaciones.</p>
@@ -982,7 +981,6 @@ EQUIPO = [
     ('Jessica Valenzuela', 'Jefa comercial', 'assets/img/equipo/jessica-valenzuela.jpg'),
     ('Felipe Jaña', 'Jefe de operaciones', 'assets/img/equipo/felipe-jana.jpg'),
     ('William Rojas', 'Jefe de contabilidad', 'assets/img/equipo/william-rojas.jpg'),
-    ('Gloria Cepeda', 'Asesora', 'assets/img/asesores/gloria.webp'),
     ('Pamela Herrera', 'Asesora', 'assets/img/asesores/pamela.webp'),
     ('Renato Vargas', 'Asesor', 'assets/img/equipo/renato-vargas.jpg'),
     ('Santiago Fernández', 'Asesor internacional', 'assets/img/equipo/santiago-fernandez.jpg'),
@@ -1034,6 +1032,7 @@ page('nosotros.html', 'Nosotros',
   </div>
   {P("EQUIPO y fotos entregados por la usuaria el 2026-11-17.")}
   <h3 class="team-sub">El equipo que te acompaña</h3>
+  <p class="team-cmf">Nuestros asesores están certificados por la CMF.</p>
   <div class="crew">{crew}</div>
   <p class="crew-hint" aria-hidden="true">Desliza para ver a todo el equipo →</p>
 </div></section>

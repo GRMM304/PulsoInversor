@@ -1757,3 +1757,6 @@ main p,main li,main blockquote{-webkit-hyphens:manual!important;hyphens:manual!i
 @keyframes appIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 /* Abierta como app instalada: sin la cabecera de sitio web, la barra inferior manda */
 .es-app .header .nav-actions{display:none}
+.team-body p{text-align:justify!important;-webkit-hyphens:manual;hyphens:manual}
+.team-cmf{text-align:center;margin:-14px auto 24px;font-size:15px;font-weight:700;color:var(--green-700)}
+@media (min-width:621px){.crew{display:flex;flex-wrap:wrap;justify-content:center}.crew-card{flex:0 0 168px}}

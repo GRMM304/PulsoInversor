@@ -71,7 +71,7 @@
     pintar(false);
   }
 
-  /* ---------- Proyecta un Hogar: estrategia → monto → plazo → resultado ---------- */
+  /* ---------- Rescate Inmobiliario: estrategia → monto → plazo → resultado ---------- */
   var pf = $('#sim-proyecta .pro-form');
   if (pf) {
     var hijos = Array.prototype.slice.call(pf.children);
