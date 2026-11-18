@@ -1254,10 +1254,10 @@ SENALES = [
 ]
 senales = ''.join(f'<article class="senal"><span class="senal-tag">Señal {i+1}</span><h3>{t}</h3><p><strong>{k}</strong> {d}</p></article>' for i, (t, k, d) in enumerate(SENALES))
 
-# Operación real (Maitencillo), entregada por la usuaria el 2026-11-18: solo los datos necesarios.
+# Ficha de EJEMPLO (Maitencillo), entregada por la usuaria el 2026-11-18: datos ilustrativos, no corresponden a una operación real.
 FICHA = [
     (None, 'Inmueble', 'Casa · Maitencillo, Puchuncaví'),
-    (1, 'Tasación comercial', '10.000 UF <small>Tasador independiente · octubre 2024</small>'),
+    (1, 'Tasación comercial', '10.000 UF <small>Tasador independiente</small>'),
     (2, 'Inversión', '4.744,2 UF <small>47% de la tasación · cobertura de capital de 211%</small>'),
     (3, 'Qué queda a favor del inversionista', 'Título de propiedad <small>Inscrito en el Conservador de Bienes Raíces</small>'),
     (4, 'Plazo y pago', '15 meses · 0,5% mensual + UF <small>Al vencimiento: 5.100 UF (inversión + 355,8 UF de interés)</small>'),
@@ -1297,19 +1297,10 @@ page('verifica-a-pulso.html', 'Verifica a Pulso',
   <span class="eyebrow dark">Verifica a Pulso</span>
   <h1>¿Por qué no estamos en la CMF?</h1>
   <p class="v-answer">Pulso Inversor no requiere certificación CMF bajo esta estructura privada, contractual y personalizada. No opera como banco, corredora, administradora de fondos ni plataforma de financiamiento colectivo regulada.</p>
-  <div class="somos">
-    <div class="somos-top">
-      <span class="somos-k">Lo que sí somos</span>
-      <p class="somos-t">Una compañía especializada en <strong>ingeniería financiera</strong> y estructuración de <strong>inversiones alternativas respaldadas por activos reales</strong>.</p>
-    </div>
-    <div class="somos-flow">
-      <div class="somos-node"><strong>Inversionistas</strong><span>que buscan rentabilizar su capital</span></div>
-      <span class="somos-link" aria-hidden="true"></span>
-      <div class="somos-hub"><strong>Pulso Inversor</strong><span>diseña cada operación</span></div>
-      <span class="somos-link" aria-hidden="true"></span>
-      <div class="somos-node"><strong>Personas y empresas</strong><span>que requieren soluciones financieras</span></div>
-    </div>
-    <div class="somos-tags"><span>Rentabilidad</span><span>Garantías</span><span>Desarrollo patrimonial</span></div>
+  <div class="somos2">
+    <span class="somos2-k">Lo que sí somos</span>
+    <p class="somos2-lead">Pulso Inversor es una compañía especializada en ingeniería financiera y estructuración de inversiones alternativas respaldadas por activos reales.</p>
+    <p>Conectamos a inversionistas que buscan rentabilizar su capital con personas y empresas que requieren soluciones financieras, diseñando operaciones que integran rentabilidad, garantías y oportunidades de desarrollo patrimonial.</p>
   </div>
   <p>Tu respaldo está en los documentos que firmas. Por eso, aquí te damos lo necesario para revisarnos por tu cuenta.</p>
 </div></section>
@@ -1328,14 +1319,15 @@ page('verifica-a-pulso.html', 'Verifica a Pulso',
 
 <section class="section" id="operacion-abierta"><div class="container">
   <div class="title center"><span class="eyebrow">Operación abierta</span><h2>Cómo revisar una operación</h2>
-    <p class="lead">Cada operación tiene su ficha. Con este ejemplo te mostramos qué mirar en cada dato antes de invertir.</p></div>
-  {P("OPERACIÓN REAL de Maitencillo (imagen del 2026-11-18): foto y extracto de tasación reales. CONFIRMAR autorización para publicarla.")}
+    <p class="lead">Cada operación tiene su ficha. Con este ejemplo ilustrativo te mostramos qué mirar en cada dato antes de invertir.</p></div>
+  {P("FICHA DE EJEMPLO (Maitencillo, imagen del 2026-11-18). La usuaria autorizó mostrarla y pidió aclarar que los datos son de ejemplo.")}
   <div class="ficha-grid">
     <article class="ficha">
-      <div class="ficha-img" style="background-image:url(assets/img/operacion/maitencillo-casa.jpg)"><span class="ficha-badge">Operación real · Foto del inmueble</span></div>
-      <div class="ficha-body"><span class="ficha-kicker">Ficha de la operación</span><h3>Casa en Maitencillo</h3>{ficha}
+      <div class="ficha-img" style="background-image:url(assets/img/operacion/maitencillo-casa.jpg)"><span class="ficha-badge">Ejemplo ilustrativo</span></div>
+      <div class="ficha-body"><span class="ficha-kicker">Ficha de ejemplo</span><h3>Casa en Maitencillo</h3>{ficha}
         <div class="ficha-bar" aria-label="La inversión equivale al 47% de la tasación"><i style="width:47%">Inversión 47%</i><span>Respaldo 53%</span></div>
-        <figure class="ficha-tas"><img src="assets/img/operacion/maitencillo-tasacion.png" alt="Extracto del informe de tasación: 10.000 UF ($379.522.672) al 16 de octubre de 2024" width="560" height="225" loading="lazy"><figcaption>Extracto real del informe de tasación</figcaption></figure>
+        <figure class="ficha-tas"><img src="assets/img/operacion/maitencillo-tasacion.png" alt="Extracto de un informe de tasación de ejemplo: 10.000 UF" width="560" height="225" loading="lazy"><figcaption>Extracto de un informe de tasación, como referencia</figcaption></figure>
+        <p class="ficha-nota">Ejemplo ilustrativo para mostrarte cómo leer una ficha. Los datos no corresponden a una operación real.</p>
       </div>
     </article>
     <div class="ficha-guide">

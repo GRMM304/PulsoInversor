@@ -157,16 +157,55 @@ async function csv(env) {
   return new Response('﻿' + lineas.join('\r\n'), { headers: { 'content-type': 'text/csv; charset=utf-8', 'content-disposition': 'attachment; filename="simulaciones-pulso.csv"', 'cache-control': 'no-store' } });
 }
 
+// ---------- Simuladores asistidos (/panel/simuladores): clave propia del equipo ----------
+// La clave no está escrita aquí: se compara su derivación PBKDF2. Si se define el secreto CLAVE_SIMULADORES en Cloudflare, se usa ese.
+const SIM_SAL = 'pulso-sim-2026';
+const SIM_HASH = '0bcf13066285a8dc2f1faa97a712a3f2f94f1b7ddd2d8a53843e4bbabad79fce';
+async function claveSimOk(env, clave) {
+  if (env.CLAVE_SIMULADORES) return clave === env.CLAVE_SIMULADORES;
+  const k = await crypto.subtle.importKey('raw', enc.encode(clave), 'PBKDF2', false, ['deriveBits']);
+  const bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', hash: 'SHA-256', salt: enc.encode(SIM_SAL), iterations: 100000 }, k, 256);
+  return [...new Uint8Array(bits)].map((b) => b.toString(16).padStart(2, '0')).join('') === SIM_HASH;
+}
+async function firmaSim(env, valor) {
+  const k = await crypto.subtle.importKey('raw', enc.encode('sim:' + (env.CLAVE_SIMULADORES || env.CLAVE_PANEL || SIM_HASH)), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+  const s = await crypto.subtle.sign('HMAC', k, enc.encode(valor));
+  return btoa(String.fromCharCode(...new Uint8Array(s))).replace(/[+/=]/g, '');
+}
+async function sesionSim(request, env) {
+  const c = (request.headers.get('cookie') || '').match(/(?:^|;\s*)sim_eq=([^;]+)/);
+  if (!c) return false;
+  const [exp, firma] = decodeURIComponent(c[1]).split('.');
+  if (!exp || Date.now() > Number(exp)) return false;
+  return firma === await firmaSim(env, exp);
+}
+function loginSim(error = '') {
+  return html(`<!DOCTYPE html><html lang="es-CL"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Simuladores asistidos · Pulso Inversor</title><link rel="icon" href="/assets/img/favicon.svg"><style>${ESTILO}</style></head><body>
+<div class="card"><h1 style="margin:0 0 8px;font-size:22px;color:#0E2C28">Simuladores asistidos</h1>
+${error ? `<p style="color:#b3261e;font-weight:700">${esc(error)}</p>` : '<p>Acceso para el equipo de Pulso Inversor. Ingresa la clave para usar los simuladores de Producción y Arquitectura de Capital.</p>'}
+<form method="post" action="/panel/simuladores/entrar"><input type="password" name="clave" required autocomplete="current-password" placeholder="Clave" style="width:100%;min-height:48px;border:1px solid #dfe5dc;border-radius:14px;padding:12px 14px;font:inherit;margin:6px 0 10px;box-sizing:border-box"><button class="b" type="submit">Entrar</button></form>
+<p style="margin:14px 0 0;font-size:14px"><a href="/simuladores">← Volver a los simuladores</a></p></div></body></html>`, error ? 401 : 200);
+}
+async function rutaSimuladores(request, env, url) {
+  if (url.pathname === '/panel/simuladores/entrar' && request.method === 'POST') {
+    const f = await request.formData();
+    if (!(await claveSimOk(env, String(f.get('clave') || '')))) { await new Promise((r) => setTimeout(r, 800)); return loginSim('Clave incorrecta.'); }
+    const exp = String(Date.now() + 14 * 864e5);
+    const cookie = `sim_eq=${encodeURIComponent(exp + '.' + await firmaSim(env, exp))}; Path=/panel/simuladores; HttpOnly; Secure; SameSite=Lax; Max-Age=${14 * 86400}`;
+    return new Response(null, { status: 303, headers: { location: '/panel/simuladores', 'set-cookie': cookie } });
+  }
+  if (!(await sesionSim(request, env)) && !(await sesionValida(request, env))) return loginSim();
+  const r = await env.ASSETS.fetch(new Request(new URL('/simuladores-equipo', url)));
+  return new Response(r.body, { status: r.status, headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store', 'x-robots-tag': 'noindex' } });
+}
+
 export async function rutaPanel(request, env, url) {
   const p = url.pathname, m = request.method;
+  if (p === '/panel/simuladores' || p === '/panel/simuladores/entrar') return rutaSimuladores(request, env, url);
   if (p === '/panel/entrar' && m === 'POST') return entrar(request, env);
   if (p === '/panel/salir') return new Response(null, { status: 303, headers: { location: '/panel', 'set-cookie': 'panel_sim=; Path=/panel; Max-Age=0; HttpOnly; Secure; SameSite=Lax' } });
   if (!(await sesionValida(request, env))) return login();
   if (p === '/panel/agendado' && m === 'POST') return marcarAgendado(request, env);
   if (p === '/panel/simulaciones.csv') return csv(env);
-  if (p === '/panel/simuladores') {   // Producción y Arquitectura de Capital: simulación asistida, solo equipo
-    const r = await env.ASSETS.fetch(new Request(new URL('/simuladores-equipo', url)));
-    return new Response(r.body, { status: r.status, headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store', 'x-robots-tag': 'noindex' } });
-  }
   return panel(env, url);
 }
