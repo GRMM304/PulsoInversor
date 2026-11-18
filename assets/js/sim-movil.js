@@ -107,7 +107,7 @@
   if (spn) {
     asistente(spn, [
       { titulo: 'Elige las propiedades', nodos: function () { return [$('#sim-patrimonial .sp-form'), $('#sp-s1')]; }, valido: function () { return !!$('#sp-props .is-on'); } },
-      { titulo: 'Descuento y financiamiento', nodos: function () { return [$('#sim-patrimonial .sp-form'), $('#sp-s2')]; }, valido: function () { return !$('#sp-enviar').disabled; }, siguiente: 'Ver mi resultado →' },
+      { titulo: 'Financiamiento', nodos: function () { return [$('#sim-patrimonial .sp-form'), $('#sp-s2')]; }, valido: function () { return !$('#sp-enviar').disabled; }, siguiente: 'Ver mi resultado →' },
       { titulo: 'Tu resultado', nodos: function () { return [$('#sp-out')]; } },
     ]);
   }

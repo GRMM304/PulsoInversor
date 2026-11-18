@@ -11,7 +11,24 @@
   ];
   var esc = function (t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
   // Ilustración simple de Lorenzo (se usa en el botón, en el encabezado y en los mensajes).
-  var ILU = '<svg class="lz-ilu" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="32" fill="#C7D95D"/><path d="M10 57c3-10 11-15 22-15s19 5 22 15a32 32 0 0 1-44 0z" fill="#0E2C28"/><path d="M26.5 42.5l5.5 6 5.5-6z" fill="#fff"/><rect x="28.5" y="36" width="7" height="8" rx="3" fill="#E2A97E"/><ellipse cx="32" cy="28" rx="10.5" ry="11.5" fill="#F2C29B"/><path d="M21.3 27.5c-.6-9 4.4-14 10.9-14 6.8 0 11.5 4.6 10.5 13.6-1.6-4.4-5.6-7-10.8-7-5 0-8.9 2.8-10.6 7.4z" fill="#3B2A20"/><circle cx="28" cy="29" r="1.5" fill="#0E2C28"/><circle cx="36" cy="29" r="1.5" fill="#0E2C28"/><path d="M28.3 33.6c2.2 2 5.2 2 7.4 0" stroke="#0E2C28" stroke-width="1.7" fill="none" stroke-linecap="round"/></svg>';
+  var ILU = '<svg class="lz-ilu" viewBox="0 0 100 100" aria-hidden="true">' +
+    '<rect width="100" height="100" fill="#EDF5C8"/><circle cx="50" cy="108" r="52" fill="#DCEA97"/>' +
+    '<path d="M12 104c2-21 16-32 38-32s36 11 38 32z" fill="#0E2C28"/>' +
+    '<path d="M39 73l11 18 11-18z" fill="#fff"/>' +
+    '<path d="M47.6 76h4.8l1.8 4.4-4.2 13-4.2-13z" fill="#C7D95D"/>' +
+    '<path d="M37 73.5l13 18.5-7.5 4.5-10-18.5zM63 73.5l-13 18.5 7.5 4.5 10-18.5z" fill="#1E5746"/>' +
+    '<path d="M43 58h14v13c0 4.5-14 4.5-14 0z" fill="#E3A57C"/>' +
+    '<ellipse cx="31.5" cy="47" rx="4.2" ry="5.8" fill="#F0B992"/><ellipse cx="68.5" cy="47" rx="4.2" ry="5.8" fill="#F0B992"/>' +
+    '<path d="M32 43c0-12.5 8-20 18-20s18 7.5 18 20v4c0 11.5-8 20.5-18 20.5S32 58.5 32 47z" fill="#F6C9A4"/>' +
+    '<path d="M29.8 45.5c-2.6-16 6.4-26.5 21-26.5 13 0 22 8.5 19.6 25.5-1.4-6.5-5.2-10.8-10.4-12.8-5.6 4.4-14.6 6.4-25.6 5.3-2 2.2-3.6 5.3-4.6 8.5z" fill="#3B2A20"/>' +
+    '<path d="M44 22.5c4-2 10-2 14 .5" stroke="#5A4232" stroke-width="2" fill="none" stroke-linecap="round"/>' +
+    '<path d="M37.5 41.5c2.2-1.7 5.3-1.7 7.5 0M55 41.5c2.2-1.7 5.3-1.7 7.5 0" stroke="#3B2A20" stroke-width="2.1" stroke-linecap="round" fill="none"/>' +
+    '<ellipse cx="41.3" cy="47.5" rx="2.4" ry="2.8" fill="#0E2C28"/><ellipse cx="58.7" cy="47.5" rx="2.4" ry="2.8" fill="#0E2C28"/>' +
+    '<circle cx="42.2" cy="46.5" r=".85" fill="#fff"/><circle cx="59.6" cy="46.5" r=".85" fill="#fff"/>' +
+    '<circle cx="36.5" cy="55" r="3.4" fill="#F29C8B" opacity=".45"/><circle cx="63.5" cy="55" r="3.4" fill="#F29C8B" opacity=".45"/>' +
+    '<path d="M50 49.5c-.6 2.4-1.6 3.6-2.6 4.2" stroke="#D8946B" stroke-width="1.6" fill="none" stroke-linecap="round"/>' +
+    '<path d="M43 57c3.8 4 10.2 4 14 0" stroke="#7A3226" stroke-width="2.3" fill="#fff" stroke-linecap="round" stroke-linejoin="round"/>' +
+    '</svg>';
   var avatar = '<span class="lz-av" aria-hidden="true">' + ILU + '</span>';
 
   var raiz = document.createElement('div');

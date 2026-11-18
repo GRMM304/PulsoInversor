@@ -838,7 +838,7 @@ _PANELES_EQUIPO = f"""  <div class="sim-panel" id="sim-hipoteca" data-sim-panel=
   </div></div>
 
   <div class="sim-panel" id="sim-patrimonial" data-sim-panel="sim-patrimonial" hidden><div class="sim-panel-body">
-    <div class="sim-head"><span class="sp-kicker">Hipoteca Inteligente Empresarial</span><h2>Simulador Patrimonial</h2><p class="muted">Elige propiedades del catálogo, el descuento y el financiamiento, y mira cuánto aportas y cómo crece tu patrimonio.</p></div>
+    <div class="sim-head"><h2>Simulador de Arquitectura de Capital</h2><p class="muted">Elige propiedades del catálogo (cada una ya trae su precio con descuento) y cuánto financia el banco, y mira cuánto aportas y cómo crece tu patrimonio.</p></div>
     <div class="pro sp">
       <div class="pro-form sp-form">
         <div class="sp-block" id="sp-s1">
@@ -847,10 +847,8 @@ _PANELES_EQUIPO = f"""  <div class="sim-panel" id="sim-hipoteca" data-sim-panel=
           <div class="sp-sum" id="sp-total"></div>
         </div>
         <div class="sp-block" id="sp-s2">
-          <span class="pro-label">2. Descuento sobre la tasación</span>
-          <div class="pro-chips" id="sp-desc"><button type="button" class="chip-opt" data-sp-desc="15">15%</button><button type="button" class="chip-opt" data-sp-desc="17.5">17,5%</button><button type="button" class="chip-opt" data-sp-desc="20">20%</button></div>
-          <span class="pro-label">3. ¿Cuánto financia el banco?</span>
-          <div class="pro-chips" id="sp-ltv"><button type="button" class="chip-opt" data-sp-ltv="70">70%</button><button type="button" class="chip-opt" data-sp-ltv="75">75%</button><button type="button" class="chip-opt" data-sp-ltv="80">80%</button></div>
+          <span class="pro-label">2. ¿Cuánto financia el banco?</span>
+          <div class="pro-chips" id="sp-ltv"><button type="button" class="chip-opt" data-sp-ltv="70">70%</button><button type="button" class="chip-opt" data-sp-ltv="80">80%</button><button type="button" class="chip-opt" data-sp-ltv="90">90%</button></div>
           <p class="pro-help">Porcentaje de la tasación que financia el banco.</p>
           <details class="sp-more">
             <summary>Ajustar plazo, tasa y arriendo <small>(opcional)</small></summary>
@@ -862,7 +860,7 @@ _PANELES_EQUIPO = f"""  <div class="sim-panel" id="sim-hipoteca" data-sim-panel=
         </div>
       </div>
       <div class="pro-out sp-out" id="sp-out">
-        <p class="pro-falta" id="sp-falta">Elige las propiedades, el descuento y el financiamiento para ver tu resultado</p>
+        <p class="pro-falta" id="sp-falta">Elige las propiedades y el financiamiento para ver tu resultado</p>
         <div class="sp-res" id="sp-fin"></div>
         <div class="sp-card">
           <h3>Mientras la deuda baja, el patrimonio crece</h3>
@@ -874,12 +872,12 @@ _PANELES_EQUIPO = f"""  <div class="sim-panel" id="sim-hipoteca" data-sim-panel=
           <summary>¿Cómo se estructura?</summary>
           <p>Los socios (personas o sociedades) forman una sociedad patrimonial que compra y mantiene las propiedades, y el banco las financia. La empresa operativa puede respaldar la deuda, sujeto a autorización y análisis de riesgo. Pulso administra arriendo, cobranza, mantención y cobertura ante incumplimiento o vacancia (10% de administración y 5% de cobertura sobre el arriendo). Estructura sujeta a revisión jurídica, tributaria y bancaria.</p>
         </details>
-        <div class="pro-actions"><button type="button" class="btn btn-primary btn-xl" id="sp-enviar" disabled>Solicitar cotización <span aria-hidden="true">→</span></button></div>
+        <div class="pro-actions"><button type="button" class="btn btn-primary btn-xl" id="sp-enviar" disabled>Enviar al correo <span aria-hidden="true">→</span></button></div>
         <p class="sim-status" id="sp-status" role="status"></p>
-        <p class="pro-note">Esta simulación no constituye una cotización ni asegura rentabilidades futuras. Es referencial a esta fecha y no compromete a Pulso Inversor SpA. Las propiedades y sus valores en UF son ejemplos del catálogo. No incluye gastos, reservas ni evaluación de riesgo; el banco puede usar el menor valor entre el precio y la tasación. La evolución no refleja arriendos, dividendos pagados, costos ni impuestos.</p>
+        <p class="pro-note">Esta simulación no constituye una cotización ni asegura rentabilidades futuras. Es referencial a esta fecha y no compromete a Pulso Inversor SpA. Propiedades publicadas en pulsopropiedades.cl, con su tasación y precio de venta al 18-11-2026. No incluye gastos, reservas ni evaluación de riesgo; el banco puede usar el menor valor entre el precio y la tasación. La evolución no refleja arriendos, dividendos pagados, costos ni impuestos.</p>
       </div>
     </div>
-    {P("SIMULADOR PATRIMONIAL según la propuesta 'Hipoteca Inteligente Empresarial' (PDF del 18-11-2026), interfaz simplificada el 18-11 (sin fotos). Valores en UF del catálogo SIMULADOS. Validaciones previas: Mariana (estructura y garantías societarias) y Felipe Rojas (rentas, costos, seguros y flujo).")}
+    {P("SIMULADOR DE ARQUITECTURA DE CAPITAL (antes Simulador Patrimonial). Catálogo: propiedades publicadas en pulsopropiedades.cl con tasación y precio de venta al 18-11-2026 (planilla de la usuaria). Financiamiento 70/80/90% sobre la tasación. Validaciones previas: Mariana (estructura y garantías societarias) y Felipe Rojas (rentas, costos, seguros y flujo).")}
   </div></div>
 """
 
@@ -975,7 +973,7 @@ PICKS_EQUIPO = '''    <button type="button" class="sim-pick" role="tab" data-sim
     <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-hipoteca" aria-selected="false">
       <span class="sim-pick-ico">PC</span><strong>Producción de Capital</strong><span>Hipoteca Inteligente: arma la configuración con la capacidad de crédito del cliente.</span><em>Desde 2.000 UF</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
     <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-patrimonial" aria-selected="false">
-      <span class="sim-pick-ico">AC</span><strong>Simulador Patrimonial</strong><span>Hipoteca Inteligente Empresarial: portafolio de propiedades con descuento para empresas y sus socios.</span><em>Arquitectura de Capital</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>'''
+      <span class="sim-pick-ico">AC</span><strong>Arquitectura de Capital</strong><span>Portafolio de propiedades con descuento y financiamiento bancario, y cómo crece el patrimonio.</span><em>Simulación asistida</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>'''
 
 def _asistido(id_, t, img, texto):
     return f"""<div class="sim-panel sim-asistido" id="{id_}" data-sim-panel="{id_}" data-asistido hidden><div class="sim-panel-body">
@@ -1009,7 +1007,7 @@ _sim_page('simuladores.html', 'Simuladores',
 # Simuladores asistidos: solo para el equipo. Se sirven en /panel/simuladores (con la clave del panel);
 # el Worker bloquea el acceso directo a /simuladores-equipo.
 _sim_page('simuladores-equipo.html', 'Simuladores asistidos', 'Uso interno del equipo de Pulso Inversor.',
-          'Simuladores asistidos', 'Uso interno del equipo de Pulso Inversor. Simula junto al cliente; al final, el botón descarga el PDF para que se lo compartas.',
+          'Simuladores asistidos', 'Uso interno del equipo de Pulso Inversor. Simula junto al cliente; al enviar te pediremos sus datos para mandarle la simulación a su correo.',
           PICKS_EQUIPO, _PANELES_EQUIPO, '')
 _fe = os.path.join(R, 'simuladores-equipo.html')
 _he = open(_fe).read().replace('<head>\n', '<head>\n<meta name="robots" content="noindex">\n', 1).replace('<div data-simuladores>', '<div data-simuladores data-equipo>', 1)

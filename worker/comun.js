@@ -11,7 +11,7 @@ export const TIPOS = {
   proyecta: 'Renta de Capital',
   hipoteca: 'Hipoteca Inteligente',
   circular: 'Inversión Inmobiliaria Circular',
-  patrimonial: 'Simulador Patrimonial',
+  patrimonial: 'Arquitectura de Capital',
 };
 
 // Enlaces de agendamiento de Brevo Meetings por tramo (pegar la URL de la página de reservas de cada asesor).

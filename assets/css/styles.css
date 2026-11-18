@@ -2122,3 +2122,22 @@ a.sim-pick{text-decoration:none}
 .lz-av .lz-ilu{width:100%;height:100%;display:block}
 .lz-msg .lz-av .lz-ilu{width:100%;height:100%}
 @media (max-width:760px){.lz-launcher{width:58px;height:58px;padding:0}.lz-launcher-ico,.lz-launcher-ico .lz-ilu,.lz-ico-x{width:58px;height:58px}}
+
+/* ===== Arquitectura de Capital y ventana de datos del equipo (2026-11-18) ===== */
+.sp-item b{display:flex;flex-direction:column;align-items:flex-end;line-height:1.2}
+.sp-item b .sp-desc{font-size:12px;font-weight:800;color:var(--green-700);margin-top:2px}
+.gate.is-modal{position:fixed;z-index:300;left:50%;top:50%;transform:translate(-50%,-50%);width:min(920px,calc(100vw - 24px));max-height:calc(100vh - 32px);overflow:auto;margin:0;box-shadow:0 0 0 100vmax rgba(8,24,22,.6),0 30px 80px rgba(0,0,0,.4)}
+.gate-x{position:absolute;right:14px;top:12px;width:40px;height:40px;border-radius:50%;border:1px solid var(--gray-200);background:#fff;font-size:24px;line-height:1;cursor:pointer;color:var(--green-900)}
+body.gate-abierto{overflow:hidden}
+@media (max-width:760px){.gate.is-modal{top:12px;transform:translateX(-50%);max-height:calc(100vh - 24px);padding:26px 18px}}
+/* Lorenzo: marco de color más grueso */
+.lz-launcher{width:76px;height:76px;padding:6px;background:linear-gradient(135deg,var(--lime),var(--gold));box-shadow:0 14px 34px rgba(14,44,40,.32)}
+.lz-launcher-ico,.lz-launcher-ico .lz-ilu,.lz-ico-x{width:64px;height:64px;border-radius:50%;overflow:hidden}
+.lz-launcher-ico{box-shadow:inset 0 0 0 3px #fff}
+.lz-launcher-ico .lz-ilu{border:3px solid #fff;border-radius:50%;box-sizing:border-box}
+.lz-ico-chat::after{right:-2px;top:-2px;width:16px;height:16px;border:3px solid #fff;z-index:2}
+.lz-launcher-ico{overflow:visible}
+.lz-launcher-ico .lz-ilu{overflow:hidden}
+.lz.is-open .lz-launcher{padding:6px}
+.lz-av{box-shadow:0 0 0 2.5px var(--lime)}
+@media (max-width:760px){.lz-launcher{width:66px;height:66px;padding:5px}.lz-launcher-ico,.lz-launcher-ico .lz-ilu,.lz-ico-x{width:56px;height:56px}}
