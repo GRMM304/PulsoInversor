@@ -723,13 +723,9 @@
     var clp = function (v) { return '$' + nf(Math.round(v)); };
     var pc = function (d) { return String(d).replace('.', ',') + '%'; };
     var dec = function (id) { var t = String($(id).value || '').replace(/[^\d,\.]/g, '').replace(',', '.'); var n = parseFloat(t); return isFinite(n) ? n : 0; };
-    var casa = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>';
-
     $('#sp-props').innerHTML = CATALOGO.map(function (p, i) {
-      return '<button type="button" class="sp-prop" data-sp-prop="' + i + '" aria-pressed="false">' +
-        '<span class="sp-prop-img' + (p.img ? '' : ' sin-foto') + '"' + (p.img ? ' style="background-image:url(assets/img/portafolio/' + p.img + '.jpg)"' : '') + '>' + (p.img ? '' : casa) +
-        '<span class="sp-check" aria-hidden="true">✓</span>' + (p.spec ? '<span class="sp-spec">' + p.spec + '</span>' : '') + '</span>' +
-        '<span class="sp-prop-info"><strong>' + esc(p.n) + '</strong><small>' + esc(p.c) + '</small><b>' + ufs(p.uf) + '</b></span></button>';
+      return '<button type="button" class="sp-item" data-sp-prop="' + i + '" aria-pressed="false"><span class="sp-box" aria-hidden="true">✓</span>' +
+        '<span class="sp-item-t"><strong>' + esc(p.n) + ', ' + esc(p.c) + '</strong>' + (p.spec ? '<small>' + p.spec + '</small>' : '') + '</span><b>' + ufs(p.uf) + '</b></button>';
     }).join('');
 
     function calc() {
@@ -753,35 +749,33 @@
     function render() {
       var r = calc(); ultimo = r;
       $$('[data-sp-prop]').forEach(function (b) { var on = S.sel.indexOf(+b.getAttribute('data-sp-prop')) >= 0; b.classList.toggle('is-on', on); b.setAttribute('aria-pressed', on); });
-      $('#sp-total').innerHTML = r.tas
-        ? '<div><small>' + r.props.length + (r.props.length === 1 ? ' propiedad seleccionada' : ' propiedades seleccionadas') + '</small><p>' + r.props.map(function (p) { return nf(p.uf); }).join(' + ') + ' UF</p></div><div class="sp-total-v"><small>Tasación total</small><strong>' + ufs(r.tas) + '</strong></div>'
-        : '<div><small>Tu portafolio</small><p>Toca una o más propiedades para sumarlas.</p></div><div class="sp-total-v"><small>Tasación total</small><strong>—</strong></div>';
-      $('#sp-desc').innerHTML = DESC.map(function (d) {
-        var on = S.desc === d;
-        return '<button type="button" class="sp-dcard' + (on ? ' is-on' : '') + '" data-sp-desc="' + d + '" aria-pressed="' + on + '"><small>−' + pc(d) + ' sobre tasación</small><strong>' + (r.tas ? ufs(r.tas * (1 - d / 100)) : '—') + '</strong><span>Precio de compra estimado</span></button>';
-      }).join('');
-      $$('[data-sp-ltv]').forEach(function (b) { var on = +b.getAttribute('data-sp-ltv') === S.ltv; b.classList.toggle('is-active', on); b.setAttribute('aria-pressed', on); });
-      $$('[data-sp-plazo]').forEach(function (b) { var on = +b.getAttribute('data-sp-plazo') === S.plazo; b.classList.toggle('is-active', on); b.setAttribute('aria-pressed', on); });
+      $('#sp-total').innerHTML = r.tas ? '<span>' + r.props.length + (r.props.length === 1 ? ' propiedad' : ' propiedades') + ' · Tasación total</span><strong>' + ufs(r.tas) + '</strong>' : '<span>Toca una o más propiedades para sumarlas</span>';
+      [['data-sp-desc', S.desc], ['data-sp-ltv', S.ltv], ['data-sp-plazo', S.plazo]].forEach(function (x) {
+        $$('[' + x[0] + ']').forEach(function (b) { var on = +b.getAttribute(x[0]) === x[1]; b.classList.toggle('is-active', on); b.setAttribute('aria-pressed', on); });
+      });
       $('#sp-enviar').disabled = !r.listo;
+      $('#sp-out').classList.toggle('is-empty', !r.listo);
+      $('#sp-falta').hidden = r.listo;
       if (!r.listo) {
-        $('#sp-fin').innerHTML = '<p class="sp-empty">' + (!r.tas ? 'Elige al menos una propiedad para calcular.' : 'Elige el descuento y cuánto financia el banco para ver tu crédito, tu aporte y el dividendo.') + '</p>';
-        $('#sp-evo').innerHTML = '<p class="sp-empty">Aquí verás cómo baja la deuda y crece tu patrimonio año a año.</p>';
-        $('#sp-evo-sub').textContent = 'Completa los pasos anteriores para ver la evolución de tu patrimonio.';
+        $('#sp-fin').innerHTML = '';
+        $('#sp-evo').innerHTML = '<p class="sp-empty">Aquí verás cómo baja la deuda y crece tu patrimonio.</p>';
+        $('#sp-evo-sub').textContent = 'Sin plusvalía.';
         return;
       }
-      var row = function (a, b, k, sub) { return '<div class="sp-row ' + (k || '') + '"><span>' + a + (sub ? '<em>' + sub + '</em>' : '') + '</span><b>' + b + '</b></div>'; };
-      var enPesos = function (v) { return '≈ ' + clp(v * UF); };
+      var row = function (a, b, k) { return '<li class="' + (k || '') + '"><span>' + a + '</span><strong>' + b + '</strong></li>'; };
+      var signo = function (v) { return v < 0 ? '−' : ''; };
       $('#sp-fin').innerHTML =
-        '<div class="sp-fin-k"><div><small>Crédito bancario</small><strong>' + ufs(r.credito) + '</strong><span>' + S.ltv + '% de la tasación</span></div>' +
-        '<div class="hl"><small>' + (r.aporte >= 0 ? 'Aporte al precio' : 'El crédito supera el precio') + '</small><strong>' + ufs(Math.abs(r.aporte)) + '</strong><span>' + enPesos(Math.abs(r.aporte)) + '</span></div>' +
-        '<div><small>Dividendo mensual</small><strong>' + nf(r.div, 1) + ' UF</strong><span>' + enPesos(r.div) + ' · ' + S.plazo + ' años al ' + nf(r.tasa, 2) + '%</span></div></div>' +
-        row('Precio de compra (−' + pc(S.desc) + ')', ufs(r.precio)) + row('Patrimonio inicial (tasación menos crédito)', ufs(r.tas - r.credito), 'pos') +
-        (r.renta > 0 ? row('Arriendo mensual estimado', nf(r.renta, 1) + ' UF') + row('Administración y cobertura (15%)', '−' + nf(r.costos, 1) + ' UF') + row('Dividendo mensual', '−' + nf(r.div, 1) + ' UF') +
-          row('Flujo mensual estimado', (r.flujo < 0 ? '−' : '') + nf(Math.abs(r.flujo), 1) + ' UF', r.flujo >= 0 ? 'pos tot' : 'neg tot', (r.flujo < 0 ? '−' : '') + enPesos(Math.abs(r.flujo)).replace('≈ ', '≈ ' + (r.flujo < 0 ? '−' : '')).replace(/^−/, '')) : '');
-      $('#sp-evo-sub').textContent = 'Ejemplo con ' + ufs(r.tas) + ' de tasación, ' + ufs(r.credito) + ' de crédito, ' + nf(r.tasa, 2) + '% real anual y ' + S.plazo + ' años, sin plusvalía.';
-      $('#sp-evo').innerHTML = r.evol.map(function (e) {
-        var wd = (e.deuda / r.tas * 100).toFixed(2), wp = (e.pat / r.tas * 100).toFixed(2);
-        return '<div class="sp-bar"><span class="sp-y">' + (e.y < 10 ? '0' : '') + e.y + ' años</span><div class="sp-track" role="img" aria-label="Año ' + e.y + ': deuda ' + ufs(e.deuda) + ', patrimonio ' + ufs(e.pat) + '"><i class="d" style="width:' + wd + '%"></i><i class="p" style="width:' + wp + '%"></i></div><b>' + ufs(e.pat) + '</b></div>';
+        '<div class="sp-hero"><small>' + (r.aporte >= 0 ? 'Tu aporte al precio' : 'El crédito supera el precio en') + '</small><strong>' + ufs(Math.abs(r.aporte)) + '</strong><span>≈ ' + clp(Math.abs(r.aporte) * UF) + '</span></div>' +
+        '<ul class="sp-rows">' +
+          row('Precio de compra (−' + pc(S.desc) + ')', ufs(r.precio)) +
+          row('Crédito del banco (' + S.ltv + '%)', ufs(r.credito)) +
+          row('Dividendo mensual', nf(r.div, 1) + ' UF') +
+          (r.renta > 0 ? row('Flujo mensual (arriendo menos administración, cobertura y dividendo)', signo(r.flujo) + nf(Math.abs(r.flujo), 1) + ' UF', r.flujo < 0 ? 'neg' : 'pos') : '') +
+        '</ul>';
+      $('#sp-evo-sub').textContent = 'Crédito a ' + S.plazo + ' años al ' + nf(r.tasa, 2) + '% real anual, sin plusvalía.';
+      $('#sp-evo').innerHTML = r.evol.filter(function (e) { return e.y <= 20; }).map(function (e) {
+        var wd = (e.deuda / r.tas * 100).toFixed(2), wp = (e.pat / r.tas * 100).toFixed(2), et = e.y ? 'Año ' + e.y : 'Hoy';
+        return '<div class="sp-bar"><span class="sp-y">' + et + '</span><div class="sp-track" role="img" aria-label="' + et + ': deuda ' + ufs(e.deuda) + ', patrimonio ' + ufs(e.pat) + '"><i class="d" style="width:' + wd + '%"></i><i class="p" style="width:' + wp + '%"></i></div><b>' + ufs(e.pat) + '</b></div>';
       }).join('');
     }
     var spPanel = $('#sim-patrimonial');
