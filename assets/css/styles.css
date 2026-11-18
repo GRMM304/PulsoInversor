@@ -2076,3 +2076,7 @@ a.sim-pick{text-decoration:none}
 .ficha-grid{align-items:start}
 .ficha-guide{position:sticky;top:calc(var(--header-h) + 24px)}
 @media (max-width:900px){.ficha-guide{position:static}}
+
+/* Lorenzo: opciones que abren WhatsApp */
+.lz-chips .lz-op{display:flex;justify-content:space-between;align-items:center;width:100%;padding:12px 16px;font-size:14.5px;text-decoration:none;border-radius:14px}
+.lz-chips .lz-op span{color:var(--green-700);font-size:16px}

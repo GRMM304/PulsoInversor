@@ -4,7 +4,11 @@
 (function () {
   if (window.__lorenzo) return; window.__lorenzo = true;
   var NOMBRE = 'Lorenzo';
-  var SUGERENCIAS = ['¿Cómo funciona invertir con Pulso?', '¿Qué respalda mi inversión?', '¿Desde cuánto puedo invertir?', 'Quiero hablar con un asesor'];
+  // Las dos opciones abren WhatsApp con Lorenzo, cada una con su propio mensaje.
+  var OPCIONES = [
+    { texto: '🌱 Es mi primera vez invirtiendo', url: 'https://wa.me/56958792038?text=Hola%2C%20es%20mi%20primera%20vez%20invirtiendo%20y%20quiero%20m%C3%A1s%20informaci%C3%B3n' },
+    { texto: '📈 Ya tengo experiencia invirtiendo', url: 'https://wa.me/56958792038?text=Hola%2C%20ya%20he%20invertido%20antes%20y%20quiero%20revisar%20una%20operaci%C3%B3n' },
+  ];
   var esc = function (t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
   var avatar = '<span class="lz-av" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h3l2-5 4 10 3-7 2 2h4"/></svg></span>';
 
@@ -57,16 +61,17 @@
   function mostrarChips(v) { chips.hidden = !v; }
   function bienvenida() {
     if (iniciado) return; iniciado = true;
-    chips.innerHTML = SUGERENCIAS.map(function (s) { return '<button type="button" class="lz-chip">' + esc(s) + '</button>'; }).join('');
+    chips.innerHTML = OPCIONES.map(function (o) { return '<a class="lz-chip lz-op" href="' + o.url + '" target="_blank" rel="noopener">' + esc(o.texto) + ' <span aria-hidden="true">→</span></a>'; }).join('');
     escribiendo(700, function () {
       burbuja('¡Hola! Soy <b>' + NOMBRE + '</b>, el asistente de Pulso Inversor.');
-      escribiendo(900, function () { burbuja('Puedo ayudarte con tus dudas sobre cómo invertir, las garantías o los simuladores. ¿Qué te gustaría saber?'); mostrarChips(true); });
+      escribiendo(900, function () { burbuja('Te atiendo por WhatsApp. Para ayudarte mejor, cuéntame: <b>¿es tu primera vez invirtiendo?</b>'); mostrarChips(true); });
     });
   }
   // Punto de conexión con respond.io: hoy responde con un mensaje fijo.
   function responder(texto) {
     escribiendo(1100, function () {
-      burbuja('Gracias por tu consulta. Muy pronto podré responderte aquí mismo. Mientras tanto, un asesor puede ayudarte: usa el botón <b>Agendar una reunión</b> y te contactamos.');
+      burbuja('Gracias por escribirme. Sigamos la conversación por WhatsApp para responderte bien. Elige la opción que te representa:');
+      mostrarChips(true);
     });
   }
   function enviar(texto) {
@@ -87,7 +92,6 @@
   launcher.addEventListener('click', function () { abrir(panel.hidden); });
   $('.lz-close').addEventListener('click', function () { abrir(false); launcher.focus(); });
   teaser.addEventListener('click', function (e) { if (e.target.closest('.lz-teaser-x')) { teaser.hidden = true; try { sessionStorage.setItem('lzVisto', '1'); } catch (er) {} return; } abrir(true); });
-  chips.addEventListener('click', function (e) { var c = e.target.closest('.lz-chip'); if (c) enviar(c.textContent); });
   $('.lz-form').addEventListener('submit', function (e) { e.preventDefault(); enviar(input.value); input.value = ''; });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !panel.hidden) abrir(false); });
 
