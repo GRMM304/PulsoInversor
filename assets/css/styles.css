@@ -1620,3 +1620,12 @@ main p,main li,main blockquote{-webkit-hyphens:manual!important;hyphens:manual!i
   #sim-area.has-open .sim-pick.is-active strong{color:var(--lime)}
   #sim-area.has-open .sim-stage{margin-top:16px}
 }
+
+/* Pie de página: invitación a dejar una reseña en Google */
+.footer-review{margin-top:40px;padding:20px 24px;border:1px solid rgba(255,255,255,.12);border-radius:var(--radius-lg);background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.footer-review strong{display:block;color:#fff;font-size:16px;margin-bottom:4px}
+.footer-review span{color:rgba(255,255,255,.72)}
+.footer .footer-review-btn{background:var(--lime);color:var(--dark);font-weight:800;white-space:nowrap}
+.footer .footer-review-btn:hover{color:var(--dark);filter:brightness(1.05)}
+.footer-review-btn span{color:var(--dark)}
+@media (max-width:640px){.footer-review{flex-direction:column;align-items:flex-start}.footer .footer-review-btn{width:100%;justify-content:center}}

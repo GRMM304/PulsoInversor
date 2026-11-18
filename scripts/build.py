@@ -6,6 +6,8 @@ EMAIL = 'contacto@pulsoinversor.cl'
 # Si cambia, actualizarlo también en assets/js/main.js (WHATSAPP).
 WHATSAPP = '56983554676'
 AGENDAR = 'Agendar una reunión'
+# Reseñas de Google (botón del pie de página).
+RESENAS_GOOGLE = 'https://g.page/r/CV1wmi0Qf_B7EAE/review'
 # Botón "Agendar una reunión" del menú: agenda de Brevo Meetings (hoy, la de Renato Vargas).
 AGENDA_URL = 'https://meet.brevo.com/pulsoinversor/renato-vargas'
 # Páginas cuyos botones de agendar (menú incluido) van a otra agenda.
@@ -65,6 +67,10 @@ def footer():
         <img class="logo-gmm" src="assets/img/logo-gmm-blanco.png" alt="Una empresa de Grupo Matchmaking" width="700" height="108">
       </div>
       {cols}
+    </div>
+    <div class="footer-review">
+      <div><strong>¿Ya conversaste con nosotros?</strong><span>Tu experiencia ayuda a otras personas a decidir con más información.</span></div>
+      <a class="btn footer-review-btn" href="{RESENAS_GOOGLE}" target="_blank" rel="noopener"><span aria-hidden="true">★</span> Déjanos tu reseña en Google</a>
     </div>
     <div class="footer-bottom">
       <span>© <span id="year">2026</span> Pulso Inversor SpA. Todos los derechos reservados.</span>
