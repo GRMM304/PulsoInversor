@@ -88,6 +88,7 @@ async function panel(env, url) {
   const enviados = filas0.filter((s) => s.seguimiento_estado === 'programado' && Date.parse(s.seguimiento_para) <= Date.now()).length;
   const abrieron = filas0.filter((s) => s.agenda_click || s.agenda_form).length;
   const agendados = filas0.filter((s) => s.agendado || (s._reunion && s._reunion.evento !== 'cancelada')).length;
+  const iniciadas = filas0.filter((s) => s._reunion && s._reunion.evento === 'iniciada').length;
   const contactados = filas0.filter((s) => s.contactado_click).length;
   const encuestas = filas0.filter((s) => s.encuesta);
   const prom = encuestas.length ? (encuestas.reduce((a, s) => a + (s.satisfaccion || 0), 0) / encuestas.length).toFixed(1).replace('.', ',') : '—';
@@ -103,7 +104,7 @@ async function panel(env, url) {
       <td>${esc(fmt(s.creado))}</td>
       <td>${estadoSeguimiento(s)}</td>
       <td>${celdaAgenda(s)}</td>
-      <td class="c">${s._reunion ? `<span class="pill ${s._reunion.evento === 'cancelada' ? 'wait' : 'ok'}">${s._reunion.evento === 'cancelada' ? 'Canceló' : '✓ Reservó en Brevo'}</span><br><small>${esc(fmt(s._reunion.inicio))}${s._reunion.cuenta ? '<br>' + esc(s._reunion.cuenta) : ''}</small><br>` : ''}<form method="post" action="/panel/agendado"><input type="hidden" name="id" value="${s.id}"><input type="hidden" name="valor" value="${s.agendado ? 0 : 1}"><input type="hidden" name="asesor" value="${esc(asesorSel)}"><button class="${s.agendado ? 'si' : ''}" type="submit" title="${esc(fmt(s.agendado))}">${s.agendado ? '✓ Agendada' : 'Marcar agendada'}</button></form></td>
+      <td class="c">${s._reunion ? `<span class="pill ${s._reunion.evento === 'cancelada' ? 'wait' : 'ok'}">${({ cancelada: 'Canceló', iniciada: '✓ Reunión iniciada', reservada: '✓ Reservó en Brevo' })[s._reunion.evento] || s._reunion.evento}</span><br><small>${esc(fmt(s._reunion.inicio))}${s._reunion.cuenta ? '<br>' + esc(s._reunion.cuenta) : ''}</small><br>` : ''}<form method="post" action="/panel/agendado"><input type="hidden" name="id" value="${s.id}"><input type="hidden" name="valor" value="${s.agendado ? 0 : 1}"><input type="hidden" name="asesor" value="${esc(asesorSel)}"><button class="${s.agendado ? 'si' : ''}" type="submit" title="${esc(fmt(s.agendado))}">${s.agendado ? '✓ Agendada' : 'Marcar agendada'}</button></form></td>
       <td>${s.contactado_click ? `<span class="pill ok">Sí</span><br><small>${esc(fmt(s.contactado_click))}</small>` : '<small>—</small>'}</td>
       <td>${celdaEncuesta(s)}</td>
     </tr>`).join('');
@@ -119,6 +120,7 @@ async function panel(env, url) {
     <div class="kpi"><b>${enviados}</b><span>Seguimientos enviados</span></div>
     <div class="kpi"><b>${abrieron}</b><span>Abrieron la agenda</span></div>
     <div class="kpi"><b>${agendados}</b><span>Reuniones agendadas</span></div>
+    <div class="kpi"><b>${iniciadas}</b><span>Reuniones iniciadas</span></div>
     <div class="kpi"><b>${contactados}</b><span>Dijeron “ya me contactaron”</span></div>
     <div class="kpi"><b>${encuestas.length}</b><span>Encuestas respondidas</span></div>
     <div class="kpi"><b>${prom}</b><span>Satisfacción promedio (1 a 5)</span></div>
@@ -126,7 +128,7 @@ async function panel(env, url) {
   </div>
   <div class="acc"><input type="search" id="q" placeholder="Buscar por nombre, email o teléfono"><form method="get" action="/panel" style="margin:0"><select name="asesor" onchange="this.form.submit()">${opciones}</select></form><a href="/panel/simulaciones.csv">Descargar Excel (CSV)</a><a href="/panel${asesorSel ? '?asesor=' + esc(asesorSel) : ''}">Actualizar</a><a href="/panel/salir">Salir</a></div>
   <div class="tabla"><table id="t"><thead><tr><th>Persona</th><th>Contacto</th><th>Monto</th><th>Asesor</th><th>Simuló</th><th>Seguimiento 48 h</th><th>Agenda</th><th class="c">Reunión</th><th>Ya contactado</th><th>Encuesta</th></tr></thead><tbody>${filas || '<tr><td colspan="10" style="padding:30px;text-align:center;color:#4E5A56">Aún no hay simulaciones registradas.</td></tr>'}</tbody></table></div>
-  <p style="color:#4E5A56;font-size:13px;line-height:1.6">“Abrió la agenda” = tocó el botón del correo y fue a la agenda Brevo del asesor. “Reservó en Brevo” = Brevo avisó la reserva (o “Canceló”) con su fecha y hora. Si la reunión se coordinó por otra vía, márcala con “Marcar agendada”.<br>“Ya contactado” = tocó “Ya me contactaron” en el correo de seguimiento. Encuesta: toca el resultado para ver el detalle.</p>
+  <p style="color:#4E5A56;font-size:13px;line-height:1.6">“Abrió la agenda” = tocó el botón del correo y fue a la agenda Brevo del asesor. “Reservó en Brevo”, “Reunión iniciada” o “Canceló” = avisos automáticos de Brevo Meetings, con la fecha y hora de la reunión. Si la reunión se coordinó por otra vía, márcala con “Marcar agendada”.<br>“Ya contactado” = tocó “Ya me contactaron” en el correo de seguimiento. Encuesta: toca el resultado para ver el detalle.</p>
 </div>
 <script>document.getElementById('q').addEventListener('input',function(e){var q=e.target.value.toLowerCase();document.querySelectorAll('#t tbody tr').forEach(function(tr){tr.style.display=tr.textContent.toLowerCase().indexOf(q)>-1?'':'none'})});</script>
 </body></html>`);
