@@ -17,6 +17,7 @@ import { esPrueba, DEFAULT_SENDER, EQUIPO, MAX_PDF_BYTES, ORIGENES, TIPOS, ASESO
 import { programarSeguimiento, rutaSeguimiento, HORAS_SEGUIMIENTO } from './seguimiento.js';
 import { rutaPanel } from './panel.js';
 import { recibirReunion } from './reuniones.js';
+import { procesarRecordatorios } from './recordatorios.js';
 
 
 function correoInversionista({ tipo, nombre, lineas, personas }) {
@@ -151,6 +152,10 @@ export default {
       catch (e) { console.error(e); return new Response('No pudimos procesar tu solicitud. Escríbenos por WhatsApp al +56 9 8355 4676.', { status: 502, headers: { 'content-type': 'text/plain; charset=utf-8' } }); }
     }
     return env.ASSETS.fetch(request);
+  },
+  // Cron cada minuto: recordatorios de reuniones (24 h, 1 h y 1 minuto antes).
+  async scheduled(event, env, ctx) {
+    ctx.waitUntil(procesarRecordatorios(env).then((r) => { if (r.enviados) console.log('recordatorios', JSON.stringify(r)); }).catch((e) => console.error('recordatorios', e)));
   },
 };
 

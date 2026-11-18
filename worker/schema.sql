@@ -38,3 +38,22 @@ CREATE TABLE IF NOT EXISTS reuniones (
   datos TEXT                        -- JSON completo recibido
 );
 CREATE INDEX IF NOT EXISTS idx_reu_email ON reuniones(email);
+
+-- Recordatorios de reuniones (24 h, 1 h y 1 minuto antes). Los envía el cron del Worker cada minuto.
+CREATE TABLE IF NOT EXISTS recordatorios (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  creado TEXT NOT NULL,
+  email TEXT NOT NULL,
+  nombre TEXT,
+  asesor TEXT,
+  inicio TEXT NOT NULL,
+  fin TEXT,
+  url_video TEXT,
+  url_cambio TEXT,
+  lugar TEXT,
+  cancelada TEXT,
+  r24 TEXT,                         -- fecha de envío, 'omitido' o 'error: ...'
+  r1h TEXT,
+  r1m TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_rec_inicio ON recordatorios(inicio);

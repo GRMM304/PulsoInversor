@@ -7,6 +7,7 @@
 // (o el token como "Bearer" en la autenticación del webhook). Secreto en Cloudflare: WEBHOOK_BREVO.
 
 import { json } from './comun.js';
+import { guardarReserva, cancelarReserva } from './recordatorios.js';
 
 const EVENTOS = { reservada: 'reservada', cancelada: 'cancelada', iniciada: 'iniciada' };
 
@@ -31,6 +32,10 @@ export async function recibirReunion(request, env, url) {
       .bind(new Date().toISOString(), evento, String(p.EMAIL || '').trim().toLowerCase(), [p.FIRSTNAME, p.LASTNAME].filter(Boolean).join(' '),
         m.meeting_start_timestamp || null, m.meeting_end_timestamp || null, m.meeting_name || null, m.account_email || null, JSON.stringify(m).slice(0, 8000))
       .run();
+    try {
+      if (evento === 'reservada') await guardarReserva(env, m);
+      if (evento === 'cancelada') await cancelarReserva(env, m);
+    } catch (e) { console.error('recordatorios', e); }
   }
   console.log('brevo reunion', evento, lista.length);
   return json({ ok: true });
@@ -42,6 +47,8 @@ export async function reunionesPorEmail(env) {
   try {
     const { results } = await env.DB.prepare('SELECT * FROM reuniones ORDER BY recibido ASC').all();
     for (const r of results) if (r.email) mapa[r.email] = r;
+    const rec = await env.DB.prepare('SELECT * FROM recordatorios ORDER BY creado ASC').all();
+    for (const r of rec.results) if (mapa[r.email]) mapa[r.email]._rec = r;
   } catch (e) { console.error('reuniones', e); }
   return mapa;
 }
