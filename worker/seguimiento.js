@@ -71,7 +71,7 @@ export async function programarSeguimiento(env, { id, nombre, email, telefono, t
     htmlContent: html,
     scheduledAt: new Date(Date.now() + HORAS_SEGUIMIENTO * 3600e3).toISOString(),
     tags: ['simulacion-seguimiento'],
-  });
+  }, email);
   return r.messageId || r.batchId || 'programado';
 }
 
@@ -177,7 +177,7 @@ ${agendas.map((a, i) => `<p><a href="/seguimiento/agendar?t=${esc(t)}&amp;con=${
       pie: 'Aviso interno del seguimiento de simulaciones de 1.pulsoinversor.cl.',
     }),
     tags: ['seguimiento-agenda'],
-  });
+  }, d.e);
   await brevo(env, {
     sender, to: [{ email: d.e, name: d.n }], replyTo: { email: ps[0].email, name: ps[0].nombre },
     subject: `Recibimos tu solicitud de reunión · Pulso Inversor`,
@@ -190,7 +190,7 @@ ${agendas.map((a, i) => `<p><a href="/seguimiento/agendar?t=${esc(t)}&amp;con=${
       pie: 'Recibes este correo porque pediste una reunión con Pulso Inversor.',
     }),
     tags: ['seguimiento-agenda-cliente'],
-  });
+  }, d.e);
   return pagina('Reunión solicitada', `<p class="eyebrow">Solicitud enviada</p><h1>¡Listo, ${esc(d.n.split(' ')[0])}!</h1>
 <p>Le avisamos a <strong>${esc(nombres(ps))}</strong>. Te ${varios ? 'escribirán' : 'escribirá'} por WhatsApp para confirmar la hora de tu reunión del ${esc(diaTxt)}.</p>
 <p>También te enviamos un correo con el resumen de tu solicitud.</p>`, `<script>fbq('track','Schedule');</script>`);
@@ -247,7 +247,7 @@ async function encuesta(request, env, url) {
       pie: 'Aviso interno del seguimiento de simulaciones de 1.pulsoinversor.cl.',
     }),
     tags: ['seguimiento-encuesta'],
-  });
+  }, d.e);
   return pagina('Gracias', `<p class="eyebrow">Encuesta enviada</p><h1>¡Gracias, ${esc(d.n.split(' ')[0])}!</h1>
 <p>Recibimos tu opinión. Nos ayuda mucho a mejorar cómo acompañamos a cada persona.</p>
 <p>Si te quedó alguna duda, escríbenos por WhatsApp cuando quieras.</p>`);

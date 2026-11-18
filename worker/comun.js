@@ -44,7 +44,17 @@ export const json = (obj, status = 200) => new Response(JSON.stringify(obj), {
 export const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 export const clp = (n) => '$' + Math.round(n || 0).toLocaleString('es-CL');
 
-export async function brevo(env, payload) {
+// Modo de prueba: si quien simula es uno de estos correos, TODO (aviso a asesores, encuesta, agenda)
+// le llega solo a esa misma casilla con [PRUEBA] en el asunto, y el seguimiento sale a los 3 minutos.
+export const CORREOS_PRUEBA = ['eorrego@grupomm.cl'];
+export const esPrueba = (email) => CORREOS_PRUEBA.includes(String(email || '').trim().toLowerCase());
+
+export async function brevo(env, payload, inversionista) {
+  if (esPrueba(inversionista)) {
+    payload = { ...payload, to: [{ email: inversionista }], subject: '[PRUEBA] ' + payload.subject };
+    delete payload.cc;
+    if (payload.scheduledAt) payload.scheduledAt = new Date(Date.now() + 3 * 60e3).toISOString();
+  }
   const r = await fetch('https://api.brevo.com/v3/smtp/email', {
     method: 'POST',
     headers: { 'api-key': env.BREVO_API_KEY, 'content-type': 'application/json', accept: 'application/json' },
