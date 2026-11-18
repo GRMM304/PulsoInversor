@@ -12,7 +12,7 @@ DOMINIO = 'https://www.pulsoinversor.cl'
 MARCA = 'Pulso Inversor'
 OG_IMAGEN = DOMINIO + '/assets/img/og-pulso-inversor.jpg'  # 1200 × 630
 # Google Analytics 4: ID de medición (G-…). Con None no se carga Analytics.
-GA4_ID = None
+GA4_ID = 'G-S1Q53460X9'
 
 # slug: (título en Google, descripción en Google)
 SEO = {
