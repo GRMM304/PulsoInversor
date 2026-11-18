@@ -1111,7 +1111,7 @@ page('verifica-a-pulso.html', 'Verifica a Pulso',
 _CHECK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'
 _CROSS = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>'
 
-def rx_hero(eyebrow, h1, texto, btn1, tema, btn2, href2, chips, card):
+def rx_hero(eyebrow, h1, texto, btn1, tema, btn2, href2, chips, card, agenda=None):
     ch = ''.join(f'<span>{_CHECK}{c}</span>' for c in chips)
     return f"""<section class="page-hero rx-hero"><div class="container rx-hero-grid">
   <div class="rx-hero-copy">
@@ -1120,7 +1120,7 @@ def rx_hero(eyebrow, h1, texto, btn1, tema, btn2, href2, chips, card):
     <h1>{h1}</h1>
     <p>{texto}</p>
     <div class="rx-hero-actions">
-      <a class="btn btn-primary btn-xl" href="{mail(tema)}" target="_blank" rel="noopener">{btn1}</a>
+      <a class="btn btn-primary btn-xl" href="{agenda or mail(tema)}" target="_blank" rel="noopener">{btn1}</a>
       <a class="btn btn-secondary btn-xl" href="{href2}">{btn2}</a>
     </div>
     <div class="rx-chips">{ch}</div>
@@ -1170,7 +1170,8 @@ page('mi-primera-inversion.html', 'Mi primera inversión',
              'Invierte tus ahorros sabiendo qué hay detrás. <span class="accent">Míralo antes de firmar.</span>',
              'Si tienes desde $5 millones en el banco y nunca has invertido, te explicamos en simple qué propiedad respalda tu dinero, qué documento queda a tu favor y cómo lo recuperas. Sin tecnicismos, sin apuro y con tu abogado revisando todo si quieres.',
              'Quiero una conversación sin compromiso', 'Mi primera inversión', 'Primero quiero entender', '#para-ti',
-             ['Desde $5 millones', 'Firma ante notario', 'Puedes venir con tu pareja o tu abogado', 'No te pedimos decidir en la reunión'], _card1)
+             ['Desde $5 millones', 'Firma ante notario', 'Puedes venir con tu pareja o tu abogado', 'No te pedimos decidir en la reunión'], _card1,
+             agenda=AGENDA_URL)  # en Mi primera inversión atiende Renato Vargas
      + rx_fit('para-ti', 'Antes de hablar de tasas, hablamos de ti',
               'En tu primera inversión, lo primero no es cuánto ganas. Es cuánto puedes mover sin quedarte sin colchón.',
               'Si inviertes el dinero que vas a necesitar, cualquier imprevisto te obliga a salir en mal momento. Y una primera mala experiencia se convierte en la razón para no volver a invertir nunca.',
