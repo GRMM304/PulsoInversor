@@ -13,7 +13,7 @@
 //
 // Además programa el correo de seguimiento a las 48 horas y atiende /seguimiento/agendar y /seguimiento/encuesta.
 
-import { DEFAULT_SENDER, EQUIPO, MAX_PDF_BYTES, ORIGENES, TIPOS, ASESORES, asesoresPara, json, esc, clp, brevo, plantilla, boton, bloqueResumen, P, C, WHATSAPP } from './comun.js';
+import { esPrueba, DEFAULT_SENDER, EQUIPO, MAX_PDF_BYTES, ORIGENES, TIPOS, ASESORES, asesoresPara, json, esc, clp, brevo, plantilla, boton, bloqueResumen, P, C, WHATSAPP } from './comun.js';
 import { programarSeguimiento, rutaSeguimiento, HORAS_SEGUIMIENTO } from './seguimiento.js';
 import { rutaPanel } from './panel.js';
 import { recibirReunion } from './reuniones.js';
@@ -107,7 +107,7 @@ async function enviarSimulacion(request, env) {
     htmlContent: correoInversionista({ tipo, nombre, lineas, personas }),
     attachment: adjunto,
     tags: ['simulacion', d.tipo],
-  });
+  }, email);
 
   // 2) Aviso al asesor asignado, con copia a la dirección comercial
   await brevo(env, {
@@ -119,7 +119,7 @@ async function enviarSimulacion(request, env) {
     htmlContent: correoEquipo({ tipo, nombre, email, telefono, monto, lineas, personas }),
     attachment: adjunto,
     tags: ['simulacion-equipo', d.tipo],
-  });
+  }, email);
 
   // 3) Correo de seguimiento programado a las 48 horas (si falla, no afecta lo anterior)
   let seguimiento = 'no';
@@ -130,7 +130,7 @@ async function enviarSimulacion(request, env) {
   if (env.DB && id) {
     const ok = !/^(error|sin_firma)/.test(seguimiento);
     await env.DB.prepare('UPDATE simulaciones SET seguimiento_estado = ?, seguimiento_para = ? WHERE id = ?')
-      .bind(ok ? 'programado' : seguimiento, ok ? new Date(Date.now() + HORAS_SEGUIMIENTO * 3600e3).toISOString() : null, id).run().catch((e) => console.error('db seg', e));
+      .bind(ok ? 'programado' : seguimiento, ok ? new Date(Date.now() + (esPrueba(email) ? 3 * 60e3 : HORAS_SEGUIMIENTO * 3600e3)).toISOString() : null, id).run().catch((e) => console.error('db seg', e));
   }
 
   return json({ ok: true, asesor: personas.map((a) => a.nombre).join(' y ') });
