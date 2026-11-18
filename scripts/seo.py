@@ -11,6 +11,8 @@ import re
 DOMINIO = 'https://www.pulsoinversor.cl'
 MARCA = 'Pulso Inversor'
 OG_IMAGEN = DOMINIO + '/assets/img/og-pulso-inversor.jpg'  # 1200 × 630
+# Google Analytics 4: ID de medición (G-…). Con None no se carga Analytics.
+GA4_ID = None
 
 # slug: (título en Google, descripción en Google)
 SEO = {
@@ -109,6 +111,16 @@ def _ld(obj):
     return '<script type="application/ld+json">' + json.dumps(obj, ensure_ascii=False, separators=(',', ':')) + '</script>'
 
 
+def analytics():
+    """Etiqueta de Google Analytics 4 y pulsoMedir(evento, datos), que usan main.js, simuladores.js y lorenzo.js."""
+    medir = "<script>window.pulsoMedir=function(n,p){try{if(window.gtag)gtag('event',n,Object.assign({pagina:location.pathname},p||{}));}catch(e){}};</script>"
+    if not GA4_ID:
+        return medir
+    return (f'<script async src="https://www.googletagmanager.com/gtag/js?id={GA4_ID}"></script>\n'
+            "<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());"
+            f"gtag('config','{GA4_ID}');</script>\n" + medir)
+
+
 def cabecera(slug, titulo, desc, nombre_corto):
     """Etiquetas para <head>: canónica, robots, Open Graph, Twitter y JSON-LD."""
     url = url_de(slug)
@@ -142,6 +154,7 @@ def cabecera(slug, titulo, desc, nombre_corto):
         f'<meta name="twitter:description" content="{d}">',
         f'<meta name="twitter:image" content="{OG_IMAGEN}">',
         _ld({'@context': 'https://schema.org', '@graph': grafo}),
+        analytics(),
     ])
 
 

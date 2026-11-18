@@ -57,6 +57,7 @@
       if (!nombre) { form.classList.add('error'); input.focus(); return; }
       form.classList.remove('error');
       if (window.fbq) fbq('track', 'Contact', { content_name: 'WhatsApp Lorenzo (inicio)' });
+      if (window.pulsoMedir) pulsoMedir('contacto_whatsapp', { origen: 'Empecemos por ti' });
       // "Empecemos por ti" abre WhatsApp con Lorenzo (+56 9 5879 2038) con el nombre que escribió la persona.
       var url = 'https://wa.me/56958792038?text=' + encodeURIComponent('Hola, soy ' + nombre.slice(0, 60) + ' y quiero empezar a invertir con Pulso Inversor.');
       var w = window.open(url, '_blank', 'noopener');
@@ -301,9 +302,11 @@
 document.addEventListener('click', function (e) {
   var a = e.target.closest && e.target.closest('a[href*="wa.me"]');
   if (a && window.fbq) fbq('track', 'Contact', { content_name: 'WhatsApp', content_category: location.pathname });
+  if (a && window.pulsoMedir) pulsoMedir('contacto_whatsapp', { origen: (a.textContent || '').trim().slice(0, 80) });
   // Clic en la agenda de Brevo (botón "Agendar una reunión" del menú) cuenta como "Schedule".
   var ag = e.target.closest && e.target.closest('a[href*="meet.brevo.com"]');
   if (ag && window.fbq) fbq('track', 'Schedule', { content_name: 'Agenda Brevo', content_category: location.pathname });
+  if (ag && window.pulsoMedir) pulsoMedir('agendar_reunion', { origen: 'Agenda Brevo', asesor: (ag.getAttribute('href') || '').split('/').pop() });
 });
 
 // Celular estilo app: las filas de tarjetas se deslizan con el dedo y muestran puntos de avance.
@@ -379,7 +382,7 @@ document.addEventListener('click', function (e) {
     e.preventDefault();
     if (evento) {
       evento.prompt();
-      evento.userChoice.then(function (r) { if (window.fbq && r.outcome === 'accepted') fbq('trackCustom', 'InstalarApp'); evento = null; });
+      evento.userChoice.then(function (r) { if (r.outcome === 'accepted') { if (window.fbq) fbq('trackCustom', 'InstalarApp'); if (window.pulsoMedir) pulsoMedir('instalar_app'); } evento = null; });
       return;
     }
     var nota = document.querySelector('.usar-app-nota');
@@ -418,6 +421,7 @@ document.addEventListener('click', function (e) {
       var op = e.target.closest('.ag-op');
       if (op) {
         if (window.fbq) fbq('track', 'Schedule', { content_name: 'Agendar: ' + op.querySelector('strong').textContent, content_category: location.pathname });
+        if (window.pulsoMedir) pulsoMedir('agendar_reunion', { origen: 'Menú: ' + op.querySelector('strong').textContent });
         setTimeout(cerrar, 150);
       }
     });

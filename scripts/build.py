@@ -1145,6 +1145,7 @@ page('privacidad.html', 'Política de privacidad',
   <p>Puedes pedirnos en cualquier momento acceder a tus datos, corregirlos, eliminarlos u oponerte a su uso, y retirar tu autorización para recibir contenido. Escríbenos a <a href="mailto:{EMAIL}">{EMAIL}</a> indicando tu nombre y lo que necesitas.</p>
   <h2>6. Cookies y medición</h2>
   <p>Este sitio usa el Píxel de Meta (Facebook e Instagram) para medir las visitas y la efectividad de nuestros anuncios, y para mostrar publicidad de Pulso Inversor a personas interesadas. El píxel usa cookies y datos de navegación; no le enviamos tu nombre, correo ni teléfono. Puedes bloquear estas cookies en la configuración de tu navegador y gestionar tus preferencias de anuncios en tu cuenta de Facebook o Instagram.</p>
+  <p>También usamos Google Analytics para saber cuántas personas visitan el sitio, qué páginas leen y qué acciones realizan (por ejemplo, enviar una simulación o abrir WhatsApp), de forma estadística y sin enviarle tu nombre, correo ni teléfono. Google Analytics usa cookies; puedes bloquearlas en tu navegador o instalar el complemento de inhabilitación de Google Analytics.</p>
   <h2>7. Contacto</h2>
   <p>Correo: <a href="mailto:{EMAIL}">{EMAIL}</a> · Teléfono: +56 2 3365 5239</p>
   <h2>8. Cambios a esta política</h2>
