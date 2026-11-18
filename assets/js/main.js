@@ -390,3 +390,57 @@ document.addEventListener('click', function (e) {
     enlace.insertAdjacentElement('afterend', nota);
   });
 })();
+
+// Botón "Agendar una reunión" del menú: primero se elige cómo partir (Google Meet, WhatsApp o presencial).
+(function () {
+  var WA = 'https://wa.me/56983554676?text=';
+  var caja = null, abiertaDesde = null;
+  function opcion(clase, href, titulo, detalle, icono) {
+    return '<a class="ag-op ' + clase + '" href="' + href + '" target="_blank" rel="noopener"><span class="ag-ic" aria-hidden="true">' + icono + '</span><span class="ag-tx"><strong>' + titulo + '</strong><small>' + detalle + '</small></span><span class="ag-fl" aria-hidden="true">›</span></a>';
+  }
+  function armar(agenda) {
+    caja = document.createElement('div');
+    caja.className = 'ag-modal'; caja.hidden = true;
+    caja.innerHTML = '<div class="ag-fondo" data-ag-cerrar></div>'
+      + '<div class="ag-caja" role="dialog" aria-modal="true" aria-labelledby="ag-titulo">'
+      + '<button type="button" class="ag-x" data-ag-cerrar aria-label="Cerrar">✕</button>'
+      + '<p class="ag-eyebrow">Agendar una reunión</p>'
+      + '<h2 id="ag-titulo">¿Cómo prefieres partir?</h2>'
+      + '<p class="ag-sub">Elige la forma que te acomode. Un asesor de Pulso Inversor te acompaña en cualquiera de ellas.</p>'
+      + '<div class="ag-ops">'
+      + opcion('ag-meet', agenda, 'Google Meet', 'Videollamada. Eliges día y hora en la agenda.', '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="12" height="12" rx="2.5"/><path d="M15 10.5l6-3.5v10l-6-3.5"/></svg>')
+      + opcion('ag-wa', WA + encodeURIComponent('Hola, quiero agendar una conversación por WhatsApp con un asesor de Pulso Inversor.'), 'WhatsApp', 'Conversamos por chat o llamada.', '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19z"/><path d="M9 9.5c.3 2 1.8 3.8 4 4.6l1.2-1.1 1.8.8-.4 1.6c-3.6.2-7.3-3.4-7.2-7l1.6-.4.8 1.8z" stroke-width="1.4"/></svg>')
+      + opcion('ag-pres', WA + encodeURIComponent('Hola, quiero agendar una reunión presencial en la oficina de Pulso Inversor.'), 'Presencial', 'En nuestra oficina en Las Condes.', '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6.5-6.1-6.5-11a6.5 6.5 0 0 1 13 0c0 4.9-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/></svg>')
+      + '</div></div>';
+    document.body.appendChild(caja);
+    caja.addEventListener('click', function (e) {
+      if (e.target.closest('[data-ag-cerrar]')) return cerrar();
+      var op = e.target.closest('.ag-op');
+      if (op) {
+        if (window.fbq) fbq('track', 'Schedule', { content_name: 'Agendar: ' + op.querySelector('strong').textContent, content_category: location.pathname });
+        setTimeout(cerrar, 150);
+      }
+    });
+  }
+  function abrir(enlace) {
+    if (!caja) armar(enlace.getAttribute('href'));
+    else caja.querySelector('.ag-meet').setAttribute('href', enlace.getAttribute('href'));
+    abiertaDesde = enlace;
+    var menu = document.getElementById('menu'), tg = document.querySelector('.mobile-toggle');
+    if (menu && menu.classList.contains('open') && tg) tg.click();
+    caja.hidden = false; document.body.classList.add('ag-abierto');
+    requestAnimationFrame(function () { caja.classList.add('is-open'); caja.querySelector('.ag-op').focus(); });
+  }
+  function cerrar() {
+    if (!caja || caja.hidden) return;
+    caja.classList.remove('is-open'); document.body.classList.remove('ag-abierto');
+    setTimeout(function () { caja.hidden = true; }, 200);
+    if (abiertaDesde) abiertaDesde.focus();
+  }
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[data-agendar]');
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    e.preventDefault(); e.stopImmediatePropagation(); abrir(a);
+  }, true);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') cerrar(); });
+})();

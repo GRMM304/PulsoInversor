@@ -1829,3 +1829,31 @@ body.has-lz .to-top{bottom:96px}
 @media (prefers-reduced-motion:reduce){.lz-ico-chat::after,.lz-typing .lz-bubble span{animation:none}.lz-teaser,.lz-panel,.lz-msg{animation:none}}
 @media print{.lz{display:none}}
 .lz-panel{order:1}.lz-teaser{order:2}.lz-launcher{order:3}
+
+/* Selector "¿Cómo prefieres partir?" del botón Agendar */
+.ag-modal{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+.ag-modal[hidden]{display:none}
+.ag-fondo{position:absolute;inset:0;background:rgba(14,44,40,.55);opacity:0;transition:opacity .2s}
+.ag-caja{position:relative;width:100%;max-width:460px;background:#fff;border-radius:var(--radius-xl);padding:34px 30px 28px;box-shadow:var(--shadow);transform:translateY(14px);opacity:0;transition:transform .22s ease,opacity .2s}
+.ag-modal.is-open .ag-fondo{opacity:1}
+.ag-modal.is-open .ag-caja{transform:none;opacity:1}
+body.ag-abierto{overflow:hidden}
+.ag-x{position:absolute;top:14px;right:14px;width:36px;height:36px;border:0;border-radius:50%;background:var(--gray-100);color:var(--green-900);font-size:15px;cursor:pointer}
+.ag-eyebrow{margin:0 0 6px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;font-weight:800;color:var(--green-700)}
+.ag-caja h2{margin:0 0 8px;font-size:26px;line-height:1.15;color:var(--green-900)}
+.ag-sub{margin:0 0 20px;color:var(--gray-700);font-size:15px;line-height:1.5}
+.ag-ops{display:grid;gap:10px}
+.ag-op{display:flex;align-items:center;gap:14px;padding:14px 16px;border:1.5px solid var(--gray-200);border-radius:var(--radius-md);text-decoration:none;color:var(--gray-900);background:#fff;transition:border-color .15s,background .15s,transform .15s}
+.ag-op:hover,.ag-op:focus-visible{border-color:var(--green-500);background:#F1F5EF;outline:none;transform:translateY(-1px)}
+.ag-ic{flex:0 0 44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:#EEF3DA;color:var(--green-800)}
+.ag-ic svg{width:24px;height:24px}
+.ag-tx{flex:1;display:flex;flex-direction:column;gap:2px}
+.ag-tx strong{font-size:17px;color:var(--green-900)}
+.ag-tx small{font-size:13.5px;color:var(--gray-700)}
+.ag-fl{font-size:26px;color:var(--green-700);line-height:1}
+@media (max-width:760px){
+  .ag-modal{align-items:flex-end;padding:0}
+  .ag-caja{max-width:none;border-radius:24px 24px 0 0;padding:28px 20px calc(22px + env(safe-area-inset-bottom));transform:translateY(100%)}
+  .ag-caja h2{font-size:23px}
+}
+@media (prefers-reduced-motion:reduce){.ag-caja,.ag-fondo{transition:none}}
