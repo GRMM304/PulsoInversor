@@ -278,7 +278,7 @@ page('index.html', 'Inicio',
     <span class="eyebrow dark">Inversión con Garantía Real y Resguardo Patrimonial</span>
     <h1>Tu próxima inversión <span class="accent">comienza con claridad</span></h1>
     <p>Explora alternativas vinculadas al mercado inmobiliario y encuentra un punto de partida para tus objetivos.</p>
-    {P("El formulario abre WhatsApp con el nombre en el mensaje. CONFIRMAR número en assets/js/main.js (WHATSAPP) y en scripts/build.py (WHATSAPP).")}
+    {P("El botón Empecemos por ti abre la agenda de Brevo de Felipe Rojas (assets/js/main.js).")}
     <form class="hero-form" data-agenda novalidate>
       <label for="agenda-nombre" class="sr-only">Tu nombre</label>
       <input id="agenda-nombre" name="nombre" type="text" autocomplete="given-name" placeholder="Escribe tu nombre" required>

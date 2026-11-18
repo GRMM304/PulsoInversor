@@ -57,8 +57,8 @@
       if (!nombre) { form.classList.add('error'); input.focus(); return; }
       form.classList.remove('error');
       if (window.fbq) fbq('track', 'Schedule', { content_name: 'Agendar reunión (inicio)' });
-      var texto = 'Hola, soy ' + nombre + '. Quiero agendar una reunión con un asesor de Pulso Inversor.';
-      var url = 'https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(texto);
+      // "Empecemos por ti" abre la agenda de Brevo de Felipe Rojas.
+      var url = 'https://meet.brevo.com/pulsoinversor/felipe-rojas';
       var w = window.open(url, '_blank', 'noopener');
       if (!w) window.location.href = url;
     });
