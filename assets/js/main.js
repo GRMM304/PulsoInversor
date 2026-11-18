@@ -56,9 +56,9 @@
       var nombre = (input.value || '').trim();
       if (!nombre) { form.classList.add('error'); input.focus(); return; }
       form.classList.remove('error');
-      if (window.fbq) fbq('track', 'Schedule', { content_name: 'Agendar reunión (inicio)' });
-      // "Empecemos por ti" abre la agenda de Brevo de Felipe Rojas.
-      var url = 'https://meet.brevo.com/pulsoinversor/felipe-rojas';
+      if (window.fbq) fbq('track', 'Contact', { content_name: 'WhatsApp Lorenzo (inicio)' });
+      // "Empecemos por ti" abre WhatsApp con Lorenzo (+56 9 5879 2038) con el nombre que escribió la persona.
+      var url = 'https://wa.me/56958792038?text=' + encodeURIComponent('Hola, soy ' + nombre.slice(0, 60) + ' y quiero empezar a invertir con Pulso Inversor.');
       var w = window.open(url, '_blank', 'noopener');
       if (!w) window.location.href = url;
     });
