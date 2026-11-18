@@ -360,34 +360,33 @@ document.addEventListener('click', function (e) {
   });
 })();
 
-// Celular estilo app (4): instalar Pulso Inversor en la pantalla de inicio.
+// Celular estilo app (4): Pulso Inversor se puede instalar como app, pero no se le ofrece a nadie con avisos.
+// Solo queda un enlace discreto en el pie de página ("Usar como app") para quien quiera hacerlo.
 (function () {
   if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
     window.addEventListener('load', function () { navigator.serviceWorker.register('/sw.js').catch(function () {}); });
   }
   var instalada = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
   if (instalada) { document.documentElement.classList.add('es-app'); return; }
-  if (!window.matchMedia('(max-width:760px)').matches) return;
-  var guardar = function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} };
-  var leer = function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } };
-  if (leer('pulsoAppAviso') === 'no') return;
-  // Se ofrece desde la segunda página vista, para no interrumpir de entrada.
-  var vistas = (parseInt(leer('pulsoVistas'), 10) || 0) + 1; guardar('pulsoVistas', vistas);
-  var ios = /iphone|ipad|ipod/i.test(navigator.userAgent) && !/crios|fxios/i.test(navigator.userAgent);
   var evento = null;
-  function aviso(texto, conBoton) {
-    if (vistas < 2 || document.querySelector('.app-aviso')) return;
-    var d = document.createElement('div'); d.className = 'app-aviso'; d.setAttribute('role', 'dialog'); d.setAttribute('aria-label', 'Instalar Pulso Inversor');
-    d.innerHTML = '<img src="/assets/img/app/icon-192.png" alt="" width="44" height="44"><div><strong>Lleva Pulso Inversor en tu celular</strong><span>' + texto + '</span></div>'
-      + (conBoton ? '<button type="button" class="app-instalar">Instalar</button>' : '') + '<button type="button" class="app-cerrar" aria-label="Cerrar">×</button>';
-    document.body.appendChild(d);
-    d.querySelector('.app-cerrar').addEventListener('click', function () { d.remove(); guardar('pulsoAppAviso', 'no'); });
-    var b = d.querySelector('.app-instalar');
-    if (b) b.addEventListener('click', function () {
-      if (!evento) return; evento.prompt();
-      evento.userChoice.then(function (r) { if (window.fbq && r.outcome === 'accepted') fbq('trackCustom', 'InstalarApp'); d.remove(); guardar('pulsoAppAviso', 'no'); });
-    });
-  }
-  window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); evento = e; aviso('Ábrelo como una app, directo desde tu pantalla de inicio.', true); });
-  if (ios) setTimeout(function () { aviso('Toca <b>Compartir</b> y luego <b>Agregar a inicio</b>.', false); }, 2500);
+  // Evita que el navegador muestre su propio aviso de instalación; se guarda para el enlace del pie.
+  window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); evento = e; });
+  var ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  var enlace = document.querySelector('[data-usar-app]');
+  if (!enlace) return;
+  enlace.hidden = false;
+  enlace.addEventListener('click', function (e) {
+    e.preventDefault();
+    if (evento) {
+      evento.prompt();
+      evento.userChoice.then(function (r) { if (window.fbq && r.outcome === 'accepted') fbq('trackCustom', 'InstalarApp'); evento = null; });
+      return;
+    }
+    var nota = document.querySelector('.usar-app-nota');
+    if (nota) { nota.hidden = !nota.hidden; return; }
+    nota = document.createElement('p'); nota.className = 'usar-app-nota';
+    nota.innerHTML = ios ? 'En iPhone: toca <b>Compartir</b> y luego <b>Agregar a inicio</b>.'
+      : 'En el menú de tu navegador (⋮), elige <b>Instalar app</b> o <b>Agregar a la pantalla de inicio</b>.';
+    enlace.insertAdjacentElement('afterend', nota);
+  });
 })();

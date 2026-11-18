@@ -83,6 +83,7 @@ def footer():
         <img class="logo-foot" src="assets/img/logo-pulso-blanco.webp" alt="Pulso Inversor" width="300" height="100">
         <p>Inversiones privadas vinculadas a bienes raíces mediante el modelo IGR: Inversión con Garantía Real.</p>
         <p><strong>Pulso Inversor SpA</strong><br><a href="mailto:{EMAIL}">{EMAIL}</a></p>
+        <a class="usar-app" href="#" data-usar-app hidden>📲 Usar Pulso Inversor como app</a>
         {P("RUT, domicilio, teléfono y demás canales oficiales.")}
         <img class="logo-gmm" src="assets/img/logo-gmm-blanco.png" alt="Una empresa de Grupo Matchmaking" width="700" height="108">
       </div>
