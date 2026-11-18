@@ -11,6 +11,7 @@ export const TIPOS = {
   proyecta: 'Rescate Inmobiliario',
   hipoteca: 'Hipoteca Inteligente',
   circular: 'Inversión Inmobiliaria Circular',
+  patrimonial: 'Simulador Patrimonial',
 };
 
 // Enlaces de agendamiento de Brevo Meetings por tramo (pegar la URL de la página de reservas de cada asesor).

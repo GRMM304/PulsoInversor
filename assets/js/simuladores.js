@@ -3,6 +3,9 @@
  *   Hipoteca Inteligente pide además la capacidad financiera por crédito.
  * - Rescate Inmobiliario: réplica del simulador de www.pulsoinversor.cl + comparación con depósito a plazo.
  * - Hipoteca Inteligente: réplica del simulador de simuladorpulsoinversor.netlify.app.
+ * - Simulador Patrimonial (Hipoteca Inteligente Empresarial): propuesta del 18-11-2026.
+ * - Inversión Circular: vive en su propia página (inversion-circular.html).
+ * Cada bloque se activa solo si su panel existe en la página.
  * Los datos de contacto viven solo en memoria y en sessionStorage (se borran al cerrar la pestaña).
  */
 (function () {
@@ -173,8 +176,11 @@
     stage.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
   var inicial = (location.hash || '').replace('#', '');
-  if (/^sim-(proyecta|hipoteca|circular)$/.test(inicial)) abrir(inicial, false);
+  if (/^sim-(proyecta|hipoteca|circular|patrimonial)$/.test(inicial)) abrir(inicial, false);
+  // Página con un solo simulador (por ejemplo, la landing de Inversión Circular): se muestra de inmediato.
+  if (!tabs.length && panels.length === 1) abrir(panels[0].getAttribute('data-sim-panel'), false);
 
+  if ($('#sim-proyecta')) (function () {
   /* =========================================================
      Rescate Inmobiliario (estrategias Acción, Hipoteca, Título)
      ========================================================= */
@@ -288,6 +294,9 @@
   });
   renderSeries(); render();
 
+  })();
+
+  if ($('#sim-hipoteca')) (function () {
   /* =========================================================
      Hipoteca Inteligente
      ========================================================= */
@@ -521,6 +530,8 @@
     if (contacto) sheet('quote', Object.assign({ name: contacto.nombre, phone: contacto.telefono, email: contacto.email, capacityUF: H.capacity, consent: true, folio: fol, traction: t.name, tractionComuna: t.comuna, years: H.years, p1: pk[0] || null, p2: pk[1] || null }, H.summary || {}));
   }
 
+  })();
+
   /* =========================================================
      Inversión Inmobiliaria Circular
      Modelo replicado del simulador de referencia (artifact de diseño).
@@ -687,6 +698,124 @@
         { t: 'Supuestos', small: true, text: $('#ic-base').textContent + ' Venta 15% bajo el valor comercial; inflación 3% anual; arriendo reajustado 3% anual; mantención, vacancia y reparaciones estimadas. Proyectar diez años exige continuidad de tasa, condiciones y cumplimiento de pagos. La nueva compra es opcional y se evalúa por separado. ' + DISCLAIMER }
       ], { tipo: 'Inversión Inmobiliaria Circular', monto: c.net });
       enviarCorreo('circular', doc, 'Simulacion_InversionCircular', resumenIC, st, btn, c.net);
+    });
+  })();
+
+  /* =========================================================
+     Simulador Patrimonial (Hipoteca Inteligente Empresarial)
+     Portafolio del catálogo → descuento y financiamiento → estructura → evolución patrimonial.
+     ========================================================= */
+  (function () {
+    if (!$('#sim-patrimonial')) return;
+    // Catálogo de ejemplo (valores en UF simulados, según la propuesta).
+    var CATALOGO = [
+      { n: 'Santa Amalia', c: 'La Florida', uf: 3500, img: 'la-florida', spec: '3 hab · 2 baños · 76 m²' },
+      { n: 'Merced', c: 'Quillota', uf: 4500, img: '', spec: '3 hab · 1 baño · 58 m²' },
+      { n: 'Valparaíso', c: 'Quillota', uf: 5000, img: '', spec: '2 hab · 2 baños · 65 m²' },
+      { n: 'Las Quemas', c: 'Osorno', uf: 6000, img: 'osorno', spec: '4 hab · 3 baños · 5.200 m²' },
+      { n: 'San Diego', c: 'Santiago', uf: 3000, img: '', spec: '2 hab · 1 baño · 48 m²' },
+      { n: 'Patricio Lynch', c: 'Quinta Normal', uf: 4000, img: 'quinta-normal', spec: '' }
+    ];
+    var DESC = [15, 17.5, 20], ADMIN = .10, COBERTURA = .05;
+    var S = { sel: [], desc: null, ltv: null, plazo: 25 };
+    var nf = function (v, d) { return new Intl.NumberFormat('es-CL', { maximumFractionDigits: d || 0 }).format(v); };
+    var ufs = function (v) { return nf(Math.round(v)) + ' UF'; };
+    var clp = function (v) { return '$' + nf(Math.round(v)); };
+    var pc = function (d) { return String(d).replace('.', ',') + '%'; };
+    var dec = function (id) { var t = String($(id).value || '').replace(/[^\d,\.]/g, '').replace(',', '.'); var n = parseFloat(t); return isFinite(n) ? n : 0; };
+    var casa = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>';
+
+    $('#sp-props').innerHTML = CATALOGO.map(function (p, i) {
+      return '<button type="button" class="sp-prop" data-sp-prop="' + i + '" aria-pressed="false">' +
+        '<span class="sp-prop-img' + (p.img ? '' : ' sin-foto') + '"' + (p.img ? ' style="background-image:url(assets/img/portafolio/' + p.img + '.jpg)"' : '') + '>' + (p.img ? '' : casa) +
+        '<span class="sp-check" aria-hidden="true">✓</span>' + (p.spec ? '<span class="sp-spec">' + p.spec + '</span>' : '') + '</span>' +
+        '<span class="sp-prop-info"><strong>' + esc(p.n) + '</strong><small>' + esc(p.c) + '</small><b>' + ufs(p.uf) + '</b></span></button>';
+    }).join('');
+
+    function calc() {
+      var props = S.sel.slice().sort(function (a, b) { return a - b; }).map(function (i) { return CATALOGO[i]; });
+      var tas = props.reduce(function (a, p) { return a + p.uf; }, 0);
+      var tasa = dec('#sp-tasa'), renta = dec('#sp-renta');
+      var r = { props: props, tas: tas, tasa: tasa, renta: renta };
+      r.listo = tas > 0 && S.desc !== null && S.ltv !== null && S.plazo > 0 && tasa >= 0 && tasa < 30;
+      if (!r.listo) return r;
+      r.precio = tas * (1 - S.desc / 100);
+      r.credito = tas * S.ltv / 100;
+      r.aporte = r.precio - r.credito;
+      var i = tasa / 100 / 12, n = S.plazo * 12;
+      r.div = i === 0 ? r.credito / n : r.credito * i / (1 - Math.pow(1 + i, -n));
+      var saldo = function (k) { return Math.max(0, i === 0 ? r.credito * (1 - k / n) : r.credito * Math.pow(1 + i, k) - r.div * (Math.pow(1 + i, k) - 1) / i); };
+      r.evol = [0, 5, 10, 15, 20, 25, 30].filter(function (y) { return y <= S.plazo; }).map(function (y) { var d = saldo(y * 12); return { y: y, deuda: d, pat: tas - d }; });
+      if (renta > 0) { r.costos = renta * (ADMIN + COBERTURA); r.flujo = renta - r.costos - r.div; }
+      return r;
+    }
+    var ultimo = null;
+    function render() {
+      var r = calc(); ultimo = r;
+      $$('[data-sp-prop]').forEach(function (b) { var on = S.sel.indexOf(+b.getAttribute('data-sp-prop')) >= 0; b.classList.toggle('is-on', on); b.setAttribute('aria-pressed', on); });
+      $('#sp-total').innerHTML = r.tas
+        ? '<div><small>' + r.props.length + (r.props.length === 1 ? ' propiedad seleccionada' : ' propiedades seleccionadas') + '</small><p>' + r.props.map(function (p) { return nf(p.uf); }).join(' + ') + ' UF</p></div><div class="sp-total-v"><small>Tasación total</small><strong>' + ufs(r.tas) + '</strong></div>'
+        : '<div><small>Tu portafolio</small><p>Toca una o más propiedades para sumarlas.</p></div><div class="sp-total-v"><small>Tasación total</small><strong>—</strong></div>';
+      $('#sp-desc').innerHTML = DESC.map(function (d) {
+        var on = S.desc === d;
+        return '<button type="button" class="sp-dcard' + (on ? ' is-on' : '') + '" data-sp-desc="' + d + '" aria-pressed="' + on + '"><small>−' + pc(d) + ' sobre tasación</small><strong>' + (r.tas ? ufs(r.tas * (1 - d / 100)) : '—') + '</strong><span>Precio de compra estimado</span></button>';
+      }).join('');
+      $$('[data-sp-ltv]').forEach(function (b) { var on = +b.getAttribute('data-sp-ltv') === S.ltv; b.classList.toggle('is-active', on); b.setAttribute('aria-pressed', on); });
+      $$('[data-sp-plazo]').forEach(function (b) { var on = +b.getAttribute('data-sp-plazo') === S.plazo; b.classList.toggle('is-active', on); b.setAttribute('aria-pressed', on); });
+      $('#sp-enviar').disabled = !r.listo;
+      if (!r.listo) {
+        $('#sp-fin').innerHTML = '<p class="sp-empty">' + (!r.tas ? 'Elige al menos una propiedad para calcular.' : 'Elige el descuento y cuánto financia el banco para ver tu crédito, tu aporte y el dividendo.') + '</p>';
+        $('#sp-evo').innerHTML = '<p class="sp-empty">Aquí verás cómo baja la deuda y crece tu patrimonio año a año.</p>';
+        $('#sp-evo-sub').textContent = 'Completa los pasos anteriores para ver la evolución de tu patrimonio.';
+        return;
+      }
+      var row = function (a, b, k, sub) { return '<div class="sp-row ' + (k || '') + '"><span>' + a + (sub ? '<em>' + sub + '</em>' : '') + '</span><b>' + b + '</b></div>'; };
+      var enPesos = function (v) { return '≈ ' + clp(v * UF); };
+      $('#sp-fin').innerHTML =
+        '<div class="sp-fin-k"><div><small>Crédito bancario</small><strong>' + ufs(r.credito) + '</strong><span>' + S.ltv + '% de la tasación</span></div>' +
+        '<div class="hl"><small>' + (r.aporte >= 0 ? 'Aporte al precio' : 'El crédito supera el precio') + '</small><strong>' + ufs(Math.abs(r.aporte)) + '</strong><span>' + enPesos(Math.abs(r.aporte)) + '</span></div>' +
+        '<div><small>Dividendo mensual</small><strong>' + nf(r.div, 1) + ' UF</strong><span>' + enPesos(r.div) + ' · ' + S.plazo + ' años al ' + nf(r.tasa, 2) + '%</span></div></div>' +
+        row('Precio de compra (−' + pc(S.desc) + ')', ufs(r.precio)) + row('Patrimonio inicial (tasación menos crédito)', ufs(r.tas - r.credito), 'pos') +
+        (r.renta > 0 ? row('Arriendo mensual estimado', nf(r.renta, 1) + ' UF') + row('Administración y cobertura (15%)', '−' + nf(r.costos, 1) + ' UF') + row('Dividendo mensual', '−' + nf(r.div, 1) + ' UF') +
+          row('Flujo mensual estimado', (r.flujo < 0 ? '−' : '') + nf(Math.abs(r.flujo), 1) + ' UF', r.flujo >= 0 ? 'pos tot' : 'neg tot', (r.flujo < 0 ? '−' : '') + enPesos(Math.abs(r.flujo)).replace('≈ ', '≈ ' + (r.flujo < 0 ? '−' : '')).replace(/^−/, '')) : '');
+      $('#sp-evo-sub').textContent = 'Ejemplo con ' + ufs(r.tas) + ' de tasación, ' + ufs(r.credito) + ' de crédito, ' + nf(r.tasa, 2) + '% real anual y ' + S.plazo + ' años, sin plusvalía.';
+      $('#sp-evo').innerHTML = r.evol.map(function (e) {
+        var wd = (e.deuda / r.tas * 100).toFixed(2), wp = (e.pat / r.tas * 100).toFixed(2);
+        return '<div class="sp-bar"><span class="sp-y">' + (e.y < 10 ? '0' : '') + e.y + ' años</span><div class="sp-track" role="img" aria-label="Año ' + e.y + ': deuda ' + ufs(e.deuda) + ', patrimonio ' + ufs(e.pat) + '"><i class="d" style="width:' + wd + '%"></i><i class="p" style="width:' + wp + '%"></i></div><b>' + ufs(e.pat) + '</b></div>';
+      }).join('');
+    }
+    var spPanel = $('#sim-patrimonial');
+    spPanel.addEventListener('click', function (e) {
+      var b;
+      if ((b = e.target.closest('[data-sp-prop]'))) { var i = +b.getAttribute('data-sp-prop'), k = S.sel.indexOf(i); if (k >= 0) S.sel.splice(k, 1); else S.sel.push(i); render(); }
+      else if ((b = e.target.closest('[data-sp-desc]'))) { S.desc = +b.getAttribute('data-sp-desc'); render(); }
+      else if ((b = e.target.closest('[data-sp-ltv]'))) { S.ltv = +b.getAttribute('data-sp-ltv'); render(); }
+      else if ((b = e.target.closest('[data-sp-plazo]'))) { S.plazo = +b.getAttribute('data-sp-plazo'); render(); }
+    });
+    ['#sp-tasa', '#sp-renta'].forEach(function (id) { $(id).addEventListener('input', function (e) { e.target.value = e.target.value.replace(/[^\d,]/g, ''); render(); }); });
+    render();
+
+    $('#sp-enviar').addEventListener('click', function () {
+      var st = $('#sp-status'), btn = $('#sp-enviar'), r = calc();
+      if (!contacto || !r.listo) { st.textContent = 'Completa el portafolio, el descuento y el financiamiento antes de enviar.'; return; }
+      if (!jspdfListo(st)) return;
+      var monto = r.tas * UF;
+      var filasEvo = r.evol.map(function (e) { return [e.y + ' años', 'Deuda ' + ufs(e.deuda) + ' · Patrimonio ' + ufs(e.pat)]; });
+      var fin = [['Precio de compra (−' + pc(S.desc) + ')', ufs(r.precio)], ['Crédito bancario (' + S.ltv + '% de la tasación)', ufs(r.credito)],
+        [r.aporte >= 0 ? 'Aporte al precio' : 'El crédito supera el precio en', ufs(Math.abs(r.aporte))], ['Dividendo mensual', nf(r.div, 1) + ' UF (' + S.plazo + ' años al ' + nf(r.tasa, 2) + '% real)'],
+        ['Patrimonio inicial', ufs(r.tas - r.credito), 'pos']];
+      if (r.renta > 0) fin = fin.concat([['Arriendo mensual estimado', nf(r.renta, 1) + ' UF'], ['Administración y cobertura (15%)', '-' + nf(r.costos, 1) + ' UF'], ['Flujo mensual estimado', (r.flujo < 0 ? '-' : '') + nf(Math.abs(r.flujo), 1) + ' UF', r.flujo >= 0 ? 'pos' : 'red']]);
+      var doc = pdfSimple('Simulación Patrimonial', 'Hipoteca Inteligente Empresarial', [
+        { t: 'Tu portafolio', rows: r.props.map(function (p) { return [p.n + ' · ' + p.c, ufs(p.uf)]; }).concat([['Tasación total', ufs(r.tas), 'pos']]) },
+        { t: 'Adquisición y financiamiento', rows: fin },
+        { t: 'Evolución patrimonial', rows: filasEvo },
+        { t: 'Estructura propuesta', text: 'Los socios (personas o sociedades) participan en una sociedad patrimonial que compra y mantiene las propiedades, financiadas por el banco con garantías aprobadas. La empresa operativa puede respaldar o garantizar la deuda, sujeto a autorización y análisis de riesgo. Pulso administra arriendo, cobranza, mantención y cobertura ante incumplimiento o vacancia (referencia: 10% de administración y 5% de cobertura sobre el arriendo mensual). Estructura sujeta a revisión jurídica, tributaria y bancaria.' },
+        { t: 'Tus próximos pasos', proximos: true },
+        { t: 'Supuestos', small: true, text: 'Valores de las propiedades en UF simulados a partir del catálogo Pulso. No incluye gastos, reservas ni evaluación de riesgo; el banco puede usar el menor valor entre el precio y la tasación. La evolución no refleja arriendos, dividendos pagados, costos, impuestos ni aportes posteriores, y no considera plusvalía. UF de referencia: ' + clp(UF) + '. ' + DISCLAIMER }
+      ], { tipo: 'Simulador Patrimonial', monto: monto });
+      var resumenSP = ['Propiedades: ' + r.props.map(function (p) { return p.n + ' (' + p.c + ')'; }).join(', '), 'Tasación total: ' + ufs(r.tas), 'Descuento: ' + pc(S.desc) + ' · Precio: ' + ufs(r.precio),
+        'Crédito: ' + ufs(r.credito) + ' (' + S.ltv + '%) · Aporte: ' + ufs(r.aporte), 'Dividendo: ' + nf(r.div, 1) + ' UF/mes · ' + S.plazo + ' años al ' + nf(r.tasa, 2) + '%'].concat(r.renta > 0 ? ['Arriendo estimado: ' + nf(r.renta, 1) + ' UF/mes · Flujo: ' + nf(r.flujo, 1) + ' UF/mes'] : []);
+      enviarCorreo('patrimonial', doc, 'Simulacion_Patrimonial', resumenSP, st, btn, monto);
     });
   })();
 

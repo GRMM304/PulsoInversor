@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Simuladores · Pulso Inversor</title>
-<meta name="description" content="Simula tu inversión en Rescate Inmobiliario (Acción, Hipoteca o Título) y compárala con un depósito a plazo, o arma tu configuración de Hipoteca Inteligente.">
+<meta name="description" content="Simula tu inversión en Rescate Inmobiliario (Acción, Hipoteca o Título) y compárala con un depósito a plazo, arma tu configuración de Hipoteca Inteligente o proyecta un portafolio con el Simulador Patrimonial.">
 <meta property="og:title" content="Simuladores · Pulso Inversor">
-<meta property="og:description" content="Simula tu inversión en Rescate Inmobiliario (Acción, Hipoteca o Título) y compárala con un depósito a plazo, o arma tu configuración de Hipoteca Inteligente.">
+<meta property="og:description" content="Simula tu inversión en Rescate Inmobiliario (Acción, Hipoteca o Título) y compárala con un depósito a plazo, arma tu configuración de Hipoteca Inteligente o proyecta un portafolio con el Simulador Patrimonial.">
 <meta property="og:image" content="assets/media/hero-poster.jpg">
 <meta name="theme-color" content="#0E2C28">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
@@ -61,12 +61,12 @@ src="https://www.facebook.com/tr?id=4384764601785320&ev=PageView&noscript=1"
       <span class="sim-pick-ico">A·H·T</span><strong>Rescate Inmobiliario</strong><span>Invierte tu capital con Acción, Hipoteca o Título y compáralo con un depósito a plazo.</span><em>Desde $5MM</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
     <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-hipoteca" aria-selected="false">
       <span class="sim-pick-ico">HI</span><strong>Hipoteca Inteligente</strong><span>Arma tu configuración con tu capacidad de crédito y mira cómo termina.</span><em>Desde 2.000 UF de crédito</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
-    <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-circular" aria-selected="false">
-      <span class="sim-pick-ico">IC</span><strong>Inversión Circular</strong><span>Compara conservar tu propiedad con venderla e invertir en Pulso Inversor.</span><em>Con tu propiedad</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
+    <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-patrimonial" aria-selected="false">
+      <span class="sim-pick-ico">SP</span><strong>Simulador Patrimonial</strong><span>Para empresas y sus socios: arma un portafolio de propiedades con descuento y mira cómo crece tu patrimonio.</span><em>Hipoteca Inteligente Empresarial</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
   </div>
 
   <div class="sim-stage" id="sim-stage" hidden>
-  <div class="gate" id="sim-gate" aria-labelledby="gate-title">
+    <div class="gate" id="sim-gate" aria-labelledby="gate-title">
     <span class="gate-lock" aria-hidden="true">🔒</span>
     <h3 id="gate-title">Completa tus datos para ver tu simulación</h3>
     <p class="gate-sub">Te los pedimos una sola vez y quedan listos para todos los simuladores.</p>
@@ -83,6 +83,7 @@ src="https://www.facebook.com/tr?id=4384764601785320&ev=PageView&noscript=1"
     </form>
   </div>
   <!-- PENDIENTE: CASILLAS (revisión 17-11-2026): Política de privacidad obligatoria; publicidad OPCIONAL y sin marcar. Términos y condiciones pendientes de validación legal. -->
+
 
 <div class="sim-panel" id="sim-proyecta" data-sim-panel="sim-proyecta"><div class="sim-panel-body">
     <div class="sim-head"><h2>Rescate Inmobiliario</h2><p class="muted">Elige tu estrategia, el monto y el plazo, y compara con lo que te daría un depósito a plazo.</p></div>
@@ -177,64 +178,59 @@ src="https://www.facebook.com/tr?id=4384764601785320&ev=PageView&noscript=1"
     <!-- PENDIENTE: REVISIÓN 7 pedía retirar la regla de reparto 50/50 de la amortización en la recompra porque difiere de la presentación vigente. Se replicó tal cual el simulador actual a pedido de la usuaria: CONFIRMAR. -->
   </div></div>
 
-  <div class="sim-panel" id="sim-circular" data-sim-panel="sim-circular" hidden><div class="sim-panel-body">
-    <div class="sim-head"><h2>Inversión Inmobiliaria Circular</h2><p class="muted">Compara conservar tu propiedad arrendada con venderla e invertir el capital en Pulso Inversor. Cifras en pesos.</p></div>
-    <div class="ic">
-      <form class="pro-form ic-form" id="ic-form" novalidate>
-        <span class="pro-label">¿Tu propiedad tiene deuda?</span>
-        <div class="pro-yesno"><button type="button" class="chip-opt" data-ic-debt="no">Sin deuda</button><button type="button" class="chip-opt" data-ic-debt="yes">Con deuda</button></div>
-        <label class="pro-label" for="ic-value">¿Cuánto vale tu propiedad hoy?</label>
-        <div class="money-in"><span>$</span><input id="ic-value" inputmode="numeric" autocomplete="off" placeholder="0"></div>
-        <label class="pro-label" for="ic-rent">¿Cuánto recibes de arriendo al mes? <small>Si no está arrendada, déjalo vacío.</small></label>
-        <div class="money-in"><span>$</span><input id="ic-rent" inputmode="numeric" autocomplete="off" placeholder="0"></div>
-        <label class="pro-label" for="ic-oldpayment">¿Cuánto pagas de dividendo al mes?</label>
-        <div class="money-in"><span>$</span><input id="ic-oldpayment" inputmode="numeric" autocomplete="off" placeholder="0"></div>
-        <div id="ic-debtfields" class="ic-sub" hidden>
-          <label class="pro-label" for="ic-debt">¿Cuánto debes hoy? <small>Saldo de prepago que informa tu banco.</small></label>
-          <div class="money-in"><span>$</span><input id="ic-debt" inputmode="numeric" autocomplete="off" placeholder="Ej. 40.000.000"></div>
-          <label class="pro-label" for="ic-oldmonths">¿Cuántas cuotas te quedan?</label>
-          <input id="ic-oldmonths" type="number" inputmode="numeric" min="1" max="600" placeholder="Ej. 225">
+  <div class="sim-panel" id="sim-patrimonial" data-sim-panel="sim-patrimonial" hidden><div class="sim-panel-body">
+    <div class="sim-head"><span class="sp-kicker">Hipoteca Inteligente Empresarial</span><h2>Simulador Patrimonial</h2><p class="muted">Tu empresa genera capacidad financiera. Tus socios pueden transformarla en patrimonio: eligen propiedades del catálogo Pulso, las compran con descuento y con financiamiento bancario, y nosotros las administramos.</p></div>
+    <div class="sp">
+      <article class="sp-step" id="sp-s1">
+        <header class="sp-sh"><span class="sp-n">01</span><div><small>Selecciona</small><h3>Elige propiedades y construye tu portafolio</h3></div></header>
+        <div class="sp-props" id="sp-props"></div>
+        <div class="sp-total" id="sp-total"></div>
+      </article>
+      <article class="sp-step" id="sp-s2">
+        <header class="sp-sh"><span class="sp-n">02</span><div><small>Aprovecha el descuento</small><h3>Una tasación y dos variables que deciden</h3></div></header>
+        <p class="muted sp-lead">El descuento baja el precio de compra. El banco define cuánto financia y, con eso, cuánto aportas.</p>
+        <span class="pro-label">Descuento sobre la tasación</span>
+        <div class="sp-desc" id="sp-desc"></div>
+        <div class="sp-vars">
+          <div><span class="pro-label">¿Cuánto financia el banco?</span>
+            <div class="pro-chips" id="sp-ltv"><button type="button" class="chip-opt" data-sp-ltv="70">70%</button><button type="button" class="chip-opt" data-sp-ltv="75">75%</button><button type="button" class="chip-opt" data-sp-ltv="80">80%</button></div><p class="pro-help">De la tasación.</p></div>
+          <div><span class="pro-label">Plazo del crédito</span>
+            <div class="pro-chips" id="sp-plazo"><button type="button" class="chip-opt" data-sp-plazo="20">20 años</button><button type="button" class="chip-opt is-active" data-sp-plazo="25" aria-pressed="true">25 años</button><button type="button" class="chip-opt" data-sp-plazo="30">30 años</button></div></div>
+          <label class="sp-in"><span class="pro-label">Tasa del crédito</span><span class="sp-unit"><input id="sp-tasa" inputmode="decimal" autocomplete="off" value="4,5"><span>% real anual</span></span></label>
+          <label class="sp-in"><span class="pro-label">Arriendo mensual estimado <small>(opcional)</small></span><span class="sp-unit"><input id="sp-renta" inputmode="decimal" autocomplete="off" placeholder="Ej. 60"><span>UF al mes</span></span><span class="pro-help">De todo el portafolio. Con este dato estimamos el flujo.</span></label>
         </div>
-        <span class="pro-label">¿Cada cuánto quieres recibir tus intereses?</span>
-        <div class="pro-chips"><button type="button" class="chip-opt" data-ic-freq="quarterly">Cada 3 meses · 1,2% mensual</button><button type="button" class="chip-opt" data-ic-freq="monthly">Cada mes · 1,0% mensual</button></div>
-        <span class="pro-label">¿A cuántos años quieres proyectar?</span>
-        <div class="pro-yesno"><button type="button" class="chip-opt" data-ic-years="5">5 años</button><button type="button" class="chip-opt" data-ic-years="10">10 años</button></div>
-        <label class="check ic-purchase"><input type="checkbox" id="ic-purchase"><span>Quiero evaluar comprar una nueva propiedad con el capital <small>(opcional)</small></span></label>
-        <div id="ic-purchasefields" class="ic-sub" hidden>
-          <label class="pro-label" for="ic-newvalue">Valor de la nueva propiedad</label>
-          <div class="money-in"><span>$</span><input id="ic-newvalue" inputmode="numeric" autocomplete="off" value="80.000.000"></div>
-          <label class="pro-label" for="ic-newrent">Arriendo que podría generar</label>
-          <div class="money-in"><span>$</span><input id="ic-newrent" inputmode="numeric" autocomplete="off" value="400.000"></div>
-          <div class="ic-2"><label><span class="pro-label">Financiamiento (% tasación)</span><input id="ic-ltv" type="number" value="85" min="0" max="100" step="0.1"></label>
-            <label><span class="pro-label">Plazo del crédito (años)</span><input id="ic-term" type="number" value="20" min="1" max="40"></label></div>
-          <div class="ic-2"><label><span class="pro-label">Tasa del crédito (% anual UF)</span><input id="ic-rate" type="number" value="5" min="0" max="30" step="0.1"></label>
-            <label><span class="pro-label">Gastos de compra (% del precio)</span><input id="ic-buycost" type="number" value="2" min="0" max="30" step="0.1"></label></div>
+        <div class="sp-fin" id="sp-fin"></div>
+        <p class="sp-fine">No incluye gastos, reservas ni evaluación de riesgo. El banco puede usar el menor valor entre el precio y la tasación.</p>
+      </article>
+      <article class="sp-step" id="sp-s3">
+        <header class="sp-sh"><span class="sp-n">03</span><div><small>Estructura</small><h3>Un vehículo patrimonial y la gestión en nuestras manos</h3></div></header>
+        <div class="sp-flow">
+          <div class="sp-node"><strong>Socios</strong><span>Personas o sociedades</span></div><i aria-hidden="true">›</i>
+          <div class="sp-node hl"><strong>Sociedad patrimonial</strong><span>Compra y mantiene las propiedades</span></div><i aria-hidden="true">›</i>
+          <div class="sp-node"><strong>Banco</strong><span>Financia con garantías aprobadas</span></div>
         </div>
-      </form>
-      <div class="ic-out" id="ic-results">
-        <div class="sim-alert" id="ic-error" role="alert" hidden></div>
-        <div class="sim-alert warn" id="ic-warning" role="status" hidden></div>
-        <div class="ic-head"><h3>Más claridad para decidir</h3><span id="ic-period">Proyección a 5 años</span></div>
-        <div class="ic-gain" id="ic-gain" hidden></div>
-        <div class="ic-kpis">
-          <div class="ic-kpi"><small>Capital neto de la venta</small><strong id="ic-k-net">—</strong><span>Venta menos prepago y gastos</span></div>
-          <div class="ic-kpi hl"><small>Ingreso mensual equivalente con Pulso Inversor</small><strong id="ic-k-monthly">—</strong><span id="ic-k-monthly-sub">—</span></div>
-          <div class="ic-kpi"><small>Flujo actual antes de costos</small><strong id="ic-k-flow">—</strong><span>Arriendo menos dividendo actual</span></div>
+        <div class="sp-flow2">
+          <div class="sp-node"><strong>Empresa operativa</strong><span>Puede respaldar o garantizar la deuda, sujeto a autorización y análisis de riesgo.</span></div>
+          <div class="sp-node dark"><strong>Pulso: administración profesional</strong><span>Arriendo, cobranza, mantención y cobertura ante incumplimiento o vacancia.</span></div>
         </div>
-        <p class="ic-summary" id="ic-summary"></p>
-        <div class="ic-card"><h4 id="ic-bars-title">¿Con cuánto terminas?</h4><div class="cb" id="ic-bars"></div>
-          <p class="cb-legend"><span class="cb-a"></span>Patrimonio o capital al término <span class="cb-b"></span>Ingresos recibidos en el período</p></div>
-        <div class="ic-card"><div class="ic-head"><h4>La comparación que respalda tu decisión</h4><span>TIR anual efectiva</span></div>
-          <div class="ic-tablewrap"><table class="ic-table"><thead><tr><th>Alternativa</th><th>5 años</th><th>10 años*</th></tr></thead><tbody id="ic-tir"></tbody></table></div>
-          <p class="ic-note" id="ic-base"></p>
-          <p class="ic-note">*Proyectar diez años exige continuidad de tasa, condiciones y cumplimiento de pagos. La nueva compra es opcional y se evalúa por separado.</p>
-          <p class="ic-note">Esta simulación no constituye una cotización ni asegura rentabilidades futuras. La rentabilidad simulada es referencial a esta fecha y no compromete a Pulso Inversor SpA. La rentabilidad y las condiciones finales se fijan al momento de la firma del contrato respectivo.</p></div>
-        <div class="pro-actions"><button type="button" class="btn btn-primary btn-xl" id="ic-correo">Enviar a mi correo <span aria-hidden="true">→</span></button></div>
-        <p class="sim-aut">Al completar tus datos personales, Pulso Inversor SpA podrá usarlos para contactarte y entregarte opciones de inversión, además de verificar el funcionamiento de la plataforma. Si quieres saber más sobre el uso y resguardo de tu información, revisa nuestra <a href="privacidad.html" target="_blank">Política de privacidad</a>.</p>
-        <p class="sim-status" id="ic-status" role="status"></p>
+        <p class="sp-fine"><b>Costos de referencia:</b> 10% de administración y 5% de cobertura, sobre el arriendo mensual. Estructura propuesta, sujeta a revisión jurídica, tributaria y bancaria.</p>
+      </article>
+      <article class="sp-step" id="sp-s4">
+        <header class="sp-sh"><span class="sp-n">04</span><div><small>La decisión</small><h3>Mientras la deuda baja, el patrimonio crece</h3></div></header>
+        <p class="muted sp-lead" id="sp-evo-sub">Completa los pasos anteriores para ver la evolución de tu patrimonio.</p>
+        <div class="sp-evo" id="sp-evo"></div>
+        <p class="sp-legend"><span class="sp-l-d"></span>Deuda pendiente <span class="sp-l-p"></span>Patrimonio neto inmobiliario</p>
+        <p class="sp-zero"><b>Sin comprar: 0 UF</b> de patrimonio generado por esta estrategia.</p>
+        <p class="sp-fine">No refleja arriendos, dividendos pagados, costos, impuestos ni aportes posteriores. Proyección sin plusvalía.</p>
+      </article>
+      <div class="sp-cta" id="sp-cta">
+        <div><span class="sp-n">05</span><h3>Elige, simula y solicita tu cotización</h3><p>Te enviamos esta simulación en PDF y un asesor la revisa contigo: propiedades disponibles, financiamiento, aportes, arriendos y dividendos.</p></div>
+        <button type="button" class="btn btn-primary btn-xl" id="sp-enviar" disabled>Solicitar cotización <span aria-hidden="true">→</span></button>
+        <p class="sim-status" id="sp-status" role="status"></p>
       </div>
     </div>
-    <!-- PENDIENTE: SUPUESTOS fijos (como el simulador de referencia): venta 15% bajo valor comercial, tasas Pulso 1,2% (pago trimestral) y 1,0% (mensual), inflación 3%, arriendo +3% anual, mantención $150.000/año, vacancia 42 días cada 3 años con 1 mes de garantía, reparaciones $1.200.000 cada 3 años. VALIDAR. -->
+    <p class="pro-note">Esta simulación no constituye una cotización ni asegura rentabilidades futuras. Es referencial a esta fecha y no compromete a Pulso Inversor SpA. Las propiedades y sus valores en UF son ejemplos del catálogo; el precio, el financiamiento y las condiciones finales dependen de cada operación, de la evaluación del banco y de los contratos respectivos. Dividendo calculado con cuota fija mensual a la tasa real indicada.</p>
+    <!-- PENDIENTE: SIMULADOR PATRIMONIAL según la propuesta 'Hipoteca Inteligente Empresarial' (PDF del 18-11-2026). Valores en UF del catálogo SIMULADOS; faltan fotos de Merced, Valparaíso y San Diego. Validaciones previas: Mariana (estructura y garantías societarias) y Felipe Rojas (rentas, costos, seguros y flujo). -->
   </div></div>
   </div>
 </div></section>

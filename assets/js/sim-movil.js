@@ -102,6 +102,16 @@
     if (cf) cf.addEventListener('submit', function () { setTimeout(function () { if ($('#hi-capdisplay') && $('#hi-capdisplay').textContent.trim() !== '—') hp.wzIr(1); }, 150); });
   }
 
+  /* ---------- Simulador Patrimonial: portafolio → descuento y financiamiento → resultado ---------- */
+  var spn = $('#sim-patrimonial');
+  if (spn) {
+    asistente(spn, [
+      { titulo: 'Elige las propiedades de tu portafolio', nodos: function () { return [$('#sp-s1')]; }, valido: function () { return !!$('#sp-props .is-on'); } },
+      { titulo: 'Descuento y financiamiento', nodos: function () { return [$('#sp-s2')]; }, valido: function () { return !$('#sp-enviar').disabled; }, siguiente: 'Ver mi resultado →' },
+      { titulo: 'Tu resultado', nodos: function () { return [$('#sp-s4'), $('#sp-s3'), $('#sp-cta'), $('#sim-patrimonial .pro-note')]; }, reiniciarEn: function () { return $('#sp-s4'); } },
+    ]);
+  }
+
   /* ---------- Inversión Circular: tus datos → resultado ---------- */
   var ic = $('#sim-circular');
   if (ic) {
