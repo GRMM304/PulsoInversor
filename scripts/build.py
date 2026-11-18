@@ -181,7 +181,7 @@ def cta_final(eyebrow='Tu siguiente paso', titulo='Cuéntanos qué quieres <span
     <span class="eyebrow dark">{eyebrow}</span>
     <h2>{titulo}</h2>
     <p>{texto}</p>
-    <a class="btn btn-primary btn-xl" href="{mail(tema)}" target="_blank" rel="noopener">{boton} <span aria-hidden="true">→</span></a>
+    <a class="btn btn-primary btn-xl" href="{AGENDA_URL}" target="_blank" rel="noopener">{boton} <span aria-hidden="true">→</span></a>
     <ul class="cta-final-notes">
       <li>Te responde una persona del equipo</li>
       <li>No te pedimos decidir en la reunión</li>
@@ -1101,7 +1101,7 @@ page('verifica-a-pulso.html', 'Verifica a Pulso',
     <p>Sin intermediarios ni nombres de fantasía. Estos son nuestros datos para que los compruebes, y la invitación a reunirnos.</p>
     {P("COMPLETAR RUT y dirección de la oficina en scripts/build.py (variables RUT y OFICINA_DIR). Con la dirección se activa el mapa de Google.")}
     <div class="of-data">{datos}</div>
-    <a class="btn btn-primary btn-xl" href="{mail('reunión en la oficina')}" target="_blank" rel="noopener">Agendar una reunión <span aria-hidden="true">→</span></a>
+    <a class="btn btn-primary btn-xl" href="{AGENDA_URL}" target="_blank" rel="noopener">Agendar una reunión <span aria-hidden="true">→</span></a>
   </div>
   {_mapa}
 </div></section>
