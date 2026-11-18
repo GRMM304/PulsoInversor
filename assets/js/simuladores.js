@@ -147,6 +147,7 @@
     if (!$('.gate-x', gate)) { var x = document.createElement('button'); x.type = 'button'; x.className = 'gate-x'; x.setAttribute('aria-label', 'Cerrar'); x.textContent = '×'; x.addEventListener('click', cerrarDatos); gate.appendChild(x); }
     var t = $('#gate-title'); if (t) t.textContent = 'Datos del cliente para enviarle la simulación';
     var sub = $('.gate-sub', gate); if (sub) sub.textContent = 'Le enviaremos el PDF a su correo.';
+    var bEnv = $('#gate-form button[type=submit]'); if (bEnv) bEnv.innerHTML = 'Enviar <span aria-hidden="true">→</span>';
     gate.classList.add('is-modal'); gate.hidden = false; document.body.classList.add('gate-abierto');
     setTimeout(function () { var n = $('#gate-nombre'); if (n) n.focus(); }, 50);
   }
