@@ -6,7 +6,7 @@
 // Cada correo trae el enlace a la videollamada y el enlace oficial de Brevo para reagendar o cancelar
 // (al cancelar, Brevo libera el cupo y nos avisa: los recordatorios pendientes se detienen).
 
-import { asesorDeReunion, DEFAULT_SENDER, ASESORES, SITIO, WHATSAPP, C, P, esc, brevo, boton, bloqueResumen, plantilla } from './comun.js';
+import { RESENAS_GOOGLE, asesorDeReunion, DEFAULT_SENDER, ASESORES, SITIO, WHATSAPP, C, P, esc, brevo, boton, bloqueResumen, plantilla } from './comun.js';
 import { firmar } from './seguimiento.js';
 
 const ETAPAS = [
@@ -115,7 +115,10 @@ async function correoPosterior(env, r, col) {
       cuerpo: P(`Gracias por darte el tiempo de conversar con <strong>${esc(asesor.nombre)}</strong>. Sabemos que tu tiempo vale, y esperamos haberte ayudado a ver con más claridad tus opciones.`)
         + P(`Si te quedó alguna pregunta o quieres revisar algo de lo que conversaron, <strong>responde este correo</strong> y le llega directo a ${quien}.`)
         + P('¿Nos ayudas con tu opinión? Son seis preguntas rápidas y nos sirven mucho para acompañar mejor a cada persona.'),
-      botones: boton('Contarnos cómo te fue', `${SITIO}/seguimiento/encuesta?t=${t}`) + boton("Escribirnos por WhatsApp", wa, false),
+      botones: boton('Contarnos cómo te fue', `${SITIO}/seguimiento/encuesta?t=${t}`) + boton("Escribirnos por WhatsApp", wa, false)
+        + `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:22px;border-top:1px solid ${C.borde}"><tr><td style="padding-top:18px;font-size:15px;line-height:1.6;color:${C.texto}">`
+        + `<strong>¿Te gustó la conversación?</strong> Una reseña en Google ayuda a otras personas a conocernos y a decidir con más información.</td></tr></table>`
+        + boton('★ Déjanos tu reseña en Google', RESENAS_GOOGLE, false),
       pie: 'Recibes este correo porque tuviste una reunión con Pulso Inversor.',
     }),
   };
