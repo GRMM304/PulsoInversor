@@ -9,6 +9,7 @@ AGENDAR = 'Agendar una reunión'
 # Redes sociales oficiales (pie de página y Verifica).
 INSTAGRAM = 'https://www.instagram.com/pulsoinversorcl'
 FACEBOOK = 'https://www.facebook.com/pulsoinversor.cl/'
+LINKEDIN = 'https://www.linkedin.com/company/pulsoinversor/'
 # Reseñas de Google (botón del pie de página).
 RESENAS_GOOGLE = 'https://g.page/r/CV1wmi0Qf_B7EAE/review'
 # Botón "Agendar una reunión" del menú: agenda de Brevo Meetings (hoy, la de Renato Vargas).
@@ -89,6 +90,7 @@ def footer():
         <div class="footer-redes">
           <a href="{INSTAGRAM}" target="_blank" rel="noopener" aria-label="Pulso Inversor en Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r=".9" fill="currentColor" stroke="none"/></svg></a>
           <a href="{FACEBOOK}" target="_blank" rel="noopener" aria-label="Pulso Inversor en Facebook"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 21v-7.6h2.6l.4-3h-3V8.5c0-.9.3-1.5 1.5-1.5h1.6V4.3c-.3 0-1.2-.1-2.3-.1-2.3 0-3.9 1.4-3.9 4v2.2H7.8v3h2.6V21z"/></svg></a>
+          <a href="{LINKEDIN}" target="_blank" rel="noopener" aria-label="Pulso Inversor en LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5.2 8.6h3v10.2h-3zM6.7 4a1.75 1.75 0 1 1 0 3.5 1.75 1.75 0 0 1 0-3.5zM10.2 8.6h2.9v1.4h.04c.4-.76 1.38-1.56 2.85-1.56 3.05 0 3.6 2 3.6 4.6v5.76h-3v-5.1c0-1.22-.02-2.78-1.7-2.78-1.7 0-1.95 1.32-1.95 2.7v5.18h-3z"/></svg></a>
         </div>
         <a class="usar-app" href="#" data-usar-app hidden>📲 Usar Pulso Inversor como app</a>
         {P("RUT, domicilio, teléfono y demás canales oficiales.")}
@@ -1101,7 +1103,7 @@ else:
 _datos = [('Razón social', 'Pulso Inversor SpA')]
 if RUT: _datos.append(('RUT', RUT))
 if OFICINA_DIR: _datos.append(('Oficina', OFICINA_DIR + '. Puedes venir a conocernos.'))
-_datos += [('WhatsApp', f'<a href="https://wa.me/{WHATSAPP}" target="_blank" rel="noopener">+56 9 8355 4676</a>'), ('Correo', f'<a href="mailto:{EMAIL}">{EMAIL}</a>'), ('Instagram', f'<a href="{INSTAGRAM}" target="_blank" rel="noopener">@pulsoinversorcl</a>'), ('Facebook', f'<a href="{FACEBOOK}" target="_blank" rel="noopener">pulsoinversor.cl</a>'), ('Grupo', 'Una empresa de Grupo Matchmaking')]
+_datos += [('WhatsApp', f'<a href="https://wa.me/{WHATSAPP}" target="_blank" rel="noopener">+56 9 8355 4676</a>'), ('Correo', f'<a href="mailto:{EMAIL}">{EMAIL}</a>'), ('Instagram', f'<a href="{INSTAGRAM}" target="_blank" rel="noopener">@pulsoinversorcl</a>'), ('Facebook', f'<a href="{FACEBOOK}" target="_blank" rel="noopener">pulsoinversor.cl</a>'), ('LinkedIn', f'<a href="{LINKEDIN}" target="_blank" rel="noopener">Pulso Inversor</a>'), ('Grupo', 'Una empresa de Grupo Matchmaking')]
 datos = ''.join(f'<div class="of-row"><span>{k}</span><strong>{v}</strong></div>' for k, v in _datos)
 
 page('verifica-a-pulso.html', 'Verifica a Pulso',
