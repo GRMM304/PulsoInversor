@@ -315,11 +315,8 @@ cards = ''.join(f'''<a class="camino{' is-open' if i == 0 else ''}" href="invers
   <div class="camino-bottom">
     <h3>{t}</h3>
     <div class="camino-detail"><div class="camino-inner">
-      <span class="camino-inv">Inversión: {inv}</span>
-      <p>{d}</p>
-      <div class="camino-rows">
+      <div class="camino-rows uno">
         <div class="camino-row"><span class="camino-label">A quiénes</span><span>{q}</span></div>
-        <div class="camino-row"><span class="camino-label">Qué logras</span><span>{lg}</span></div>
       </div>
     </div></div>
   </div>
@@ -382,9 +379,9 @@ page('index.html', 'Inicio',
     <a class="card profile-card choice" href="mi-primera-inversion.html">
       <h3><span class="choice-tag yes">Sí</span> es mi primera vez</h3>
       <p>Tengo mis ahorros en el banco y quiero hacerlos crecer, pero me preocupa arriesgar mi dinero.</p>
-      {bullets(['Invierte desde $5 millones, sin necesidad de comprometer todos tus ahorros.',
-                'Tu inversión está respaldada por un inmueble, no solo por una promesa de pago.',
-                'Conoce cuánto podrías ganar y en qué plazo, antes de tomar una decisión.'])}
+      {bullets(['<span><strong>Invierte desde $5 millones</strong>, sin necesidad de comprometer todos tus ahorros.</span>',
+                '<span>Tu inversión está <strong>respaldada por un inmueble</strong>, no solo por una promesa de pago.</span>',
+                '<span>Conoce <strong>cuánto podrías ganar y en qué plazo</strong>, antes de tomar una decisión.</span>'])}
       <span class="btn btn-primary">Quiero conocer cómo funciona</span></a>
     <a class="card profile-card choice" href="ya-tengo-experiencia.html">
       <h3><span class="choice-tag no">No</span> ya he invertido</h3>
@@ -403,21 +400,21 @@ page('index.html', 'Inicio',
       <div class="why-col why-other">
         <span class="why-kicker">Otras alternativas</span>
         <h3>Lo que ya conoces</h3>
-        <p>Los depósitos a plazo y los fondos ofrecen tasas de interés más bajas y, con ellas, retornos más bajos.</p>
-        <p>Otros instrumentos financieros están expuestos a las variaciones del mercado.</p>
+        <p>Otros instrumentos financieros ofrecen tasas de interés más bajas y, con ellas, retornos más bajos.</p>
+        <p>Además, están expuestos a las variaciones del mercado.</p>
         <p>Si compras una propiedad para invertir, muchas veces tienes que complementar el dividendo de tu bolsillo y hacerte cargo de mantenerla.</p>
       </div>
       <div class="why-col why-pulso">
         <span class="why-kicker">Con nosotros</span>
         <h3>Pulso Inversor</h3>
-        <p>Intereses que superan ampliamente a los de un depósito a plazo o un fondo mutuo.</p>
+        <p>Intereses que superan ampliamente a los de otros instrumentos financieros.</p>
         <p>Retornos definidos por contrato, estructurados en escrituras públicas y pagarés.</p>
         <p>Distintas estructuras de inversión, con acceso a oportunidades en remate y a portafolios con descuento.</p>
       </div>
     </div>
     <div class="why-m"><span class="why-kicker">Con nosotros</span><h3>Pulso Inversor</h3>
-      <div class="why-m-item"><p class="why-m-pulso">Intereses que superan ampliamente a los de un depósito a plazo o un fondo mutuo.</p><p class="why-m-otra"><span>Otras alternativas</span>Los depósitos a plazo y los fondos ofrecen tasas de interés más bajas y, con ellas, retornos más bajos.</p></div>
-      <div class="why-m-item"><p class="why-m-pulso">Retornos definidos por contrato, estructurados en escrituras públicas y pagarés.</p><p class="why-m-otra"><span>Otras alternativas</span>Otros instrumentos financieros están expuestos a las variaciones del mercado.</p></div>
+      <div class="why-m-item"><p class="why-m-pulso">Intereses que superan ampliamente a los de otros instrumentos financieros.</p><p class="why-m-otra"><span>Otras alternativas</span>Otros instrumentos financieros ofrecen tasas de interés más bajas y, con ellas, retornos más bajos.</p></div>
+      <div class="why-m-item"><p class="why-m-pulso">Retornos definidos por contrato, estructurados en escrituras públicas y pagarés.</p><p class="why-m-otra"><span>Otras alternativas</span>Además, están expuestos a las variaciones del mercado.</p></div>
       <div class="why-m-item"><p class="why-m-pulso">Distintas estructuras de inversión, con acceso a oportunidades en remate y a portafolios con descuento.</p><p class="why-m-otra"><span>Otras alternativas</span>Si compras una propiedad para invertir, muchas veces tienes que complementar el dividendo de tu bolsillo y hacerte cargo de mantenerla.</p></div>
     </div>
     <div class="why-igr">
@@ -434,7 +431,7 @@ page('index.html', 'Inicio',
 </div></section>
 
 <section class="section"><div class="container">
-  <div class="title center"><span class="eyebrow">Modelo IGR · Matriz de estrategias</span><h2>Tres estrategias para rentabilizar, producir y diseñar tu patrimonio</h2></div>
+  <div class="title center"><span class="eyebrow">Matriz IGR</span><h2>Tres estrategias para rentabilizar, producir y diseñar tu patrimonio</h2></div>
   <div class="caminos-acc">{cards}</div>
 </div></section>
 
@@ -599,28 +596,48 @@ estrategias = ''.join(f"""<article class="aht" id="estrategia-{n.lower().replace
       </dl>
     </article>""" for l, n, tag, gar, tk, pl, it, rt in ESTRATEGIAS)
 
-# Las tres tarjetas siguen la Matriz de estrategias del Modelo IGR (2026-11-18).
-TIPOS = [
-    ('renta-de-capital', 'Renta de Capital', 'Proyecto Nuevo Hogar',
-     'Pone a trabajar tu capital disponible para generar una renta periódica alta, segura y con respaldo real.',
+# Matriz IGR (2026-11-18): en las tarjetas solo el nombre; al abrir, por qué se llama así, a quiénes, tres rectángulos de condiciones y qué logras.
+def _rect(kicker, titulo, filas=()):
+    dl = ('<dl>' + ''.join(f'<div><dt>{k}</dt><dd>{v}</dd></div>' for k, v in filas) + '</dl>') if filas else ''
+    return f'<article class="est-rect"><span class="est-rect-k">{kicker}</span><h4>{titulo}</h4>{dl}</article>'
+ESTRATEGIAS_IGR = [
+    ('renta-de-capital', 'Renta de Capital',
+     'Porque es una estrategia para poner a trabajar tu capital disponible y generar una renta periódica alta, segura y con respaldo real.',
      'Inversionistas con capital disponible desde $5.000.000.',
-     'Interés de 0,7% a 1,2% mensual, según la garantía. Plazos de 12 a 27 meses.',
-     'Renta periódica, con garantía real y una rentabilidad muy superior a la de un depósito a plazo.'),
-    ('produccion-de-capital', 'Producción de Capital', 'Hipoteca Inteligente',
-     'Usa tu capacidad financiera para generar un activo que produce capital, combinando financiamiento bancario, control del arriendo y valorización del inmueble.',
+     [('estrategia-titulo', 'Garantía real', 'Título', [('Plazo', '15, 21 o 27 meses'), ('Interés mensual', '0,8% · 0,9% · 1,0% + UF'), ('Retiros', 'No'), ('Ticket mínimo', '$100.000.000')]),
+      ('estrategia-hipoteca', 'Garantía real', 'Hipoteca', [('Plazo', '15, 21 o 27 meses'), ('Interés mensual', '0,7% · 0,8% · 0,9% + UF'), ('Retiros', 'No'), ('Ticket mínimo', '$25.000.000')]),
+      ('estrategia-pagare', 'Garantía real', 'Pagaré', [('Plazo', '12, 18 o 24 meses'), ('Interés mensual', '1,0% · 1,1% · 1,2%'), ('Retiros', 'Sí'), ('Ticket mínimo', '$5.000.000')])],
+     'Renta periódica, con garantía real y una rentabilidad muy superior a la de un depósito a plazo.',
+     '<a class="btn btn-primary btn-xl" href="simuladores.html#sim-proyecta">Simular Renta de Capital <span aria-hidden="true">→</span></a>'),
+    ('produccion-de-capital', 'Producción de Capital',
+     'Porque utiliza tu capacidad financiera (scoring) para generar un activo que produce capital, combinando financiamiento bancario, control del arriendo y valorización del inmueble.',
      'Personas con capacidad de crédito hipotecario y buen comportamiento financiero.',
-     'Propiedades desde 2.000 UF. Retorno de 5% + UF anual. Horizonte de 2 a 5 años.',
-     'Produces capital con financiamiento del banco, generas flujo por arriendo y construyes patrimonio.'),
-    ('arquitectura-de-capital', 'Arquitectura de Capital', 'Configuración Patrimonial',
-     'Diseña una estructura integral de inversión y patrimonio que combina tus bienes, ingresos y ahorros, según tus objetivos, plazos y necesidades (tributarias, sucesorias o familiares).',
+     [('', 'Propiedades', 'Desde 2.000 UF', []), ('', 'Retorno', '5% + UF anual', []), ('', 'Horizonte', '2 a 5 años', [])],
+     'Produces capital con financiamiento del banco, generas flujo por arriendo y construyes patrimonio.',
+     f'<a class="btn btn-primary btn-xl" href="{AGENDA_URL}" target="_blank" rel="noopener">Solicitar una simulación asistida <span aria-hidden="true">→</span></a><p class="inv-asist">Esta simulación la haces junto a un asesor de Pulso Inversor.</p>'),
+    ('arquitectura-de-capital', 'Arquitectura de Capital',
+     'Porque te permite diseñar una estructura integral de inversión y patrimonio, combinando tus bienes, ingresos y ahorros, según tus objetivos, plazos y necesidades especiales (tributarias, sucesorias o familiares).',
      'Personas con bienes, ingresos y/o ahorros que buscan una estrategia patrimonial integral.',
-     'Diseño a medida, con distintas opciones de inversión, financiamiento y estructura legal.',
-     'Protección, eficiencia, continuidad y crecimiento de tu patrimonio, con una configuración personalizada.'),
+     [('', 'Diseño a medida', 'Opciones de inversión', []), ('', 'Diseño a medida', 'Opciones de financiamiento', []), ('', 'Diseño a medida', 'Estructura legal', [])],
+     'Protección, eficiencia, continuidad y crecimiento de tu patrimonio, con una configuración personalizada.',
+     f'<a class="btn btn-primary btn-xl" href="{AGENDA_URL}" target="_blank" rel="noopener">Solicitar una simulación asistida <span aria-hidden="true">→</span></a><p class="inv-asist">Esta simulación la haces junto a un asesor de Pulso Inversor.</p>'),
 ]
-tipos = ''.join(f"""<button type="button" class="tipo" data-inv-tab="{a_}" aria-expanded="false" aria-controls="{a_}">
-      <span class="tipo-n">0{i+1}</span><h3>{t}</h3><span class="tipo-chip">Inversión: {inv}</span><p>{d}</p>
-      <span class="tipo-rows"><span><b>A quiénes</b>{q}</span><span><b>Condiciones</b>{c}</span><span><b>Qué logras</b>{lg}</span></span>
-      <span class="tipo-go"><span class="tipo-go-open">Ver detalle</span><span class="tipo-go-close">Cerrar</span> <i aria-hidden="true">↓</i></span></button>""" for i, (a_, t, inv, d, q, c, lg) in enumerate(TIPOS))
+tipos = ''.join(f"""<button type="button" class="tipo tipo-solo" data-inv-tab="{a_}" aria-expanded="false" aria-controls="{a_}">
+      <span class="tipo-n">0{i+1}</span><h3>{t}</h3>
+      <span class="tipo-go"><span class="tipo-go-open">Ver detalle</span><span class="tipo-go-close">Cerrar</span> <i aria-hidden="true">↓</i></span></button>""" for i, (a_, t, *_r) in enumerate(ESTRATEGIAS_IGR))
+def _panel(i, a_, t, porque, quien, rects, logras, cta):
+    rs = ''.join(_rect(k, h, f).replace('<article class="est-rect">', f'<article class="est-rect"{f" id={chr(34)}{rid}{chr(34)}" if rid else ""}>') for rid, k, h, f in rects)
+    return f"""<div class="inv-panel" id="{a_}" data-inv-panel="{a_}" hidden>
+    <div class="est">
+      <div class="est-head"><span class="eyebrow">0{i+1}</span><h2>{t}</h2>
+        <h3 class="est-porque">¿Por qué se llama {t}?</h3><p class="lead">{porque}</p></div>
+      <div class="est-row"><span class="est-k">A quiénes</span><p>{quien}</p></div>
+      <div class="est-row"><span class="est-k">Condiciones</span><div class="est-rects">{rs}</div></div>
+      <div class="est-row"><span class="est-k">Qué logras</span><p>{logras}</p></div>
+      <div class="est-cta">{cta}</div>
+    </div>
+  </div>"""
+paneles_inv = '\n\n  '.join(_panel(i, *x) for i, x in enumerate(ESTRATEGIAS_IGR))
 
 PASOS_HI = [
     ('Compras una propiedad con tu crédito hipotecario', 'Usas tu capacidad de crédito para comprar una propiedad que requiere financiamiento. No necesitas poner capital.'),
@@ -641,55 +658,23 @@ PASOS_AC = [
     ('La simulamos contigo', 'Un asesor te muestra los números y cómo crecería tu patrimonio.'),
 ]
 PERFILES = [
-    ('Tengo capital disponible y quiero una renta periódica', 'Renta de Capital · Acción', 'Desde $5MM · Pagaré', '#estrategia-accion'),
+    ('Tengo capital disponible y quiero una renta periódica', 'Renta de Capital · Pagaré', 'Desde $5MM', '#estrategia-pagare'),
     ('Busco que mi inversión tenga respaldo hipotecario', 'Renta de Capital · Hipoteca', 'Desde $25MM · Hipoteca a tu favor', '#estrategia-hipoteca'),
     ('Quiero el mayor resguardo: una propiedad a mi nombre', 'Renta de Capital · Título', 'Desde $100MM · Título de propiedad', '#estrategia-titulo'),
-    ('Tengo capacidad de crédito, pero no capital para invertir', 'Producción de Capital', 'Hipoteca Inteligente · propiedades desde 2.000 UF', '#produccion-de-capital'),
-    ('Tengo bienes, ingresos o ahorros y quiero una estrategia para todo mi patrimonio', 'Arquitectura de Capital', 'Configuración Patrimonial · diseño a medida', '#arquitectura-de-capital'),
+    ('Tengo capacidad de crédito, pero no capital para invertir', 'Producción de Capital', 'Propiedades desde 2.000 UF', '#produccion-de-capital'),
+    ('Tengo bienes, ingresos o ahorros y quiero una estrategia para todo mi patrimonio', 'Arquitectura de Capital', 'Diseño a medida', '#arquitectura-de-capital'),
 ]
 perfiles = ''.join(f"""<a class="perfil" href="{h}"><span class="perfil-q">“{q}”</span><span class="perfil-arrow" aria-hidden="true">→</span><span class="perfil-a"><small>Te recomendamos</small><strong>{r}</strong><em>{m}</em></span></a>""" for q, r, m, h in PERFILES)
 
 page('inversiones.html', 'Inversiones',
-     'Las tres estrategias del Modelo IGR: Renta de Capital (Proyecto Nuevo Hogar), Producción de Capital (Hipoteca Inteligente) y Arquitectura de Capital (Configuración Patrimonial).',
+     'Las tres estrategias de la Matriz IGR: Renta de Capital, Producción de Capital y Arquitectura de Capital.',
      hero('Cómo invertir / Inversiones', 'Encuentra la estrategia que va contigo',
-          'Tres estrategias complementarias para rentabilizar, producir y diseñar tu patrimonio. Toca la tuya para ver el detalle.', 'Modelo IGR') + f"""
+          'Tres estrategias complementarias para rentabilizar, producir y diseñar tu patrimonio. Toca la tuya para ver el detalle.', 'Matriz IGR') + f"""
 <section class="section tipos-sec" data-inv><div class="container">
   <div class="tipos">{tipos}</div>
 
-  <div class="inv-panel" id="renta-de-capital" data-inv-panel="renta-de-capital" hidden>
-    <div class="title center"><span class="eyebrow">01 · Renta de Capital</span><h2>Proyecto Nuevo Hogar</h2>
-      <p class="lead">Pon a trabajar tu capital disponible y recibe una renta periódica con respaldo real. Tú eliges la garantía: pagaré, hipoteca o título de propiedad.</p></div>
-    <div class="ahts">{estrategias}</div>
-    <div class="actions" style="justify-content:center"><a class="btn btn-primary btn-xl" href="simuladores.html#sim-proyecta">Simular Renta de Capital <span aria-hidden="true">→</span></a></div>
-    {P("Condiciones según la Tabla de condiciones del 2026-11-18. La tabla original marcaba 'Sí*' en retiros de Pagaré y '$100.000.000**' en Título: CONFIRMAR qué dicen esas notas.")}
-  </div>
-
-  <div class="inv-panel" id="produccion-de-capital" data-inv-panel="produccion-de-capital" hidden>
-    <div class="inv-split">
-      <div class="inv-side">
-        <span class="eyebrow">02 · Producción de Capital</span><h2>Hipoteca Inteligente</h2>
-        <p class="lead">Tu capacidad de crédito es tu capital de oportunidad. Sin desembolsar dinero propio, accedes a una inversión inmobiliaria financiada, donde la estructura del negocio está diseñada para cubrir los dividendos y gestionar la operación.</p>
-        <ul class="inv-facts"><li><span>Propiedades</span><strong>Desde 2.000 UF</strong></li><li><span>Retorno</span><strong>5% + UF anual</strong></li><li><span>Horizonte</span><strong>2 a 5 años</strong></li></ul>
-        <div class="actions"><a class="btn btn-primary" href="{AGENDA_URL}" target="_blank" rel="noopener">Solicitar una simulación asistida</a></div>
-        <p class="inv-asist">Esta simulación la haces junto a un asesor de Pulso Inversor.</p>
-      </div>
-      {pasos(PASOS_HI)}
-    </div>
-  </div>
-
-  <div class="inv-panel" id="arquitectura-de-capital" data-inv-panel="arquitectura-de-capital" hidden>
-    <div class="inv-split">
-      <div class="inv-side">
-        <span class="eyebrow">03 · Arquitectura de Capital</span><h2>Configuración Patrimonial</h2>
-        <p class="lead">Diseñamos contigo una estructura integral de inversión y patrimonio, combinando tus bienes, ingresos y ahorros según tus objetivos, plazos y necesidades especiales.</p>
-        <ul class="inv-facts"><li><span>Para</span><strong>Personas con bienes, ingresos y/o ahorros</strong></li><li><span>Condiciones</span><strong>Diseño a medida</strong></li><li><span>Logras</span><strong>Protección, eficiencia, continuidad y crecimiento</strong></li></ul>
-        <div class="actions"><a class="btn btn-primary" href="{AGENDA_URL}" target="_blank" rel="noopener">Solicitar una simulación asistida</a></div>
-        <p class="inv-asist">Esta simulación la haces junto a un asesor de Pulso Inversor.</p>
-      </div>
-      {pasos(PASOS_AC)}
-    </div>
-    {P("PASOS de Configuración Patrimonial redactados a partir de la descripción de la Matriz IGR: VALIDAR el proceso real, alcance, honorarios y entregables.")}
-  </div>
+  {paneles_inv}
+  {P("Condiciones de Renta de Capital según la Tabla de condiciones del 2026-11-18. La tabla original marcaba 'Sí*' en retiros de Pagaré y '$100.000.000**' en Título: CONFIRMAR qué dicen esas notas.")}
 </div></section>
 
 <section class="section section-soft" id="comparar"><div class="container">
@@ -697,11 +682,11 @@ page('inversiones.html', 'Inversiones',
   <div class="table-wrap compare"><table>
     <thead><tr><th>Estrategia</th><th>Desde</th><th>Qué queda a tu favor</th><th>Interés o retorno</th><th>Plazos</th></tr></thead>
     <tbody>
-      <tr><td>Renta de Capital · Acción</td><td>$5 millones</td><td>Contrato de mutuo y pagaré</td><td>1,0% a 1,2% mensual</td><td>12, 18 o 24 meses</td></tr>
+      <tr><td>Renta de Capital · Pagaré</td><td>$5 millones</td><td>Contrato de mutuo y pagaré</td><td>1,0% a 1,2% mensual</td><td>12, 18 o 24 meses</td></tr>
       <tr><td>Renta de Capital · Hipoteca</td><td>$25 millones</td><td>Hipoteca inscrita a tu favor</td><td>0,7% a 0,9% mensual + UF</td><td>15, 21 o 27 meses</td></tr>
       <tr><td>Renta de Capital · Título</td><td>$100 millones</td><td>La propiedad inscrita a tu nombre</td><td>0,8% a 1,0% mensual + UF</td><td>15, 21 o 27 meses</td></tr>
-      <tr><td>Producción de Capital · Hipoteca Inteligente</td><td>Propiedades desde 2.000 UF, con tu crédito hipotecario</td><td>La propiedad a tu nombre durante la operación</td><td>5% + UF anual</td><td>2 a 5 años</td></tr>
-      <tr><td>Arquitectura de Capital · Configuración Patrimonial</td><td>Tus bienes, ingresos y/o ahorros</td><td>Según la estructura legal que diseñemos contigo</td><td>A medida</td><td>A medida</td></tr>
+      <tr><td>Producción de Capital</td><td>Propiedades desde 2.000 UF, con tu crédito hipotecario</td><td>La propiedad a tu nombre durante la operación</td><td>5% + UF anual</td><td>2 a 5 años</td></tr>
+      <tr><td>Arquitectura de Capital</td><td>Tus bienes, ingresos y/o ahorros</td><td>Según la estructura legal que diseñemos contigo</td><td>A medida</td><td>A medida</td></tr>
     </tbody></table></div>
 </div></section>
 
@@ -913,7 +898,7 @@ f"""
   {GATE}
 
 <div class="sim-panel" id="sim-proyecta" data-sim-panel="sim-proyecta"><div class="sim-panel-body">
-    <div class="sim-head"><span class="sp-kicker">Proyecto Nuevo Hogar</span><h2>Renta de Capital</h2><p class="muted">Elige tu estrategia, el monto y el plazo, y compara con lo que te daría un depósito a plazo.</p></div>
+    <div class="sim-head"><h2>Renta de Capital</h2><p class="muted">Elige tu estrategia, el monto y el plazo, y compara con lo que te daría un depósito a plazo.</p></div>
     <div class="pro">
       <div class="pro-form">
         <span class="pro-label">Estrategia</span>
@@ -979,13 +964,13 @@ f"""
 
 
 PICKS_PUBLICO = f'''    <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-proyecta" aria-selected="false">
-      <span class="sim-pick-ico">A·H·T</span><strong>Renta de Capital</strong><span>Proyecto Nuevo Hogar: invierte tu capital con pagaré, hipoteca o título y compáralo con un depósito a plazo.</span><em>Desde $5MM</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
+      <span class="sim-pick-ico">A·H·T</span><strong>Renta de Capital</strong><span>Invierte tu capital con pagaré, hipoteca o título y compáralo con un depósito a plazo.</span><em>Desde $5MM</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
     <a class="sim-pick sim-pick-asist" href="{AGENDA_URL}" target="_blank" rel="noopener">
-      <span class="sim-pick-ico">PC</span><strong>Producción de Capital</strong><span>Hipoteca Inteligente: tu capacidad de crédito genera retorno y patrimonio. La simulas junto a un asesor.</span><em>Simulación asistida</em><span class="sim-pick-go">Agendar con un asesor <i aria-hidden="true">→</i></span></a>
+      <span class="sim-pick-ico">PC</span><strong>Producción de Capital</strong><span>Tu capacidad de crédito genera retorno y patrimonio. La simulas junto a un asesor.</span><em>Simulación asistida</em><span class="sim-pick-go">Agendar con un asesor <i aria-hidden="true">→</i></span></a>
     <a class="sim-pick sim-pick-asist" href="{AGENDA_URL}" target="_blank" rel="noopener">
-      <span class="sim-pick-ico">AC</span><strong>Arquitectura de Capital</strong><span>Configuración Patrimonial: una estructura a la medida de tus bienes, ingresos y ahorros. La simulas junto a un asesor.</span><em>Simulación asistida</em><span class="sim-pick-go">Agendar con un asesor <i aria-hidden="true">→</i></span></a>'''
+      <span class="sim-pick-ico">AC</span><strong>Arquitectura de Capital</strong><span>Una estructura a la medida de tus bienes, ingresos y ahorros. La simulas junto a un asesor.</span><em>Simulación asistida</em><span class="sim-pick-go">Agendar con un asesor <i aria-hidden="true">→</i></span></a>'''
 PICKS_EQUIPO = '''    <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-proyecta" aria-selected="false">
-      <span class="sim-pick-ico">A·H·T</span><strong>Renta de Capital</strong><span>Proyecto Nuevo Hogar: invierte tu capital con pagaré, hipoteca o título y compáralo con un depósito a plazo.</span><em>Desde $5MM</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
+      <span class="sim-pick-ico">A·H·T</span><strong>Renta de Capital</strong><span>Invierte tu capital con pagaré, hipoteca o título y compáralo con un depósito a plazo.</span><em>Desde $5MM</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
     <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-hipoteca" aria-selected="false">
       <span class="sim-pick-ico">PC</span><strong>Producción de Capital</strong><span>Hipoteca Inteligente: arma la configuración con la capacidad de crédito del cliente.</span><em>Desde 2.000 UF</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
     <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-patrimonial" aria-selected="false">
