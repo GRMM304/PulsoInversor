@@ -3,6 +3,7 @@
 // Configurar en Brevo dos webhooks de Meetings:
 //   "Meeting booked"    → https://1.pulsoinversor.cl/api/brevo-reuniones/reservada?token=WEBHOOK_BREVO
 //   "Meeting cancelled" → https://1.pulsoinversor.cl/api/brevo-reuniones/cancelada?token=WEBHOOK_BREVO
+//   "Meeting started"   → https://1.pulsoinversor.cl/api/brevo-reuniones/iniciada?token=WEBHOOK_BREVO
 // (o el token como "Bearer" en la autenticación del webhook). Secreto en Cloudflare: WEBHOOK_BREVO.
 
 import { json } from './comun.js';
