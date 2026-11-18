@@ -1542,8 +1542,8 @@ button.tipo{font:inherit;text-align:left;cursor:pointer;width:100%}
 @media (max-width:620px){
   .why-compare{grid-template-columns:repeat(2,minmax(230px,1fr));overflow-x:auto;-webkit-overflow-scrolling:touch}
   .ic-tablewrap .ic-table{min-width:520px}
-  main p,main li,main blockquote{text-align:justify;-webkit-hyphens:auto;hyphens:auto}
-  .title.center p,.cta-final p,.disclaimer,.why-cta span,.cta-final-small,.hero-form-note,.r2-caption,.port-title,.gate-sub{text-align:justify;text-align-last:center}
+  /* Revisión 17-11: sin justificado (dejaba espacios grandes entre palabras). Textos a la izquierda; los centrados se mantienen centrados. */
+  .title.center p,.cta-final p,.disclaimer,.why-cta span,.cta-final-small,.hero-form-note,.r2-caption,.port-title,.gate-sub{text-align:center}
   .btn,.chip-opt,.rx-chips span,.tipo-chip,.aht-chips span{text-align:center;text-align-last:auto}
 }
 .of-foto{background-size:cover;background-position:center}
@@ -1629,3 +1629,11 @@ main p,main li,main blockquote{-webkit-hyphens:manual!important;hyphens:manual!i
 .footer .footer-review-btn:hover{color:var(--dark);filter:brightness(1.05)}
 .footer-review-btn span{color:var(--dark)}
 @media (max-width:640px){.footer-review{flex-direction:column;align-items:flex-start}.footer .footer-review-btn{width:100%;justify-content:center}}
+
+/* Cómo funciona: la indicación va bajo la lista de etapas, alineada con los números */
+.r2-caption-list{text-align:left;margin:18px 0 0 2px}
+@media (max-width:620px){.title.center p.r2-caption-list,.r2-caption-list{text-align:left}}
+/* Texto de autorización de datos (simuladores) */
+.gate-aut,.sim-aut{font-size:12.5px;line-height:1.5;color:var(--gray-500);margin:10px 0 0}
+.gate-aut a,.sim-aut a{color:var(--green-700);text-decoration:underline}
+.gate-form .gate-aut{grid-column:1/-1}

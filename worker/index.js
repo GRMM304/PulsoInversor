@@ -41,7 +41,7 @@ function correoInversionista({ tipo, nombre, lineas, personas }) {
   });
 }
 
-function correoEquipo({ tipo, nombre, email, telefono, monto, lineas, personas }) {
+function correoEquipo({ tipo, nombre, email, telefono, monto, lineas, personas, publicidad, consentimiento }) {
   const waCliente = telefono ? 'https://wa.me/56' + telefono.replace(/^56/, '') + '?text=' + encodeURIComponent(`Hola ${nombre.split(/\s+/)[0]}, te escribo de Pulso Inversor por la simulación de ${tipo} que hiciste en nuestro sitio.`) : '';
   const fecha = new Date().toLocaleString('es-CL', { timeZone: 'America/Santiago', dateStyle: 'long', timeStyle: 'short' });
   const asignado = personas.map((a) => a.nombre).join(' y ');
@@ -50,7 +50,7 @@ function correoEquipo({ tipo, nombre, email, telefono, monto, lineas, personas }
     eyebrow: `Nueva simulación · ${tipo}`,
     titulo: `${esc(nombre)}${monto ? ' · ' + clp(monto) : ''}`,
     cuerpo: P(`Asesor asignado: <strong>${esc(asignado)}</strong>. Al inversionista le dijimos que ${esc(personas.map((a) => a.nombre.split(' ')[0]).join(' y '))} le escribirá en las próximas horas hábiles.`)
-      + bloqueResumen([`Nombre: ${nombre}`, `Correo: ${email}`, `Teléfono: ${telefono ? '+56 ' + telefono : '—'}`, `Simulador: ${tipo}`, `Monto simulado: ${monto ? clp(monto) : '—'}`, `Fecha: ${fecha}`])
+      + bloqueResumen([`Nombre: ${nombre}`, `Correo: ${email}`, `Teléfono: ${telefono ? '+56 ' + telefono : '—'}`, `Simulador: ${tipo}`, `Monto simulado: ${monto ? clp(monto) : '—'}`, `Fecha: ${fecha}`, `Acepta recibir publicidad: ${publicidad ? 'Sí' : 'No'}${consentimiento ? ' (' + new Date(consentimiento).toLocaleString('es-CL', { timeZone: 'America/Santiago', dateStyle: 'short', timeStyle: 'short' }) + ')' : ''}`])
       + bloqueResumen(lineas)
       + P('El PDF que recibió va adjunto. Si respondes este correo, le escribes directamente.'),
     botones: waCliente ? boton('Escribirle por WhatsApp', waCliente) : '',
@@ -72,6 +72,8 @@ async function enviarSimulacion(request, env) {
   const nombre = String(c.nombre || '').trim().replace(/\s+/g, ' ').slice(0, 120);
   const email = String(c.email || '').trim().slice(0, 160);
   const telefono = String(c.telefono || '').replace(/\D/g, '').slice(0, 15);
+  const publicidad = c.publicidad === true;
+  const consentimiento = String(c.consentimiento || '').slice(0, 40);
   if (!tipo || nombre.length < 2 || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return json({ ok: false, error: 'datos_invalidos' }, 400);
 
   const pdf = String(d.pdfBase64 || '').replace(/^data:application\/pdf;[^,]*,/, '');
@@ -94,8 +96,8 @@ async function enviarSimulacion(request, env) {
   let id = null;
   if (env.DB) {
     try {
-      const r = await env.DB.prepare('INSERT INTO simulaciones (creado, nombre, email, telefono, tipo, monto, grupo, asesor) VALUES (?,?,?,?,?,?,?,?) RETURNING id')
-        .bind(new Date().toISOString(), nombre, email, telefono, tipo, Math.round(monto), grupo, personas.map((a) => a.nombre).join(' y ')).first();
+      const r = await env.DB.prepare('INSERT INTO simulaciones (creado, nombre, email, telefono, tipo, monto, grupo, asesor, publicidad) VALUES (?,?,?,?,?,?,?,?,?) RETURNING id')
+        .bind(new Date().toISOString(), nombre, email, telefono, tipo, Math.round(monto), grupo, personas.map((a) => a.nombre).join(' y '), publicidad ? 1 : 0).first();
       id = r && r.id;
     } catch (e) { console.error('db insert', e); }
   }
@@ -117,7 +119,7 @@ async function enviarSimulacion(request, env) {
     cc: copias.length ? copias.map((e) => ({ email: e })) : undefined,
     replyTo: { email, name: nombre },
     subject: `Nueva simulación ${tipo}${monto ? ' · ' + clp(monto) : ''} · ${nombre}`,
-    htmlContent: correoEquipo({ tipo, nombre, email, telefono, monto, lineas, personas }),
+    htmlContent: correoEquipo({ tipo, nombre, email, telefono, monto, lineas, personas, publicidad, consentimiento }),
     attachment: adjunto,
     tags: ['simulacion-equipo', d.tipo],
   }, email);

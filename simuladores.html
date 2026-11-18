@@ -56,7 +56,7 @@ src="https://www.facebook.com/tr?id=4384764601785320&ev=PageView&noscript=1"
     <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-hipoteca" aria-selected="false">
       <span class="sim-pick-ico">HI</span><strong>Hipoteca Inteligente</strong><span>Arma tu configuración con tu capacidad de crédito y mira cómo termina.</span><em>Desde 2.000 UF de crédito</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
     <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-circular" aria-selected="false">
-      <span class="sim-pick-ico">IC</span><strong>Inversión Circular</strong><span>Compara conservar tu propiedad con venderla e invertir en Pulso.</span><em>Con tu propiedad</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
+      <span class="sim-pick-ico">IC</span><strong>Inversión Circular</strong><span>Compara conservar tu propiedad con venderla e invertir en Pulso Inversor.</span><em>Con tu propiedad</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
   </div>
 
   <div class="sim-stage" id="sim-stage" hidden>
@@ -68,14 +68,15 @@ src="https://www.facebook.com/tr?id=4384764601785320&ev=PageView&noscript=1"
       <label>Nombre y apellido<input id="gate-nombre" name="nombre" autocomplete="name" placeholder="Tu nombre" required></label>
       <label>Correo electrónico<input name="email" type="email" autocomplete="email" placeholder="nombre@correo.cl" required></label>
       <label>Teléfono / WhatsApp<span class="gate-tel"><span>+56</span><input name="telefono" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="9 1234 5678" required></span></label>
-      <label class="check"><input type="checkbox" name="terminos" required><span>Acepto los términos y condiciones y la <a href="privacidad.html" target="_blank">Política de privacidad</a>.</span></label>
-      <label class="check"><input type="checkbox" name="contenido" required><span>Acepto que Pulso Inversor me envíe contenido e información sobre inversiones por correo y WhatsApp.</span></label>
+      <label class="check"><input type="checkbox" name="terminos" required><span>Acepto la <a href="privacidad.html" target="_blank">Política de privacidad</a>.</span></label>
+      <label class="check"><input type="checkbox" name="contenido"><span>(Opcional) Acepto recibir información comercial y publicidad de Pulso Inversor por correo y WhatsApp.</span></label>
+      <p class="gate-aut">Al completar tus datos personales, Pulso Inversor SpA podrá usarlos para contactarte y entregarte opciones de inversión, además de verificar el funcionamiento de la plataforma. Si quieres saber más sobre el uso y resguardo de tu información, revisa nuestra <a href="privacidad.html" target="_blank">Política de privacidad</a>.</p>
       <div class="hp" aria-hidden="true"><label>No completar<input name="website" tabindex="-1" autocomplete="off"></label></div>
       <p class="gate-err" id="gate-err" role="alert"></p>
       <button class="btn btn-primary" type="submit">Ver mi simulación <span aria-hidden="true">→</span></button>
     </form>
   </div>
-  <!-- PENDIENTE: CASILLAS: ambas obligatorias a pedido de la usuaria. La Política de privacidad del sitio actual decía que la casilla de contenido era opcional; revisar con legal. FALTA el documento de Términos y condiciones (hoy el enlace va a la Política de privacidad). -->
+  <!-- PENDIENTE: CASILLAS (revisión 17-11-2026): Política de privacidad obligatoria; publicidad OPCIONAL y sin marcar. Términos y condiciones pendientes de validación legal. -->
 
 <div class="sim-panel" id="sim-proyecta" data-sim-panel="sim-proyecta"><div class="sim-panel-body">
     <div class="sim-head"><h2>Proyecta un Hogar</h2><p class="muted">Elige tu estrategia, el monto y el plazo, y compara con lo que te daría un depósito a plazo.</p></div>
@@ -104,7 +105,7 @@ src="https://www.facebook.com/tr?id=4384764601785320&ev=PageView&noscript=1"
         <p class="pro-falta" id="p-falta">Elige la estrategia, el monto y el plazo para ver tu resultado</p>
         <div class="pro-cols">
           <div class="pro-result">
-            <span class="pro-tag">Con Pulso</span>
+            <span class="pro-tag">Con Pulso Inversor</span>
             <div class="pro-total"><small>Total a recibir</small><strong id="r-total">—</strong></div>
             <div class="pro-gain"><small>Ganas</small><strong id="r-ganancia">—</strong></div>
             <ul class="pro-list">
@@ -127,8 +128,9 @@ src="https://www.facebook.com/tr?id=4384764601785320&ev=PageView&noscript=1"
         </div>
         <p class="pro-pref" id="p-pref" hidden>Sobre $250.000.000 puedes acceder a condiciones preferentes. Pregúntale a tu asesor.</p>
         <div class="pro-actions"><button type="button" class="btn btn-primary btn-xl" id="p-correo">Enviar a mi correo <span aria-hidden="true">→</span></button></div>
+        <p class="sim-aut">Al completar tus datos personales, Pulso Inversor SpA podrá usarlos para contactarte y entregarte opciones de inversión, además de verificar el funcionamiento de la plataforma. Si quieres saber más sobre el uso y resguardo de tu información, revisa nuestra <a href="privacidad.html" target="_blank">Política de privacidad</a>.</p>
         <p class="sim-status" id="p-status" role="status"></p>
-        <p class="pro-note">Referencial. Depósito a plazo a 365 días, renovado al vencimiento con interés compuesto; los meses que no completan un año se calculan en proporción. <span id="r-nota-uf">Hipoteca y Título se reajustan en UF (UF de hoy <span id="r-uf">—</span>, IPC estimado 4,5% anual).</span> Las condiciones finales dependen de la evaluación y del contrato.</p>
+        <p class="pro-note">Esta simulación no constituye una cotización ni asegura rentabilidades futuras. La rentabilidad simulada es referencial a esta fecha y no compromete a Pulso Inversor SpA. La rentabilidad y las condiciones finales se fijan al momento de la firma del contrato respectivo. Depósito a plazo: a 365 días, renovado al vencimiento con interés compuesto; para plazos que no son años completos, el último período se calcula en proporción al tiempo. <span id="r-nota-uf">Hipoteca y Título se reajustan en UF (UF de hoy <span id="r-uf">—</span>, IPC estimado 4,5% anual).</span></p>
       </div>
     </div>
     <!-- PENDIENTE: TASA del depósito a plazo a 365 días (DAP_ANUAL en assets/js/simuladores.js): 4,8% anual referencial; CONFIRMAR el valor vigente a usar. -->
@@ -165,12 +167,12 @@ src="https://www.facebook.com/tr?id=4384764601785320&ev=PageView&noscript=1"
         <div id="hi-result"></div>
       </div></article>
     </div>
-    <p class="pro-note">Simulación referencial en UF. Considera una vacancia promedio de 1 mes por año, contribuciones estimadas en 0,08% anual de la tasación y mantención y reparaciones estimadas en 0,04% anual. En la recompra, la amortización acumulada se distribuye en partes iguales entre el inversionista y Pulso. Los valores definitivos dependen de cada propiedad y de la tabla bancaria aplicable.</p>
+    <p class="pro-note">Esta simulación no constituye una cotización ni asegura rentabilidades futuras. La rentabilidad simulada es referencial a esta fecha y no compromete a Pulso Inversor SpA. La rentabilidad y las condiciones finales se fijan al momento de la firma del contrato respectivo. Simulación en UF. Considera una vacancia promedio de 1 mes por año; contribuciones estimadas en 0,08% anual de la tasación; mantención y reparaciones estimadas en 0,04% anual. En la recompra, la amortización acumulada se distribuye en partes iguales entre el inversionista y Pulso Inversor. Los valores definitivos dependen de cada propiedad y de la tabla bancaria aplicable.</p>
     <!-- PENDIENTE: REVISIÓN 7 pedía retirar la regla de reparto 50/50 de la amortización en la recompra porque difiere de la presentación vigente. Se replicó tal cual el simulador actual a pedido de la usuaria: CONFIRMAR. -->
   </div></div>
 
   <div class="sim-panel" id="sim-circular" data-sim-panel="sim-circular" hidden><div class="sim-panel-body">
-    <div class="sim-head"><h2>Inversión Inmobiliaria Circular</h2><p class="muted">Compara conservar tu propiedad arrendada con venderla e invertir el capital en Pulso. Cifras en pesos.</p></div>
+    <div class="sim-head"><h2>Inversión Inmobiliaria Circular</h2><p class="muted">Compara conservar tu propiedad arrendada con venderla e invertir el capital en Pulso Inversor. Cifras en pesos.</p></div>
     <div class="ic">
       <form class="pro-form ic-form" id="ic-form" novalidate>
         <span class="pro-label">¿Tu propiedad tiene deuda?</span>
@@ -210,7 +212,7 @@ src="https://www.facebook.com/tr?id=4384764601785320&ev=PageView&noscript=1"
         <div class="ic-gain" id="ic-gain" hidden></div>
         <div class="ic-kpis">
           <div class="ic-kpi"><small>Capital neto de la venta</small><strong id="ic-k-net">—</strong><span>Venta menos prepago y gastos</span></div>
-          <div class="ic-kpi hl"><small>Ingreso mensual equivalente con Pulso</small><strong id="ic-k-monthly">—</strong><span id="ic-k-monthly-sub">—</span></div>
+          <div class="ic-kpi hl"><small>Ingreso mensual equivalente con Pulso Inversor</small><strong id="ic-k-monthly">—</strong><span id="ic-k-monthly-sub">—</span></div>
           <div class="ic-kpi"><small>Flujo actual antes de costos</small><strong id="ic-k-flow">—</strong><span>Arriendo menos dividendo actual</span></div>
         </div>
         <p class="ic-summary" id="ic-summary"></p>
@@ -219,8 +221,10 @@ src="https://www.facebook.com/tr?id=4384764601785320&ev=PageView&noscript=1"
         <div class="ic-card"><div class="ic-head"><h4>La comparación que respalda tu decisión</h4><span>TIR anual efectiva</span></div>
           <div class="ic-tablewrap"><table class="ic-table"><thead><tr><th>Alternativa</th><th>5 años</th><th>10 años*</th></tr></thead><tbody id="ic-tir"></tbody></table></div>
           <p class="ic-note" id="ic-base"></p>
-          <p class="ic-note">*Proyectar diez años exige continuidad de tasa, condiciones y cumplimiento de pagos. La nueva compra es opcional y se evalúa por separado.</p></div>
+          <p class="ic-note">*Proyectar diez años exige continuidad de tasa, condiciones y cumplimiento de pagos. La nueva compra es opcional y se evalúa por separado.</p>
+          <p class="ic-note">Esta simulación no constituye una cotización ni asegura rentabilidades futuras. La rentabilidad simulada es referencial a esta fecha y no compromete a Pulso Inversor SpA. La rentabilidad y las condiciones finales se fijan al momento de la firma del contrato respectivo.</p></div>
         <div class="pro-actions"><button type="button" class="btn btn-primary btn-xl" id="ic-correo">Enviar a mi correo <span aria-hidden="true">→</span></button></div>
+        <p class="sim-aut">Al completar tus datos personales, Pulso Inversor SpA podrá usarlos para contactarte y entregarte opciones de inversión, además de verificar el funcionamiento de la plataforma. Si quieres saber más sobre el uso y resguardo de tu información, revisa nuestra <a href="privacidad.html" target="_blank">Política de privacidad</a>.</p>
         <p class="sim-status" id="ic-status" role="status"></p>
       </div>
     </div>
@@ -250,7 +254,7 @@ src="https://www.facebook.com/tr?id=4384764601785320&ev=PageView&noscript=1"
     <div class="footer-grid">
       <div>
         <img class="logo-foot" src="assets/img/logo-pulso-blanco.webp" alt="Pulso Inversor" width="300" height="100">
-        <p>Inversiones privadas vinculadas a bienes raíces mediante el modelo IGR, Inversión con Garantía Real.</p>
+        <p>Inversiones privadas vinculadas a bienes raíces mediante el modelo IGR: Inversión con Garantía Real.</p>
         <p><strong>Pulso Inversor SpA</strong><br><a href="mailto:contacto@pulsoinversor.cl">contacto@pulsoinversor.cl</a></p>
         <!-- PENDIENTE: RUT, domicilio, teléfono y demás canales oficiales. -->
         <img class="logo-gmm" src="assets/img/logo-gmm-blanco.png" alt="Una empresa de Grupo Matchmaking" width="700" height="108">

@@ -17,6 +17,8 @@
   // Planilla de Google (Apps Script) que usa hoy el simulador de Hipoteca Inteligente.
   var SHEET_URL = 'https://script.google.com/macros/s/AKfycby1He4sHgOoqwfI5Zc0hJ8Ux3SlESniUs3vZEkC0PvcZxFHhmalKODK4v-pEKjrWBPH/exec';
   // Tasa mensual referencial de un depósito a plazo a 30 días, renovado cada mes. PENDIENTE: confirmar.
+  // Disclaimer de las simulaciones (revisión 17-11-2026).
+  var DISCLAIMER = 'Esta simulación no constituye una cotización ni asegura rentabilidades futuras. La rentabilidad simulada es referencial a esta fecha y no compromete a Pulso Inversor SpA. La rentabilidad y las condiciones finales se fijan al momento de la firma del contrato respectivo.';
   var DAP_ANUAL = 4.8;   // % anual referencial de un depósito a plazo a 365 días (CONFIRMAR)
   // Valores de respaldo si no responde el servicio de indicadores.
   var UF = 39100, IPC = 4.5;
@@ -139,7 +141,7 @@
     var b64 = doc.output('datauristring').split(',')[1];
     var archivo = prefijo + '_' + (doc.__folio || folioPI()) + '_' + slugNombre() + '.pdf';
     fetch(API_CORREO, { method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ tipo: tipo, cliente: { nombre: contacto.nombre, email: contacto.email, telefono: contacto.telefono }, pdfBase64: b64, archivo: archivo, resumen: resumen, monto: Math.round(monto || 0), website: '' }) })
+      body: JSON.stringify({ tipo: tipo, cliente: { nombre: contacto.nombre, email: contacto.email, telefono: contacto.telefono, publicidad: contacto.publicidad === true, consentimiento: contacto.consentimiento || null }, pdfBase64: b64, archivo: archivo, resumen: resumen, monto: Math.round(monto || 0), website: '' }) })
       .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return r.ok && j.ok; }); })
       .then(function (ok) {
         st.classList.add(ok ? 'is-ok' : 'is-err');
@@ -160,11 +162,11 @@
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) faltan.push('correo');
     if (tel.length < 8) faltan.push('teléfono');
     var msg = faltan.length ? 'Completa correctamente: ' + faltan.join(', ') + '.' : '';
-    if (!f.terminos.checked || !f.contenido.checked) msg += (msg ? ' ' : '') + 'Para continuar debes aceptar ambas casillas.';
+    if (!f.terminos.checked) msg += (msg ? ' ' : '') + 'Para continuar debes aceptar la Política de privacidad.';
     err.textContent = msg;
     ['nombre', 'email', 'telefono'].forEach(function (n) { f[n].classList.toggle('invalid', faltan.indexOf(n === 'telefono' ? 'teléfono' : n === 'email' ? 'correo' : n) >= 0); });
     if (msg) return;
-    contacto = { nombre: nombre, email: email, telefono: tel };
+    contacto = { nombre: nombre, email: email, telefono: tel, publicidad: !!f.contenido.checked, consentimiento: new Date().toISOString() };
     ses.set('pulsoContacto', contacto);
     if (window.fbq) fbq('track', 'Lead', { content_name: 'Desbloqueó simuladores' });
     setLocked(false);
@@ -277,10 +279,10 @@
     var doc = pdfSimple('Simulación Proyecta un Hogar', 'Resultado referencial', [
       { t: 'Tu simulación', rows: [['Alternativa', 'Estrategia ' + sr.nombre + ' · ' + sr.garantia], ['Monto a invertir', fmtCLP(r.monto)], ['Plazo', P.plazo + ' meses'],
         ['Tasa', fmtPct(tasa(), 1) + ' mensual' + (sr.uf ? ' + UF' : '')]].concat(sr.retiro ? [['Retiro anticipado', P.retiro ? 'Sí' : 'No']] : []) },
-      { t: 'Con Pulso', rows: [['Total a recibir', fmtCLP(r.total)], ['Ganancia', '+' + fmtCLP(r.ganancia), 'pos']] },
+      { t: 'Con Pulso Inversor', rows: [['Total a recibir', fmtCLP(r.total)], ['Ganancia', '+' + fmtCLP(r.ganancia), 'pos']] },
       { t: 'En un depósito a plazo a 365 días', rows: [['Tasa referencial', fmtPct(DAP_ANUAL, 2) + ' anual'], ['Total a recibir', fmtCLP(r.dapTotal)], ['Ganancia', '+' + fmtCLP(r.dapGanancia), 'red']] },
       { t: 'Tus próximos pasos', proximos: true },
-      { t: 'Supuestos', small: true, text: 'Simulación referencial. Depósito a plazo a 365 días, renovado al vencimiento con interés compuesto; los meses que no completan un año se calculan en proporción.' + (sr.uf ? ' Hipoteca y Título se reajustan en UF (UF ' + fmtCLP(UF) + ', IPC estimado 4,5% anual).' : '') + ' Las condiciones finales dependen de la evaluación y del contrato de cada operación. Este documento no constituye una oferta vinculante.' }
+      { t: 'Supuestos', small: true, text: DISCLAIMER + ' Depósito a plazo: a 365 días, renovado al vencimiento con interés compuesto; para plazos que no son años completos, el último período se calcula en proporción al tiempo.' + (sr.uf ? ' Hipoteca y Título se reajustan en UF (UF ' + fmtCLP(UF) + ', IPC estimado 4,5% anual).' : '') }
     ], { tipo: 'Proyecta un Hogar', monto: r.monto });
     enviarCorreo('proyecta', doc, 'Simulacion_ProyectaUnHogar', resumenTxt.split('\n'), st, btn, r.monto);
   });
@@ -361,16 +363,16 @@
   }
   function conclusion(picks, available, kept, soldAmort, invA, pulA, realized) {
     var keepN = picks.filter(function (x) { return x.d === 'keep'; }).length, sellN = picks.length - keepN, plazo = H.years + ' años';
-    if (keepN === picks.length) return 'Elegiste conservar y priorizar la construcción de patrimonio. Al término de ' + plazo + ' mantienes ' + (keepN === 1 ? 'una propiedad administrada' : keepN + ' propiedades administradas') + ' y el 100% del equity generado, equivalente a ' + signed(kept) + ', además de ' + signed(available) + ' de retorno disponible.';
-    if (sellN === picks.length) return 'Elegiste activar la recompra y priorizar liquidez. La amortización acumulada de ' + signed(soldAmort) + ' se distribuye en partes iguales: ' + signed(invA) + ' para ti y ' + signed(pulA) + ' para Pulso. Tu capital líquido estimado al término de ' + plazo + ' es ' + signed(realized) + '.';
-    return 'Elegiste combinar patrimonio y liquidez. Conservas una propiedad con ' + signed(kept) + ' de equity y activas la recompra de la otra. De la amortización recomprada, recibes ' + signed(invA) + ' y Pulso recibe ' + signed(pulA) + '. Tu capital líquido estimado es ' + signed(realized) + '.';
+    if (keepN === picks.length) return 'Elegiste conservar las propiedades para construir patrimonio. Al término de ' + plazo + ' mantienes ' + (keepN === 1 ? 'una propiedad administrada' : keepN + ' propiedades administradas') + ' con el 100% del equity generado, equivalente a ' + signed(kept) + '. Además, tienes ' + signed(available) + ' de retorno disponible.';
+    if (sellN === picks.length) return 'Elegiste activar la recompra para priorizar liquidez. La amortización acumulada de ' + signed(soldAmort) + ' se distribuye en partes iguales: ' + signed(invA) + ' para ti; ' + signed(pulA) + ' para Pulso Inversor. Tu capital líquido estimado al término de ' + plazo + ' es ' + signed(realized) + '.';
+    return 'Elegiste combinar patrimonio con liquidez. Conservas una propiedad con ' + signed(kept) + ' de equity; de la otra, activas la recompra. De la amortización recomprada, tú recibes ' + signed(invA) + '; Pulso Inversor recibe ' + signed(pulA) + '. Tu capital líquido estimado es ' + signed(realized) + '.';
   }
   function renderResult() {
     if (H.tr === null || !H.years) { H.quote = null; $('#hi-result').innerHTML = '<div class="hi-empty"><strong>Tu resultado aparecerá aquí</strong><p>Elige la propiedad Tracción, el plazo y hasta dos propiedades del Portafolio Patrimonio.</p></div>'; return; }
     var ret = tractionReturn(), months = H.years * 12, t = tractionData[H.tr];
     var picks = H.selected.map(function (i) { return { i: i, p: patrimonyData[i], d: dec(i), c: calcPat(patrimonyData[i]) }; });
     var d = function (a, b, k, sub) { return '<div class="hi-drow ' + (k || '') + '"><span>' + a + (sub ? '<em>' + sub + '</em>' : '') + '</span><b>' + b + '</b></div>'; };
-    var pdfBar = '<div class="hi-actions"><button class="btn btn-primary" id="hi-pdf" type="button">Enviar a mi correo</button></div><p class="sim-status" id="hi-pdfstatus" role="status"></p>';
+    var pdfBar = '<div class="hi-actions"><button class="btn btn-primary" id="hi-pdf" type="button">Enviar a mi correo</button></div><p class="sim-status" id="hi-pdfstatus" role="status"></p><p class="sim-aut">Al completar tus datos personales, Pulso Inversor SpA podrá usarlos para contactarte y entregarte opciones de inversión, además de verificar el funcionamiento de la plataforma. Si quieres saber más sobre el uso y resguardo de tu información, revisa nuestra <a href="privacidad.html" target="_blank">Política de privacidad</a>.</p>';
     if (!picks.length) {
       var ok = H.tractionOnly === true;
       var concl0 = 'Elegiste enfocarte solo en el retorno del Portafolio Tracción. Al término de ' + H.years + ' años, el retorno acumulado estimado es ' + signed(ret) + ', sin propiedades del Portafolio Patrimonio ni equity asociado.';
@@ -407,7 +409,7 @@
       '<div class="hi-dark"><h4>Resultado económico · ' + H.years + ' años</h4>' + d('Retorno Tracción', signed(ret)) + d('Flujo acumulado', signed(flowAccum)) + d('Vacancia · 1 mes/año', signed(vacancy)) + d('Contribuciones', signed(contributions)) + d('Mantención y reparaciones', signed(maintenance)) + d('Retorno disponible', signed(available), 'total') + '</div>' +
       '<p class="hi-dlabel">La decisión es tuya</p><div class="hi-choices">' +
       '<div class="hi-choice' + (keepP.length ? ' on' : '') + '"><small>Conservar · 100% equity</small>' + (keepP.length ? '<p>' + keepP.map(function (x) { return esc(x.p.name); }).join(' y ') + '</p><p>' + uf(kept) + ' amortizadas</p><em>Mantienes la propiedad y el 100% del equity generado.</em>' : '<em>Ninguna propiedad marcada para conservar.</em>') + '</div>' +
-      '<div class="hi-choice sell' + (sellP.length ? ' on' : '') + '"><small>Activar recompra · 50%</small>' + (sellP.length ? '<p>' + sellP.map(function (x) { return esc(x.p.name); }).join(' y ') + '</p><p>50% de ' + uf(soldAmort) + ' = ' + uf(invA) + '</p><em>El otro 50% (' + uf(pulA) + ') corresponde a Pulso.</em>' : '<em>Ninguna propiedad marcada para recompra.</em>') + '</div></div>' +
+      '<div class="hi-choice sell' + (sellP.length ? ' on' : '') + '"><small>Activar recompra · 50%</small>' + (sellP.length ? '<p>' + sellP.map(function (x) { return esc(x.p.name); }).join(' y ') + '</p><p>50% de ' + uf(soldAmort) + ' = ' + uf(invA) + '</p><em>El otro 50% (' + uf(pulA) + ') corresponde a Pulso Inversor.</em>' : '<em>Ninguna propiedad marcada para recompra.</em>') + '</div></div>' +
       '<div class="hi-closing"><h4>Al cierre · ' + H.years + ' años</h4>' + dr('Retorno disponible', signed(available)) + (sellP.length ? dr('Recompra · 50% de la amortización', signed(invA)) : '') + dr('Capital líquido estimado', signed(realized), 'tot') + (keepP.length ? dr('Equity conservado', signed(kept)) : '') + '</div>' +
       '<div class="hi-concl"><strong>Conclusión de tu elección</strong>' + conclText + '</div>' + pdfBar;
   }
@@ -509,7 +511,7 @@
     section('Conclusión'); para(qd.conclusionText, 9.5, 'text');
     y = pdfProximos(doc, y + 6, M, CW, montoHI);
     section('Supuestos y condiciones', 22);
-    para('Simulación referencial en UF. Considera una vacancia promedio de 1 mes por año, contribuciones estimadas en 0,08% anual de la tasación y mantención y reparaciones estimadas en 0,04% anual. En la recompra, la amortización acumulada se distribuye en partes iguales entre el inversionista y Pulso. Los valores definitivos dependen de cada propiedad y de la tabla bancaria aplicable. Este documento no constituye una oferta vinculante ni una aprobación de crédito.', 8.5);
+    para(DISCLAIMER + ' Simulación en UF. Considera una vacancia promedio de 1 mes por año; contribuciones estimadas en 0,08% anual de la tasación; mantención y reparaciones estimadas en 0,04% anual. En la recompra, la amortización acumulada se distribuye en partes iguales entre el inversionista y Pulso Inversor. Los valores definitivos dependen de cada propiedad y de la tabla bancaria aplicable. Este documento no constituye una aprobación de crédito.', 8.5);
     var n = doc.getNumberOfPages(); for (var i = 1; i <= n; i++) { doc.setPage(i); doc.setDrawColor.apply(doc, C.line); doc.setLineWidth(.2); doc.line(M, 286, W - M, 286); font(7.5, 'normal', 'muted'); doc.text('Pulso Inversor · Cotización ' + fol, M, 291); doc.text('Página ' + i + ' de ' + n, W - M, 291, { align: 'right' }); }
     doc.__folio = fol;
     var resumenHI = ['Propiedad Tracción: ' + t.name + ' (' + t.comuna + ')', 'Plazo: ' + H.years + ' años', 'Capacidad declarada: ' + uf(H.capacity) + ' por crédito',
@@ -625,12 +627,12 @@
       var g = $('#ic-gain');
       g.hidden = false; g.classList.toggle('neg', dif < 0);
       g.innerHTML = dif >= 0
-        ? '<span class="ic-gain-k">Con el modelo Pulso</span><strong>Tu ingreso mensual aumenta <b>+' + money(dif) + '</b></strong><span>De ' + money(flujoActual) + ' a ' + money(c.monthly) + ' al mes' + (flujoActual > 0 ? ' · ' + (c.monthly / flujoActual >= 3 ? 'más del triple de lo que recibes hoy' : c.monthly / flujoActual >= 2 ? 'más del doble de lo que recibes hoy' : '+' + Math.round((c.monthly / flujoActual - 1) * 100) + '% sobre lo que recibes hoy') : '') + '</span>'
-        : '<span class="ic-gain-k">Con el modelo Pulso</span><strong>Tu ingreso mensual sería ' + money(Math.abs(dif)) + ' menor</strong><span>De ' + money(flujoActual) + ' a ' + money(c.monthly) + ' al mes, antes de costos</span>';
-      $('#ic-summary').textContent = 'La venta estima ' + money(c.sale) + '. Después de prepagar ' + money(x.debt) + ' y descontar gastos, quedan ' + money(c.net) + ' para invertir en Pulso, a ' + (c.rate * 100).toLocaleString('es-CL', { minimumFractionDigits: 1 }) + '% mensual simple. La comparación es frente al arriendo menos dividendo, antes de costos.';
+        ? '<span class="ic-gain-k">Con el modelo Pulso Inversor</span><strong>Tu ingreso mensual aumenta <b>+' + money(dif) + '</b></strong><span>De ' + money(flujoActual) + ' a ' + money(c.monthly) + ' al mes' + (flujoActual > 0 ? ' · ' + (c.monthly / flujoActual >= 3 ? 'más del triple de lo que recibes hoy' : c.monthly / flujoActual >= 2 ? 'más del doble de lo que recibes hoy' : '+' + Math.round((c.monthly / flujoActual - 1) * 100) + '% sobre lo que recibes hoy') : '') + '</span>'
+        : '<span class="ic-gain-k">Con el modelo Pulso Inversor</span><strong>Tu ingreso mensual sería ' + money(Math.abs(dif)) + ' menor</strong><span>De ' + money(flujoActual) + ' a ' + money(c.monthly) + ' al mes, antes de costos</span>';
+      $('#ic-summary').textContent = 'La venta estima ' + money(c.sale) + '. Después de prepagar ' + money(x.debt) + ' y descontar gastos, quedan ' + money(c.net) + ' para invertir en Pulso Inversor, a ' + (c.rate * 100).toLocaleString('es-CL', { minimumFractionDigits: 1 }) + '% mensual simple. La comparación es frente al arriendo menos dividendo, antes de costos.';
       $('#ic-period').textContent = 'Proyección a ' + X.years + ' años';
       // Barras: ¿con cuánto terminas?
-      var nombres = ['Si conservas y arriendas', 'Si vendes e inviertes en Pulso', 'Si vendes, inviertes y compras otra propiedad'];
+      var nombres = ['Si conservas y arriendas', 'Si vendes e inviertes en Pulso Inversor', 'Si vendes, inviertes y compras otra propiedad'];
       var pa = [(x.debt ? 'Tu propiedad, descontada la deuda' : 'Valor de tu propiedad') + ' (incluye plusvalía de ' + compact(c.plusvalia) + ')', 'Capital invertido', 'Capital invertido y nueva propiedad'];
       var pb = ['Arriendos netos recibidos', 'Intereses recibidos', 'Intereses y arriendos netos recibidos'];
       var n = X.purchase ? 3 : 2, filas = [];
@@ -679,10 +681,10 @@
         { t: 'Tu propiedad', rows: [['Valor comercial', money(x.value)], ['Arriendo mensual', money(x.rent)], ['Dividendo mensual', money(x.oldpayment)], ['Deuda a prepagar', money(x.debt)]] },
         { t: 'Lo esencial', rows: [['Capital neto de la venta', money(c.net)], ['Ingreso mensual equivalente', money(c.monthly)], [x.frequency === 'quarterly' ? 'Pago efectivo trimestral' : 'Pago mensual', money(x.frequency === 'quarterly' ? c.payout : c.monthly)], ['Flujo actual antes de costos', money(u.flujoActual)]] },
         { t: 'Resumen', text: $('#ic-summary').textContent },
-        { t: '¿Con cuánto terminas en ' + x.years + ' años?', rows: [['Si conservas y arriendas', compact(c.end[0] + c.totals[0])], ['Si vendes e inviertes en Pulso', compact(c.end[1] + c.totals[1])]].concat(u.n === 3 && u.cicloOk ? [['Si vendes, inviertes y compras otra', compact(c.end[2] + c.totals[2])]] : []).concat([['Mayor resultado', u.best, 'pos']]) },
+        { t: '¿Con cuánto terminas en ' + x.years + ' años?', rows: [['Si conservas y arriendas', compact(c.end[0] + c.totals[0])], ['Si vendes e inviertes en Pulso Inversor', compact(c.end[1] + c.totals[1])]].concat(u.n === 3 && u.cicloOk ? [['Si vendes, inviertes y compras otra', compact(c.end[2] + c.totals[2])]] : []).concat([['Mayor resultado', u.best, 'pos']]) },
         { t: 'TIR anual efectiva', rows: filasTir },
         { t: 'Tus próximos pasos', proximos: true },
-        { t: 'Supuestos', small: true, text: $('#ic-base').textContent + ' Venta 15% bajo el valor comercial; inflación 3% anual; arriendo reajustado 3% anual; mantención, vacancia y reparaciones estimadas. Proyectar diez años exige continuidad de tasa, condiciones y cumplimiento de pagos. La nueva compra es opcional y se evalúa por separado. Simulación referencial, no constituye una oferta vinculante.' }
+        { t: 'Supuestos', small: true, text: $('#ic-base').textContent + ' Venta 15% bajo el valor comercial; inflación 3% anual; arriendo reajustado 3% anual; mantención, vacancia y reparaciones estimadas. Proyectar diez años exige continuidad de tasa, condiciones y cumplimiento de pagos. La nueva compra es opcional y se evalúa por separado. ' + DISCLAIMER }
       ], { tipo: 'Inversión Inmobiliaria Circular', monto: c.net });
       enviarCorreo('circular', doc, 'Simulacion_InversionCircular', resumenIC, st, btn, c.net);
     });

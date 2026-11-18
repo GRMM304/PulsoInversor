@@ -20,7 +20,8 @@ CREATE TABLE IF NOT EXISTS simulaciones (
   encuesta_json TEXT,
   satisfaccion INTEGER,
   recomienda INTEGER,
-  notas TEXT
+  notas TEXT,
+  publicidad INTEGER               -- 1 si aceptó recibir publicidad (casilla opcional)
 );
 CREATE INDEX IF NOT EXISTS idx_sim_creado ON simulaciones(creado);
 

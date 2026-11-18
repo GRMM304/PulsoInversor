@@ -61,7 +61,7 @@ def footer():
     <div class="footer-grid">
       <div>
         <img class="logo-foot" src="assets/img/logo-pulso-blanco.webp" alt="Pulso Inversor" width="300" height="100">
-        <p>Inversiones privadas vinculadas a bienes raíces mediante el modelo IGR, Inversión con Garantía Real.</p>
+        <p>Inversiones privadas vinculadas a bienes raíces mediante el modelo IGR: Inversión con Garantía Real.</p>
         <p><strong>Pulso Inversor SpA</strong><br><a href="mailto:{EMAIL}">{EMAIL}</a></p>
         {P("RUT, domicilio, teléfono y demás canales oficiales.")}
         <img class="logo-gmm" src="assets/img/logo-gmm-blanco.png" alt="Una empresa de Grupo Matchmaking" width="700" height="108">
@@ -341,7 +341,7 @@ page('index.html', 'Inicio',
 </div></section>
 
 <section class="section section-soft" id="por-que-pulso"><div class="container">
-  <div class="title center"><span class="eyebrow">¿Por qué invertir con Pulso?</span><h2>Conoce qué hay detrás de tu inversión</h2></div>
+  <div class="title center"><span class="eyebrow">¿Por qué invertir con Pulso Inversor?</span><h2>Conoce qué hay detrás de tu inversión</h2></div>
   <div class="why" data-why data-reveal>
     <div class="why-compare">
       <div class="why-col why-other">
@@ -388,7 +388,7 @@ page('index.html', 'Inicio',
   <div class="reviews">
     <figure class="video-testimonio">
       <video controls playsinline preload="none" poster="assets/media/testimonio-gonzalo.jpg"><source src="assets/media/testimonio-gonzalo.mp4" type="video/mp4"></video>
-      <figcaption><strong>Gonzalo</strong>, kinesiólogo. Tenía sus ahorros quietos en el banco y aquí cuenta cómo fue su primera inversión con Pulso.</figcaption>
+      <figcaption><strong>Gonzalo</strong>, kinesiólogo. Tenía sus ahorros quietos en el banco y aquí cuenta cómo fue su primera inversión con Pulso Inversor.</figcaption>
     </figure>
     <div class="review-list">
       {''.join(testimonio(*t) for t in TESTIMONIOS)}
@@ -417,7 +417,7 @@ pilares = ''.join(f'''<button class="flip" type="button" aria-pressed="false">
     </button>''' for i, (ic, t, d, b) in enumerate(PILARES))
 
 PASOS_CAMINO = [
-    ('Simula tu inversión', 'Explora nuestras soluciones y conoce una estimación de tus intereses según el monto y plazo.',
+    ('Simula tu inversión', 'Explora nuestras soluciones: conoce una estimación de tus intereses según el monto y el plazo.',
      'Tus números, primero.', [('Exploras', 'Nuestras soluciones'), ('Defines', 'Monto y plazo'), ('Obtienes', 'Una estimación de tus intereses')]),
     ('Conversemos sobre tus objetivos', 'Un asesor conoce tu perfil, resuelve tus dudas y te orienta sobre las alternativas disponibles.',
      'Hablamos contigo.', [('Conocemos', 'Tu perfil'), ('Resolvemos', 'Tus dudas'), ('Te orientamos', 'Sobre las alternativas disponibles')]),
@@ -451,7 +451,7 @@ page('como-funciona.html', 'Cómo funciona',
     <div class="breadcrumb"><a href="index.html">Inicio</a> / Cómo invertir / Cómo funciona</div>
     <span class="eyebrow dark">Modelo IGR</span>
     <h1>Porque invertir también puede generar impacto</h1>
-    <p>Estructuramos inversiones privadas vinculadas a bienes raíces mediante el modelo IGR, Inversión con Garantía Real. Conectamos objetivos de inversión con soluciones de liquidez para propietarios, a través de una relación directa con cada inversionista.</p>
+    <p>Estructuramos inversiones privadas vinculadas a bienes raíces mediante el modelo IGR: Inversión con Garantía Real. Conectamos objetivos de inversión con soluciones de liquidez para propietarios, a través de una relación directa con cada inversionista.</p>
   </div>
   <figure class="cf-video">
     {P("VIDEO de Felipe Rojas (de newpulso). En newpulso estaba marcado: 'confirmar uso; el video dice «doble garantía real»'.")}
@@ -468,13 +468,15 @@ page('como-funciona.html', 'Cómo funciona',
 </div></section>
 
 <section class="section ruta-section"><div class="container">
-  <div class="title center"><span class="eyebrow dark">Tu experiencia con Pulso</span><h2>Así es tu camino con Pulso</h2>
+  <div class="title center"><span class="eyebrow dark">Tu experiencia con Pulso Inversor</span><h2>Así es tu camino con Pulso Inversor</h2>
     <p class="lead">Desde la primera evaluación hasta el cierre de tu inversión, conoces las condiciones de cada etapa.</p></div>
   <div class="r2" data-r2>
-    <ol class="r2-list">{ruta_steps}</ol>
+    <div class="r2-steps">
+      <ol class="r2-list">{ruta_steps}</ol>
+      <p class="r2-caption r2-caption-list">Toca cada etapa para ver qué pasa en ella.</p>
+    </div>
     <div class="r2-stage" aria-live="polite">
       <div class="r2-frame">{ruta_cards}</div>
-      <p class="r2-caption">Toca cada etapa para ver qué pasa en ella.</p>
     </div>
   </div>
 </div></section>
@@ -556,7 +558,7 @@ PASOS_HI = [
 PASOS_IC = [
     ('Vendes tu propiedad', 'Se ofrece a un precio que permita una venta ágil.'),
     ('Liberas su capital', 'Si tiene una deuda hipotecaria, se salda con la venta.'),
-    ('Lo inviertes en Pulso', 'El capital genera intereses fijos cada mes y te da un flujo de caja constante.'),
+    ('Lo inviertes en Pulso Inversor', 'El capital genera intereses fijos cada mes y te da un flujo de caja constante.'),
     ('Puedes optar a comprar otra propiedad con descuento', 'Si quieres seguir en el mercado inmobiliario, puedes comprar otra propiedad con descuento.', True),
 ]
 PERFILES = [
@@ -615,7 +617,7 @@ page('inversiones.html', 'Inversiones',
       <tr><td>Proyecta un Hogar · Hipoteca</td><td>$25 millones</td><td>Hipoteca inscrita a tu favor</td><td>15, 21 o 27 meses</td></tr>
       <tr><td>Proyecta un Hogar · Título</td><td>$100 millones</td><td>La propiedad inscrita a tu nombre</td><td>15, 21 o 27 meses</td></tr>
       <tr><td>Hipoteca Inteligente</td><td>2.000 UF de capacidad de crédito</td><td>La propiedad a tu nombre durante la operación, con recompra al cierre</td><td>2 a 5 años</td></tr>
-      <tr><td>Inversión Inmobiliaria Circular</td><td>El capital de tu propiedad</td><td>Inversión en Pulso con intereses fijos mensuales</td><td>Según tu contrato</td></tr>
+      <tr><td>Inversión Inmobiliaria Circular</td><td>El capital de tu propiedad</td><td>Inversión en Pulso Inversor con intereses fijos mensuales</td><td>Según tu contrato</td></tr>
     </tbody></table></div>
 </div></section>
 
@@ -677,7 +679,7 @@ page('garantias-y-documentos.html', 'Garantías y respaldo',
   <div>
     <div class="breadcrumb"><a href="index.html">Inicio</a> / Cómo invertir / Garantías y respaldo</div>
     <span class="eyebrow dark">Garantías y respaldo legal</span>
-    <h1>¿Qué protege tu inversión con Pulso?</h1>
+    <h1>¿Qué protege tu inversión con Pulso Inversor?</h1>
     <p>Cada operación cuenta con una estructura legal definida para establecer tus derechos, las obligaciones de pago y los mecanismos de resguardo de tu capital. Estos varían según la solución de inversión.</p>
     <div class="gdeck-tabs" role="tablist" aria-label="Garantías">{_tabs}</div>
   </div>
@@ -725,7 +727,7 @@ f"""
     <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-hipoteca" aria-selected="false">
       <span class="sim-pick-ico">HI</span><strong>Hipoteca Inteligente</strong><span>Arma tu configuración con tu capacidad de crédito y mira cómo termina.</span><em>Desde 2.000 UF de crédito</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
     <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-circular" aria-selected="false">
-      <span class="sim-pick-ico">IC</span><strong>Inversión Circular</strong><span>Compara conservar tu propiedad con venderla e invertir en Pulso.</span><em>Con tu propiedad</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
+      <span class="sim-pick-ico">IC</span><strong>Inversión Circular</strong><span>Compara conservar tu propiedad con venderla e invertir en Pulso Inversor.</span><em>Con tu propiedad</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
   </div>
 
   <div class="sim-stage" id="sim-stage" hidden>
@@ -737,14 +739,15 @@ f"""
       <label>Nombre y apellido<input id="gate-nombre" name="nombre" autocomplete="name" placeholder="Tu nombre" required></label>
       <label>Correo electrónico<input name="email" type="email" autocomplete="email" placeholder="nombre@correo.cl" required></label>
       <label>Teléfono / WhatsApp<span class="gate-tel"><span>+56</span><input name="telefono" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="9 1234 5678" required></span></label>
-      <label class="check"><input type="checkbox" name="terminos" required><span>Acepto los términos y condiciones y la <a href="privacidad.html" target="_blank">Política de privacidad</a>.</span></label>
-      <label class="check"><input type="checkbox" name="contenido" required><span>Acepto que Pulso Inversor me envíe contenido e información sobre inversiones por correo y WhatsApp.</span></label>
+      <label class="check"><input type="checkbox" name="terminos" required><span>Acepto la <a href="privacidad.html" target="_blank">Política de privacidad</a>.</span></label>
+      <label class="check"><input type="checkbox" name="contenido"><span>(Opcional) Acepto recibir información comercial y publicidad de Pulso Inversor por correo y WhatsApp.</span></label>
+      <p class="gate-aut">Al completar tus datos personales, Pulso Inversor SpA podrá usarlos para contactarte y entregarte opciones de inversión, además de verificar el funcionamiento de la plataforma. Si quieres saber más sobre el uso y resguardo de tu información, revisa nuestra <a href="privacidad.html" target="_blank">Política de privacidad</a>.</p>
       <div class="hp" aria-hidden="true"><label>No completar<input name="website" tabindex="-1" autocomplete="off"></label></div>
       <p class="gate-err" id="gate-err" role="alert"></p>
       <button class="btn btn-primary" type="submit">Ver mi simulación <span aria-hidden="true">→</span></button>
     </form>
   </div>
-  {P("CASILLAS: ambas obligatorias a pedido de la usuaria. La Política de privacidad del sitio actual decía que la casilla de contenido era opcional; revisar con legal. FALTA el documento de Términos y condiciones (hoy el enlace va a la Política de privacidad).")}
+  {P("CASILLAS (revisión 17-11-2026): Política de privacidad obligatoria; publicidad OPCIONAL y sin marcar. Términos y condiciones pendientes de validación legal.")}
 
 <div class="sim-panel" id="sim-proyecta" data-sim-panel="sim-proyecta"><div class="sim-panel-body">
     <div class="sim-head"><h2>Proyecta un Hogar</h2><p class="muted">Elige tu estrategia, el monto y el plazo, y compara con lo que te daría un depósito a plazo.</p></div>
@@ -773,7 +776,7 @@ f"""
         <p class="pro-falta" id="p-falta">Elige la estrategia, el monto y el plazo para ver tu resultado</p>
         <div class="pro-cols">
           <div class="pro-result">
-            <span class="pro-tag">Con Pulso</span>
+            <span class="pro-tag">Con Pulso Inversor</span>
             <div class="pro-total"><small>Total a recibir</small><strong id="r-total">—</strong></div>
             <div class="pro-gain"><small>Ganas</small><strong id="r-ganancia">—</strong></div>
             <ul class="pro-list">
@@ -796,8 +799,9 @@ f"""
         </div>
         <p class="pro-pref" id="p-pref" hidden>Sobre $250.000.000 puedes acceder a condiciones preferentes. Pregúntale a tu asesor.</p>
         <div class="pro-actions"><button type="button" class="btn btn-primary btn-xl" id="p-correo">Enviar a mi correo <span aria-hidden="true">→</span></button></div>
+        <p class="sim-aut">Al completar tus datos personales, Pulso Inversor SpA podrá usarlos para contactarte y entregarte opciones de inversión, además de verificar el funcionamiento de la plataforma. Si quieres saber más sobre el uso y resguardo de tu información, revisa nuestra <a href="privacidad.html" target="_blank">Política de privacidad</a>.</p>
         <p class="sim-status" id="p-status" role="status"></p>
-        <p class="pro-note">Referencial. Depósito a plazo a 365 días, renovado al vencimiento con interés compuesto; los meses que no completan un año se calculan en proporción. <span id="r-nota-uf">Hipoteca y Título se reajustan en UF (UF de hoy <span id="r-uf">—</span>, IPC estimado 4,5% anual).</span> Las condiciones finales dependen de la evaluación y del contrato.</p>
+        <p class="pro-note">Esta simulación no constituye una cotización ni asegura rentabilidades futuras. La rentabilidad simulada es referencial a esta fecha y no compromete a Pulso Inversor SpA. La rentabilidad y las condiciones finales se fijan al momento de la firma del contrato respectivo. Depósito a plazo: a 365 días, renovado al vencimiento con interés compuesto; para plazos que no son años completos, el último período se calcula en proporción al tiempo. <span id="r-nota-uf">Hipoteca y Título se reajustan en UF (UF de hoy <span id="r-uf">—</span>, IPC estimado 4,5% anual).</span></p>
       </div>
     </div>
     {P("TASA del depósito a plazo a 365 días (DAP_ANUAL en assets/js/simuladores.js): 4,8% anual referencial; CONFIRMAR el valor vigente a usar.")}
@@ -834,12 +838,12 @@ f"""
         <div id="hi-result"></div>
       </div></article>
     </div>
-    <p class="pro-note">Simulación referencial en UF. Considera una vacancia promedio de 1 mes por año, contribuciones estimadas en 0,08% anual de la tasación y mantención y reparaciones estimadas en 0,04% anual. En la recompra, la amortización acumulada se distribuye en partes iguales entre el inversionista y Pulso. Los valores definitivos dependen de cada propiedad y de la tabla bancaria aplicable.</p>
+    <p class="pro-note">Esta simulación no constituye una cotización ni asegura rentabilidades futuras. La rentabilidad simulada es referencial a esta fecha y no compromete a Pulso Inversor SpA. La rentabilidad y las condiciones finales se fijan al momento de la firma del contrato respectivo. Simulación en UF. Considera una vacancia promedio de 1 mes por año; contribuciones estimadas en 0,08% anual de la tasación; mantención y reparaciones estimadas en 0,04% anual. En la recompra, la amortización acumulada se distribuye en partes iguales entre el inversionista y Pulso Inversor. Los valores definitivos dependen de cada propiedad y de la tabla bancaria aplicable.</p>
     {P("REVISIÓN 7 pedía retirar la regla de reparto 50/50 de la amortización en la recompra porque difiere de la presentación vigente. Se replicó tal cual el simulador actual a pedido de la usuaria: CONFIRMAR.")}
   </div></div>
 
   <div class="sim-panel" id="sim-circular" data-sim-panel="sim-circular" hidden><div class="sim-panel-body">
-    <div class="sim-head"><h2>Inversión Inmobiliaria Circular</h2><p class="muted">Compara conservar tu propiedad arrendada con venderla e invertir el capital en Pulso. Cifras en pesos.</p></div>
+    <div class="sim-head"><h2>Inversión Inmobiliaria Circular</h2><p class="muted">Compara conservar tu propiedad arrendada con venderla e invertir el capital en Pulso Inversor. Cifras en pesos.</p></div>
     <div class="ic">
       <form class="pro-form ic-form" id="ic-form" novalidate>
         <span class="pro-label">¿Tu propiedad tiene deuda?</span>
@@ -879,7 +883,7 @@ f"""
         <div class="ic-gain" id="ic-gain" hidden></div>
         <div class="ic-kpis">
           <div class="ic-kpi"><small>Capital neto de la venta</small><strong id="ic-k-net">—</strong><span>Venta menos prepago y gastos</span></div>
-          <div class="ic-kpi hl"><small>Ingreso mensual equivalente con Pulso</small><strong id="ic-k-monthly">—</strong><span id="ic-k-monthly-sub">—</span></div>
+          <div class="ic-kpi hl"><small>Ingreso mensual equivalente con Pulso Inversor</small><strong id="ic-k-monthly">—</strong><span id="ic-k-monthly-sub">—</span></div>
           <div class="ic-kpi"><small>Flujo actual antes de costos</small><strong id="ic-k-flow">—</strong><span>Arriendo menos dividendo actual</span></div>
         </div>
         <p class="ic-summary" id="ic-summary"></p>
@@ -888,8 +892,10 @@ f"""
         <div class="ic-card"><div class="ic-head"><h4>La comparación que respalda tu decisión</h4><span>TIR anual efectiva</span></div>
           <div class="ic-tablewrap"><table class="ic-table"><thead><tr><th>Alternativa</th><th>5 años</th><th>10 años*</th></tr></thead><tbody id="ic-tir"></tbody></table></div>
           <p class="ic-note" id="ic-base"></p>
-          <p class="ic-note">*Proyectar diez años exige continuidad de tasa, condiciones y cumplimiento de pagos. La nueva compra es opcional y se evalúa por separado.</p></div>
+          <p class="ic-note">*Proyectar diez años exige continuidad de tasa, condiciones y cumplimiento de pagos. La nueva compra es opcional y se evalúa por separado.</p>
+          <p class="ic-note">Esta simulación no constituye una cotización ni asegura rentabilidades futuras. La rentabilidad simulada es referencial a esta fecha y no compromete a Pulso Inversor SpA. La rentabilidad y las condiciones finales se fijan al momento de la firma del contrato respectivo.</p></div>
         <div class="pro-actions"><button type="button" class="btn btn-primary btn-xl" id="ic-correo">Enviar a mi correo <span aria-hidden="true">→</span></button></div>
+        <p class="sim-aut">Al completar tus datos personales, Pulso Inversor SpA podrá usarlos para contactarte y entregarte opciones de inversión, además de verificar el funcionamiento de la plataforma. Si quieres saber más sobre el uso y resguardo de tu información, revisa nuestra <a href="privacidad.html" target="_blank">Política de privacidad</a>.</p>
         <p class="sim-status" id="ic-status" role="status"></p>
       </div>
     </div>
@@ -917,7 +923,7 @@ page('privacidad.html', 'Política de privacidad',
     <li>Enviarte contenido e información sobre inversiones por correo y WhatsApp, si lo autorizaste. Puedes darte de baja cuando quieras.</li></ul>
   <p>No vendemos ni cedemos tus datos a terceros para fines comerciales propios de ellos.</p>
   <h2>3. Quién más trata tus datos</h2>
-  <p>Usamos proveedores de servicios tecnológicos, como la plataforma de correo y gestión de contactos Brevo y Google (planillas). Ellos tratan tus datos solo por encargo nuestro y para los fines descritos aquí.</p>
+  <p>Usamos proveedores de servicios tecnológicos, como Brevo (correo y gestión de contactos) y Google (planillas). Ellos tratan tus datos solo por encargo nuestro y para los fines descritos aquí.</p>
   <h2>4. Cuánto tiempo los guardamos</h2>
   <p>Mientras mantengamos contacto contigo o hasta que nos pidas eliminarlos, salvo que la ley nos obligue a conservarlos por más tiempo.</p>
   <h2>5. Tus derechos</h2>
@@ -934,7 +940,7 @@ page('privacidad.html', 'Política de privacidad',
 # ---------------- 3.1 Nosotros ----------------
 HITOS = [
     ('2016', 'Los orígenes', 'Bajo el origen empresarial de Partners &amp; Advisers y la gestión de Iván Barboza, nace el modelo Inversión Remate Seguro (IRS), que permitía a los inversionistas participar en oportunidades de remates judiciales con respaldo de activos inmobiliarios.'),
-    ('2016 – 2023', 'Experiencia y especialización', 'Se consolida una profunda experiencia en evaluación comercial, análisis jurídico y gestión inmobiliaria, y el horizonte se amplía hacia el financiamiento privado.'),
+    ('2016 – 2023', 'Experiencia y especialización', 'Se consolida una profunda experiencia en evaluación comercial, análisis jurídico y gestión inmobiliaria. Con ella, el horizonte se amplía hacia el financiamiento privado.'),
     ('Fines de 2023', 'Nace Pulso Inversor SpA', 'Con la entrada en vigor de la Ley Fintech y la especialización de las actividades de Partners &amp; Advisers, se constituye oficialmente Pulso Inversor SpA y el modelo evoluciona hacia la Inversión con Garantía Real (IGR).'),
     ('Hoy', 'Parte de Grupo Matchmaking', 'Ese desarrollo impulsó la creación de Grupo Matchmaking, el grupo de empresas del que Pulso Inversor hoy forma parte fundamental.'),
 ]
@@ -990,14 +996,14 @@ page('nosotros.html', 'Nosotros',
 </div></section>
 
 <section class="section"><div class="container">
-  <div class="title center"><span class="eyebrow">Nuestro equipo</span><h2>Las personas detrás de Pulso</h2></div>
+  <div class="title center"><span class="eyebrow">Nuestro equipo</span><h2>Las personas detrás de Pulso Inversor</h2></div>
   <div class="team">
     <article class="team-card"><div class="team-photo" style="background-image:url(assets/img/equipo/ivan-barboza.jpg)"></div><div class="team-body">
       <h3>Iván Barboza</h3><span class="team-role">Cofundador y experto inmobiliario</span>
-      <p>Con más de una década desarrollando modelos de inversión alternativa, Iván es el arquitecto detrás de Pulso Inversor. En 2016, al alero de Partners &amp; Advisers, comenzó a estructurar operaciones respaldadas por activos inmobiliarios, buscando más transparencia, gestión profesional y solidez contractual para los inversionistas. Ese conocimiento le permitió evolucionar el modelo hacia la Inversión con Garantía Real (IGR) y liderar en 2023 el nacimiento de Pulso Inversor SpA, con el propósito de acercar a las personas a inversiones seguras y respaldadas.</p></div></article>
+      <p>Con más de una década desarrollando modelos de inversión alternativa, Iván es el arquitecto detrás de Pulso Inversor. En 2016, al alero de Partners &amp; Advisers, comenzó a estructurar operaciones respaldadas por activos inmobiliarios, buscando más transparencia, gestión profesional y solidez contractual para los inversionistas. Ese conocimiento le permitió evolucionar el modelo hacia la Inversión con Garantía Real (IGR). En 2023 lideró el nacimiento de Pulso Inversor SpA, con el propósito de acercar a las personas a inversiones con respaldo real, revisables antes de firmar.</p></div></article>
     <article class="team-card"><div class="team-photo" style="background-image:url(assets/img/equipo/felipe-rojas.jpg)"></div><div class="team-body">
       <h3>Felipe Rojas</h3><span class="team-role">Cofundador y estratega financiero</span>
-      <p>Lleva 16 años liderando áreas de finanzas y control de gestión en compañías como LATAM, Iansa y Transbank, y suma esa visión corporativa y rigor analítico a la empresa. Su vínculo con el proyecto nació de la confianza en el modelo: comenzó como cliente, validando los intereses y la seguridad de las operaciones con su propio patrimonio. Hoy estructura financieramente los productos para que cada operación sea directa, segura y competitiva.</p></div></article>
+      <p>Lleva 16 años liderando áreas de finanzas y control de gestión en compañías como LATAM, Iansa y Transbank. Esa visión corporativa, con rigor analítico, es la que aporta a la empresa. Su vínculo con el proyecto nació de la confianza en el modelo: comenzó como cliente, validando con su propio patrimonio los intereses y el respaldo de las operaciones. Hoy estructura financieramente los productos para que cada operación sea directa, transparente y competitiva.</p></div></article>
   </div>
   {P("EQUIPO y fotos entregados por la usuaria el 2026-11-17.")}
   <h3 class="team-sub">El equipo que te acompaña</h3>
@@ -1019,9 +1025,9 @@ page('nosotros.html', 'Nosotros',
 
 # ---------------- 3.2 Verifica ----------------
 SENALES = [
-    ('No te explican de dónde salen los intereses', 'En Pulso:', 'cada pago de intereses está ligado a una operación concreta y queda escrito en el contrato que revisas antes de firmar.'),
-    ('No te dicen en qué está tu dinero', 'En Pulso:', 'te mostramos una operación real, con la propiedad, su tasación y su precio de compra.'),
-    ('Te apuran para firmar', 'En Pulso:', 'no te pedimos decidir en la reunión. Te llevas los documentos y lo piensas con calma.'),
+    ('No te explican de dónde salen los intereses', 'En Pulso Inversor:', 'cada pago de intereses está ligado a una operación concreta y queda escrito en el contrato que revisas antes de firmar.'),
+    ('No te dicen en qué está tu dinero', 'En Pulso Inversor:', 'te mostramos una operación real, con la propiedad, su tasación y su precio de compra.'),
+    ('Te apuran para firmar', 'En Pulso Inversor:', 'no te pedimos decidir en la reunión. Te llevas los documentos y lo piensas con calma.'),
 ]
 senales = ''.join(f'<article class="senal"><span class="senal-tag">Señal {i+1}</span><h3>{t}</h3><p><strong>{k}</strong> {d}</p></article>' for i, (t, k, d) in enumerate(SENALES))
 
@@ -1075,11 +1081,11 @@ page('verifica-a-pulso.html', 'Verifica a Pulso',
 
 <section class="section section-soft estafa"><div class="container estafa-grid">
   <figure class="estafa-video">
-    <video controls playsinline preload="none" poster="assets/media/ivan-es-una-estafa.jpg"><source src="assets/media/ivan-es-una-estafa.mp4" type="video/mp4"></video>
+    <video controls playsinline preload="none" poster="assets/media/ivan-es-una-estafa-portada.jpg"><source src="assets/media/ivan-es-una-estafa.mp4" type="video/mp4"></video>
     <figcaption><strong>«¿Esto es una estafa?»</strong> Iván Barboza responde</figcaption>
   </figure>
   <div>
-    <span class="eyebrow">Para que te cuides de todos, incluidos nosotros</span>
+    <span class="eyebrow">Para que tomes decisiones informadas, sin depender de nuestra palabra</span>
     <h2>Tres señales de una estafa. Mídenos con ellas.</h2>
     <div class="senales">{senales}</div>
   </div>
@@ -1184,7 +1190,7 @@ page('mi-primera-inversion.html', 'Mi primera inversión',
      'Tu primera inversión fuera del banco: qué propiedad respalda tu dinero, qué documento queda a tu favor y cómo lo recuperas. Sin tecnicismos y sin apuro.',
      rx_hero('Tu primera inversión fuera del banco',
              'Invierte tus ahorros sabiendo qué hay detrás. <span class="accent">Míralo antes de firmar.</span>',
-             'Si tienes desde $5 millones en el banco y nunca has invertido, te explicamos en simple qué propiedad respalda tu dinero, qué documento queda a tu favor y cómo lo recuperas. Sin tecnicismos, sin apuro y con tu abogado revisando todo si quieres.',
+             'Si tienes desde $5 millones en el banco y nunca has invertido, te explicamos en simple qué propiedad respalda tu dinero, qué documento queda a tu favor y cómo lo recuperas. Sin tecnicismos ni apuro; si quieres, con tu abogado revisando todo.',
              'Quiero una conversación sin compromiso', 'Mi primera inversión', 'Primero quiero entender', '#para-ti',
              ['Desde $5 millones', 'Firma ante notario', 'Puedes venir con tu pareja o tu abogado', 'No te pedimos decidir en la reunión'], _card1,
              agenda=AGENDA_URL)  # en Mi primera inversión atiende Renato Vargas
@@ -1235,7 +1241,7 @@ page('ya-tengo-experiencia.html', 'Ya tengo experiencia invirtiendo',
      + rx_fit('tu-patrimonio', 'Antes de la operación, tu patrimonio',
               'Saber cuánto tienes no es lo mismo que saber cuánto puedes mover',
               'Tu empresa, tu salud y tu familia definen cuánto capital puede quedar comprometido 15, 21 o 27 meses. Quien invierte sin ese análisis puede terminar comprometiendo dinero que va a necesitar, o dejando sin trabajar dinero que podría estar rindiendo.',
-              'Por eso la primera reunión es un diagnóstico uno a uno: qué tienes hoy (banco, propiedades, empresa), qué necesitas líquido y para qué, y cuál es el horizonte real de ese dinero. Con eso definimos monto, línea y plazo. A veces el monto es menor de lo que el cliente imaginaba, y se lo decimos.',
+              'Por eso la primera reunión es un diagnóstico uno a uno: qué tienes hoy (banco, propiedades, empresa); qué necesitas líquido y para qué; cuál es el horizonte real de ese dinero. Con eso definimos monto, línea y plazo. A veces el monto es menor de lo que el cliente imaginaba; si es así, se lo decimos.',
               '''<h3>Cómo se ordena tu patrimonio</h3><p class="muted">Ejemplo ilustrativo de cómo se ordena un patrimonio antes de invertir:</p>
       <div class="rx-bar three"><div class="rx-seg s2" style="--w:30%"><span>Liquidez que no se toca</span></div><div class="rx-seg s4" style="--w:39%"><span>Tus inversiones actuales</span></div><div class="rx-seg s3" style="--w:31%"><span>Operación con respaldo</span></div></div>
       <p class="rx-visual-note">Las proporciones son solo un ejemplo: las de tu caso salen del diagnóstico. Si quieres, el equipo legal, tributario y patrimonial de Grupo MatchMaking te ayuda a ordenar el resto.</p>''',
@@ -1275,7 +1281,7 @@ page('preguntas-frecuentes.html', 'Preguntas frecuentes',
   {P("AGREGAR cuando esté aprobada: '¿Qué costos debo considerar?' (costos del inversionista, momento de cobro, conceptos incluidos/excluidos por alternativa).")}
   {qa('¿Lo que muestra el simulador es lo que voy a recibir?', 'Es una estimación con los datos y supuestos que usaste. En <a href="simuladores.html">Simuladores</a>, la sección “Cómo leer tu simulación” te ayuda a interpretar el resultado.')}
   {qa('¿Cómo se pagan los impuestos?', 'Depende de la estructura y de tu situación personal. Te recomendamos revisarlo con tu asesor tributario.')}
-  {qa('¿Dónde reviso la situación de Pulso ante la CMF?', 'En <a href="verifica-a-pulso.html">Verifica a Pulso</a> te explicamos nuestra situación y cómo consultarla por tu cuenta.')}
+  {qa('¿Dónde reviso la situación de Pulso Inversor ante la CMF?', 'En <a href="verifica-a-pulso.html">Verifica a Pulso</a> te explicamos nuestra situación y cómo consultarla por tu cuenta.')}
 </div></section>
 ''' + cta('¿Tienes otra pregunta?', 'Escríbenos. Te responde una persona del equipo.', 'Hacer mi pregunta', None,
                                 href=whatsapp('Hola, tengo una pregunta sobre Pulso Inversor')))

@@ -97,7 +97,7 @@ async function panel(env, url) {
 
   const filas = filas0.map((s) => `
     <tr>
-      <td><strong>${esc(s.nombre)}</strong><br><small>${esc(s.tipo)}</small></td>
+      <td><strong>${esc(s.nombre)}</strong><br><small>${esc(s.tipo)}${s.publicidad ? ' · acepta publicidad' : ''}</small></td>
       <td><a href="mailto:${esc(s.email)}">${esc(s.email)}</a>${s.telefono ? `<br><a href="https://wa.me/56${esc(String(s.telefono).replace(/^56/, ''))}" target="_blank">+56 ${esc(s.telefono)}</a>` : ''}</td>
       <td>${s.monto ? clp(s.monto) : '—'}</td>
       <td>${esc(s.asesor || '')}</td>
@@ -146,7 +146,7 @@ async function csv(env) {
   const enc = (s) => { try { return JSON.parse(s || '{}'); } catch (e) { return {}; } };
   const cols = [
     ['Fecha simulación', (s) => fmt(s.creado)], ['Nombre', 'nombre'], ['Email', 'email'], ['Teléfono', (s) => s.telefono ? '+56 ' + s.telefono : ''],
-    ['Simulador', 'tipo'], ['Monto', 'monto'], ['Asesor', 'asesor'], ['Seguimiento', 'seguimiento_estado'], ['Seguimiento enviado', (s) => fmt(s.seguimiento_para)],
+    ['Simulador', 'tipo'], ['Monto', 'monto'], ['Acepta publicidad', (s) => (s.publicidad ? 'Sí' : 'No')], ['Asesor', 'asesor'], ['Seguimiento', 'seguimiento_estado'], ['Seguimiento enviado', (s) => fmt(s.seguimiento_para)],
     ['Abrió agenda', (s) => fmt(s.agenda_click)], ['Agendó con', 'agenda_con'], ['Solicitud por formulario', (s) => { const a = enc(s.agenda_form); return a.dia ? `${a.dia} · ${a.franja} · ${a.modalidad}` : ''; }],
     ['Reunión agendada (marcada)', (s) => fmt(s.agendado)], ['Dijo ya contactado', (s) => fmt(s.contactado_click)], ['Encuesta', (s) => fmt(s.encuesta)],
     ['Satisfacción (1-5)', 'satisfaccion'], ['Recomienda (0-10)', 'recomienda'], ['Quién contactó', (s) => enc(s.encuesta_json).quien], ['Medio', (s) => enc(s.encuesta_json).medio],
