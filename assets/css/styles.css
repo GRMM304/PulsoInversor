@@ -1720,3 +1720,28 @@ main p,main li,main blockquote{-webkit-hyphens:manual!important;hyphens:manual!i
   .video-testimonio video{max-height:360px}
   .to-top{display:none!important}   /* la barra inferior ya da acceso a todo */
 }
+
+/* ===================== Celular estilo app (paso 3): simuladores paso a paso ===================== */
+@media (max-width:760px){
+  .wz-off{display:none!important}
+  .wz-head{display:flex;align-items:center;gap:12px;margin:6px 0 4px}
+  .wz-back{flex:0 0 40px;height:40px;border-radius:50%;border:1px solid var(--gray-200);background:#fff;font-size:26px;line-height:1;color:var(--green-900);cursor:pointer}
+  .wz-prog{flex:1}
+  .wz-count{display:block;font-size:12.5px;font-weight:800;color:var(--gray-500);margin-bottom:6px;letter-spacing:.02em}
+  .wz-track{height:6px;border-radius:999px;background:var(--gray-200);overflow:hidden}
+  .wz-track i{display:block;height:100%;background:linear-gradient(90deg,var(--green-700),var(--lime));border-radius:999px;transition:width .35s ease}
+  .wz-title{font-size:24px;line-height:1.2;margin:14px 0 14px;color:var(--green-900)}
+  .wz-group{display:flex;flex-direction:column;gap:10px}
+  .wz-foot{position:sticky;bottom:calc(74px + env(safe-area-inset-bottom));z-index:20;padding:12px 0 4px;margin-top:18px;
+    background:linear-gradient(rgba(255,255,255,0),#fff 30%)}
+  .wz-foot .btn{width:100%;min-height:54px;font-size:16px}
+  .wz-foot .btn.is-disabled{opacity:.45;filter:grayscale(.4)}
+  .wz-restart{display:inline-block;margin:0 0 12px;padding:6px 0;border:0;background:none;color:var(--green-700);font:inherit;font-size:14px;font-weight:800;cursor:pointer}
+  /* Opciones grandes, fáciles de tocar */
+  #sim-proyecta .pro-series{display:grid;grid-template-columns:1fr;gap:10px}
+  #sim-proyecta .pro-series button{min-height:72px;text-align:left}
+  #sim-proyecta .pro-monto{font-size:24px;min-height:60px}
+  #sim-proyecta .chip-opt{min-height:46px;font-size:15px}
+  .sim-panel .sim-head p{display:none}
+  .sim-panel.wz-final .sim-head{display:none}
+}

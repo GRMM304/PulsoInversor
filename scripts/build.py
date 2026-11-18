@@ -928,7 +928,7 @@ f"""
 <img id="sim-logo" class="pdf-logo" src="assets/img/logo-pulso-gmm.png" alt="" width="396" height="44">
 """ + cta_final('¿Prefieres ver los números con alguien?', 'Revisemos tu simulación <span class="accent">juntos</span>',
                 'Un asesor te acompaña a leer los resultados y a resolver tus dudas.', AGENDAR, 'mi simulación'),
-     scripts='\n<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>\n<script src="assets/js/simuladores.js"></script>')
+     scripts='\n<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>\n<script src="assets/js/simuladores.js"></script>\n<script src="assets/js/sim-movil.js"></script>')
 
 # ---------------- Política de privacidad ----------------
 page('privacidad.html', 'Política de privacidad',
