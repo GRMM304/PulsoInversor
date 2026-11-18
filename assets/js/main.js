@@ -359,3 +359,35 @@ document.addEventListener('click', function (e) {
     if (q.scrollHeight > 190) q.insertAdjacentElement('afterend', plegar(q, 'Leer testimonio completo', 'Leer menos'));
   });
 })();
+
+// Celular estilo app (4): instalar Pulso Inversor en la pantalla de inicio.
+(function () {
+  if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+    window.addEventListener('load', function () { navigator.serviceWorker.register('/sw.js').catch(function () {}); });
+  }
+  var instalada = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+  if (instalada) { document.documentElement.classList.add('es-app'); return; }
+  if (!window.matchMedia('(max-width:760px)').matches) return;
+  var guardar = function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} };
+  var leer = function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } };
+  if (leer('pulsoAppAviso') === 'no') return;
+  // Se ofrece desde la segunda página vista, para no interrumpir de entrada.
+  var vistas = (parseInt(leer('pulsoVistas'), 10) || 0) + 1; guardar('pulsoVistas', vistas);
+  var ios = /iphone|ipad|ipod/i.test(navigator.userAgent) && !/crios|fxios/i.test(navigator.userAgent);
+  var evento = null;
+  function aviso(texto, conBoton) {
+    if (vistas < 2 || document.querySelector('.app-aviso')) return;
+    var d = document.createElement('div'); d.className = 'app-aviso'; d.setAttribute('role', 'dialog'); d.setAttribute('aria-label', 'Instalar Pulso Inversor');
+    d.innerHTML = '<img src="/assets/img/app/icon-192.png" alt="" width="44" height="44"><div><strong>Lleva Pulso Inversor en tu celular</strong><span>' + texto + '</span></div>'
+      + (conBoton ? '<button type="button" class="app-instalar">Instalar</button>' : '') + '<button type="button" class="app-cerrar" aria-label="Cerrar">×</button>';
+    document.body.appendChild(d);
+    d.querySelector('.app-cerrar').addEventListener('click', function () { d.remove(); guardar('pulsoAppAviso', 'no'); });
+    var b = d.querySelector('.app-instalar');
+    if (b) b.addEventListener('click', function () {
+      if (!evento) return; evento.prompt();
+      evento.userChoice.then(function (r) { if (window.fbq && r.outcome === 'accepted') fbq('trackCustom', 'InstalarApp'); d.remove(); guardar('pulsoAppAviso', 'no'); });
+    });
+  }
+  window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); evento = e; aviso('Ábrelo como una app, directo desde tu pantalla de inicio.', true); });
+  if (ios) setTimeout(function () { aviso('Toca <b>Compartir</b> y luego <b>Agregar a inicio</b>.', false); }, 2500);
+})();
