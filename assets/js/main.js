@@ -301,4 +301,7 @@
 document.addEventListener('click', function (e) {
   var a = e.target.closest && e.target.closest('a[href*="wa.me"]');
   if (a && window.fbq) fbq('track', 'Contact', { content_name: 'WhatsApp', content_category: location.pathname });
+  // Clic en la agenda de Brevo (botón "Agendar una reunión" del menú) cuenta como "Schedule".
+  var ag = e.target.closest && e.target.closest('a[href*="meet.brevo.com"]');
+  if (ag && window.fbq) fbq('track', 'Schedule', { content_name: 'Agenda Brevo', content_category: location.pathname });
 });

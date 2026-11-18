@@ -6,6 +6,8 @@ EMAIL = 'contacto@pulsoinversor.cl'
 # Si cambia, actualizarlo también en assets/js/main.js (WHATSAPP).
 WHATSAPP = '56983554676'
 AGENDAR = 'Agendar una reunión'
+# Botón "Agendar una reunión" del menú: agenda de Brevo Meetings (hoy, la de Renato Vargas).
+AGENDA_URL = 'https://meet.brevo.com/pulsoinversor/renato-vargas'
 
 def mail(subject=None):
     """Enlace de contacto de los botones: abre WhatsApp con un mensaje que conserva el tema."""
@@ -33,7 +35,7 @@ def header(slug):
         active = any(s == slug for s, _ in subs)
         links = ''.join(f'<li><a href="{s}"{" aria-current=page" if s==slug else ""}>{t}</a></li>' for s, t in subs)
         items.append(f'<li class="has-sub{" active" if active else ""}"><button type="button" aria-expanded="false" aria-controls="sub{i}">{label}</button><ul class="submenu" id="sub{i}">{links}</ul></li>')
-    items.append(f'<li class="nav-cta-item" hidden-desktop><a href="{mail()}" target="_blank" rel="noopener">{AGENDAR}</a></li>')
+    items.append(f'<li class="nav-cta-item" hidden-desktop><a href="{AGENDA_URL}" target="_blank" rel="noopener">{AGENDAR}</a></li>')
     return f'''<a class="skip" href="#contenido">Saltar al contenido</a>
 <header class="header">
   <div class="container nav">
@@ -41,7 +43,7 @@ def header(slug):
     <nav aria-label="Principal">
       <ul class="menu" id="menu">{''.join(items)}</ul>
     </nav>
-    <div class="nav-actions"><a class="btn nav-cta" href="{mail()}" target="_blank" rel="noopener">{AGENDAR}</a></div>
+    <div class="nav-actions"><a class="btn nav-cta" href="{AGENDA_URL}" target="_blank" rel="noopener">{AGENDAR}</a></div>
     <button class="mobile-toggle" type="button" aria-controls="menu" aria-expanded="false" aria-label="Abrir menú">☰</button>
   </div>
 </header>'''
