@@ -1857,3 +1857,9 @@ body.ag-abierto{overflow:hidden}
   .ag-caja h2{font-size:23px}
 }
 @media (prefers-reduced-motion:reduce){.ag-caja,.ag-fondo{transition:none}}
+
+/* Redes sociales en el pie */
+.footer-redes{display:flex;gap:10px;margin:4px 0 14px}
+.footer .footer-redes a{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:#fff;transition:background .15s,color .15s}
+.footer .footer-redes a:hover{background:var(--lime);color:var(--dark);border-color:var(--lime)}
+.footer-redes svg{width:20px;height:20px}
