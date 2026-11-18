@@ -21,6 +21,6 @@
     "directory": "./",
     "binding": "ASSETS",
     "html_handling": "auto-trailing-slash",
-    "run_worker_first": ["/api/*", "/seguimiento/*", "/panel", "/panel/*"]
+    "run_worker_first": ["/api/*", "/seguimiento/*", "/panel", "/panel/*", "/simuladores-equipo", "/simuladores-equipo.html", "/simuladores-equipo/"]
   }
 }

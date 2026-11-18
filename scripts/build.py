@@ -1,4 +1,4 @@
-import os, urllib.parse
+import os, re, urllib.parse
 R = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 EMAIL = 'contacto@pulsoinversor.cl'
 
@@ -227,6 +227,21 @@ def cta(h, p, label, subject, href=None):
 <div><h2>{h}</h2><p>{p}</p></div>
 <a class="btn btn-primary" href="{href or mail(subject)}" target="_blank" rel="noopener">{label}</a></div></div></section>'''
 
+def cta_rutas(eyebrow, titulo, texto):
+    return f'''<section class="cta-final">
+  <div class="container">
+    <span class="eyebrow dark">{eyebrow}</span>
+    <h2>{titulo}</h2>
+    <p>{texto}</p>
+    <div class="cta-final-actions">
+      <a class="btn btn-primary btn-xl" href="simuladores.html">Simular mi inversión <span aria-hidden="true">→</span></a>
+      <a class="btn btn-secondary" href="mi-primera-inversion.html">Es mi primera vez</a>
+      <a class="btn btn-secondary" href="ya-tengo-experiencia.html">Ya he invertido</a>
+    </div>
+    <p class="cta-final-small">No te pedimos decidir en la reunión. Puedes venir con tu pareja, un socio o tu abogado.</p>
+  </div>
+</section>'''
+
 def cta_final(eyebrow='Tu siguiente paso', titulo='Cuéntanos qué quieres <span class="accent">construir</span>',
               texto='Una conversación para conocernos y ver por dónde partir. Sin apuro.', boton=None, tema=None):
     boton = boton or AGENDAR
@@ -278,17 +293,20 @@ PRODUCTS = [
 _ICONS['calendario'] = '<rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17"/><path d="M8 3v4M16 3v4"/><path d="M8 14h2M14 14h2M8 17h2M14 17h2"/>'
 _ICONS['doc-check'] = '<path d="M6 3h9l3 3v8"/><path d="M6 3v18h7"/><path d="M9 8h6M9 11h6M9 14h3"/><circle cx="17.5" cy="18" r="3.5"/><path d="M16 18l1 1 2-2"/>'
 
-# Tres caminos: a primera vista, nombre y frase; al abrir, qué activas y qué logras.
+# Matriz de estrategias del Modelo IGR (imagen entregada por la usuaria el 2026-11-18).
 CAMINOS = [
-    ('rescate-inmobiliario', 'Rescate Inmobiliario', 'Oportunidad para hacer crecer tu capital. Desde inversiones accesibles con respaldo notarial hasta operaciones con garantía hipotecaria o título de propiedad. Tú eliges cómo participar.',
-     ('Capital disponible', 'Desde $5.000.000'),
-     ('Renta periódica', 'Flujos mensuales o trimestrales con factibilidad de interés')),
-    ('hipoteca-inteligente', 'Hipoteca Inteligente', 'Tu capacidad de crédito es tu capital de oportunidad. Sin necesidad de desembolsar dinero propio, puedes acceder a una inversión inmobiliaria financiada, donde la estructura del negocio está diseñada para cubrir los dividendos y gestionar la operación.',
-     ('Capacidad financiera', 'Desde 2.000 UF de crédito hipotecario'),
-     ('Capital y patrimonio', 'Tu capacidad bancaria genera retorno y activos')),
-    ('inversion-circular', 'Inversión Inmobiliaria Circular', 'Convierte una deuda hipotecaria que te ahoga en una inversión que te da flujo cada mes.',
-     ('Tu propiedad', 'El capital que hoy está detenido en tu inmueble'),
-     ('Flujo mensual', 'Sin deuda, con intereses fijos cada mes y tu capacidad de crédito recuperada')),
+    ('renta-de-capital', 'Renta de Capital', 'Proyecto Nuevo Hogar',
+     'Una estrategia para poner a trabajar tu capital disponible y generar una renta periódica alta, segura y con respaldo real.',
+     'Inversionistas con capital disponible desde $5.000.000.',
+     'Renta periódica, con garantía real y una rentabilidad muy superior a la de un depósito a plazo.'),
+    ('produccion-de-capital', 'Producción de Capital', 'Hipoteca Inteligente',
+     'Usa tu capacidad financiera para generar un activo que produce capital, combinando financiamiento bancario, control del arriendo y valorización del inmueble.',
+     'Personas con capacidad de crédito hipotecario y buen comportamiento financiero.',
+     'Produces capital con financiamiento del banco, generas flujo por arriendo y construyes patrimonio.'),
+    ('arquitectura-de-capital', 'Arquitectura de Capital', 'Configuración Patrimonial',
+     'Diseña una estructura integral de inversión y patrimonio que combina tus bienes, ingresos y ahorros, según tus objetivos, plazos y necesidades (tributarias, sucesorias o familiares).',
+     'Personas con bienes, ingresos y/o ahorros que buscan una estrategia patrimonial integral.',
+     'Protección, eficiencia, continuidad y crecimiento de tu patrimonio, con una configuración personalizada.'),
 ]
 _ARROW = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>'
 cards = ''.join(f'''<a class="camino{' is-open' if i == 0 else ''}" href="inversiones.html#{a}" data-camino>
@@ -297,14 +315,15 @@ cards = ''.join(f'''<a class="camino{' is-open' if i == 0 else ''}" href="invers
   <div class="camino-bottom">
     <h3>{t}</h3>
     <div class="camino-detail"><div class="camino-inner">
+      <span class="camino-inv">Inversión: {inv}</span>
       <p>{d}</p>
       <div class="camino-rows">
-        <div class="camino-row"><span class="camino-label">Qué activas</span><strong>{act[0]}</strong><span>{act[1]}</span></div>
-        <div class="camino-row"><span class="camino-label">Qué logras</span><strong>{log[0]}</strong><span>{log[1]}</span></div>
+        <div class="camino-row"><span class="camino-label">A quiénes</span><span>{q}</span></div>
+        <div class="camino-row"><span class="camino-label">Qué logras</span><span>{lg}</span></div>
       </div>
     </div></div>
   </div>
-</a>''' for i, (a, t, d, act, log) in enumerate(CAMINOS))
+</a>''' for i, (a, t, inv, d, q, lg) in enumerate(CAMINOS))
 
 def bullets(items):
     return '<ul class="choice-list">' + ''.join(f'<li>{x}</li>' for x in items) + '</ul>'
@@ -339,7 +358,7 @@ page('index.html', 'Inicio',
       <button class="btn btn-primary" type="submit">Empecemos por ti <span aria-hidden="true">→</span></button>
     </form>
   </div>
-  {P("CIFRAS retiradas a pedido de la usuaria (2026-11-16): cartera aprox. $1.100 millones; rentabilidades desde 0,8%.")}
+  {P("CIFRAS retiradas a pedido de la usuaria (2026-11-16): cartera aprox. $4.000 millones; rentabilidades desde 0,8%.")}
   <div class="hero-team">
     <div class="avatars">
       <img src="assets/img/equipo/ivan-barboza-avatar.jpg" alt="Iván Barboza" title="Iván Barboza" width="240" height="240" loading="lazy">
@@ -369,11 +388,11 @@ page('index.html', 'Inicio',
       <span class="btn btn-primary">Quiero conocer cómo funciona</span></a>
     <a class="card profile-card choice" href="ya-tengo-experiencia.html">
       <h3><span class="choice-tag no">No</span> ya he invertido</h3>
-      <p>Ya conozco otras alternativas y busco oportunidades con retornos atractivos, respaldo y condiciones claras.</p>
-      {bullets(['Operaciones desde $25 millones, con intereses pactados en UF.',
-                'Respaldo inmobiliario identificable: conoce el inmueble, su tasación y la cobertura de la operación.',
-                'Estructura contractual individual: revisa las garantías, los plazos y las condiciones de pago antes de invertir.'])}
-      <span class="btn btn-dark">Quiero evaluar oportunidades</span></a>
+      <p>¿Estás por renovar tu depósito a plazo o quieres saber si puedes invertir con financiamiento bancario? Conoce las nuevas alternativas de Pulso Inversor.</p>
+      {bullets(['<span><strong>Invierte parte de tus ahorros.</strong> Explora opciones de inversión inmobiliaria según el monto que quieras destinar.</span>',
+                '<span><strong>Aprovecha tu capacidad de crédito.</strong> Evalúa si puedes financiar la compra de una propiedad con un crédito hipotecario para construir patrimonio.</span>',
+                '<span><strong>Compara antes de decidir.</strong> Revisa cuánto podrías ganar, cómo y cuándo recuperarías tu dinero, y qué respaldo tiene cada opción.</span>'])}
+      <span class="btn btn-dark">Quiero comparar alternativas</span></a>
   </div>
 </div></section>
 
@@ -384,22 +403,22 @@ page('index.html', 'Inicio',
       <div class="why-col why-other">
         <span class="why-kicker">Otras alternativas</span>
         <h3>Lo que ya conoces</h3>
-        <p>Los depósitos a plazo suelen ofrecer retornos más conservadores.</p>
-        <p>Los fondos están expuestos a variaciones de mercado.</p>
-        <p>Comprar para arrendar exige una inversión mayor y gestión continua.</p>
+        <p>Los depósitos a plazo y los fondos ofrecen tasas de interés más bajas y, con ellas, retornos más bajos.</p>
+        <p>Otros instrumentos financieros están expuestos a las variaciones del mercado.</p>
+        <p>Si compras una propiedad para invertir, muchas veces tienes que complementar el dividendo de tu bolsillo y hacerte cargo de mantenerla.</p>
       </div>
       <div class="why-col why-pulso">
         <span class="why-kicker">Con nosotros</span>
         <h3>Pulso Inversor</h3>
-        <p>Intereses pactados en UF, con potencial de superar alternativas conservadoras.</p>
-        <p>Retornos definidos contractualmente, sin depender directamente de la cotización diaria de un fondo.</p>
-        <p>Participación en operaciones inmobiliarias sin comprar ni administrar una propiedad.</p>
+        <p>Intereses que superan ampliamente a los de un depósito a plazo o un fondo mutuo.</p>
+        <p>Retornos definidos por contrato, estructurados en escrituras públicas y pagarés.</p>
+        <p>Distintas estructuras de inversión, con acceso a oportunidades en remate y a portafolios con descuento.</p>
       </div>
     </div>
     <div class="why-m"><span class="why-kicker">Con nosotros</span><h3>Pulso Inversor</h3>
-      <div class="why-m-item"><p class="why-m-pulso">Intereses pactados en UF, con potencial de superar alternativas conservadoras.</p><p class="why-m-otra"><span>Otras alternativas</span>Los depósitos a plazo suelen ofrecer retornos más conservadores.</p></div>
-      <div class="why-m-item"><p class="why-m-pulso">Retornos definidos contractualmente, sin depender directamente de la cotización diaria de un fondo.</p><p class="why-m-otra"><span>Otras alternativas</span>Los fondos están expuestos a variaciones de mercado.</p></div>
-      <div class="why-m-item"><p class="why-m-pulso">Participación en operaciones inmobiliarias sin comprar ni administrar una propiedad.</p><p class="why-m-otra"><span>Otras alternativas</span>Comprar para arrendar exige una inversión mayor y gestión continua.</p></div>
+      <div class="why-m-item"><p class="why-m-pulso">Intereses que superan ampliamente a los de un depósito a plazo o un fondo mutuo.</p><p class="why-m-otra"><span>Otras alternativas</span>Los depósitos a plazo y los fondos ofrecen tasas de interés más bajas y, con ellas, retornos más bajos.</p></div>
+      <div class="why-m-item"><p class="why-m-pulso">Retornos definidos por contrato, estructurados en escrituras públicas y pagarés.</p><p class="why-m-otra"><span>Otras alternativas</span>Otros instrumentos financieros están expuestos a las variaciones del mercado.</p></div>
+      <div class="why-m-item"><p class="why-m-pulso">Distintas estructuras de inversión, con acceso a oportunidades en remate y a portafolios con descuento.</p><p class="why-m-otra"><span>Otras alternativas</span>Si compras una propiedad para invertir, muchas veces tienes que complementar el dividendo de tu bolsillo y hacerte cargo de mantenerla.</p></div>
     </div>
     <div class="why-igr">
       <p class="lead">Descubre cómo te acompañamos y qué información tendrás para evaluar tu alternativa. Antes de invertir, deberías poder responder estas tres preguntas con documentos en la mano. Así trabaja el Modelo IGR.</p>
@@ -415,7 +434,7 @@ page('index.html', 'Inicio',
 </div></section>
 
 <section class="section"><div class="container">
-  <div class="title center"><span class="eyebrow">Formas de invertir</span><h2>Tres caminos, según lo que quieres construir</h2></div>
+  <div class="title center"><span class="eyebrow">Modelo IGR · Matriz de estrategias</span><h2>Tres estrategias para rentabilizar, producir y diseñar tu patrimonio</h2></div>
   <div class="caminos-acc">{cards}</div>
 </div></section>
 
@@ -435,12 +454,13 @@ page('index.html', 'Inicio',
   {P("INCORPORAR enlace al perfil oficial de Pulso en Google: botón 'Ver opiniones en Google'.")}
   <p class="disclaimer" style="text-align:center">Las experiencias corresponden a casos particulares y no aseguran resultados futuros.</p>
 </div></section>
-''' + cta_final())
+''' + cta_rutas('Tu siguiente paso', 'Cuéntanos qué quieres <span class="accent">construir</span>',
+               'Simula tu inversión o dinos si es tu primera vez, y te llevamos a lo que te sirve.'))
 
 # ---------------- 2.1 Cómo funciona ----------------
 PILARES = [
-    ('escudo', 'Respaldo inmobiliario', 'Cada operación está vinculada a un inmueble identificado, con tasación y antecedentes verificables.',
-     'Puedes evaluar el valor del inmueble frente al dinero que inviertes y conocer qué activo respalda la operación.'),
+    ('escudo', 'Respaldo inmobiliario', 'Todas las operaciones están vinculadas únicamente a bienes raíces comprados a precios de oportunidad.',
+     'Tu capital tiene cobertura: las propiedades se compran bajo su valor, y ese margen protege tu inversión hasta que se transan según la operación.'),
     ('documento', 'Estructura legal', 'La operación se formaliza mediante contratos y garantías, según el instrumento de inversión.',
      'Sabes quién tiene la obligación de pagarte, qué derechos te corresponden y qué mecanismos existen ante un incumplimiento.'),
     ('calendario', 'Retorno y plazo', 'Los intereses, el vencimiento y las condiciones de pago quedan establecidos por contrato.',
@@ -488,7 +508,7 @@ page('como-funciona.html', 'Cómo funciona',
     <div class="breadcrumb"><a href="index.html">Inicio</a> / Cómo invertir / Cómo funciona</div>
     <span class="eyebrow dark">Modelo IGR</span>
     <h1>Porque invertir también puede generar impacto</h1>
-    <p>Estructuramos inversiones privadas vinculadas a bienes raíces mediante el modelo IGR: Inversión con Garantía Real. Conectamos objetivos de inversión con soluciones de liquidez para propietarios, a través de una relación directa con cada inversionista.</p>
+    <p>Estructuramos inversiones privadas vinculadas a bienes raíces mediante el modelo IGR: Inversión con Garantía Real y respaldo patrimonial. Conectamos objetivos de inversión con soluciones de liquidez para propietarios, a través de una relación directa con cada inversionista.</p>
   </div>
   <figure class="cf-video">
     {P("VIDEO de Felipe Rojas (de newpulso). En newpulso estaba marcado: 'confirmar uso; el video dice «doble garantía real»'.")}
@@ -560,30 +580,47 @@ def pasos(lista):
                 + ('<span class="paso-opt">Opcional</span>' if opc else '') + f'<strong>{t}</strong><p>{d}</p></div></li>')
     return '<ol class="pasos">' + ''.join(li(i, x) for i, x in enumerate(lista)) + '</ol>'
 
+# Condiciones según la "Tabla de condiciones" entregada el 2026-11-18.
 ESTRATEGIAS = [
-    ('A', 'Acción', 'Acceso flexible con respaldo notarial.', 'Desde $5MM', 'Pagaré',
-     'Para inversionistas que buscan menor ticket de entrada y una estructura documentada.'),
-    ('H', 'Hipoteca', 'Inversión respaldada por garantía hipotecaria.', 'Desde $25MM', 'Hipoteca',
-     'Para inversionistas que priorizan respaldo inmobiliario mediante hipoteca.'),
-    ('T', 'Título', 'Máximo respaldo mediante título de propiedad.', 'Desde $100MM', 'Título',
-     'Para inversionistas que buscan una estructura de mayor resguardo.'),
+    ('A', 'Acción', 'Acceso flexible con respaldo notarial.', 'Pagaré', '$5.000.000', '12, 18 o 24 meses', '1,0% a 1,2%', 'Sí, según contrato'),
+    ('H', 'Hipoteca', 'Inversión respaldada por garantía hipotecaria.', 'Hipoteca', '$25.000.000', '15, 21 o 27 meses', '0,7% a 0,9% + UF', 'No'),
+    ('T', 'Título', 'Máximo respaldo mediante título de propiedad.', 'Título', '$100.000.000', '15, 21 o 27 meses', '0,8% a 1,0% + UF', 'No'),
 ]
 estrategias = ''.join(f"""<article class="aht" id="estrategia-{n.lower().replace('í','i').replace('ó','o')}">
       <span class="aht-letter" aria-hidden="true">{l}</span>
       <h3>{n}</h3>
       <p class="aht-tag">{tag}</p>
-      <div class="aht-chips"><span>{mn}</span><span>{doc}</span></div>
-      <p class="aht-desc">{d}</p>
-    </article>""" for l, n, tag, mn, doc, d in ESTRATEGIAS)
+      <dl class="aht-rows">
+        <div><dt>Garantía real</dt><dd>{gar}</dd></div>
+        <div><dt>Ticket mínimo</dt><dd>{tk}</dd></div>
+        <div><dt>Plazo</dt><dd>{pl}</dd></div>
+        <div><dt>Interés mensual</dt><dd>{it}</dd></div>
+        <div><dt>Retiro anticipado</dt><dd>{rt}</dd></div>
+      </dl>
+    </article>""" for l, n, tag, gar, tk, pl, it, rt in ESTRATEGIAS)
 
+# Las tres tarjetas siguen la Matriz de estrategias del Modelo IGR (2026-11-18).
 TIPOS = [
-    ('rescate-inmobiliario', 'Rescate Inmobiliario', 'Oportunidad para hacer crecer tu capital. Desde inversiones accesibles con respaldo notarial hasta operaciones con garantía hipotecaria o título de propiedad. Tú eliges cómo participar.', 'Desde $5MM'),
-    ('hipoteca-inteligente', 'Hipoteca Inteligente', 'Tu capacidad de crédito es tu capital de oportunidad. Sin necesidad de desembolsar dinero propio, puedes acceder a una inversión inmobiliaria financiada, donde la estructura del negocio está diseñada para cubrir los dividendos y gestionar la operación.', 'Desde 2.000 UF de crédito'),
-    ('inversion-circular', 'Inversión Inmobiliaria Circular', 'Transforma el capital detenido en tu propiedad en una inversión que te da flujo cada mes.', 'Con tu propiedad'),
+    ('renta-de-capital', 'Renta de Capital', 'Proyecto Nuevo Hogar',
+     'Pone a trabajar tu capital disponible para generar una renta periódica alta, segura y con respaldo real.',
+     'Inversionistas con capital disponible desde $5.000.000.',
+     'Interés de 0,7% a 1,2% mensual, según la garantía. Plazos de 12 a 27 meses.',
+     'Renta periódica, con garantía real y una rentabilidad muy superior a la de un depósito a plazo.'),
+    ('produccion-de-capital', 'Producción de Capital', 'Hipoteca Inteligente',
+     'Usa tu capacidad financiera para generar un activo que produce capital, combinando financiamiento bancario, control del arriendo y valorización del inmueble.',
+     'Personas con capacidad de crédito hipotecario y buen comportamiento financiero.',
+     'Propiedades desde 2.000 UF. Retorno de 5% + UF anual. Horizonte de 2 a 5 años.',
+     'Produces capital con financiamiento del banco, generas flujo por arriendo y construyes patrimonio.'),
+    ('arquitectura-de-capital', 'Arquitectura de Capital', 'Configuración Patrimonial',
+     'Diseña una estructura integral de inversión y patrimonio que combina tus bienes, ingresos y ahorros, según tus objetivos, plazos y necesidades (tributarias, sucesorias o familiares).',
+     'Personas con bienes, ingresos y/o ahorros que buscan una estrategia patrimonial integral.',
+     'Diseño a medida, con distintas opciones de inversión, financiamiento y estructura legal.',
+     'Protección, eficiencia, continuidad y crecimiento de tu patrimonio, con una configuración personalizada.'),
 ]
 tipos = ''.join(f"""<button type="button" class="tipo" data-inv-tab="{a_}" aria-expanded="false" aria-controls="{a_}">
-      <span class="tipo-n">0{i+1}</span><h3>{t}</h3><p>{d}</p><span class="tipo-chip">{c}</span>
-      <span class="tipo-go"><span class="tipo-go-open">Ver cómo funciona</span><span class="tipo-go-close">Cerrar</span> <i aria-hidden="true">↓</i></span></button>""" for i, (a_, t, d, c) in enumerate(TIPOS))
+      <span class="tipo-n">0{i+1}</span><h3>{t}</h3><span class="tipo-chip">Inversión: {inv}</span><p>{d}</p>
+      <span class="tipo-rows"><span><b>A quiénes</b>{q}</span><span><b>Condiciones</b>{c}</span><span><b>Qué logras</b>{lg}</span></span>
+      <span class="tipo-go"><span class="tipo-go-open">Ver detalle</span><span class="tipo-go-close">Cerrar</span> <i aria-hidden="true">↓</i></span></button>""" for i, (a_, t, inv, d, q, c, lg) in enumerate(TIPOS))
 
 PASOS_HI = [
     ('Compras una propiedad con tu crédito hipotecario', 'Usas tu capacidad de crédito para comprar una propiedad que requiere financiamiento. No necesitas poner capital.'),
@@ -597,64 +634,74 @@ PASOS_IC = [
     ('Lo inviertes en Pulso Inversor', 'El capital genera intereses fijos cada mes y te da un flujo de caja constante.'),
     ('Puedes optar a comprar otra propiedad con descuento', 'Si quieres seguir en el mercado inmobiliario, puedes comprar otra propiedad con descuento.', True),
 ]
+PASOS_AC = [
+    ('Nos cuentas qué tienes', 'Revisamos tus bienes, ingresos y ahorros.'),
+    ('Definimos tus objetivos', 'Plazos, flujo esperado y necesidades tributarias, sucesorias o familiares.'),
+    ('Diseñamos tu configuración', 'Combinamos opciones de inversión, financiamiento y estructura legal.'),
+    ('La simulamos contigo', 'Un asesor te muestra los números y cómo crecería tu patrimonio.'),
+]
 PERFILES = [
-    ('Tengo capital disponible para invertir', 'Acción', 'Desde $5MM · Pagaré', '#estrategia-accion'),
-    ('Busco que mi inversión tenga respaldo inmobiliario', 'Hipoteca', 'Desde $25MM · Hipoteca a tu favor', '#estrategia-hipoteca'),
-    ('Quiero el mayor resguardo: una propiedad a mi nombre', 'Título', 'Desde $100MM · Título de propiedad', '#estrategia-titulo'),
-    ('Tengo capacidad de crédito y no poseo capital para invertir', 'Hipoteca Inteligente', 'Desde 2.000 UF de crédito', '#hipoteca-inteligente'),
-    ('Tengo una propiedad y quiero que su capital trabaje', 'Inversión Circular', 'Flujo mensual con tu propiedad', '#inversion-circular'),
+    ('Tengo capital disponible y quiero una renta periódica', 'Renta de Capital · Acción', 'Desde $5MM · Pagaré', '#estrategia-accion'),
+    ('Busco que mi inversión tenga respaldo hipotecario', 'Renta de Capital · Hipoteca', 'Desde $25MM · Hipoteca a tu favor', '#estrategia-hipoteca'),
+    ('Quiero el mayor resguardo: una propiedad a mi nombre', 'Renta de Capital · Título', 'Desde $100MM · Título de propiedad', '#estrategia-titulo'),
+    ('Tengo capacidad de crédito, pero no capital para invertir', 'Producción de Capital', 'Hipoteca Inteligente · propiedades desde 2.000 UF', '#produccion-de-capital'),
+    ('Tengo bienes, ingresos o ahorros y quiero una estrategia para todo mi patrimonio', 'Arquitectura de Capital', 'Configuración Patrimonial · diseño a medida', '#arquitectura-de-capital'),
 ]
 perfiles = ''.join(f"""<a class="perfil" href="{h}"><span class="perfil-q">“{q}”</span><span class="perfil-arrow" aria-hidden="true">→</span><span class="perfil-a"><small>Te recomendamos</small><strong>{r}</strong><em>{m}</em></span></a>""" for q, r, m, h in PERFILES)
 
 page('inversiones.html', 'Inversiones',
-     'Las tres formas de invertir con Pulso Inversor: Rescate Inmobiliario (estrategias Acción, Hipoteca y Título), Hipoteca Inteligente e Inversión Inmobiliaria Circular.',
-     hero('Cómo invertir / Inversiones', 'Encuentra la alternativa que va contigo',
-          'Tres formas de invertir, cada una pensada para un momento distinto. Toca la tuya para ver cómo funciona.', 'Inversiones') + f"""
+     'Las tres estrategias del Modelo IGR: Renta de Capital (Proyecto Nuevo Hogar), Producción de Capital (Hipoteca Inteligente) y Arquitectura de Capital (Configuración Patrimonial).',
+     hero('Cómo invertir / Inversiones', 'Encuentra la estrategia que va contigo',
+          'Tres estrategias complementarias para rentabilizar, producir y diseñar tu patrimonio. Toca la tuya para ver el detalle.', 'Modelo IGR') + f"""
 <section class="section tipos-sec" data-inv><div class="container">
   <div class="tipos">{tipos}</div>
 
-  <div class="inv-panel" id="rescate-inmobiliario" data-inv-panel="rescate-inmobiliario" hidden>
-    <div class="title center"><span class="eyebrow">01 · Para invertir tu capital</span><h2>Rescate Inmobiliario</h2>
-      <p class="lead">Oportunidad para hacer crecer tu capital. Desde inversiones accesibles con respaldo notarial hasta operaciones con garantía hipotecaria o título de propiedad. Tú eliges cómo participar.</p></div>
+  <div class="inv-panel" id="renta-de-capital" data-inv-panel="renta-de-capital" hidden>
+    <div class="title center"><span class="eyebrow">01 · Renta de Capital</span><h2>Proyecto Nuevo Hogar</h2>
+      <p class="lead">Pon a trabajar tu capital disponible y recibe una renta periódica con respaldo real. Tú eliges la garantía: pagaré, hipoteca o título de propiedad.</p></div>
     <div class="ahts">{estrategias}</div>
-    <div class="actions" style="justify-content:center"><a class="btn btn-primary btn-xl" href="simuladores.html#sim-proyecta">Simular Rescate Inmobiliario <span aria-hidden="true">→</span></a></div>
-    {P("Montos y textos de las estrategias según la imagen entregada el 2026-11-17 (Título desde $100MM según la tabla de condiciones del 2026-11-17). Plazos por estrategia en la tabla: VALIDAR.")}
+    <div class="actions" style="justify-content:center"><a class="btn btn-primary btn-xl" href="simuladores.html#sim-proyecta">Simular Renta de Capital <span aria-hidden="true">→</span></a></div>
+    {P("Condiciones según la Tabla de condiciones del 2026-11-18. La tabla original marcaba 'Sí*' en retiros de Pagaré y '$100.000.000**' en Título: CONFIRMAR qué dicen esas notas.")}
   </div>
 
-  <div class="inv-panel" id="hipoteca-inteligente" data-inv-panel="hipoteca-inteligente" hidden>
+  <div class="inv-panel" id="produccion-de-capital" data-inv-panel="produccion-de-capital" hidden>
     <div class="inv-split">
       <div class="inv-side">
-        <span class="eyebrow">02 · Para quien tiene capacidad de crédito</span><h2>Hipoteca Inteligente</h2>
-        <p class="lead">Tu capacidad de crédito es tu capital de oportunidad. Sin necesidad de desembolsar dinero propio, puedes acceder a una inversión inmobiliaria financiada, donde la estructura del negocio está diseñada para cubrir los dividendos y gestionar la operación.</p>
-        <ul class="inv-facts"><li><span>Desde</span><strong>2.000 UF de capacidad de crédito</strong></li><li><span>Capital</span><strong>No necesitas capital propio</strong></li><li><span>Plazo</span><strong>2 a 5 años</strong></li></ul>
-        <div class="actions"><a class="btn btn-primary" href="simuladores.html#sim-hipoteca">Simular Hipoteca Inteligente</a></div>
+        <span class="eyebrow">02 · Producción de Capital</span><h2>Hipoteca Inteligente</h2>
+        <p class="lead">Tu capacidad de crédito es tu capital de oportunidad. Sin desembolsar dinero propio, accedes a una inversión inmobiliaria financiada, donde la estructura del negocio está diseñada para cubrir los dividendos y gestionar la operación.</p>
+        <ul class="inv-facts"><li><span>Propiedades</span><strong>Desde 2.000 UF</strong></li><li><span>Retorno</span><strong>5% + UF anual</strong></li><li><span>Horizonte</span><strong>2 a 5 años</strong></li></ul>
+        <div class="actions"><a class="btn btn-primary" href="{AGENDA_URL}" target="_blank" rel="noopener">Solicitar una simulación asistida</a></div>
+        <p class="inv-asist">Esta simulación la haces junto a un asesor de Pulso Inversor.</p>
       </div>
       {pasos(PASOS_HI)}
     </div>
   </div>
 
-  <div class="inv-panel" id="inversion-circular" data-inv-panel="inversion-circular" hidden>
+  <div class="inv-panel" id="arquitectura-de-capital" data-inv-panel="arquitectura-de-capital" hidden>
     <div class="inv-split">
       <div class="inv-side">
-        <span class="eyebrow">03 · Para propietarios</span><h2>Inversión Inmobiliaria Circular</h2>
-        <p class="lead">Transforma el capital detenido en tu propiedad en una inversión que te da flujo cada mes, y deja atrás las cargas que hoy te genera.</p>
-        <div class="actions"><a class="btn btn-primary" href="inversion-circular.html">Conoce y simula Inversión Circular</a></div>
+        <span class="eyebrow">03 · Arquitectura de Capital</span><h2>Configuración Patrimonial</h2>
+        <p class="lead">Diseñamos contigo una estructura integral de inversión y patrimonio, combinando tus bienes, ingresos y ahorros según tus objetivos, plazos y necesidades especiales.</p>
+        <ul class="inv-facts"><li><span>Para</span><strong>Personas con bienes, ingresos y/o ahorros</strong></li><li><span>Condiciones</span><strong>Diseño a medida</strong></li><li><span>Logras</span><strong>Protección, eficiencia, continuidad y crecimiento</strong></li></ul>
+        <div class="actions"><a class="btn btn-primary" href="{AGENDA_URL}" target="_blank" rel="noopener">Solicitar una simulación asistida</a></div>
+        <p class="inv-asist">Esta simulación la haces junto a un asesor de Pulso Inversor.</p>
       </div>
-      {pasos(PASOS_IC)}
+      {pasos(PASOS_AC)}
     </div>
+    {P("PASOS de Configuración Patrimonial redactados a partir de la descripción de la Matriz IGR: VALIDAR el proceso real, alcance, honorarios y entregables.")}
   </div>
 </div></section>
 
 <section class="section section-soft" id="comparar"><div class="container">
   <div class="title center"><span class="eyebrow">Tabla comparativa</span><h2>Compáralas lado a lado</h2></div>
   <div class="table-wrap compare"><table>
-    <thead><tr><th>Alternativa</th><th>Desde</th><th>Qué queda a tu favor</th><th>Plazos</th></tr></thead>
+    <thead><tr><th>Estrategia</th><th>Desde</th><th>Qué queda a tu favor</th><th>Interés o retorno</th><th>Plazos</th></tr></thead>
     <tbody>
-      <tr><td>Rescate Inmobiliario · Acción</td><td>$5 millones</td><td>Contrato de mutuo y pagaré</td><td>12, 18 o 24 meses</td></tr>
-      <tr><td>Rescate Inmobiliario · Hipoteca</td><td>$25 millones</td><td>Hipoteca inscrita a tu favor</td><td>15, 21 o 27 meses</td></tr>
-      <tr><td>Rescate Inmobiliario · Título</td><td>$100 millones</td><td>La propiedad inscrita a tu nombre</td><td>15, 21 o 27 meses</td></tr>
-      <tr><td>Hipoteca Inteligente</td><td>2.000 UF de capacidad de crédito</td><td>La propiedad a tu nombre durante la operación, con recompra al cierre</td><td>2 a 5 años</td></tr>
-      <tr><td>Inversión Inmobiliaria Circular</td><td>El capital de tu propiedad</td><td>Inversión en Pulso Inversor con intereses fijos mensuales</td><td>Según tu contrato</td></tr>
+      <tr><td>Renta de Capital · Acción</td><td>$5 millones</td><td>Contrato de mutuo y pagaré</td><td>1,0% a 1,2% mensual</td><td>12, 18 o 24 meses</td></tr>
+      <tr><td>Renta de Capital · Hipoteca</td><td>$25 millones</td><td>Hipoteca inscrita a tu favor</td><td>0,7% a 0,9% mensual + UF</td><td>15, 21 o 27 meses</td></tr>
+      <tr><td>Renta de Capital · Título</td><td>$100 millones</td><td>La propiedad inscrita a tu nombre</td><td>0,8% a 1,0% mensual + UF</td><td>15, 21 o 27 meses</td></tr>
+      <tr><td>Producción de Capital · Hipoteca Inteligente</td><td>Propiedades desde 2.000 UF, con tu crédito hipotecario</td><td>La propiedad a tu nombre durante la operación</td><td>5% + UF anual</td><td>2 a 5 años</td></tr>
+      <tr><td>Arquitectura de Capital · Configuración Patrimonial</td><td>Tus bienes, ingresos y/o ahorros</td><td>Según la estructura legal que diseñemos contigo</td><td>A medida</td><td>A medida</td></tr>
     </tbody></table></div>
 </div></section>
 
@@ -673,7 +720,7 @@ _ICONS['llave'] = '<circle cx="8" cy="15" r="4"/><path d="M11 12l8-8"/><path d="
 GARANTIAS = [
     ('pagare', 'Pagaré', 'Un compromiso de pago exigible legalmente.', 'Respalda la obligación de pago y permite ejercer acciones de cobro si no se cumple lo acordado.'),
     ('hipoteca', 'Hipoteca', 'Una propiedad queda vinculada al cumplimiento de la deuda.', 'Te entrega un derecho real de garantía sobre un inmueble identificado e inscrito.'),
-    ('llave', 'Título de propiedad', 'El inmueble queda legalmente a tu nombre.', 'Adquieres derechos de propietario sobre un bien raíz inscrito a tu nombre, según la operación.'),
+    ('llave', 'Título de propiedad', 'El inmueble queda legalmente a tu nombre.', 'Adquieres derechos de propietario sobre un bien raíz inscrito a tu nombre en el respectivo Conservador de Bienes Raíces.'),
     ('documento', 'Contrato de mutuo', 'Las condiciones financieras quedan establecidas por escrito.', 'Determina las obligaciones de las partes, el monto, los intereses y los plazos de devolución.'),
 ]
 GAR_IMG = {'pagare': 'pagare', 'hipoteca': 'hipoteca', 'llave': 'titulo', 'documento': 'mutuo'}
@@ -704,9 +751,9 @@ def _prop(slug, c, tipo, sector):
 propiedades = ''.join(_prop(*x) for x in PROPIEDADES)
 
 MECANISMOS = [
-    ('Obligaciones respaldadas por pagaré', 'El inversionista puede iniciar acciones de cobro contra los obligados y, cuando corresponda, contra los avales que hayan asumido formalmente esa responsabilidad.'),
-    ('Operaciones respaldadas por hipoteca', 'Se puede buscar una venta voluntaria del inmueble para pagar la deuda. Si no resulta viable, existen mecanismos judiciales para hacer efectiva la garantía.'),
-    ('Operaciones con propiedad a nombre del inversionista', 'El inversionista conserva sus derechos sobre el inmueble y puede exigir las obligaciones de recompra asumidas contractualmente, de acuerdo con las condiciones de la operación.'),
+    ('Obligaciones respaldadas por pagaré', 'El pagaré es un título ejecutivo. Si no se paga, se inicia directamente un juicio ejecutivo, sin necesidad de declarar responsabilidades antes, y se pueden embargar los bienes de la empresa.'),
+    ('Operaciones respaldadas por hipoteca', 'La hipoteca te da la misma garantía que tiene un banco sobre un bien raíz. Si no se cumple lo pactado, se puede iniciar un juicio ejecutivo para recuperar el capital mediante el remate del inmueble de la compañía.'),
+    ('Operaciones con propiedad a nombre del inversionista', 'La propiedad queda inscrita a tu nombre en el respectivo Conservador de Bienes Raíces. Conservas tus derechos sobre el inmueble y puedes exigir la recompra pactada en el contrato.'),
 ]
 mecanismos = ''.join(f'<article class="mec-card"><span class="mec-num">0{i+1}</span><h3>{t}</h3><p>{d}</p></article>' for i, (t, d) in enumerate(MECANISMOS))
 
@@ -729,9 +776,9 @@ page('garantias-y-documentos.html', 'Garantías y respaldo',
 <section class="port-section port-light" id="portafolio">
   <div class="container port-intro">
     <span class="eyebrow">El respaldo detrás de nuestras operaciones</span>
-    {P("CIFRA: la referencia decía 'Más de $1.300 millones' (pendiente de validar). Se usa la cifra que entregó la usuaria el 2026-11-16: aprox. $1.100 millones. CONFIRMAR valor vigente y qué activos incluye.")}
+    {P("CIFRA actualizada por la usuaria el 2026-11-18: $4.000 millones.")}
     {P("PRECISIÓN: no todas las propiedades del portafolio garantizan necesariamente todas las inversiones. Distinguir entre activos que garantizan obligaciones y propiedades disponibles para nuevas operaciones.")}
-    <h2 class="port-title">Actualmente contamos con más de <span class="port-num">$<span data-count="1100" data-when-visible>1.100</span> millones</span> listos para estructurar tu garantía</h2>
+    <h2 class="port-title">Actualmente contamos con más de <span class="port-num">$<span data-count="4000" data-when-visible>4.000</span> millones</span> listos para estructurar tu garantía</h2>
   </div>
   {P("PROPIEDADES: fotos reales entregadas el 2026-11-17; se muestran solo comuna y tipo (sin valor comercial ni descuento). El Retiro, Loncoche es un terreno: CONFIRMAR el tipo.")}
   <div class="marquee" aria-label="Propiedades del portafolio">
@@ -770,84 +817,7 @@ GATE = """  <div class="gate" id="sim-gate" aria-labelledby="gate-title">
   """ + P("CASILLAS (revisión 17-11-2026): Política de privacidad obligatoria; publicidad OPCIONAL y sin marcar. Términos y condiciones pendientes de validación legal.") + """
 """
 
-page('simuladores.html', 'Simuladores',
-     'Simula tu inversión en Rescate Inmobiliario (Acción, Hipoteca o Título) y compárala con un depósito a plazo, arma tu configuración de Hipoteca Inteligente o proyecta un portafolio con el Simulador Patrimonial.',
-f"""
-<div data-simuladores>
-<section class="section sim-top" id="sim-area"><div class="container">
-  <div class="title center"><h1>¿Qué quieres simular?</h1>
-    <p class="lead">Elige un simulador, completa tus datos una vez y revisa tus números con calma. Los resultados son referenciales.</p></div>
-  <div class="sim-picks" role="tablist" aria-label="Simuladores">
-    <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-proyecta" aria-selected="false">
-      <span class="sim-pick-ico">A·H·T</span><strong>Rescate Inmobiliario</strong><span>Invierte tu capital con Acción, Hipoteca o Título y compáralo con un depósito a plazo.</span><em>Desde $5MM</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
-    <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-hipoteca" aria-selected="false">
-      <span class="sim-pick-ico">HI</span><strong>Hipoteca Inteligente</strong><span>Arma tu configuración con tu capacidad de crédito y mira cómo termina.</span><em>Desde 2.000 UF de crédito</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
-    <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-patrimonial" aria-selected="false">
-      <span class="sim-pick-ico">SP</span><strong>Simulador Patrimonial</strong><span>Para empresas y sus socios: arma un portafolio de propiedades con descuento y mira cómo crece tu patrimonio.</span><em>Hipoteca Inteligente Empresarial</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
-  </div>
-
-  <div class="sim-stage" id="sim-stage" hidden>
-  {GATE}
-
-<div class="sim-panel" id="sim-proyecta" data-sim-panel="sim-proyecta"><div class="sim-panel-body">
-    <div class="sim-head"><h2>Rescate Inmobiliario</h2><p class="muted">Elige tu estrategia, el monto y el plazo, y compara con lo que te daría un depósito a plazo.</p></div>
-    <div class="pro">
-      <div class="pro-form">
-        <span class="pro-label">Estrategia</span>
-        <div class="pro-series">
-          <button type="button" data-serie="A"><b>A</b><span>Acción<small>Desde $5MM · Pagaré</small></span></button>
-          <button type="button" data-serie="H"><b>H</b><span>Hipoteca<small>Desde $25MM · Hipoteca</small></span></button>
-          <button type="button" data-serie="T"><b>T</b><span>Título<small>Desde $100MM · Título</small></span></button>
-        </div>
-        <label class="pro-label" for="p-monto">Monto a invertir</label>
-        <input id="p-monto" class="pro-monto" type="text" inputmode="numeric" autocomplete="off">
-        <div class="pro-chips" id="p-quick"></div>
-        <p class="pro-help" id="p-min"></p>
-        <p class="pro-warn" id="p-warn" hidden>El monto está bajo el mínimo; se calcula con el mínimo de la estrategia.</p>
-        <span class="pro-label">Plazo</span>
-        <div class="pro-chips" id="p-plazos"></div>
-        <div class="pro-retiro" id="p-retiro-wrap">
-          <span class="pro-label">¿Quieres la opción de retiro anticipado?</span>
-          <div class="pro-yesno" role="group" aria-label="Retiro anticipado"><button type="button" class="chip-opt" data-retiro="0">No</button><button type="button" class="chip-opt" data-retiro="1">Sí</button></div>
-          <p class="pro-help">Si eliges Sí, puedes retirar antes del plazo, y la tasa mensual baja 0,1 punto (por ejemplo, de 1,0% a 0,9%).</p>
-        </div>
-      </div>
-      <div class="pro-out">
-        <p class="pro-falta" id="p-falta">Elige la estrategia, el monto y el plazo para ver tu resultado</p>
-        <div class="pro-cols">
-          <div class="pro-result">
-            <span class="pro-tag">Con Pulso Inversor</span>
-            <div class="pro-total"><small>Total a recibir</small><strong id="r-total">—</strong></div>
-            <div class="pro-gain"><small>Ganas</small><strong id="r-ganancia">—</strong></div>
-            <ul class="pro-list">
-              <li><span>Estrategia</span><strong id="r-estrategia">—</strong></li>
-              <li><span>Monto</span><strong id="r-monto">—</strong></li>
-              <li><span>Plazo</span><strong id="r-plazo">—</strong></li>
-              <li><span>Tasa</span><strong id="r-tasa">—</strong></li>
-            </ul>
-          </div>
-          <div class="pro-dap">
-            <span class="pro-tag bank">En un depósito a plazo</span>
-            <div class="pro-total"><small>Total a recibir</small><strong id="d-total">—</strong></div>
-            <div class="pro-gain bank"><small>Ganas</small><strong id="d-dap">—</strong></div>
-            <ul class="pro-list">
-              <li><span>Monto</span><strong id="d-monto">—</strong></li>
-              <li><span>Plazo</span><strong id="d-plazo">—</strong></li>
-              <li><span>Tasa</span><strong><span id="d-tasa">—</span> anual</strong></li>
-            </ul>
-          </div>
-        </div>
-        <p class="pro-pref" id="p-pref" hidden>Sobre $250.000.000 puedes acceder a condiciones preferentes. Pregúntale a tu asesor.</p>
-        <div class="pro-actions"><button type="button" class="btn btn-primary btn-xl" id="p-correo">Enviar a mi correo <span aria-hidden="true">→</span></button></div>
-        <p class="sim-aut">Al completar tus datos personales, Pulso Inversor SpA podrá usarlos para contactarte y entregarte opciones de inversión, además de verificar el funcionamiento de la plataforma. Si quieres saber más sobre el uso y resguardo de tu información, revisa nuestra <a href="privacidad.html" target="_blank">Política de privacidad</a>.</p>
-        <p class="sim-status" id="p-status" role="status"></p>
-        <p class="pro-note">Esta simulación no constituye una cotización ni asegura rentabilidades futuras. La rentabilidad simulada es referencial a esta fecha y no compromete a Pulso Inversor SpA. La rentabilidad y las condiciones finales se fijan al momento de la firma del contrato respectivo. Depósito a plazo: a 365 días, renovado al vencimiento con interés compuesto; para plazos que no son años completos, el último período se calcula en proporción al tiempo. <span id="r-nota-uf">Hipoteca y Título se reajustan en UF (UF de hoy <span id="r-uf">—</span>, IPC estimado 4,5% anual).</span></p>
-      </div>
-    </div>
-    {P("TASA del depósito a plazo a 365 días (DAP_ANUAL en assets/js/simuladores.js): 4,8% anual referencial; CONFIRMAR el valor vigente a usar.")}
-  </div></div>
-
-  <div class="sim-panel" id="sim-hipoteca" data-sim-panel="sim-hipoteca" hidden><div class="sim-panel-body">
+_PANELES_EQUIPO = f"""  <div class="sim-panel" id="sim-hipoteca" data-sim-panel="sim-hipoteca" hidden><div class="sim-panel-body">
     <div class="sim-head"><h2>Hipoteca Inteligente</h2><p class="muted">Arma tu configuración: el Portafolio Tracción genera el retorno y el Portafolio Patrimonio construye tu patrimonio.</p></div>
     <form class="hi-capform" id="hi-cap-form" novalidate>
       <div><strong>Tu capacidad financiera</strong><p>Indica cuánto crédito hipotecario podrías obtener por operación. Cada propiedad se valida por separado; los créditos no se suman.</p></div>
@@ -926,13 +896,117 @@ f"""
     </div>
     {P("SIMULADOR PATRIMONIAL según la propuesta 'Hipoteca Inteligente Empresarial' (PDF del 18-11-2026), interfaz simplificada el 18-11 (sin fotos). Valores en UF del catálogo SIMULADOS. Validaciones previas: Mariana (estructura y garantías societarias) y Felipe Rojas (rentas, costos, seguros y flujo).")}
   </div></div>
+"""
+
+def _sim_page(slug, titulo, desc, h1, lead, picks, paneles_extra, cierre):
+  page(slug, titulo, desc,
+f"""
+<div data-simuladores>
+<section class="section sim-top" id="sim-area"><div class="container">
+  <div class="title center"><h1>{h1}</h1>
+    <p class="lead">{lead}</p></div>
+  <div class="sim-picks" role="tablist" aria-label="Simuladores">
+{picks}
   </div>
+
+  <div class="sim-stage" id="sim-stage" hidden>
+  {GATE}
+
+<div class="sim-panel" id="sim-proyecta" data-sim-panel="sim-proyecta"><div class="sim-panel-body">
+    <div class="sim-head"><span class="sp-kicker">Proyecto Nuevo Hogar</span><h2>Renta de Capital</h2><p class="muted">Elige tu estrategia, el monto y el plazo, y compara con lo que te daría un depósito a plazo.</p></div>
+    <div class="pro">
+      <div class="pro-form">
+        <span class="pro-label">Estrategia</span>
+        <div class="pro-series">
+          <button type="button" data-serie="A"><b>A</b><span>Acción<small>Desde $5MM · Pagaré</small></span></button>
+          <button type="button" data-serie="H"><b>H</b><span>Hipoteca<small>Desde $25MM · Hipoteca</small></span></button>
+          <button type="button" data-serie="T"><b>T</b><span>Título<small>Desde $100MM · Título</small></span></button>
+        </div>
+        <label class="pro-label" for="p-monto">Monto a invertir</label>
+        <input id="p-monto" class="pro-monto" type="text" inputmode="numeric" autocomplete="off">
+        <div class="pro-chips" id="p-quick"></div>
+        <p class="pro-help" id="p-min"></p>
+        <p class="pro-warn" id="p-warn" hidden>El monto está bajo el mínimo; se calcula con el mínimo de la estrategia.</p>
+        <span class="pro-label">Plazo</span>
+        <div class="pro-chips" id="p-plazos"></div>
+        <div class="pro-retiro" id="p-retiro-wrap">
+          <span class="pro-label">¿Quieres la opción de retiro anticipado?</span>
+          <div class="pro-yesno" role="group" aria-label="Retiro anticipado"><button type="button" class="chip-opt" data-retiro="0">No</button><button type="button" class="chip-opt" data-retiro="1">Sí</button></div>
+          <p class="pro-help">Si eliges Sí, puedes retirar antes del plazo, y la tasa mensual baja 0,1 punto (por ejemplo, de 1,0% a 0,9%).</p>
+        </div>
+      </div>
+      <div class="pro-out">
+        <p class="pro-falta" id="p-falta">Elige la estrategia, el monto y el plazo para ver tu resultado</p>
+        <div class="pro-cols">
+          <div class="pro-result">
+            <span class="pro-tag">Con Pulso Inversor</span>
+            <div class="pro-total"><small>Total a recibir</small><strong id="r-total">—</strong></div>
+            <div class="pro-gain"><small>Ganas</small><strong id="r-ganancia">—</strong></div>
+            <ul class="pro-list">
+              <li><span>Estrategia</span><strong id="r-estrategia">—</strong></li>
+              <li><span>Monto</span><strong id="r-monto">—</strong></li>
+              <li><span>Plazo</span><strong id="r-plazo">—</strong></li>
+              <li><span>Tasa</span><strong id="r-tasa">—</strong></li>
+            </ul>
+          </div>
+          <div class="pro-dap">
+            <span class="pro-tag bank">En un depósito a plazo</span>
+            <div class="pro-total"><small>Total a recibir</small><strong id="d-total">—</strong></div>
+            <div class="pro-gain bank"><small>Ganas</small><strong id="d-dap">—</strong></div>
+            <ul class="pro-list">
+              <li><span>Monto</span><strong id="d-monto">—</strong></li>
+              <li><span>Plazo</span><strong id="d-plazo">—</strong></li>
+              <li><span>Tasa</span><strong><span id="d-tasa">—</span> anual</strong></li>
+            </ul>
+          </div>
+        </div>
+        <p class="pro-pref" id="p-pref" hidden>Sobre $250.000.000 puedes acceder a condiciones preferentes. Pregúntale a tu asesor.</p>
+        <div class="pro-actions"><button type="button" class="btn btn-primary btn-xl" id="p-correo">Enviar a mi correo <span aria-hidden="true">→</span></button></div>
+        <p class="sim-aut">Al completar tus datos personales, Pulso Inversor SpA podrá usarlos para contactarte y entregarte opciones de inversión, además de verificar el funcionamiento de la plataforma. Si quieres saber más sobre el uso y resguardo de tu información, revisa nuestra <a href="privacidad.html" target="_blank">Política de privacidad</a>.</p>
+        <p class="sim-status" id="p-status" role="status"></p>
+        <p class="pro-note">Esta simulación no constituye una cotización ni asegura rentabilidades futuras. La rentabilidad simulada es referencial a esta fecha y no compromete a Pulso Inversor SpA. La rentabilidad y las condiciones finales se fijan al momento de la firma del contrato respectivo. Depósito a plazo: a 365 días, renovado al vencimiento con interés compuesto; para plazos que no son años completos, el último período se calcula en proporción al tiempo. <span id="r-nota-uf">Hipoteca y Título se reajustan en UF (UF de hoy <span id="r-uf">—</span>, IPC estimado 4,5% anual).</span></p>
+      </div>
+    </div>
+    {P("TASA del depósito a plazo a 365 días (DAP_ANUAL en assets/js/simuladores.js): 4,8% anual referencial; CONFIRMAR el valor vigente a usar.")}
+  </div></div>
+
+{paneles_extra}  </div>
 </div></section>
 </div>
 <img id="sim-logo" class="pdf-logo" src="assets/img/logo-pulso-gmm.png" alt="" width="396" height="44">
-""" + cta_final('¿Prefieres ver los números con alguien?', 'Revisemos tu simulación <span class="accent">juntos</span>',
-                'Un asesor te acompaña a leer los resultados y a resolver tus dudas.', AGENDAR, 'mi simulación'),
-     scripts='\n<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>\n<script src="assets/js/simuladores.js"></script>\n<script src="assets/js/sim-movil.js"></script>')
+""" + cierre,
+       scripts='\n<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>\n<script src="assets/js/simuladores.js"></script>\n<script src="assets/js/sim-movil.js"></script>')
+
+
+PICKS_PUBLICO = f'''    <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-proyecta" aria-selected="false">
+      <span class="sim-pick-ico">A·H·T</span><strong>Renta de Capital</strong><span>Proyecto Nuevo Hogar: invierte tu capital con pagaré, hipoteca o título y compáralo con un depósito a plazo.</span><em>Desde $5MM</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
+    <a class="sim-pick sim-pick-asist" href="{AGENDA_URL}" target="_blank" rel="noopener">
+      <span class="sim-pick-ico">PC</span><strong>Producción de Capital</strong><span>Hipoteca Inteligente: tu capacidad de crédito genera retorno y patrimonio. La simulas junto a un asesor.</span><em>Simulación asistida</em><span class="sim-pick-go">Agendar con un asesor <i aria-hidden="true">→</i></span></a>
+    <a class="sim-pick sim-pick-asist" href="{AGENDA_URL}" target="_blank" rel="noopener">
+      <span class="sim-pick-ico">AC</span><strong>Arquitectura de Capital</strong><span>Configuración Patrimonial: una estructura a la medida de tus bienes, ingresos y ahorros. La simulas junto a un asesor.</span><em>Simulación asistida</em><span class="sim-pick-go">Agendar con un asesor <i aria-hidden="true">→</i></span></a>'''
+PICKS_EQUIPO = '''    <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-proyecta" aria-selected="false">
+      <span class="sim-pick-ico">A·H·T</span><strong>Renta de Capital</strong><span>Proyecto Nuevo Hogar: invierte tu capital con pagaré, hipoteca o título y compáralo con un depósito a plazo.</span><em>Desde $5MM</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
+    <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-hipoteca" aria-selected="false">
+      <span class="sim-pick-ico">PC</span><strong>Producción de Capital</strong><span>Hipoteca Inteligente: arma la configuración con la capacidad de crédito del cliente.</span><em>Desde 2.000 UF</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
+    <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-patrimonial" aria-selected="false">
+      <span class="sim-pick-ico">AC</span><strong>Simulador Patrimonial</strong><span>Hipoteca Inteligente Empresarial: portafolio de propiedades con descuento para empresas y sus socios.</span><em>Arquitectura de Capital</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>'''
+
+_sim_page('simuladores.html', 'Simuladores',
+          'Simula tu inversión en Renta de Capital (Acción, Hipoteca o Título) y compárala con un depósito a plazo. Producción y Arquitectura de Capital se simulan junto a un asesor.',
+          '¿Qué quieres simular?', 'Elige un simulador, completa tus datos una vez y revisa tus números con calma. Los resultados son referenciales.',
+          PICKS_PUBLICO, '',
+          cta_final('¿Prefieres ver los números con alguien?', 'Revisemos tu simulación <span class="accent">juntos</span>',
+                    'Un asesor te acompaña a leer los resultados y a resolver tus dudas.', AGENDAR, 'mi simulación'))
+
+# Simuladores asistidos: solo para el equipo. Se sirven en /panel/simuladores (con la clave del panel);
+# el Worker bloquea el acceso directo a /simuladores-equipo.
+_sim_page('simuladores-equipo.html', 'Simuladores asistidos', 'Uso interno del equipo de Pulso Inversor.',
+          'Simuladores asistidos', 'Uso interno del equipo de Pulso Inversor. Simula junto al cliente: los datos de contacto que ingreses son los del cliente y la simulación le llega a su correo.',
+          PICKS_EQUIPO, _PANELES_EQUIPO, '')
+_fe = os.path.join(R, 'simuladores-equipo.html')
+_he = open(_fe).read().replace('<head>\n', '<head>\n<meta name="robots" content="noindex">\n', 1)
+_he = re.sub(r'((?:href|src)=")(?!https?:|/|#|mailto:|tel:|data:|javascript:)', r'\1/', _he)
+open(_fe, 'w').write(_he)
 
 # ---------------- Landing: Inversión Inmobiliaria Circular ----------------
 page('inversion-circular.html', 'Inversión Inmobiliaria Circular',
@@ -1069,7 +1143,7 @@ page('privacidad.html', 'Política de privacidad',
 HITOS = [
     ('2016', 'Los orígenes', 'Bajo el origen empresarial de Partners &amp; Advisers y la gestión de Iván Barboza, nace el modelo Inversión Remate Seguro (IRS), que permitía a los inversionistas participar en oportunidades de remates judiciales con respaldo de activos inmobiliarios.'),
     ('2016 – 2023', 'Experiencia y especialización', 'Se consolida una profunda experiencia en evaluación comercial, análisis jurídico y gestión inmobiliaria. Con ella, el horizonte se amplía hacia el financiamiento privado.'),
-    ('Fines de 2023', 'Nace Pulso Inversor SpA', 'Con la entrada en vigor de la Ley Fintech y la especialización de las actividades de Partners &amp; Advisers, se constituye oficialmente Pulso Inversor SpA y el modelo evoluciona hacia la Inversión con Garantía Real (IGR).'),
+    ('Fines de 2023', 'Nace Pulso Inversor SpA', 'Con la entrada en vigor de la Ley Fintech y la especialización de las actividades de Partners &amp; Advisers, se constituye oficialmente Pulso Inversor SpA y el modelo evoluciona hacia la Inversión con Garantía Real (IGR) y resguardo patrimonial.'),
     ('Hoy', 'Parte de Grupo Matchmaking', 'Ese desarrollo impulsó la creación de Grupo Matchmaking, el grupo de empresas del que Pulso Inversor hoy forma parte fundamental.'),
 ]
 hitos = ''.join(f'<li><span class="hito-year">{y}</span><strong>{t}</strong><p>{d}</p></li>' for y, t, d in HITOS)
@@ -1079,20 +1153,20 @@ PILARES_N = [
     ('Intereses atractivos', 'Búsqueda constante de intereses atractivos que superen a los instrumentos de ahorro convencionales.'),
     ('Inversión con sentido', 'Generamos valor más allá del dinero, con soluciones que ayudan a los propietarios frente a escenarios de pérdida patrimonial y abren nuevas oportunidades financieras.'),
 ]
+ASESORES = [   # certificados por la CMF
+    ('Pamela Herrera', 'Asesora de inversiones', 'assets/img/asesores/pamela.webp'),
+    ('Renato Vargas', 'Asesor de inversiones', 'assets/img/equipo/renato-vargas.jpg'),
+    ('Santiago Fernández', 'Asesor internacional', 'assets/img/equipo/santiago-fernandez.jpg'),
+]
 EQUIPO = [
     ('Jessica Valenzuela', 'Jefa comercial', 'assets/img/equipo/jessica-valenzuela.jpg'),
     ('Felipe Jaña', 'Jefe de operaciones', 'assets/img/equipo/felipe-jana.jpg'),
     ('William Rojas', 'Jefe de contabilidad', 'assets/img/equipo/william-rojas.jpg'),
-    ('Pamela Herrera', 'Asesora', 'assets/img/asesores/pamela.webp'),
-    ('Renato Vargas', 'Asesor', 'assets/img/equipo/renato-vargas.jpg'),
-    ('Santiago Fernández', 'Asesor internacional', 'assets/img/equipo/santiago-fernandez.jpg'),
 ]
-def _ini(n):
-    partes = n.split()
-    return (partes[0][0] + (partes[-1][0] if len(partes) > 1 else '')).upper()
-crew = ''.join(
-    f'''<article class="crew-card">{f'<img src="{foto}" alt="{n}" width="240" height="240" loading="lazy">' if foto else f'<span class="crew-ini" aria-hidden="true">{_ini(n)}</span>'}<strong>{n}</strong><span>{r}</span></article>'''
-    for n, r, foto in EQUIPO)
+def _crew(lista, cmf=False):
+    return ''.join(f'''<article class="crew-card"><img src="{foto}" alt="{n}" width="240" height="240" loading="lazy"><strong>{n}</strong><span class="crew-role">{r}</span>{'<span class="crew-cmf">Certificado CMF</span>' if cmf else ''}</article>''' for n, r, foto in lista)
+crew_asesores = _crew(ASESORES, True)
+crew = _crew(EQUIPO)
 pilares_n = ''.join(f'<article class="pilar"><span class="pilar-num">0{i+1}</span><h3>{t}</h3><p>{d}</p></article>' for i, (t, d) in enumerate(PILARES_N))
 _ICONS['onda'] = '<path d="M3 12h3l2-5 4 10 3-7 2 2h4"/>'
 _ICONS['flecha-up'] = '<path d="M4 18l6-6 4 4 6-8"/><path d="M15 8h5v5"/>'
@@ -1133,10 +1207,15 @@ page('nosotros.html', 'Nosotros',
       <p>Lleva 16 años liderando áreas de finanzas y control de gestión en compañías como LATAM, Iansa y Transbank. Esa visión corporativa, con rigor analítico, es la que aporta a la empresa. Su vínculo con el proyecto nació de la confianza en el modelo: comenzó como cliente, validando con su propio patrimonio los intereses y el respaldo de las operaciones. Hoy estructura financieramente los productos para que cada operación sea directa, transparente y competitiva.</p></div></article>
   </div>
   {P("EQUIPO y fotos entregados por la usuaria el 2026-11-17.")}
-  <h3 class="team-sub">El equipo que te acompaña</h3>
-  <p class="team-cmf">Nuestros asesores están certificados por la CMF.</p>
-  <div class="crew">{crew}</div>
-  <p class="crew-hint" aria-hidden="true">Desliza para ver a todo el equipo →</p>
+  <div class="crew-block crew-block-cmf">
+    <div class="crew-head"><span class="eyebrow">Asesores certificados por la CMF</span><h3>Quienes te acompañan en tu inversión</h3>
+      <p>Te atienden, te explican cada operación y te acompañan hasta el cierre. La certificación de la CMF corresponde a nuestros asesores de inversión.</p></div>
+    <div class="crew crew-lg">{crew_asesores}</div>
+  </div>
+  <div class="crew-block">
+    <div class="crew-head"><h3>Gestión, operaciones y contabilidad</h3><p>El equipo que sostiene cada operación por dentro.</p></div>
+    <div class="crew crew-lg">{crew}</div>
+  </div>
 </div></section>
 
 <section class="section section-soft"><div class="container">
@@ -1178,10 +1257,8 @@ revisar = ''.join(f'<li><span class="ficha-mark">{i+1}</span>{t}</li>' for i, t 
 
 IMPREVISTOS = [
     ('Si un pago se atrasa', 'Cada operación tiene definido qué se hace según su documento: acciones de cobro con el pagaré, venta voluntaria o ejecución de la hipoteca, o exigir la recompra cuando la propiedad está a tu nombre.'),
-    ('Si cambia el valor de la propiedad', 'Las operaciones se estructuran con una diferencia entre el precio de compra y la tasación. Esa diferencia, que puedes revisar antes de invertir, le da holgura a tu garantía.'),
-    ('Si necesitas tu dinero antes', 'Antes de invertir revisamos contigo el plazo y cuánto puedes destinar sin tocar tu fondo de emergencia. Cualquier salida anticipada se conversa según las condiciones de tu contrato.'),
-    ('Si surge un tema legal con el inmueble', 'Los documentos se firman ante notario y la garantía o el título se inscriben en el Conservador de Bienes Raíces. Puedes pedir los certificados y revisarlos con tu abogado cuando quieras.'),
-    ('Para no poner todo en un mismo lugar', 'Te recomendamos invertir una parte de tu patrimonio. El resto debería seguir en alternativas que puedas usar cuando lo necesites.'),
+    ('Si necesitas tu dinero antes', 'Puedes retirar tu capital antes del plazo cuando inviertes con pagaré. En ese caso se aplican las condiciones de tu contrato de mutuo.'),
+    ('Si surge un tema legal con el inmueble', 'Pulso Inversor se hace responsable de sanear cualquier gravamen sobre el inmueble y cualquier uso indebido de él, ejerciendo los derechos y las garantías de los inversionistas.'),
 ]
 imprevistos = ''.join(f'<article class="riesgo"><div class="riesgo-q"><span class="riesgo-ico" aria-hidden="true">{i+1}</span><h3>{q}</h3></div><div class="riesgo-a"><span class="riesgo-k">Lo que hacemos</span><p>{a_}</p></div></article>' for i, (q, a_) in enumerate(IMPREVISTOS))
 
@@ -1204,6 +1281,11 @@ page('verifica-a-pulso.html', 'Verifica a Pulso',
   <span class="eyebrow dark">Verifica a Pulso</span>
   <h1>¿Por qué no estamos en la CMF?</h1>
   <p class="v-answer">Pulso Inversor no requiere certificación CMF bajo esta estructura privada, contractual y personalizada. No opera como banco, corredora, administradora de fondos ni plataforma de financiamiento colectivo regulada.</p>
+  <div class="v-somos">
+    <span class="v-somos-k">Lo que sí somos</span>
+    <p>Pulso Inversor es una compañía especializada en ingeniería financiera y estructuración de inversiones alternativas respaldadas por activos reales.</p>
+    <p>Conectamos a inversionistas que buscan rentabilizar su capital con personas y empresas que necesitan soluciones financieras, y diseñamos operaciones que integran rentabilidad, garantías y oportunidades de desarrollo patrimonial.</p>
+  </div>
   <p>Tu respaldo está en los documentos que firmas. Por eso, aquí te damos lo necesario para revisarnos por tu cuenta.</p>
 </div></section>
 

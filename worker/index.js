@@ -147,6 +147,8 @@ export default {
       try { return await enviarSimulacion(request, env); }
       catch (e) { console.error(e); return json({ ok: false, error: 'envio_fallido' }, 502); }
     }
+    // Los simuladores asistidos solo se ven en /panel/simuladores, con la clave del equipo.
+    if (/^\/simuladores-equipo(\.html)?\/?$/.test(url.pathname)) return new Response('No encontrado', { status: 404, headers: { 'content-type': 'text/plain; charset=utf-8' } });
     if (url.pathname.startsWith('/api/brevo-reuniones/')) return recibirReunion(request, env, url);
     if (url.pathname === '/panel' || url.pathname.startsWith('/panel/')) return rutaPanel(request, env, url);
     if (url.pathname.startsWith('/seguimiento/')) {

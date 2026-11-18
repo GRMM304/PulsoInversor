@@ -113,7 +113,7 @@ async function panel(env, url) {
     .map(([v, t]) => `<option value="${v}"${v === asesorSel ? ' selected' : ''}>${esc(t)}</option>`).join('');
 
   return html(`<!DOCTYPE html><html lang="es-CL"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Simulaciones y seguimiento · Pulso Inversor</title><link rel="icon" href="/assets/img/favicon.svg"><style>${ESTILO}</style></head><body>
-<header><h1>Simulaciones y seguimiento</h1><p>Simuladores de 1.pulsoinversor.cl · correo de seguimiento a las 48 horas · agenda Brevo · encuesta</p></header>
+<header><h1>Simulaciones y seguimiento</h1><p>Simuladores de 1.pulsoinversor.cl · correo de seguimiento a las 48 horas · agenda Brevo · encuesta · <a href="/panel/simuladores" style="color:#C7D95D;font-weight:800">Abrir simuladores asistidos →</a></p></header>
 <div class="wrap">
   <div class="kpis">
     <div class="kpi"><b>${n}</b><span>Simulaciones${monto ? ' · ' + clp(monto) : ''}</span></div>
@@ -164,5 +164,9 @@ export async function rutaPanel(request, env, url) {
   if (!(await sesionValida(request, env))) return login();
   if (p === '/panel/agendado' && m === 'POST') return marcarAgendado(request, env);
   if (p === '/panel/simulaciones.csv') return csv(env);
+  if (p === '/panel/simuladores') {   // Producción y Arquitectura de Capital: simulación asistida, solo equipo
+    const r = await env.ASSETS.fetch(new Request(new URL('/simuladores-equipo', url)));
+    return new Response(r.body, { status: r.status, headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store', 'x-robots-tag': 'noindex' } });
+  }
   return panel(env, url);
 }
