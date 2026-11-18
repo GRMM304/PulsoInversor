@@ -174,10 +174,14 @@ def hero(crumb, h1, p, eyebrow=None):
 <div class="breadcrumb"><a href="index.html">Inicio</a> / {crumb}</div>{eb}
 <h1>{h1}</h1><p>{p}</p></div></section>'''
 
-def cta(h, p, label, subject):
+def whatsapp(texto):
+    """Enlace a WhatsApp con un mensaje exacto."""
+    return f'https://wa.me/{WHATSAPP}?text=' + urllib.parse.quote(texto)
+
+def cta(h, p, label, subject, href=None):
     return f'''<section class="section"><div class="container"><div class="cta-band">
 <div><h2>{h}</h2><p>{p}</p></div>
-<a class="btn btn-primary" href="{mail(subject)}" target="_blank" rel="noopener">{label}</a></div></div></section>'''
+<a class="btn btn-primary" href="{href or mail(subject)}" target="_blank" rel="noopener">{label}</a></div></div></section>'''
 
 def cta_final(eyebrow='Tu siguiente paso', titulo='Cuéntanos qué quieres <span class="accent">construir</span>',
               texto='Una conversación para conocernos y ver por dónde partir. Sin apuro.', boton=None, tema=None):
@@ -1267,5 +1271,6 @@ page('preguntas-frecuentes.html', 'Preguntas frecuentes',
   {qa('¿Cómo se pagan los impuestos?', 'Depende de la estructura y de tu situación personal. Te recomendamos revisarlo con tu asesor tributario.')}
   {qa('¿Dónde reviso la situación de Pulso ante la CMF?', 'En <a href="verifica-a-pulso.html">Verifica a Pulso</a> te explicamos nuestra situación y cómo consultarla por tu cuenta.')}
 </div></section>
-''' + cta('¿Tienes otra pregunta?', 'Escríbenos. Te responde una persona del equipo.', 'Hacer mi pregunta', 'Consulta al equipo'))
+''' + cta('¿Tienes otra pregunta?', 'Escríbenos. Te responde una persona del equipo.', 'Hacer mi pregunta', None,
+                                href=whatsapp('Hola, tengo una pregunta sobre Pulso Inversor')))
 print('ok')
