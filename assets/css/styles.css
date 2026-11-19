@@ -2147,3 +2147,6 @@ iframe[title="Webchat Widget"][state="widgetClose"],iframe[title="Webchat Widget
 .lz.lz-rio{display:none!important}
 iframe[title="Webchat Widget"]{z-index:2147483000!important}
 .lz-launcher.lz-cargando{opacity:.75;cursor:progress}
+
+/* 2026-11-18: sin botón "volver arriba" en desktop (en celular ya estaba oculto) */
+.to-top{display:none!important}
