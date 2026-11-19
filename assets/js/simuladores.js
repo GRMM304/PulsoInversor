@@ -16,7 +16,7 @@
   if (!root) return;
 
   /* ---------- Configuración ---------- */
-  var WHATSAPP = '56983554676';
+  var WHATSAPP = '56958792038'; // respond.io (Lorenzo)
   // Planilla de Google (Apps Script) que usa hoy el simulador de Hipoteca Inteligente.
   var SHEET_URL = 'https://script.google.com/macros/s/AKfycby1He4sHgOoqwfI5Zc0hJ8Ux3SlESniUs3vZEkC0PvcZxFHhmalKODK4v-pEKjrWBPH/exec';
   // Tasa mensual referencial de un depósito a plazo a 30 días, renovado cada mes. PENDIENTE: confirmar.
@@ -107,7 +107,7 @@
     doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(207, 224, 217); doc.text(varios ? 'Cofundadores de Pulso Inversor' : (nombres[0] === 'Pamela Herrera' ? 'Asesora' : 'Asesor') + ' de inversiones · Pulso Inversor', M + 7, y + 20.5);
     var yy = y + 28; doc.setFontSize(9.5); doc.setTextColor(255, 255, 255);
     lineas.forEach(function (l) { doc.text(l, M + 7, yy); yy += l.length * 4.5 + 1.5; });
-    doc.setFont('helvetica', 'bold'); doc.setTextColor(199, 217, 93); doc.text('WhatsApp +56 9 8355 4676  ·  contacto@pulsoinversor.cl  ·  Los Militares 5890, of. 304, Las Condes', M + 7, yy + 3);
+    doc.setFont('helvetica', 'bold'); doc.setTextColor(199, 217, 93); doc.text('WhatsApp +56 9 5879 2038  ·  contacto@pulsoinversor.cl  ·  Los Militares 5890, of. 304, Las Condes', M + 7, yy + 3);
     return y + h + 4;
   }
   function pdfSimple(titulo, subtitulo, secciones, opc) {
