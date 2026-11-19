@@ -304,13 +304,57 @@ async function confirmarReunion(env, url) {
   const nombre = esc(rec.nombre || rec.email);
   return pagina('Reunión', `<p class="eyebrow">Reunión con ${nombre}</p><h1>${final === 'si' ? '¡Gracias! Quedó registrada como realizada' : 'Registramos que no se presentó'}</h1>`
     + `<p>${final === 'si' ? 'En una hora le llegará el correo de agradecimiento con la encuesta y la invitación a dejar una reseña. En 48 horas, el de seguimiento.' : 'Le enviaremos un correo para reagendar la reunión cuando le acomode. No recibirá el agradecimiento ni la encuesta.'}</p>`
-    + (yaEnviado && final !== r ? '<p class="err">Ya se habían enviado los correos de la respuesta anterior, así que no se cambió.</p>' : ''));
+    + (yaEnviado && final !== r ? '<p class="err">Ya se habían enviado los correos de la respuesta anterior, así que no se cambió.</p>' : '')
+    + (final === 'si' ? formularioGrabacion(url.searchParams.get('t'), rec) : ''));
+}
+
+// Grabación de la reunión: el asesor pega el enlace y se envía a Iván Barboza y Felipe Rojas (y queda en el CRM).
+export const GRABACION_PARA = [{ email: 'ibarboza@grupomm.cl', name: 'Iván Barboza' }, { email: 'frojas@grupomm.cl', name: 'Felipe Rojas' }];
+function formularioGrabacion(t, rec) {
+  if (rec.grabacion) return `<p style="margin-top:22px"><strong>Grabación enviada</strong> a Iván y Felipe.</p>`;
+  return `<form method="post" action="/seguimiento/reunion" style="margin-top:26px;padding-top:20px;border-top:1px solid ${C.borde}">
+<input type="hidden" name="t" value="${esc(t)}">
+<p style="margin:0 0 8px"><strong>Grabación de la reunión</strong><br><span style="font-size:14px;color:${C.gris}">Pega el enlace de la grabación (Brevo Meetings, Drive u otro) y se la enviamos a Iván Barboza y Felipe Rojas.</span></p>
+<input name="enlace" type="url" required placeholder="https://…" style="width:100%;padding:12px 14px;border:1px solid ${C.borde};border-radius:12px;font:inherit;margin:0 0 10px">
+<textarea name="comentario" rows="3" placeholder="Comentario para Iván y Felipe (opcional)" style="width:100%;padding:12px 14px;border:1px solid ${C.borde};border-radius:12px;font:inherit;margin:0 0 12px"></textarea>
+<button type="submit" style="background:${C.lima};border:0;border-radius:999px;padding:13px 22px;font:inherit;font-weight:700;color:${C.verde};cursor:pointer">Enviar grabación a Iván y Felipe</button>
+</form>`;
+}
+
+async function enviarGrabacion(request, env) {
+  const f = await request.formData();
+  const d = await leer(env, String(f.get('t') || ''));
+  const enlace = String(f.get('enlace') || '').trim().slice(0, 600);
+  const comentario = String(f.get('comentario') || '').trim().slice(0, 1500);
+  if (!d || !d.rid) return enlaceVencido();
+  if (!/^https?:\/\/\S+$/i.test(enlace)) return pagina('Grabación', '<p class="err">El enlace no es válido. Vuelve atrás y pega el enlace completo (empieza con https://).</p>');
+  const rec = await env.DB.prepare('SELECT * FROM recordatorios WHERE id = ?').bind(d.rid).first();
+  if (!rec) return enlaceVencido();
+  const sender = { name: 'Pulso Inversor', email: env.SENDER_EMAIL || DEFAULT_SENDER };
+  const cuando = new Date(rec.inicio).toLocaleString('es-CL', { timeZone: 'America/Santiago', weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit', hour12: false });
+  await brevo(env, {
+    sender, to: GRABACION_PARA,
+    subject: `Grabación: reunión de ${rec.asesor || 'Pulso Inversor'} con ${rec.nombre || rec.email}`,
+    htmlContent: plantilla({
+      preheader: `Grabación de la reunión del ${cuando} h.`,
+      eyebrow: 'Grabación de reunión', titulo: `Reunión con ${esc(rec.nombre || rec.email)}`,
+      cuerpo: bloqueResumen([`Persona: ${rec.nombre || '—'}`, `Correo: ${rec.email}`, `Asesor: ${rec.asesor || '—'}`, `Fecha: ${cuando} h`])
+        + (comentario ? P(`<strong>Comentario del asesor:</strong><br>${esc(comentario).replace(/\n/g, '<br>')}`) : ''),
+      botones: boton('Ver la grabación', enlace),
+      pie: 'Aviso interno de reuniones de pulsoinversor.cl.',
+    }),
+    tags: ['reunion-grabacion'],
+  }, rec.email);
+  await env.DB.prepare('UPDATE recordatorios SET grabacion = ? WHERE id = ?').bind(enlace, rec.id).run();
+  const { crmReunion } = await import('./crm.js');
+  await crmReunion(env, { email: rec.email, nombre: rec.nombre, estado: 'Grabación', inicio: rec.inicio, asesor: rec.asesor, detalle: enlace, soloNota: true });
+  return pagina('Grabación', `<p class="eyebrow">Reunión con ${esc(rec.nombre || rec.email)}</p><h1>Grabación enviada</h1><p>Se la enviamos a Iván Barboza y Felipe Rojas, y quedó guardada en la ficha del contacto en Brevo.</p>`);
 }
 
 export async function rutaSeguimiento(request, env, url) {
   if (!['GET', 'POST'].includes(request.method)) return new Response('Método no permitido', { status: 405 });
   if (url.pathname === '/seguimiento/agendar') return agendar(request, env, url);
   if (url.pathname === '/seguimiento/encuesta') return encuesta(request, env, url);
-  if (url.pathname === '/seguimiento/reunion') return confirmarReunion(env, url);
+  if (url.pathname === '/seguimiento/reunion') return request.method === 'POST' ? enviarGrabacion(request, env) : confirmarReunion(env, url);
   return null;
 }

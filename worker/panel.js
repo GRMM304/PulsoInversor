@@ -4,6 +4,7 @@
 import { ASESORES, esc, clp } from './comun.js';
 import { reunionesPorEmail } from './reuniones.js';
 import { eventoMeta } from './meta.js';
+import { avanzarNegocio } from './crm.js';
 
 const enc = new TextEncoder();
 async function firmarSesion(env, valor) {
@@ -160,6 +161,7 @@ async function marcarInvirtio(request, env) {
       persona: { email: s.email, telefono: s.telefono, nombre: s.nombre },
       datos: { value: Number(s.monto) || 0, currency: 'CLP', content_name: s.tipo },
     });
+    await avanzarNegocio(env, { email: s.email }, 'Invirtió', { nombre: s.nombre, estrategia: s.tipo, monto: s.monto });
   }
   return new Response(null, { status: 303, headers: { location: '/panel' } });
 }

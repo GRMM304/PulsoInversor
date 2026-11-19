@@ -16,7 +16,7 @@
 import { informeSemanal } from './informe.js';
 import { eventoMeta, datosWeb } from './meta.js';
 import { whatsappSimulacion } from './respondio.js';
-import { recibirRespondio } from './crm.js';
+import { recibirRespondio, avanzarNegocio } from './crm.js';
 import { avisoWhatsapp, esPrueba, DEFAULT_SENDER, EQUIPO, MAX_PDF_BYTES, ORIGENES, TIPOS, ASESORES, asesoresPara, json, esc, clp, brevo, plantilla, boton, bloqueResumen, P, C, WHATSAPP } from './comun.js';
 import { programarSeguimiento, rutaSeguimiento, HORAS_SEGUIMIENTO } from './seguimiento.js';
 import { rutaPanel } from './panel.js';
@@ -149,7 +149,13 @@ async function enviarSimulacion(request, env) {
     if (env.DB && id) await env.DB.prepare('UPDATE simulaciones SET whatsapp = ? WHERE id = ?').bind(wa.ok ? 'enviado ' + new Date().toISOString() : (wa.omitido ? 'omitido: ' + wa.omitido : 'error: ' + (wa.error || '')).slice(0, 200), id).run().catch(() => {});
   }
 
-  // 5) Meta (API de conversiones): el mismo SubmitApplication que envió el navegador, con el mismo ID para no duplicarlo.
+  // 5) CRM (Brevo): negocio en el embudo de Pulso Inversor ("Nuevo lead"), salvo pruebas y simuladores del equipo.
+  if (!d.equipo && !esPrueba(email)) {
+    const neg = await avanzarNegocio(env, { email }, 'Nuevo lead', { nombre, estrategia: tipo, monto });
+    if (neg && neg.ok === false) console.error('crm simulacion', neg.error);
+  }
+
+  // 6) Meta (API de conversiones): el mismo SubmitApplication que envió el navegador, con el mismo ID para no duplicarlo.
   //    Llega aunque la persona tenga bloqueador de anuncios. No se envía en pruebas ni desde los simuladores del equipo.
   const metaId = String(d.metaEventId || '').slice(0, 80);
   if (metaId && !esPrueba(email)) {

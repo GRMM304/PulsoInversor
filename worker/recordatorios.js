@@ -157,7 +157,7 @@ async function avisoAsesor(env, r, sender) {
     eyebrow: 'Reunión terminada', titulo: `¿Se realizó la reunión con ${esc(nombre)}?`,
     cuerpo: P(`La reunión de las <strong>${hora(r.inicio)} h</strong> ya terminó. Confírmanos con un clic:`)
       + bloqueResumen([`Persona: ${nombre}`, `Correo: ${r.email}`, `Hora: ${fechaLarga(r.inicio)} h`])
-      + P(`<strong>Sí, se realizó:</strong> en una hora le llega el agradecimiento con la encuesta y la invitación a dejar una reseña, y en 48 horas el seguimiento.<br><strong>No se presentó:</strong> le llega una invitación para reagendar. No recibe el agradecimiento.`)
+      + P(`<strong>Sí, se realizó:</strong> en una hora le llega el agradecimiento con la encuesta y la invitación a dejar una reseña, y en 48 horas el seguimiento. En la misma página puedes pegar el <strong>enlace de la grabación</strong> para enviársela a Iván y Felipe.<br><strong>No se presentó:</strong> le llega una invitación para reagendar. No recibe el agradecimiento.`)
       + `<p style="margin:0 0 14px;font-size:13px;color:${C.gris}">Si no respondes, no se le envía nada después de la reunión.</p>`,
     botones: boton('Sí, se realizó', `${SITIO}/seguimiento/reunion?r=si&t=${t}`) + boton('No se presentó', `${SITIO}/seguimiento/reunion?r=no&t=${t}`, false),
     pie: 'Aviso interno de reuniones de pulsoinversor.cl.',

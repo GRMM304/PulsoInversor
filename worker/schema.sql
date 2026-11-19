@@ -65,7 +65,8 @@ CREATE TABLE IF NOT EXISTS recordatorios (
   aviso_asesor TEXT,                -- correo al asesor al terminar: "¿se realizó la reunión?"
   realizada TEXT,                   -- 'si' / 'no' según responde el asesor (fecha en realizada_en)
   realizada_en TEXT,
-  noshow TEXT                       -- correo "¿reagendamos?" si la persona no se presentó
+  noshow TEXT,                      -- correo "¿reagendamos?" si la persona no se presentó
+  grabacion TEXT                    -- enlace de la grabación que pegó el asesor (se envía a Iván y Felipe)
 );
 CREATE INDEX IF NOT EXISTS idx_rec_inicio ON recordatorios(inicio);
 
