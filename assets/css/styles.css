@@ -1665,16 +1665,6 @@ main p,main li,main blockquote{-webkit-hyphens:manual!important;hyphens:manual!i
   .footer-bottom{margin-top:24px}
 
   /* Tabla comparativa de Inversiones: una tarjeta por alternativa */
-  .table-wrap.compare{overflow:visible;background:transparent;box-shadow:none;border:0}
-  .table-wrap.compare table{min-width:0;display:block;border:0;background:transparent}
-  .table-wrap.compare thead{display:none}
-  .table-wrap.compare tbody{display:grid;gap:12px}
-  .table-wrap.compare tr{display:block;background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:16px 18px;box-shadow:var(--shadow-soft)}
-  .table-wrap.compare td{display:flex;justify-content:space-between;gap:14px;padding:8px 0;border:0;border-top:1px solid var(--gray-100);font-size:14px;text-align:right;position:static;background:none!important}
-  .table-wrap.compare td::before{content:attr(data-label);color:var(--gray-500);font-weight:600;text-align:left;flex:0 0 42%}
-  .table-wrap.compare td:first-child{display:block;border-top:0;padding:0 0 8px;font-size:17px;font-weight:800;color:var(--green-900);text-align:left}
-  .table-wrap.compare td:first-child::before{content:none}
-  .table-wrap.compare+.tabla-hint{display:none}
 }
 
 /* ===================== Celular estilo app (paso 2): tarjetas que se deslizan ===================== */
@@ -2150,3 +2140,13 @@ iframe[title="Webchat Widget"]{z-index:2147483000!important}
 
 /* 2026-11-18: sin botón "volver arriba" en desktop (en celular ya estaba oculto) */
 .to-top{display:none!important}
+
+/* 2026-11-19: tabla comparativa deslizable en celular; garantías con gesto de deslizar */
+@media (max-width:760px){
+  .table-wrap.compare{scroll-snap-type:x proximity}
+  .table-wrap.compare table{min-width:720px}
+  .table-wrap.compare td:first-child,.table-wrap.compare th:first-child{min-width:150px;max-width:170px}
+}
+.gdeck-stage{touch-action:pan-y}
+.footer .logo-foot{height:auto;width:210px;max-width:100%}
+@media (max-width:760px){.footer .logo-foot{width:170px}}

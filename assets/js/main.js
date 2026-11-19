@@ -174,6 +174,14 @@
     tabs.forEach(function (t) { t.addEventListener('click', function () { ir(+t.getAttribute('data-go')); auto(); }); });
     deck.addEventListener('mouseenter', function () { clearInterval(timer); deck.classList.add('is-paused'); });
     deck.addEventListener('mouseleave', function () { deck.classList.remove('is-paused'); ir(i); auto(); });
+    // Con el dedo: deslizar a la izquierda muestra la siguiente tarjeta; a la derecha, la anterior.
+    var x0 = null, y0 = null;
+    deck.addEventListener('touchstart', function (e) { var t = e.touches[0]; x0 = t.clientX; y0 = t.clientY; }, { passive: true });
+    deck.addEventListener('touchend', function (e) {
+      if (x0 === null) return;
+      var t = e.changedTouches[0], dx = t.clientX - x0, dy = t.clientY - y0; x0 = null;
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) { ir(dx < 0 ? i + 1 : i - 1); auto(); }
+    }, { passive: true });
     ir(0); auto();
   });
 
