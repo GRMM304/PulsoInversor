@@ -193,11 +193,32 @@
       body: JSON.stringify({ equipo: EQUIPO || undefined, metaEventId: metaEventId || undefined, pageUrl: location.href.split('#')[0], tipo: tipo, cliente: { nombre: contacto.nombre, email: contacto.email, telefono: contacto.telefono, edad: contacto.edad, publicidad: contacto.publicidad === true, consentimiento: contacto.consentimiento || null }, pdfBase64: b64, archivo: archivo, resumen: resumen, monto: Math.round(monto || 0), website: '' }) })
       .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return r.ok && j.ok; }); })
       .then(function (ok) {
+        if (ok) avisoEnviado(contacto.email, asesoresPara(monto));
         st.classList.add(ok ? 'is-ok' : 'is-err');
         st.textContent = ok ? '✓ Te enviamos la simulación a ' + contacto.email + '. ' + asesoresPara(monto).join(' y ') + (asesoresPara(monto).length > 1 ? ' se contactarán contigo' : ' se contactará contigo') + ' pronto. Si no ves el correo, revisa tu carpeta de spam.'
           : 'No pudimos enviar el correo en este momento. Ya recibimos tu simulación y un asesor te la hará llegar.';
       }, function () { st.classList.add('is-err'); st.textContent = 'No pudimos enviar el correo en este momento. Ya recibimos tu simulación y un asesor te la hará llegar.'; })
       .then(function () { btn.disabled = false; });
+  }
+  function avisoEnviado(email, asesores) {
+    var m = document.createElement('div');
+    m.className = 'ag-modal sim-ok-modal'; m.setAttribute('role', 'dialog'); m.setAttribute('aria-modal', 'true'); m.setAttribute('aria-labelledby', 'sim-ok-t');
+    var quien = asesores.join(' y ') + (asesores.length > 1 ? ' se contactarán' : ' se contactará');
+    m.innerHTML = '<div class="ag-fondo"></div><div class="ag-caja"><button type="button" class="ag-x" aria-label="Cerrar">✕</button>' +
+      '<div class="sim-ok-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>' +
+      '<h2 id="sim-ok-t">¡Simulación enviada!</h2><p class="ag-sub">Te enviamos tu simulación en PDF a <strong></strong>. ' + quien + ' contigo pronto.</p>' +
+      '<p class="sim-ok-spam">Si no ves el correo en unos minutos, revisa tu carpeta de spam o promociones.</p>' +
+      '<button type="button" class="btn btn-primary btn-xl sim-ok-btn">Entendido</button></div>';
+    m.querySelector('.ag-sub strong').textContent = email;
+    var antes = document.activeElement;
+    function cerrar() { document.removeEventListener('keydown', tecla); document.body.classList.remove('ag-abierto'); m.remove(); if (antes && antes.focus) antes.focus(); }
+    function tecla(e) { if (e.key === 'Escape') cerrar(); }
+    m.querySelector('.ag-fondo').addEventListener('click', cerrar);
+    m.querySelector('.ag-x').addEventListener('click', cerrar);
+    m.querySelector('.sim-ok-btn').addEventListener('click', cerrar);
+    document.addEventListener('keydown', tecla);
+    document.body.appendChild(m); document.body.classList.add('ag-abierto');
+    requestAnimationFrame(function () { m.classList.add('is-open'); m.querySelector('.sim-ok-btn').focus(); });
   }
   function jspdfListo(st) { if (window.jspdf && window.jspdf.jsPDF) return true; st.textContent = 'No se pudo preparar el documento. Revisa tu conexión y recarga la página.'; return false; }
 
