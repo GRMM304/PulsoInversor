@@ -178,7 +178,12 @@ export default {
       // /assets y /api siguen su curso normal; cualquier otra ruta va al sitio en www.
       const pagina = url.pathname === '/' ? '/presentacion/' : /^\/simuladores\/?$/.test(url.pathname) ? '/simuladores-equipo' : null;
       if (pagina) {
-        const r = await env.ASSETS.fetch(new Request(new URL(pagina, url)));
+        let r = await env.ASSETS.fetch(new Request(new URL(pagina, url)));
+        // En los simuladores de la presentación no va el menú del sitio (ni barra inferior, pie ni chat): solo el logo, que vuelve a la presentación.
+        if (pagina === '/simuladores-equipo') r = new HTMLRewriter()
+          .on('head', { element: (e) => e.append('<style>.header nav,.header .nav-actions,.header .mobile-toggle,.tabbar,.footer{display:none!important}</style>', { html: true }) })
+          .on('script[src*="lorenzo.js"]', { element: (e) => e.remove() })
+          .transform(r);
         return new Response(r.body, { status: r.status, headers: { 'content-type': 'text/html; charset=utf-8', 'x-robots-tag': 'noindex, nofollow', 'cache-control': 'no-cache' } });
       }
       if (!/^\/(assets\/|api\/|manifest\.webmanifest$)/.test(url.pathname)) return Response.redirect('https://www.pulsoinversor.cl' + url.pathname + url.search, 301);
