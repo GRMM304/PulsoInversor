@@ -2177,3 +2177,45 @@ iframe[title="Webchat Widget"]{z-index:2147483000!important}
 .camino-bg-3{background:url(../img/igr/arquitectura-de-capital.jpg) center 45%/cover}
 .camino-bg::after{background:linear-gradient(180deg,rgba(14,44,40,.30) 0%,rgba(14,44,40,.45) 40%,rgba(10,30,26,.94) 100%)}
 .camino:not(.is-open) .camino-bg::after{background:linear-gradient(180deg,rgba(14,44,40,.55) 0%,rgba(14,44,40,.65) 45%,rgba(10,30,26,.95) 100%)}
+
+/* Matriz IGR del inicio, v3 (2026-11-19): fondos de marca con trama, número grande e íconos duotono animados */
+.camino-bg-1{background:radial-gradient(120% 80% at 100% 0%,rgba(199,217,93,.35),transparent 55%),linear-gradient(165deg,#1f5a48,#0E2C28 75%)}
+.camino-bg-2{background:radial-gradient(120% 80% at 0% 0%,rgba(242,193,78,.30),transparent 55%),linear-gradient(195deg,#24604c,#0c2723 75%)}
+.camino-bg-3{background:radial-gradient(120% 80% at 50% 0%,rgba(140,200,170,.30),transparent 55%),linear-gradient(180deg,#1a4d42,#0a211e 75%)}
+.camino-bg::after{background:radial-gradient(rgba(255,255,255,.09) 1px,transparent 1.4px) 0 0/18px 18px;-webkit-mask:linear-gradient(180deg,#000,transparent 70%);mask:linear-gradient(180deg,#000,transparent 70%)}
+.camino:not(.is-open) .camino-bg::after{background:radial-gradient(rgba(255,255,255,.07) 1px,transparent 1.4px) 0 0/18px 18px}
+.camino-big{position:absolute;right:-6px;top:40px;font-size:190px;font-weight:800;line-height:1;letter-spacing:-.06em;color:transparent;-webkit-text-stroke:1.5px rgba(255,255,255,.10);pointer-events:none;transition:opacity .5s,transform .7s cubic-bezier(.2,.8,.2,1)}
+.camino:not(.is-open) .camino-big{opacity:.6;transform:translateY(10px)}
+.camino-top{position:relative}
+.camino-ic{width:112px;height:112px;margin-bottom:18px;border-radius:28px;display:grid;place-items:center;background:linear-gradient(145deg,rgba(255,255,255,.14),rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 18px 40px -18px rgba(0,0,0,.6);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:width .55s cubic-bezier(.2,.8,.2,1),height .55s cubic-bezier(.2,.8,.2,1),border-radius .55s}
+.camino:not(.is-open) .camino-ic{width:84px;height:84px;border-radius:22px}
+.camino-ic svg{width:74%;height:74%;overflow:visible}
+.camino-ic .ic-line{fill:none;stroke:#fff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.camino-ic .ic-fill{fill:var(--lime)}
+.camino-ic .ic-soft{fill:rgba(255,255,255,.22)}
+.camino-ic .ic-dark{fill:var(--green-900)}
+.camino-ic .ic-ring{fill:rgba(199,217,93,.16);stroke:var(--lime);stroke-width:2}
+.camino-ic .ic-dot{fill:var(--lime)}
+.camino-ic .ic-draw{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .9s ease .2s}
+.camino.is-open .camino-ic .ic-draw{stroke-dashoffset:0}
+.camino-ic .ic-grow{transform-box:fill-box;transform-origin:50% 100%;transform:scaleY(.35);transition:transform .7s cubic-bezier(.2,.8,.2,1) var(--d,0s)}
+.camino.is-open .camino-ic .ic-grow{transform:none}
+.camino-ic .ic-win rect{opacity:.25;transition:opacity .3s ease calc(.3s + var(--d,0s))}
+.camino.is-open .camino-ic .ic-win rect{opacity:1}
+.camino-ic .ic-dot{transform-box:fill-box;transform-origin:center;transform:scale(0);transition:transform .4s ease .9s}
+.camino.is-open .camino-ic .ic-dot{transform:scale(1)}
+.camino-ic .ic-node{transform-box:fill-box;transform-origin:center;transform:scale(.6);opacity:.5;transition:transform .5s cubic-bezier(.3,1.4,.5,1) calc(.4s + var(--d,0s)),opacity .4s calc(.4s + var(--d,0s))}
+.camino.is-open .camino-ic .ic-node{transform:none;opacity:1}
+.camino-verbo{display:inline-block;margin-bottom:8px;font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--lime)}
+@media (max-width:900px){
+  .camino .camino-ic{width:96px;height:96px;border-radius:24px}
+  .camino .camino-ic .ic-draw{stroke-dashoffset:0}.camino .camino-ic .ic-grow{transform:none}.camino .camino-ic .ic-win rect{opacity:1}.camino .camino-ic .ic-dot{transform:scale(1)}.camino .camino-ic .ic-node{transform:none;opacity:1}
+  .camino-big{font-size:150px;opacity:1!important;transform:none!important}
+}
+@media (prefers-reduced-motion:reduce){.camino-ic *{transition:none!important}}
+.camino-ic{width:132px;height:132px;border-radius:32px}
+.camino:not(.is-open) .camino-ic{width:100px;height:100px;border-radius:26px}
+.camino-ic svg{width:90%;height:90%}
+.camino-ic .ic-line{stroke-width:3.6}
+.camino-ic .ic-node{transform:scale(.85);opacity:.8}
+@media (max-width:900px){.camino .camino-ic{width:112px;height:112px;border-radius:28px}}
