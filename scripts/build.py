@@ -603,7 +603,7 @@ estrategias = ''.join(f"""<article class="aht" id="estrategia-{n.lower().replace
         <div><dt>Ticket mínimo</dt><dd>{tk}</dd></div>
         <div><dt>Plazo</dt><dd>{pl}</dd></div>
         <div><dt>Interés mensual</dt><dd>{it}</dd></div>
-        <div><dt>Retiro anticipado</dt><dd>{rt}</dd></div>
+        <div><dt>Retiros trimestrales</dt><dd>{rt}</dd></div>
       </dl>
     </article>""" for l, n, tag, gar, tk, pl, it, rt in ESTRATEGIAS)
 
@@ -926,9 +926,9 @@ f"""
         <span class="pro-label">Plazo</span>
         <div class="pro-chips" id="p-plazos"></div>
         <div class="pro-retiro" id="p-retiro-wrap">
-          <span class="pro-label">¿Quieres la opción de retiro anticipado?</span>
-          <div class="pro-yesno" role="group" aria-label="Retiro anticipado"><button type="button" class="chip-opt" data-retiro="0">No</button><button type="button" class="chip-opt" data-retiro="1">Sí</button></div>
-          <p class="pro-help">Si eliges Sí, puedes retirar antes del plazo, y la tasa mensual baja 0,1 punto (por ejemplo, de 1,0% a 0,9%).</p>
+          <span class="pro-label">¿Quieres la opción de retiros trimestrales?</span>
+          <div class="pro-yesno" role="group" aria-label="Retiros trimestrales"><button type="button" class="chip-opt" data-retiro="0">No</button><button type="button" class="chip-opt" data-retiro="1">Sí</button></div>
+          <p class="pro-help">Si eliges Sí, puedes hacer retiros cada tres meses, y la tasa mensual baja 0,1 punto (por ejemplo, de 1,0% a 0,9%).</p>
         </div>
       </div>
       <div class="pro-out">
