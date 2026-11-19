@@ -11,6 +11,30 @@
 
 import { RESENAS_GOOGLE, asesorDeReunion, DEFAULT_SENDER, ASESORES, SITIO, WHATSAPP, WHATSAPP_TXT, C, P, esc, brevo, boton, bloqueResumen, plantilla } from './comun.js';
 import { firmar, procesarSeguimientos } from './seguimiento.js';
+import { whatsappPlantilla, telefonoChile } from './respondio.js';
+
+// WhatsApp del flujo de reuniones (respond.io): mismo momento que cada correo. Plantilla por etapa.
+const WA_PLANTILLAS = { conf: 'pulso_reunion_agendada', r24: 'pulso_reunion_24h', r1h: 'pulso_reunion_1h', r1m: 'pulso_reunion_ahora', p1h: 'pulso_reunion_gracias', noshow: 'pulso_reunion_reagendar', p48: 'pulso_reunion_seguimiento' };
+async function waReunion(env, r, etapa, enlace) {
+  const a = asesorDeReunion(r.asesor);
+  const asesor = a ? a.asesor.nombre : (r.asesor || 'nuestro equipo');
+  const primer = String(r.nombre || '').trim().split(/\s+/)[0] || 'Hola';
+  let tel = r.telefono;
+  if (!tel) { const s = await env.DB.prepare('SELECT telefono FROM simulaciones WHERE lower(email) = ? AND telefono IS NOT NULL ORDER BY creado DESC LIMIT 1').bind(r.email).first().catch(() => null); tel = s && s.telefono; }
+  const cuando = fechaLarga(r.inicio) + ' h';
+  const vars = {
+    conf: [primer, asesor, cuando],
+    r24: [primer, asesor, cuando],
+    r1h: [primer, asesor, hora(r.inicio) + ' h', r.url_video || 'el enlace que te enviamos por correo'],
+    r1m: [primer, asesor, r.url_video || 'el enlace que te enviamos por correo'],
+    p1h: [primer, asesor, enlace || SITIO],
+    noshow: [primer, asesor, enlace || r.url_cambio || SITIO],
+    p48: [primer, asesor],
+  }[etapa];
+  const res = await whatsappPlantilla(env, { telefono: tel, nombre: r.nombre, email: r.email, plantilla: WA_PLANTILLAS[etapa], variables: vars });
+  if (!res.ok) console.log('whatsapp reunion', etapa, r.id, JSON.stringify(res));
+  return res;
+}
 
 const ETAPAS = [
   { col: 'r24', antes: 24 * 60, margenMin: 60 },   // si reservó con menos de ~25 h, no se envía el de 24 h
@@ -33,10 +57,13 @@ export async function guardarReserva(env, m) {
   }
   const ya = await env.DB.prepare('SELECT id FROM recordatorios WHERE email = ? AND inicio = ? AND cancelada IS NULL').bind(email, m.meeting_start_timestamp).first();
   if (ya) return;
-  await env.DB.prepare('INSERT INTO recordatorios (creado, email, nombre, asesor, inicio, fin, url_video, url_cambio, lugar) VALUES (?,?,?,?,?,?,?,?,?)')
+  const ids = m.identifiers || {};
+  const telefono = telefonoChile(ids.whatsapp_id || ids.phone_id || p.SMS || p.WHATSAPP || '') || null;
+  const ins = await env.DB.prepare('INSERT INTO recordatorios (creado, email, nombre, asesor, inicio, fin, url_video, url_cambio, lugar, telefono) VALUES (?,?,?,?,?,?,?,?,?,?) RETURNING *')
     .bind(new Date().toISOString(), email, [p.FIRSTNAME, p.LASTNAME].filter(Boolean).join(' '), m.meeting_name || '', m.meeting_start_timestamp, m.meeting_end_timestamp || null,
-      m.meeting_url || null, m.reschedule_cancel_url || null, [m.meeting_location, m.meeting_address].filter((x) => x && x !== 'Sendinblue video').join(' · ') || null)
-    .run();
+      m.meeting_url || null, m.reschedule_cancel_url || null, [m.meeting_location, m.meeting_address].filter((x) => x && x !== 'Sendinblue video').join(' · ') || null, telefono)
+    .first();
+  if (ins) await waReunion(env, ins, 'conf');   // WhatsApp: "tu reunión quedó agendada"
 }
 
 export async function cancelarReserva(env, m) {
@@ -210,6 +237,7 @@ export async function procesarRecordatorios(env) {
         try {
           const c = correo(r, e.col);
           const a = asesorPorNombre(r.asesor);
+          await waReunion(env, r, e.col);
           await brevo(env, { sender, to: [{ email: r.email, name: r.nombre || undefined }], replyTo: a ? { email: a.email, name: a.nombre } : undefined, subject: c.asunto, htmlContent: c.html, tags: ['reunion-recordatorio', e.col] }, r.email);
           estado = new Date().toISOString(); enviados++;
         } catch (x) { estado = 'error: ' + String(x.message || x).slice(0, 150); }
@@ -233,6 +261,7 @@ export async function procesarRecordatorios(env) {
       let estado;
       try {
         const c = await correoNoShow(env, r);
+        await waReunion(env, r, 'noshow', (c.html.match(/href="([^"]+)"[^>]*>Elegir otro horario/) || [])[1]);
         await brevo(env, { sender, to: [{ email: r.email, name: r.nombre || undefined }], replyTo: c.replyTo ? { email: c.replyTo.email, name: c.replyTo.nombre } : undefined, subject: c.asunto, htmlContent: c.html, tags: ['reunion-noshow'] }, r.email);
         estado = new Date().toISOString(); enviados++;
       } catch (x) { estado = 'error: ' + String(x.message || x).slice(0, 150); }
@@ -255,6 +284,7 @@ export async function procesarRecordatorios(env) {
       if (ahora < fin + e.limite * 60e3 && env.FIRMA_SEGUIMIENTO) {
         try {
           const c = await correoPosterior(env, r, e.col);
+          await waReunion(env, r, e.col, ((c.html.match(/(https?:[^"]+\/seguimiento\/encuesta\?t=[^"&]+)/) || [])[1]));
           await brevo(env, { sender, to: [{ email: r.email, name: r.nombre || undefined }], replyTo: { email: c.replyTo.email, name: c.replyTo.nombre }, subject: c.asunto, htmlContent: c.html, tags: ['reunion-posterior', e.col] }, r.email);
           estado = new Date().toISOString(); enviados++;
         } catch (x) { estado = 'error: ' + String(x.message || x).slice(0, 150); }

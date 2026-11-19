@@ -67,3 +67,35 @@ export async function whatsappSimulacion(env, { nombre, email, telefono, edad, t
     return { ok: false, pasos, error: e.message.slice(0, 200) };
   }
 }
+
+// ---------- Plantillas de WhatsApp para el flujo de reuniones ----------
+// Se envía una plantilla solo si está APROBADA en respond.io (se revisa cada 10 minutos). Así se pueden ir creando de a poco.
+let cachePlantillas = null;
+async function plantillasAprobadas(env) {
+  if (cachePlantillas && Date.now() - cachePlantillas.t < 10 * 60e3) return cachePlantillas.v;
+  const d = await llamar(env, 'GET', `/space/channel/${CANAL_WHATSAPP}/template`);
+  const v = new Map((d.items || []).filter((t) => t.status === 'approved').map((t) => [t.name, t.languageCode || 'es_CL']));
+  cachePlantillas = { t: Date.now(), v };
+  return v;
+}
+
+export async function whatsappPlantilla(env, { telefono, nombre, email, plantilla, variables }) {
+  if (!env.RESPONDIO_TOKEN) return { omitido: 'sin token' };
+  const fono = telefonoChile(telefono);
+  if (!fono) return { omitido: 'sin teléfono válido' };
+  try {
+    const aprobadas = await plantillasAprobadas(env);
+    if (!aprobadas.has(plantilla)) return { omitido: 'plantilla no aprobada: ' + plantilla };
+    const id = encodeURIComponent('phone:' + fono);
+    const partes = String(nombre || '').trim().split(/\s+/);
+    await llamar(env, 'POST', `/contact/create_or_update/${id}`, { firstName: partes[0] || '', lastName: partes.slice(1).join(' '), phone: fono, email: email || undefined, language: 'es', countryCode: 'CL' });
+    await llamar(env, 'POST', `/contact/${id}/message`, {
+      channelId: CANAL_WHATSAPP,
+      message: { type: 'whatsapp_template', template: { name: plantilla, languageCode: aprobadas.get(plantilla), components: [{ type: 'body', parameters: variables.map((v) => ({ type: 'text', text: String(v || '-').slice(0, 900) })) }] } },
+    });
+    return { ok: true };
+  } catch (e) {
+    console.error('whatsapp', plantilla, e.message);
+    return { ok: false, error: e.message.slice(0, 200) };
+  }
+}
