@@ -46,7 +46,6 @@
   var tabs = $$('[data-sim-tab]'), panels = $$('[data-sim-panel]');
   var stage = $('#sim-stage'), gate = $('#sim-gate');
   var contacto = ses.get('pulsoContacto');
-  if (contacto && !contacto.edad) contacto = null; // datos guardados antes de pedir la edad: se vuelven a pedir
   // Página del equipo (/panel/simuladores): ya entró con la clave, así que no se piden datos.
   var EQUIPO = root.hasAttribute('data-equipo');
   function setLocked(locked) {
@@ -116,7 +115,7 @@
   }
   function pdfProximos(doc, y, M, CW, monto) {
     var nombres = asesoresPara(monto), varios = nombres.length > 1, quien = nombres.join(' y ');
-    var pasos = ['1. ' + quien + (varios ? ' te escribirán' : ' te escribirá') + ' en las próximas horas hábiles para resolver tus dudas.',
+    var pasos = ['1. ' + quien + (varios ? ' se contactarán contigo' : ' se contactará contigo') + ' en las próximas horas hábiles para resolver tus dudas.',
       '2. Si quieres, te mostramos una operación real: la propiedad, su tasación y el documento que queda a tu favor.',
       '3. Revisas todo con calma, con tu abogado si lo prefieres. No te pedimos decidir en la reunión.'];
     doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5);
@@ -195,7 +194,7 @@
       .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return r.ok && j.ok; }); })
       .then(function (ok) {
         st.classList.add(ok ? 'is-ok' : 'is-err');
-        st.textContent = ok ? '✓ Te enviamos la simulación a ' + contacto.email + '. ' + asesoresPara(monto).join(' y ') + (asesoresPara(monto).length > 1 ? ' te escribirán' : ' te escribirá') + ' pronto. Si no ves el correo, revisa tu carpeta de spam.'
+        st.textContent = ok ? '✓ Te enviamos la simulación a ' + contacto.email + '. ' + asesoresPara(monto).join(' y ') + (asesoresPara(monto).length > 1 ? ' se contactarán contigo' : ' se contactará contigo') + ' pronto. Si no ves el correo, revisa tu carpeta de spam.'
           : 'No pudimos enviar el correo en este momento. Ya recibimos tu simulación y un asesor te la hará llegar.';
       }, function () { st.classList.add('is-err'); st.textContent = 'No pudimos enviar el correo en este momento. Ya recibimos tu simulación y un asesor te la hará llegar.'; })
       .then(function () { btn.disabled = false; });
