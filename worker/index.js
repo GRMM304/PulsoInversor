@@ -171,6 +171,16 @@ async function metaLead(request, env) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    // Presentación comercial: solo en presentacion.pulsoinversor.cl (no enlazada ni indexada). En los otros dominios no existe.
+    if (url.hostname === 'presentacion.pulsoinversor.cl') {
+      if (url.pathname === '/robots.txt') return new Response('User-agent: *\nDisallow: /\n', { headers: { 'content-type': 'text/plain; charset=utf-8' } });
+      const r = await env.ASSETS.fetch(new Request(new URL('/presentacion/', url)));
+      return new Response(r.body, { status: r.status, headers: { 'content-type': 'text/html; charset=utf-8', 'x-robots-tag': 'noindex, nofollow', 'cache-control': 'no-cache' } });
+    }
+    if (/^\/presentacion(\/|$)/.test(url.pathname)) {
+      const r = await env.ASSETS.fetch(new Request(new URL('/404', url)));
+      return new Response(r.body, { status: 404, headers: { 'content-type': 'text/html; charset=utf-8', 'x-robots-tag': 'noindex' } });
+    }
     // El sitio vive en www.pulsoinversor.cl. pulsoinversor.cl redirige siempre; 1.pulsoinversor.cl redirige las páginas
     // pero sigue atendiendo /api, /seguimiento y /panel (webhooks de Brevo y enlaces de correos ya enviados).
     const interno = /^\/(api|seguimiento|panel)(\/|$)/.test(url.pathname);
