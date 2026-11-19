@@ -6,7 +6,7 @@
 //
 // Secreto necesario en Cloudflare: FIRMA_SEGUIMIENTO (texto aleatorio para firmar los enlaces).
 
-import { avisoRespond, RESPOND_APP, AGENDA_BREVO, ASESORES, SITIO, WHATSAPP, WHATSAPP_TXT, DEFAULT_SENDER, C, P, esc, clp, brevo, boton, bloqueResumen, plantilla } from './comun.js';
+import { avisoWhatsapp, AGENDA_BREVO, ASESORES, SITIO, WHATSAPP, WHATSAPP_TXT, DEFAULT_SENDER, C, P, esc, clp, brevo, boton, bloqueResumen, plantilla } from './comun.js';
 
 export const HORAS_SEGUIMIENTO = 48;
 const ENCUESTA_EMAIL = ['eorrego@grupomm.cl'];
@@ -168,14 +168,14 @@ ${agendas.map((a, i) => `<p><a href="/seguimiento/agendar?t=${esc(t)}&amp;con=${
     replyTo: { email: d.e, name: d.n },
     subject: `Pide reunión: ${d.n} · ${diaTxt}, ${f.franja.split(' (')[0].toLowerCase()}`,
     htmlContent: plantilla({
-      preheader: `${d.n} quiere reunirse ${diaTxt}. Confírmale por WhatsApp desde respond.io.`,
+      preheader: `${d.n} quiere reunirse ${diaTxt}. Confírmale por el WhatsApp de Pulso Inversor.`,
       eyebrow: `Solicitud de reunión · ${d.s}`,
       titulo: `${esc(d.n)} quiere reunirse contigo`,
-      cuerpo: P(`Respondió el correo de seguimiento de su simulación. Escríbele por WhatsApp desde respond.io para confirmar la hora exacta.`)
-        + avisoRespond(d.p)
+      cuerpo: P(`Respondió el correo de seguimiento de su simulación. Escríbele por el WhatsApp de Pulso Inversor para confirmar la hora exacta.`)
+        + avisoWhatsapp(d.p)
         + bloqueResumen([`Día preferido: ${diaTxt}`, `Horario: ${f.franja}`, `Modalidad: ${f.modalidad}`, `Comentario: ${f.comentario || '—'}`])
         + bloqueResumen([`Nombre: ${d.n}`, `Correo: ${d.e}`, `Teléfono: ${d.p ? '+56 ' + d.p : '—'}`, `Simulador: ${d.s}`, `Monto simulado: ${d.m ? clp(d.m) : '—'}`, `Asesor asignado: ${nombres(ps)}`]),
-      botones: boton('Abrir respond.io', RESPOND_APP),
+      botones: '',
       pie: 'Aviso interno del seguimiento de simulaciones de pulsoinversor.cl.',
     }),
     tags: ['seguimiento-agenda'],

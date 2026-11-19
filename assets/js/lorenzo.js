@@ -119,7 +119,7 @@
     panel.hidden = true; raiz.classList.remove('is-open'); teaser.hidden = true;
     raiz.classList.add('lz-rio'); document.body.classList.add('lz-rio-abierto');
     window.$respond.do('chat:open');
-    if (window.fbq) { fbq('track', 'Contact', { content_name: 'Chat Lorenzo (respond.io)', content_category: location.pathname }); fbq('trackCustom', 'AbrirChatLorenzo'); }
+    if (window.fbq) { fbq('track', 'Contact', { content_name: 'Chat Lorenzo', content_category: location.pathname }); fbq('trackCustom', 'AbrirChatLorenzo'); }
     if (window.pulsoMedir) pulsoMedir('chat_lorenzo');
     try { sessionStorage.setItem('lzVisto', '1'); } catch (e) {}
     return true;

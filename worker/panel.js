@@ -98,7 +98,7 @@ async function panel(env, url) {
   const filas = filas0.map((s) => `
     <tr>
       <td><strong>${esc(s.nombre)}</strong><br><small>${esc(s.tipo)}${s.publicidad ? ' · acepta publicidad' : ''}</small></td>
-      <td><a href="mailto:${esc(s.email)}">${esc(s.email)}</a>${s.telefono ? `<br>+56 ${esc(s.telefono)} · <a href="https://app.respond.io/" target="_blank" title="Contactar por WhatsApp solo desde respond.io">respond.io</a>` : ''}</td>
+      <td><a href="mailto:${esc(s.email)}">${esc(s.email)}</a>${s.telefono ? `<br>+56 ${esc(s.telefono)}` : ''}</td>
       <td>${s.monto ? clp(s.monto) : '—'}</td>
       <td>${esc(s.asesor || '')}</td>
       <td>${esc(fmt(s.creado))}</td>
