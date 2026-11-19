@@ -288,7 +288,8 @@
     $('#p-falta').hidden = listo;
     if (!listo) {
       ['r-estrategia', 'r-monto', 'r-plazo', 'r-tasa', 'r-total', 'r-ganancia', 'd-total', 'd-dap', 'd-monto', 'd-plazo'].forEach(function (id) { $('#' + id).textContent = '—'; });
-      $('#d-tasa').textContent = fmtPct(DAP_ANUAL, 2);
+      $('#d-tasa').textContent = fmtPct(DAP_ANUAL, 1);
+      $('#d-base').textContent = 'Calculado con un depósito a plazo a 365 días renovable (' + fmtPct(DAP_ANUAL, 1) + ' anual).';
       $('#p-warn').hidden = !(P.serie && P.monto && P.monto < SERIES[P.serie].minimo);
       $('#p-pref').hidden = true; $('#r-nota-uf').hidden = !(P.serie && SERIES[P.serie].uf); $('#r-uf').textContent = fmtCLP(UF);
       return;
@@ -307,7 +308,8 @@
     $('#d-monto').textContent = fmtCLP(r.monto);
     $('#d-plazo').textContent = P.plazo + ' meses';
     $('#p-pref').hidden = r.monto < 250000000;
-    $('#d-tasa').textContent = fmtPct(DAP_ANUAL, 2);
+    $('#d-tasa').textContent = fmtPct(DAP_ANUAL, 1);
+    $('#d-base').textContent = 'Calculado a ' + P.plazo + ' meses, en base a un depósito a 365 días renovable (' + fmtPct(DAP_ANUAL, 1) + ' anual).';
     $('#r-nota-uf').hidden = !s.uf;
     $('#r-uf').textContent = fmtCLP(UF);
   }
@@ -315,9 +317,9 @@
   function resumen() {
     var r = calcular(), s = SERIES[P.serie];
     return 'Alternativa: Renta de Capital · ' + s.nombre + '\nMonto: ' + fmtCLP(r.monto) + '\nPlazo: ' + P.plazo + ' meses' +
-      (s.retiro ? '\nRetiro anticipado: ' + (P.retiro ? 'Sí' : 'No') : '') + '\nRentabilidad: ' + (s.uf ? 'UF + ' : '') + fmtPct(tasa(), 1) + ' mensual' +
+      (s.retiro ? '\nRetiros trimestrales: ' + (P.retiro ? 'Sí' : 'No') : '') + '\nRentabilidad: ' + (s.uf ? 'UF + ' : '') + fmtPct(tasa(), 1) + ' mensual' +
       '\nTotal a recibir (referencial): ' + fmtCLP(r.total) + '\nGanancia: ' + fmtCLP(r.ganancia) +
-      '\nDepósito a plazo a 365 días (' + fmtPct(DAP_ANUAL, 2) + ' anual): ' + fmtCLP(r.dapGanancia);
+      '\nDepósito a plazo a ' + P.plazo + ' meses: ganancia ' + fmtCLP(r.dapGanancia) + ' (simulado en base a un depósito a 365 días renovable, ' + fmtPct(DAP_ANUAL, 1) + ' anual)';
   }
   root.addEventListener('click', function (e) {
     var b;
@@ -341,11 +343,11 @@
     var resumenTxt = resumen();
     var doc = pdfSimple('Simulación Renta de Capital', 'Resultado referencial', [
       { t: 'Tu simulación', rows: [['Alternativa', 'Renta de Capital · ' + sr.nombre], ['Monto a invertir', fmtCLP(r.monto)], ['Plazo', P.plazo + ' meses'],
-        ['Rentabilidad', (sr.uf ? 'UF + ' : '') + fmtPct(tasa(), 1) + ' mensual']].concat(sr.retiro ? [['Retiro anticipado', P.retiro ? 'Sí' : 'No']] : []) },
+        ['Rentabilidad', (sr.uf ? 'UF + ' : '') + fmtPct(tasa(), 1) + ' mensual']].concat(sr.retiro ? [['Retiros trimestrales', P.retiro ? 'Sí' : 'No']] : []) },
       { t: 'Con Pulso Inversor', rows: [['Total a recibir', fmtCLP(r.total)], ['Ganancia', '+' + fmtCLP(r.ganancia), 'pos']] },
-      { t: 'En un depósito a plazo a 365 días', rows: [['Tasa referencial', fmtPct(DAP_ANUAL, 2) + ' anual'], ['Total a recibir', fmtCLP(r.dapTotal)], ['Ganancia', '+' + fmtCLP(r.dapGanancia), 'red']] },
+      { t: 'En un depósito a plazo a ' + P.plazo + ' meses', rows: [['Plazo', P.plazo + ' meses'], ['Base del cálculo', 'Depósito a 365 días renovable'], ['Tasa referencial', fmtPct(DAP_ANUAL, 1) + ' anual'], ['Total a recibir', fmtCLP(r.dapTotal)], ['Ganancia', '+' + fmtCLP(r.dapGanancia), 'red']] },
       { t: 'Tus próximos pasos', proximos: true },
-      { t: 'Supuestos', small: true, text: DISCLAIMER + ' Depósito a plazo: a 365 días, renovado al vencimiento con interés compuesto; para plazos que no son años completos, el último período se calcula en proporción al tiempo.' + (sr.uf ? ' Hipoteca y Título se reajustan en UF (UF ' + fmtCLP(UF) + ', IPC estimado 4,5% anual).' : '') }
+      { t: 'Supuestos', small: true, text: DISCLAIMER + ' Depósito a plazo: calculado a ' + P.plazo + ' meses, el mismo plazo de tu simulación, en base a un depósito a 365 días renovable (' + fmtPct(DAP_ANUAL, 1) + ' anual), renovado al vencimiento con interés compuesto; para plazos que no son años completos, el último período se calcula en proporción al tiempo.' + (sr.uf ? ' Hipoteca y Título se reajustan en UF (UF ' + fmtCLP(UF) + ', IPC estimado 4,5% anual).' : '') }
     ], { tipo: 'Renta de Capital', monto: r.monto });
     enviarCorreo('proyecta', doc, 'Simulacion_RentaDeCapital', resumenTxt.split('\n'), st, btn, r.monto);
   });

@@ -1199,6 +1199,7 @@ select{appearance:none;-webkit-appearance:none;padding-right:40px;background:#ff
 .pro-gain.bank strong{color:#c62828}
 .pro-dap .pro-list li{border-bottom-color:var(--gray-100);color:var(--gray-500)}
 .pro-dap .pro-list strong{color:var(--gray-900)}
+.pro-dap-base{margin:-6px 0 0;font-size:13px;line-height:1.45;color:var(--gray-500)}
 .pro-result .pro-total span{display:none}
 .pro-diff{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px;padding:18px 22px;border-radius:var(--radius-lg);background:linear-gradient(135deg,var(--lime),var(--gold));color:var(--green-900)}
 .pro-diff>span{font-weight:700;font-size:15px}
