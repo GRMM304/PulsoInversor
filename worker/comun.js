@@ -55,7 +55,9 @@ export function asesorDeReunion(nombreReunion) {
   return null;
 }
 export const EDAD_CORTE = 40;
-export const asesoresPara = (edad) => (Number(edad) > EDAD_CORTE ? ASESORES[1] : ASESORES[0]).personas;
+// La edad llega como rango ("18 a 29" … "60 o más"); se usa el límite inferior. Menos de 40 → grupo 0; 40 o más → grupo 1.
+export const edadMin = (edad) => parseInt(String(edad ?? ''), 10) || 0;
+export const asesoresPara = (edad) => (edadMin(edad) >= EDAD_CORTE ? ASESORES[1] : ASESORES[0]).personas;
 
 export const json = (obj, status = 200) => new Response(JSON.stringify(obj), {
   status, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' },

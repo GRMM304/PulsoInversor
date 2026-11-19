@@ -2,6 +2,7 @@
 // plantilla aprobada "simulacion_enviada", y el contacto queda en respond.io con su rango de edad, estrategia y monto
 // (campos que usan Lorenzo y los flujos para derivar a Renato o Pamela). Secreto: RESPONDIO_TOKEN.
 // Nunca lanza error: si algo falla, lo registra y el correo de la simulación sigue su curso.
+import { edadMin } from './comun.js';
 const API = 'https://api.respond.io/v2';
 export const CANAL_WHATSAPP = 580663;           // WhatsApp Business +56 9 5879 2038
 export const USUARIO_LORENZO = 76268113;        // agente Lorenzo en respond.io
@@ -36,7 +37,7 @@ export async function whatsappSimulacion(env, { nombre, email, telefono, edad, t
   try {
     // 1) Contacto con sus datos (crea o actualiza).
     const campos = [{ name: 'estrategia_pulso', value: tipo }];
-    if (edad) campos.push({ name: 'rango_de_edad_pulso', value: Number(edad) > 40 ? '41 y más' : 'Hasta 40' });
+    if (edad) campos.push({ name: 'rango_de_edad_pulso', value: edadMin(edad) >= 40 ? '41 y más' : 'Hasta 40' });
     if (monto) campos.push({ name: 'monto_pulso', value: Math.round(monto) });
     await llamar(env, 'POST', `/contact/create_or_update/${id}`, {
       firstName: partes[0] || '', lastName: partes.slice(1).join(' '), phone: fono, email: email || undefined, language: 'es', countryCode: 'CL', custom_fields: campos,

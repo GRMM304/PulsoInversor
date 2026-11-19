@@ -78,7 +78,7 @@ async function enviarSimulacion(request, env) {
   const telefono = String(c.telefono || '').replace(/\D/g, '').slice(0, 15);
   const publicidad = c.publicidad === true;
   const consentimiento = String(c.consentimiento || '').slice(0, 40);
-  const edad = Math.round(Number(c.edad)) || null;   // define el asesor (hasta 40 → Renato; 41+ → Pamela)
+  const edad = String(c.edad ?? '').trim().slice(0, 20) || null;   // rango de edad; define el asesor (menos de 40 → Renato; 40 o más → Pamela)
   if (!tipo || nombre.length < 2 || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return json({ ok: false, error: 'datos_invalidos' }, 400);
 
   const pdf = String(d.pdfBase64 || '').replace(/^data:application\/pdf;[^,]*,/, '');

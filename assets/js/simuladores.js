@@ -100,9 +100,9 @@
   function slugNombre() { return String(contacto ? contacto.nombre : 'cliente').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40) || 'cliente'; }
   // PDF sencillo: encabezado de marca + secciones de filas clave/valor y párrafos.
   // Asesor según el monto simulado (los correos viven en el Worker).
-  // Asesor según la edad (los correos viven en el Worker): hasta 40 años → Renato; 41 o más → Pamela.
+  // Asesor según el rango de edad (los correos viven en el Worker): menos de 40 años → Renato; 40 o más → Pamela.
   function asesoresPara() {
-    return Number(contacto && contacto.edad) > 40 ? ['Pamela Herrera'] : ['Renato Vargas'];
+    return (parseInt(contacto && contacto.edad, 10) || 0) >= 40 ? ['Pamela Herrera'] : ['Renato Vargas'];
   }
   var primerNombre = function () { return String(contacto ? contacto.nombre : '').trim().split(/\s+/)[0] || ''; };
   // Bloques con empatía, comunes a todos los PDF.
@@ -226,12 +226,12 @@
     e.preventDefault();
     var f = e.target, err = $('#gate-err');
     if (f.website.value) return; // trampa para bots
-    var nombre = f.nombre.value.trim(), email = f.email.value.trim(), tel = f.telefono.value.replace(/\D/g, ''), edad = parseInt(f.edad ? f.edad.value : '', 10);
+    var nombre = f.nombre.value.trim(), email = f.email.value.trim(), tel = f.telefono.value.replace(/\D/g, ''), edad = f.edad ? f.edad.value : '';
     var faltan = [];
     if (nombre.length < 2) faltan.push('nombre');
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) faltan.push('correo');
     if (tel.length < 8) faltan.push('teléfono');
-    if (!(edad >= 18 && edad <= 110)) faltan.push('edad');
+    if (!edad) faltan.push('edad');
     var msg = faltan.length ? 'Completa correctamente: ' + faltan.join(', ') + '.' : '';
     if (!f.terminos.checked) msg += (msg ? ' ' : '') + 'Para continuar debes aceptar la Política de privacidad.';
     err.textContent = msg;
