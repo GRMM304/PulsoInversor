@@ -32,6 +32,9 @@ def P(text):
     """Marcador interno: no se muestra en el sitio."""
     return f'<!-- PENDIENTE: {text} -->'
 
+# Botón "Agendar una reunión" del menú (y "Agendar" de la barra del celular): abre WhatsApp de Pulso Inversor.
+WA_MENU = f'https://wa.me/{WHATSAPP}?text=' + urllib.parse.quote('Hola, quiero agendar una reunión con un asesor de Pulso Inversor.')
+
 NAV = [
     ('Cómo invertir', [('como-funciona.html', 'Cómo funciona'), ('inversiones.html', 'Inversiones'),
                        ('garantias-y-documentos.html', 'Garantías y respaldo'), ('simuladores.html', 'Simuladores')]),
@@ -47,7 +50,7 @@ def header(slug):
         active = any(s == slug for s, _ in subs)
         links = ''.join(f'<li><a href="{s}"{" aria-current=page" if s==slug else ""}>{t}</a></li>' for s, t in subs)
         items.append(f'<li class="has-sub{" active" if active else ""}"><button type="button" aria-expanded="false" aria-controls="sub{i}">{label}</button><ul class="submenu" id="sub{i}">{links}</ul></li>')
-    items.append(f'<li class="nav-cta-item" hidden-desktop><a href="{AGENDA_URL}" target="_blank" rel="noopener" data-agendar>{AGENDAR}</a></li>')
+    items.append(f'<li class="nav-cta-item" hidden-desktop><a href="{WA_MENU}" target="_blank" rel="noopener">{AGENDAR}</a></li>')
     return f'''<a class="skip" href="#contenido">Saltar al contenido</a>
 <header class="header">
   <div class="container nav">
@@ -55,7 +58,7 @@ def header(slug):
     <nav aria-label="Principal">
       <ul class="menu" id="menu">{''.join(items)}</ul>
     </nav>
-    <div class="nav-actions"><a class="btn nav-cta" href="{AGENDA_URL}" target="_blank" rel="noopener" data-agendar>{AGENDAR}</a></div>
+    <div class="nav-actions"><a class="btn nav-cta" href="{WA_MENU}" target="_blank" rel="noopener">{AGENDAR}</a></div>
     <button class="mobile-toggle" type="button" aria-controls="menu" aria-expanded="false" aria-label="Abrir menú">☰</button>
   </div>
 </header>'''
@@ -77,7 +80,7 @@ def tabbar(slug):
             + item('inicio', 'index.html', 'Inicio', slug == 'index.html')
             + item('simular', 'simuladores.html', 'Simular', slug == 'simuladores.html')
             + item('inversiones', 'inversiones.html', 'Inversiones', slug == 'inversiones.html')
-            + item('agendar', AGENDA_URL, 'Agendar', externo=True, extra='" data-agendar="')
+            + item('agendar', WA_MENU, 'Agendar', externo=True)
             + '</nav>')
 
 def footer():
