@@ -181,15 +181,17 @@
     if (!EQUIPO) {
       var valor = Math.round(Number(monto) || 0);
       if (window.fbq) {
-        fbq('track', 'SubmitApplication', valor > 0 ? { content_name: tipo, value: valor, currency: 'CLP' } : { content_name: tipo });
+        var metaEventId = 'sim-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8);
+        fbq('track', 'SubmitApplication', valor > 0 ? { content_name: tipo, value: valor, currency: 'CLP' } : { content_name: tipo }, { eventID: metaEventId });
         fbq('trackCustom', 'EnviarSimulacion', { simulador: tipo });
       }
       if (window.pulsoMedir) pulsoMedir('simulacion_enviada', valor > 0 ? { simulador: tipo, value: valor, currency: 'CLP' } : { simulador: tipo });
     }
+    if (typeof metaEventId === 'undefined') var metaEventId = '';
     var b64 = doc.output('datauristring').split(',')[1];
     var archivo = prefijo + '_' + (doc.__folio || folioPI()) + '_' + slugNombre() + '.pdf';
     fetch(API_CORREO, { method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ tipo: tipo, cliente: { nombre: contacto.nombre, email: contacto.email, telefono: contacto.telefono, publicidad: contacto.publicidad === true, consentimiento: contacto.consentimiento || null }, pdfBase64: b64, archivo: archivo, resumen: resumen, monto: Math.round(monto || 0), website: '' }) })
+      body: JSON.stringify({ metaEventId: metaEventId || undefined, pageUrl: location.href.split('#')[0], tipo: tipo, cliente: { nombre: contacto.nombre, email: contacto.email, telefono: contacto.telefono, publicidad: contacto.publicidad === true, consentimiento: contacto.consentimiento || null }, pdfBase64: b64, archivo: archivo, resumen: resumen, monto: Math.round(monto || 0), website: '' }) })
       .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return r.ok && j.ok; }); })
       .then(function (ok) {
         st.classList.add(ok ? 'is-ok' : 'is-err');
@@ -218,7 +220,9 @@
     ses.set('pulsoContacto', contacto);
     if (!EQUIPO) {
       if (window.fbq) {
-        fbq('track', 'Lead', { content_name: 'Desbloqueó simuladores' });
+        var leadId = 'lead-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8);
+        fbq('track', 'Lead', { content_name: 'Desbloqueó simuladores' }, { eventID: leadId });
+        try { fetch('/api/meta-lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, keepalive: true, body: JSON.stringify({ eventId: leadId, nombre: nombre, email: email, telefono: tel, pageUrl: location.href.split('#')[0] }) }); } catch (er) {}
       }
       if (window.pulsoMedir) pulsoMedir('generate_lead', { origen: 'Simuladores' });
     }

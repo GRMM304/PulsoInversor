@@ -25,8 +25,19 @@ async function datosPersona({ email, telefono, nombre }) {
   return ud;
 }
 
+// Datos del navegador que ayudan a Meta a reconocer a la persona (no se cifran: así los pide Meta).
+export function datosWeb(request, url) {
+  const c = Object.fromEntries((request.headers.get('cookie') || '').split(/;\s*/).filter(Boolean).map((x) => { const i = x.indexOf('='); let v = x.slice(i + 1); try { v = decodeURIComponent(v); } catch (e) { /* tal cual */ } return [x.slice(0, i), v]; }));
+  const ud = {};
+  const ip = request.headers.get('cf-connecting-ip'); if (ip) ud.client_ip_address = ip;
+  const ua = request.headers.get('user-agent'); if (ua) ud.client_user_agent = ua.slice(0, 400);
+  if (c._fbp) ud.fbp = c._fbp;
+  if (c._fbc) ud.fbc = c._fbc;
+  return { url: String(url || request.headers.get('referer') || 'https://www.pulsoinversor.cl/').split('#')[0].slice(0, 500), ud };
+}
+
 // Envía un evento. eventoId evita duplicados si Brevo repite el aviso. Nunca lanza error: solo lo registra.
-export async function eventoMeta(env, { nombreEvento, eventoId, persona, datos, cuando }) {
+export async function eventoMeta(env, { nombreEvento, eventoId, persona, datos, cuando, web }) {
   if (!env.META_CAPI_TOKEN) return { omitido: 'sin token' };
   try {
     const cuerpo = {
@@ -34,8 +45,9 @@ export async function eventoMeta(env, { nombreEvento, eventoId, persona, datos, 
         event_name: nombreEvento,
         event_time: Math.floor((cuando ? Date.parse(cuando) : Date.now()) / 1000),
         event_id: eventoId,
-        action_source: 'system_generated',
-        user_data: await datosPersona(persona || {}),
+        action_source: web ? 'website' : 'system_generated',
+        event_source_url: web ? web.url : undefined,
+        user_data: { ...(await datosPersona(persona || {})), ...(web ? web.ud : {}) },
         custom_data: datos || undefined,
       }],
       access_token: env.META_CAPI_TOKEN,

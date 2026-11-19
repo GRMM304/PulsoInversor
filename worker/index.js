@@ -14,6 +14,7 @@
 // Además programa el correo de seguimiento a las 48 horas y atiende /seguimiento/agendar y /seguimiento/encuesta.
 
 import { informeSemanal } from './informe.js';
+import { eventoMeta, datosWeb } from './meta.js';
 import { avisoWhatsapp, esPrueba, DEFAULT_SENDER, EQUIPO, MAX_PDF_BYTES, ORIGENES, TIPOS, ASESORES, asesoresPara, json, esc, clp, brevo, plantilla, boton, bloqueResumen, P, C, WHATSAPP } from './comun.js';
 import { programarSeguimiento, rutaSeguimiento, HORAS_SEGUIMIENTO } from './seguimiento.js';
 import { rutaPanel } from './panel.js';
@@ -137,7 +138,33 @@ async function enviarSimulacion(request, env) {
       .bind(ok ? 'programado' : seguimiento, ok ? new Date(Date.now() + (esPrueba(email) ? 3 * 60e3 : HORAS_SEGUIMIENTO * 3600e3)).toISOString() : null, id).run().catch((e) => console.error('db seg', e));
   }
 
+  // 4) Meta (API de conversiones): el mismo SubmitApplication que envió el navegador, con el mismo ID para no duplicarlo.
+  //    Llega aunque la persona tenga bloqueador de anuncios. No se envía en pruebas ni desde los simuladores del equipo.
+  const metaId = String(d.metaEventId || '').slice(0, 80);
+  if (metaId && !esPrueba(email)) {
+    await eventoMeta(env, {
+      nombreEvento: 'SubmitApplication', eventoId: metaId, web: datosWeb(request, d.pageUrl),
+      persona: { email, telefono, nombre }, datos: monto ? { value: monto, currency: 'CLP', content_name: tipo } : { content_name: tipo },
+    });
+  }
+
   return json({ ok: true, asesor: personas.map((a) => a.nombre).join(' y ') });
+}
+
+// Lead del formulario de acceso a los simuladores, también desde el servidor (mismo ID que el del navegador).
+async function metaLead(request, env) {
+  const origin = request.headers.get('origin') || '';
+  if (origin && !ORIGENES.includes(origin)) return json({ ok: false }, 403);
+  let d; try { d = await request.json(); } catch (e) { return json({ ok: false }, 400); }
+  const email = String(d.email || '').trim().slice(0, 160);
+  const eventoId = String(d.eventId || '').slice(0, 80);
+  if (d.website || !eventoId || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email) || esPrueba(email)) return json({ ok: true });
+  await eventoMeta(env, {
+    nombreEvento: 'Lead', eventoId, web: datosWeb(request, d.pageUrl),
+    persona: { email, telefono: String(d.telefono || '').replace(/\D/g, '').slice(0, 15), nombre: String(d.nombre || '').slice(0, 120) },
+    datos: { content_name: 'Desbloqueó simuladores' },
+  });
+  return json({ ok: true });
 }
 
 export default {
@@ -160,6 +187,10 @@ export default {
     if (html && request.method === 'GET' && !/^\/simuladores-equipo/.test(url.pathname)) {
       const limpio = html[1] && html[1] !== 'index' ? '/' + html[1] : '/';
       return Response.redirect(url.origin + limpio + url.search, 301);
+    }
+    if (url.pathname === '/api/meta-lead') {
+      if (request.method !== 'POST') return json({ ok: false, error: 'metodo_no_permitido' }, 405);
+      try { return await metaLead(request, env); } catch (e) { console.error('meta-lead', e); return json({ ok: false }, 500); }
     }
     if (url.pathname === '/api/enviar-simulacion') {
       if (request.method !== 'POST') return json({ ok: false, error: 'metodo_no_permitido' }, 405);
