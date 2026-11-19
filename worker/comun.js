@@ -6,6 +6,12 @@ export const SITIO = 'https://www.pulsoinversor.cl';
 // WhatsApp de Pulso Inversor en respond.io: contesta el agente Lorenzo y deriva al asesor.
 export const WHATSAPP = '56958792038';
 export const WHATSAPP_TXT = '+56 9 5879 2038';
+// Los asesores contactan a los clientes por WhatsApp SOLO desde respond.io (nunca desde su WhatsApp personal).
+export const RESPOND_APP = 'https://app.respond.io/';
+export function avisoRespond(telefono) {
+  const tel = telefono ? '+56 ' + String(telefono).replace(/^56/, '') : null;
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFF8E6;border:1px solid #F2D58A;border-radius:14px;margin:8px 0 18px"><tr><td style="padding:16px 18px;font-family:Helvetica,Arial,sans-serif;font-size:14px;line-height:1.6;color:#1F2523"><strong>Contáctalo por WhatsApp solo desde respond.io</strong>, con el WhatsApp de Pulso Inversor (${WHATSAPP_TXT}). Nunca desde tu WhatsApp personal.<br>${tel ? `En respond.io busca el contacto por su teléfono <strong>${tel}</strong> (o créalo) y escríbele desde ahí. ` : 'En respond.io busca o crea el contacto y escríbele desde ahí. '}Si la persona aún no le ha escrito a Pulso Inversor, inicia la conversación con una plantilla aprobada.</td></tr></table>`;
+}
 export const RESENAS_GOOGLE = 'https://g.page/r/CV1wmi0Qf_B7EAE/review';
 export const MAX_PDF_BYTES = 3 * 1024 * 1024;
 export const ORIGENES = ['https://www.pulsoinversor.cl', 'https://pulsoinversor.cl', 'https://1.pulsoinversor.cl', 'http://localhost:8787', 'http://127.0.0.1:8787'];

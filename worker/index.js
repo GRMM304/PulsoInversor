@@ -14,7 +14,7 @@
 // Además programa el correo de seguimiento a las 48 horas y atiende /seguimiento/agendar y /seguimiento/encuesta.
 
 import { informeSemanal } from './informe.js';
-import { esPrueba, DEFAULT_SENDER, EQUIPO, MAX_PDF_BYTES, ORIGENES, TIPOS, ASESORES, asesoresPara, json, esc, clp, brevo, plantilla, boton, bloqueResumen, P, C, WHATSAPP } from './comun.js';
+import { avisoRespond, RESPOND_APP, esPrueba, DEFAULT_SENDER, EQUIPO, MAX_PDF_BYTES, ORIGENES, TIPOS, ASESORES, asesoresPara, json, esc, clp, brevo, plantilla, boton, bloqueResumen, P, C, WHATSAPP } from './comun.js';
 import { programarSeguimiento, rutaSeguimiento, HORAS_SEGUIMIENTO } from './seguimiento.js';
 import { rutaPanel } from './panel.js';
 import { recibirReunion } from './reuniones.js';
@@ -43,7 +43,6 @@ function correoInversionista({ tipo, nombre, lineas, personas }) {
 }
 
 function correoEquipo({ tipo, nombre, email, telefono, monto, lineas, personas, publicidad, consentimiento }) {
-  const waCliente = telefono ? 'https://wa.me/56' + telefono.replace(/^56/, '') + '?text=' + encodeURIComponent(`Hola ${nombre.split(/\s+/)[0]}, te escribo de Pulso Inversor por la simulación de ${tipo} que hiciste en nuestro sitio.`) : '';
   const fecha = new Date().toLocaleString('es-CL', { timeZone: 'America/Santiago', dateStyle: 'long', timeStyle: 'short' });
   const asignado = personas.map((a) => a.nombre).join(' y ');
   return plantilla({
@@ -53,8 +52,9 @@ function correoEquipo({ tipo, nombre, email, telefono, monto, lineas, personas, 
     cuerpo: P(`Asesor asignado: <strong>${esc(asignado)}</strong>. Al inversionista le dijimos que ${esc(personas.map((a) => a.nombre.split(' ')[0]).join(' y '))} le escribirá en las próximas horas hábiles.`)
       + bloqueResumen([`Nombre: ${nombre}`, `Correo: ${email}`, `Teléfono: ${telefono ? '+56 ' + telefono : '—'}`, `Simulador: ${tipo}`, `Monto simulado: ${monto ? clp(monto) : '—'}`, `Fecha: ${fecha}`, `Acepta recibir publicidad: ${publicidad ? 'Sí' : 'No'}${consentimiento ? ' (' + new Date(consentimiento).toLocaleString('es-CL', { timeZone: 'America/Santiago', dateStyle: 'short', timeStyle: 'short' }) + ')' : ''}`])
       + bloqueResumen(lineas)
+      + avisoRespond(telefono)
       + P('El PDF que recibió va adjunto. Si respondes este correo, le escribes directamente.'),
-    botones: waCliente ? boton('Escribirle por WhatsApp', waCliente) : '',
+    botones: boton('Abrir respond.io', RESPOND_APP),
     pie: 'Aviso interno de los simuladores de pulsoinversor.cl.',
   });
 }
