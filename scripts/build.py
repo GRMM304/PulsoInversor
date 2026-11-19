@@ -310,7 +310,7 @@ CAMINOS = [
      'Renta periódica, con respaldo patrimonial inmobiliario y una rentabilidad muy superior a la de un depósito a plazo.'),
     ('produccion-de-capital', 'Producción de Capital', 'Hipoteca Inteligente',
      'Usa tu capacidad financiera para generar un activo que produce capital, combinando financiamiento bancario, control del arriendo y valorización del inmueble.',
-     'Si tienes capacidad de crédito hipotecario y quieres generar capital con Hipoteca Inteligente.',
+     'Si no tienes ahorros, pero sí capacidad de crédito hipotecario, puedes producir capital y patrimonio en 2 a 5 años.',
      'Produces capital con financiamiento del banco, generas flujo por arriendo y construyes patrimonio.'),
     ('arquitectura-de-capital', 'Arquitectura de Capital', 'Configuración Patrimonial',
      'Diseña una estructura integral de inversión y patrimonio que combina tus bienes, ingresos y ahorros, según tus objetivos, plazos y necesidades (tributarias, sucesorias o familiares).',
