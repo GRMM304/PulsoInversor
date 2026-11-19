@@ -121,9 +121,25 @@ CONTENIDO_META = {
 }
 
 
+# Con la configuración básica de Meta solo llega el NOMBRE del evento: un evento propio por interés permite
+# audiencias segmentadas (quién vio cada estrategia o cada ruta). Se envía una vez por sesión.
+INTERES_POR_PAGINA = {
+    'mi-primera-inversion.html': 'PerfilPrimeraVez',
+    'ya-tengo-experiencia.html': 'PerfilConExperiencia',
+    'inversion-circular.html': 'VioInversionCircular',
+}
+INTERES_JS = ("window.pulsoInteres=function(n){try{var k='pi_'+n;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');}catch(e){}"
+              "if(window.fbq)fbq('trackCustom',n);if(window.pulsoMedir)pulsoMedir('interes',{tema:n});};")
+
+
 def vista_contenido(slug):
     n = CONTENIDO_META.get(slug)
-    return f"fbq('track', 'ViewContent', {{content_name: '{n}', content_category: 'Página'}});" if n else ''
+    out = INTERES_JS
+    if n:
+        out += f"\nfbq('track', 'ViewContent', {{content_name: '{n}', content_category: 'Página'}});"
+    if slug in INTERES_POR_PAGINA:
+        out += f"\npulsoInteres('{INTERES_POR_PAGINA[slug]}');"
+    return out
 
 
 def analytics():

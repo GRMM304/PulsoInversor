@@ -213,7 +213,9 @@
   var inv = document.querySelector('[data-inv]');
   if (inv) {
     var tabs = inv.querySelectorAll('[data-inv-tab]'), panels = inv.querySelectorAll('[data-inv-panel]');
+    var INTERES_INV = { 'renta-de-capital': 'VioRentaCapital', 'produccion-de-capital': 'VioProduccionCapital', 'arquitectura-de-capital': 'VioArquitecturaCapital' };
     var abrirInv = function (id, desplazar, destino) {
+      if (id && INTERES_INV[id] && window.pulsoInteres) pulsoInteres(INTERES_INV[id]);
       tabs.forEach(function (t) { var on = t.getAttribute('data-inv-tab') === id; t.classList.toggle('is-active', on); t.setAttribute('aria-expanded', on ? 'true' : 'false'); });
       panels.forEach(function (p) { p.hidden = p.getAttribute('data-inv-panel') !== id; });
       inv.classList.toggle('has-open', !!id);

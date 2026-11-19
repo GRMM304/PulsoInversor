@@ -66,6 +66,28 @@
   }
   tabs.forEach(function (t) { t.addEventListener('click', function () { var id = t.getAttribute('data-sim-tab'); abrir(id, true); history.replaceState(null, '', location.search + '#' + id); }); });
 
+  // Píxel: "empezó a simular" = elige un simulador o escribe en él / en el acceso (una vez por página; nunca en la vista del equipo).
+  var INTERES_SIM = { 'sim-proyecta': 'VioRentaCapital', 'sim-asistido-pc': 'VioProduccionCapital', 'sim-asistido-ac': 'VioArquitecturaCapital', 'sim-circular': 'VioInversionCircular' };
+  var empezo = false;
+  function empezar(id) {
+    if (EQUIPO) return;
+    if (id && INTERES_SIM[id] && window.pulsoInteres) pulsoInteres(INTERES_SIM[id]);
+    if (empezo) return; empezo = true;
+    if (window.fbq) fbq('track', 'CustomizeProduct', { content_name: id || 'simulador' });
+    if (window.pulsoMedir) pulsoMedir('simulador_iniciado', { simulador: id || '' });
+  }
+  tabs.forEach(function (t) { t.addEventListener('click', function (e) { if (e.isTrusted) empezar(t.getAttribute('data-sim-tab')); }); });
+  // Escribir o elegir algo (no el foco automático) en un simulador o en el formulario de acceso.
+  ['input', 'change'].forEach(function (ev) {
+    root.addEventListener(ev, function (e) {
+      if (!e.isTrusted || !e.target.closest || e.target.closest('[data-sim-tab]')) return;
+      var p = e.target.closest('[data-sim-panel]');
+      var tab = $('[data-sim-tab].is-active');
+      var id = p ? p.getAttribute('data-sim-panel') : (tab ? tab.getAttribute('data-sim-tab') : (panels.length === 1 ? panels[0].getAttribute('data-sim-panel') : null));
+      empezar(id);
+    });
+  });
+
   function sheet(type, payload) {
     var body = JSON.stringify(Object.assign({ type: type, website: '', pageUrl: location.href.split('?')[0].split('#')[0], referrer: document.referrer || '' }, payload));
     return fetch(SHEET_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: body })
