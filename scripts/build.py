@@ -433,7 +433,6 @@ page('index.html', 'Inicio',
     </div>
   </div>
   <div class="why-cta"><a class="btn btn-primary btn-xl" href="como-funciona.html">Descubre cómo funciona <span aria-hidden="true">→</span></a><span>Respaldo, estructura legal y plazos, explicados paso a paso</span></div>
-  <p class="disclaimer">Comparación general y referencial. Toda inversión, incluidas las nuestras, tiene riesgos.</p>
 </div></section>
 
 <section class="section"><div class="container">
