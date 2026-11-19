@@ -60,3 +60,6 @@ CREATE TABLE IF NOT EXISTS recordatorios (
   p48 TEXT                          -- seguimiento (remarketing), 48 h después de terminada
 );
 CREATE INDEX IF NOT EXISTS idx_rec_inicio ON recordatorios(inicio);
+
+-- Informe semanal enviado (lunes 10:00 Chile). semana = lunes de la semana informada.
+CREATE TABLE IF NOT EXISTS informes (semana TEXT PRIMARY KEY, enviado TEXT, detalle TEXT);

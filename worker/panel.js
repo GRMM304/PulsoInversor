@@ -207,5 +207,13 @@ export async function rutaPanel(request, env, url) {
   if (!(await sesionValida(request, env))) return login();
   if (p === '/panel/agendado' && m === 'POST') return marcarAgendado(request, env);
   if (p === '/panel/simulaciones.csv') return csv(env);
+  // Informe semanal: vista previa (GET) y envío de prueba a INFORME_PARA (POST).
+  if (p === '/panel/informe') {
+    const { armarInforme, enviarInforme } = await import('./informe.js');
+    if (!env.WINDSOR_API_KEY) return new Response('Falta el secreto WINDSOR_API_KEY.', { status: 503, headers: { 'content-type': 'text/plain; charset=utf-8' } });
+    if (m === 'POST') { const r = await enviarInforme(env); return new Response('Enviado: ' + r.asunto + (r.errores.length ? '\nAvisos: ' + r.errores.join(' · ') : ''), { headers: { 'content-type': 'text/plain; charset=utf-8' } }); }
+    const r = await armarInforme(env);
+    return new Response(r.html, { headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' } });
+  }
   return panel(env, url);
 }

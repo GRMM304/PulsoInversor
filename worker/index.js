@@ -13,6 +13,7 @@
 //
 // Además programa el correo de seguimiento a las 48 horas y atiende /seguimiento/agendar y /seguimiento/encuesta.
 
+import { informeSemanal } from './informe.js';
 import { esPrueba, DEFAULT_SENDER, EQUIPO, MAX_PDF_BYTES, ORIGENES, TIPOS, ASESORES, asesoresPara, json, esc, clp, brevo, plantilla, boton, bloqueResumen, P, C, WHATSAPP } from './comun.js';
 import { programarSeguimiento, rutaSeguimiento, HORAS_SEGUIMIENTO } from './seguimiento.js';
 import { rutaPanel } from './panel.js';
@@ -172,6 +173,8 @@ export default {
   // Cron cada minuto: recordatorios de reuniones (24 h, 1 h y 1 minuto antes).
   async scheduled(event, env, ctx) {
     ctx.waitUntil(procesarRecordatorios(env).then((r) => { if (r.enviados) console.log('recordatorios', JSON.stringify(r)); }).catch((e) => console.error('recordatorios', e)));
+    // Informe semanal: lunes 10:00 (Chile), una vez por semana.
+    ctx.waitUntil(informeSemanal(env).then((r) => { if (r) console.log('informe', JSON.stringify(r)); }).catch((e) => console.error('informe', e)));
   },
 };
 
