@@ -166,7 +166,7 @@ export default {
     if (url.pathname === '/panel' || url.pathname.startsWith('/panel/')) return rutaPanel(request, env, url);
     if (url.pathname.startsWith('/seguimiento/')) {
       try { const r = await rutaSeguimiento(request, env, url); if (r) return r; }
-      catch (e) { console.error(e); return new Response('No pudimos procesar tu solicitud. Escríbenos por WhatsApp al +56 9 8355 4676.', { status: 502, headers: { 'content-type': 'text/plain; charset=utf-8' } }); }
+      catch (e) { console.error(e); return new Response('No pudimos procesar tu solicitud. Escríbenos por WhatsApp al +56 9 5879 2038.', { status: 502, headers: { 'content-type': 'text/plain; charset=utf-8' } }); }
     }
     return env.ASSETS.fetch(request);
   },

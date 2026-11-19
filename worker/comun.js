@@ -3,7 +3,9 @@
 export const DEFAULT_SENDER = 'contacto@pulsoinversor.cl';
 export const EQUIPO = ['eorrego@grupomm.cl', 'ibarboza@grupomm.cl', 'frojas@grupomm.cl'];
 export const SITIO = 'https://www.pulsoinversor.cl';
-export const WHATSAPP = '56983554676';
+// WhatsApp de Pulso Inversor en respond.io: contesta el agente Lorenzo y deriva al asesor.
+export const WHATSAPP = '56958792038';
+export const WHATSAPP_TXT = '+56 9 5879 2038';
 export const RESENAS_GOOGLE = 'https://g.page/r/CV1wmi0Qf_B7EAE/review';
 export const MAX_PDF_BYTES = 3 * 1024 * 1024;
 export const ORIGENES = ['https://www.pulsoinversor.cl', 'https://pulsoinversor.cl', 'https://1.pulsoinversor.cl', 'http://localhost:8787', 'http://127.0.0.1:8787'];
@@ -114,7 +116,7 @@ export function plantilla({ preheader, eyebrow, titulo, cuerpo, botones = '', pi
       <div style="margin:0 0 24px">${botones}</div>
     </td></tr>
     <tr><td style="padding:20px 28px 26px;background:${C.verde};font-family:${FUENTE};font-size:13px;line-height:1.55;color:rgba(255,255,255,.78)">
-      <p style="margin:0 0 8px">¿Dudas? Escríbenos por <a href="https://wa.me/${WHATSAPP}" target="_blank" style="color:${C.lima}">WhatsApp +56 9 8355 4676</a> o visítanos en Los Militares 5890, of. 304, Las Condes.</p>
+      <p style="margin:0 0 8px">¿Dudas? Escríbenos por <a href="https://wa.me/${WHATSAPP}" target="_blank" style="color:${C.lima}">WhatsApp ${WHATSAPP_TXT}</a> o visítanos en Los Militares 5890, of. 304, Las Condes.</p>
       <p style="margin:0;color:rgba(255,255,255,.55);font-size:12px">${esc(pie)} Pulso Inversor · Una empresa de Grupo MatchMaking.</p>
     </td></tr>
   </table>

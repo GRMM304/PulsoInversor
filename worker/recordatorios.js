@@ -6,7 +6,7 @@
 // Cada correo trae el enlace a la videollamada y el enlace oficial de Brevo para reagendar o cancelar
 // (al cancelar, Brevo libera el cupo y nos avisa: los recordatorios pendientes se detienen).
 
-import { RESENAS_GOOGLE, asesorDeReunion, DEFAULT_SENDER, ASESORES, SITIO, WHATSAPP, C, P, esc, brevo, boton, bloqueResumen, plantilla } from './comun.js';
+import { RESENAS_GOOGLE, asesorDeReunion, DEFAULT_SENDER, ASESORES, SITIO, WHATSAPP, WHATSAPP_TXT, C, P, esc, brevo, boton, bloqueResumen, plantilla } from './comun.js';
 import { firmar } from './seguimiento.js';
 
 const ETAPAS = [
@@ -85,7 +85,7 @@ function correo(r, col) {
       preheader: `${r.asesor || 'Tu asesor'} ya te está esperando.`,
       eyebrow: 'Empieza ahora', titulo: `${primer}, ${quien} ya te está esperando`,
       cuerpo: P(r.url_video ? 'Tu reunión comienza en un minuto. Entra con el botón de abajo.' : 'Tu reunión comienza en un minuto.')
-        + P(`¿Tienes algún problema para entrar? Escríbenos por <a href="https://wa.me/${WHATSAPP}" style="color:${C.verde2}">WhatsApp +56 9 8355 4676</a> y te ayudamos.`),
+        + P(`¿Tienes algún problema para entrar? Escríbenos por <a href="https://wa.me/${WHATSAPP}" style="color:${C.verde2}">WhatsApp ${WHATSAPP_TXT}</a> y te ayudamos.`),
       botones: video + cambiar,
       pie: 'Recibes este correo porque agendaste una reunión con Pulso Inversor.',
     }),

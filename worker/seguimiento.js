@@ -6,7 +6,7 @@
 //
 // Secreto necesario en Cloudflare: FIRMA_SEGUIMIENTO (texto aleatorio para firmar los enlaces).
 
-import { AGENDA_BREVO, ASESORES, SITIO, WHATSAPP, DEFAULT_SENDER, C, P, esc, clp, brevo, boton, bloqueResumen, plantilla } from './comun.js';
+import { AGENDA_BREVO, ASESORES, SITIO, WHATSAPP, WHATSAPP_TXT, DEFAULT_SENDER, C, P, esc, clp, brevo, boton, bloqueResumen, plantilla } from './comun.js';
 
 export const HORAS_SEGUIMIENTO = 48;
 const ENCUESTA_EMAIL = ['eorrego@grupomm.cl'];
@@ -104,7 +104,7 @@ button{margin-top:26px;background:${C.lima};color:${C.verde};border:0;border-rad
 </style></head><body><div class="wrap"><div class="card">
 <div class="top"><a href="/"><img src="/assets/img/email/logo-pulso.png" alt="Pulso Inversor · Una empresa de Grupo MatchMaking"></a></div>
 <div class="in">${cuerpo}</div>
-<div class="pie">¿Dudas? Escríbenos por <a href="https://wa.me/${WHATSAPP}">WhatsApp +56 9 8355 4676</a> · Los Militares 5890, of. 304, Las Condes.</div>
+<div class="pie">¿Dudas? Escríbenos por <a href="https://wa.me/${WHATSAPP}">WhatsApp ${WHATSAPP_TXT}</a> · Los Militares 5890, of. 304, Las Condes.</div>
 </div></div></body></html>`, { headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store', 'x-robots-tag': 'noindex' } });
 }
 const opciones = (name, lista, req = true, clase = '') => `<div class="ops ${clase}">${lista.map((o, i) => `<label><input type="radio" name="${name}" value="${esc(o)}"${req && i === 0 ? ' required' : ''}><span>${esc(o)}</span></label>`).join('')}</div>`;
