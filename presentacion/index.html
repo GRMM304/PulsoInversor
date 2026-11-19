@@ -1054,7 +1054,10 @@ h2, h3 { color: var(--green-900); }
 .evo-growth b { color: #8fa82a; }
 .evo-igr-badge { background: radial-gradient(circle at 25% 20%, rgba(199,217,93,.28), transparent 45%), linear-gradient(135deg, var(--green-900), var(--dark)); }
 .evo-igr-badge strong::after { background: var(--lime); }
-.evo-igr-cta { margin-top: 18px; gap: 12px; padding: 13px 26px; font-size: 17px; }
+.evo-igr-row { display: flex; align-items: center; gap: 32px; margin-top: 44px; }
+.evo-igr-row .evo-igr { flex: 1 1 auto; min-width: 0; margin-top: 0; }
+.evolution-slide .evo-igr-next { flex: 0 0 auto; margin: 0; }
+@media (max-width: 1100px){ .evo-igr-row { flex-direction: column; align-items: stretch; gap: 26px; } }
 
 
 /* ===================== REDISEÑO: PORTADA ===================== */
@@ -1648,11 +1651,14 @@ nav a { white-space: nowrap; }
     <div><h2>Abril 2024:</h2><p>el Banco Central de Chile aumentó los límites de inversión en activos alternativos.</p></div>
   </article>
 </div>
+<div class="evo-igr-row">
 <div class="evo-igr">
   <div class="evo-igr-badge"><strong>IGR</strong></div>
   <svg class="evo-igr-building" viewBox="0 0 190 130" aria-hidden="true" fill="none" stroke="#224c3f" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"><path d="M8 124h150"/><path d="M14 124V60h30v64"/><path d="M44 124V22l40-12v114"/><path d="M84 124V30l30 8v86"/><g stroke="#8fb31c" stroke-width="6"><path d="M24 76v6M34 76v6M24 96v6M34 96v6M56 36v6M70 36v6M56 56v6M70 56v6M56 76v6M70 76v6M56 96v6M70 96v6M96 52v6M104 52v6M96 72v6M104 72v6M96 92v6M104 92v6"/></g><circle cx="150" cy="86" r="16" stroke="#8fb31c"/><path d="M150 124V96M150 112l-8-8M150 106l8-8" stroke="#8fb31c"/></svg>
   <span class="evo-igr-divider" aria-hidden="true"></span>
-  <div class="evo-igr-text"><h2>Deuda privada<br>respaldada por bienes raíces</h2><p>Una alternativa dentro de los activos alternativos, orientada a diversificar el portafolio con garantías reales.</p><a class="evo-igr-cta button primary gradient-action" href="#consolidado">Ver Matriz IGR <svg class="btn-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></a></div>
+  <div class="evo-igr-text"><h2>Deuda privada<br>respaldada por bienes raíces</h2><p>Una alternativa dentro de los activos alternativos, orientada a diversificar el portafolio con garantías reales.</p></div>
+</div>
+<div class="slide-next evo-igr-next"><a class="button primary gradient-action" href="#consolidado">Ver Matriz IGR <svg class="btn-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></a></div>
 </div>
 </section>
 
