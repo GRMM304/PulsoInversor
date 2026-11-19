@@ -61,7 +61,7 @@ SEO = {
     'privacidad.html': (None, None),
 }
 
-NO_INDEXAR = {'simuladores-equipo.html', '404.html'}
+NO_INDEXAR = {'simuladores-equipo.html', '404.html', 'inversion-circular.html'}
 
 REDES = ['https://www.instagram.com/pulsoinversorcl', 'https://www.facebook.com/pulsoinversor.cl/',
          'https://www.linkedin.com/company/pulsoinversor/']

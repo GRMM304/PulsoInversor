@@ -146,7 +146,13 @@ export default {
     // El sitio vive en www.pulsoinversor.cl. pulsoinversor.cl redirige siempre; 1.pulsoinversor.cl redirige las páginas
     // pero sigue atendiendo /api, /seguimiento y /panel (webhooks de Brevo y enlaces de correos ya enviados).
     const interno = /^\/(api|seguimiento|panel)(\/|$)/.test(url.pathname);
-    if (url.hostname === 'pulsoinversor.cl' || (url.hostname === '1.pulsoinversor.cl' && !interno && request.method === 'GET')) {
+    // Páginas en etapa de prueba (stage): solo se ven en 1.pulsoinversor.cl; en www no existen.
+    const enStage = /^\/inversion-circular(\.html)?\/?$/.test(url.pathname);
+    if (enStage && url.hostname !== '1.pulsoinversor.cl') {
+      const r = await env.ASSETS.fetch(new Request(new URL('/404', url)));
+      return new Response(r.body, { status: 404, headers: { 'content-type': 'text/html; charset=utf-8', 'x-robots-tag': 'noindex' } });
+    }
+    if (url.hostname === 'pulsoinversor.cl' || (url.hostname === '1.pulsoinversor.cl' && !interno && !enStage && request.method === 'GET')) {
       return Response.redirect('https://www.pulsoinversor.cl' + url.pathname + url.search, 301);
     }
     // Una sola dirección por página (SEO): /nosotros.html → /nosotros y /index.html → / con 301.
