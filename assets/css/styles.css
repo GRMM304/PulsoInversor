@@ -2169,3 +2169,11 @@ iframe[title="Webchat Widget"]{z-index:2147483000!important}
 .camino:not(.is-open) .camino-ilu{max-width:210px;opacity:.75}
 .camino.is-open .camino-ilu{max-width:330px}
 @media (max-width:900px){.camino .camino-ilu{max-width:280px;opacity:.92}}
+
+/* Matriz IGR del inicio: foto de fondo por estrategia con velo verde (2026-11-19) */
+.camino-ilu-w{display:none}
+.camino-bg-1{background:url(../img/igr/renta-de-capital.jpg) center 40%/cover}
+.camino-bg-2{background:url(../img/igr/produccion-de-capital.jpg) center 30%/cover}
+.camino-bg-3{background:url(../img/igr/arquitectura-de-capital.jpg) center 45%/cover}
+.camino-bg::after{background:linear-gradient(180deg,rgba(14,44,40,.30) 0%,rgba(14,44,40,.45) 40%,rgba(10,30,26,.94) 100%)}
+.camino:not(.is-open) .camino-bg::after{background:linear-gradient(180deg,rgba(14,44,40,.55) 0%,rgba(14,44,40,.65) 45%,rgba(10,30,26,.95) 100%)}
