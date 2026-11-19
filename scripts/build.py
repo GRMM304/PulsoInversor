@@ -249,20 +249,8 @@ def cta_rutas(eyebrow, titulo, texto):
 
 def cta_final(eyebrow='Tu siguiente paso', titulo='Cuéntanos qué quieres <span class="accent">construir</span>',
               texto='Una conversación para conocernos y ver por dónde partir. Sin apuro.', boton=None, tema=None):
-    boton = boton or AGENDAR
-    return f'''<section class="cta-final">
-  <div class="container">
-    <span class="eyebrow dark">{eyebrow}</span>
-    <h2>{titulo}</h2>
-    <p>{texto}</p>
-    <a class="btn btn-primary btn-xl" href="{AGENDA_URL}" target="_blank" rel="noopener">{boton} <span aria-hidden="true">→</span></a>
-    <ul class="cta-final-notes">
-      <li>Te responde una persona del equipo</li>
-      <li>No te pedimos decidir en la reunión</li>
-      <li>Puedes venir con tu abogado</li>
-    </ul>
-  </div>
-</section>'''
+    """Cierre de página: los mismos tres botones en todo el sitio (Simular, Es mi primera vez, Ya he invertido)."""
+    return cta_rutas(eyebrow, titulo, texto)
 
 
 # ---------------- Íconos (trazo simple, heredan el color del texto) ----------------
@@ -1361,7 +1349,8 @@ page('verifica-a-pulso.html', 'Verifica a Pulso',
   </div>
   {_mapa}
 </div></section>
-""")
+""" + cta_rutas('Tu siguiente paso', 'Ya nos verificaste; ahora <span class="accent">mira tus números</span>',
+               'Simula tu inversión o cuéntanos si es tu primera vez y te llevamos a lo que te sirve.'))
 
 # ---------------- 4 Recursos: componentes compartidos ----------------
 _CHECK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'
@@ -1518,7 +1507,9 @@ page('preguntas-frecuentes.html', 'Preguntas frecuentes',
   {qa('¿Dónde reviso la situación de Pulso Inversor ante la CMF?', 'En <a href="verifica-a-pulso.html">Verifica a Pulso</a> te explicamos nuestra situación y cómo consultarla por tu cuenta.')}
 </div></section>
 ''' + cta('¿Tienes otra pregunta?', 'Escríbenos. Te responde una persona del equipo.', 'Hacer mi pregunta', None,
-                                href=whatsapp('Hola, tengo una pregunta sobre Pulso Inversor')))
+                                href=whatsapp('Hola, tengo una pregunta sobre Pulso Inversor'))
+     + cta_rutas('Tu siguiente paso', 'Con tus dudas resueltas, <span class="accent">mira tus números</span>',
+                 'Simula tu inversión o cuéntanos si es tu primera vez y te llevamos a lo que te sirve.'))
 print('ok')
 
 # ---------------- Página 404 ----------------
