@@ -47,8 +47,12 @@ n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];
 s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '4384764601785320');
+// Coincidencias avanzadas: si la persona ya dejó sus datos en los simuladores, el píxel los usa (Meta los cifra antes de enviarlos).
+window.pulsoAM=function(c){var n=String(c.nombre||'').trim().toLowerCase().split(/\s+/),t=String(c.telefono||'').replace(/\D/g,'');if(t.length===9)t='56'+t;return{em:String(c.email||'').trim().toLowerCase(),ph:t,fn:n[0]||'',ln:n.length>1?n[n.length-1]:'',country:'cl'};};
+var _pc=null;try{_pc=JSON.parse(sessionStorage.getItem('pulsoContacto')||'null');}catch(e){}
+fbq('init', '4384764601785320', _pc && _pc.email ? pulsoAM(_pc) : {});
 fbq('track', 'PageView');
+
 </script>
 <noscript><img height="1" width="1" style="display:none"
 src="https://www.facebook.com/tr?id=4384764601785320&ev=PageView&noscript=1"

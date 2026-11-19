@@ -156,8 +156,14 @@
     if (!contacto) { if (EQUIPO) pedirDatos(btn); return; }
     st.className = st.className.replace(/\s?is-(ok|err)/g, '');
     st.textContent = 'Enviando a ' + contacto.email + '…'; btn.disabled = true;
-    if (window.fbq) fbq('trackCustom', 'EnviarSimulacion', { simulador: tipo });
-    if (window.pulsoMedir) pulsoMedir('simulacion_enviada', { simulador: tipo });
+    if (!EQUIPO) {
+      var valor = Math.round(Number(monto) || 0);
+      if (window.fbq) {
+        fbq('track', 'SubmitApplication', valor > 0 ? { content_name: tipo, value: valor, currency: 'CLP' } : { content_name: tipo });
+        fbq('trackCustom', 'EnviarSimulacion', { simulador: tipo });
+      }
+      if (window.pulsoMedir) pulsoMedir('simulacion_enviada', valor > 0 ? { simulador: tipo, value: valor, currency: 'CLP' } : { simulador: tipo });
+    }
     var b64 = doc.output('datauristring').split(',')[1];
     var archivo = prefijo + '_' + (doc.__folio || folioPI()) + '_' + slugNombre() + '.pdf';
     fetch(API_CORREO, { method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -188,8 +194,12 @@
     if (msg) return;
     contacto = { nombre: nombre, email: email, telefono: tel, publicidad: !!f.contenido.checked, consentimiento: new Date().toISOString() };
     ses.set('pulsoContacto', contacto);
-    if (window.fbq) fbq('track', 'Lead', { content_name: 'Desbloqueó simuladores' });
-    if (window.pulsoMedir) pulsoMedir('generate_lead', { origen: 'Simuladores' });
+    if (!EQUIPO) {
+      if (window.fbq) {
+        fbq('track', 'Lead', { content_name: 'Desbloqueó simuladores' });
+      }
+      if (window.pulsoMedir) pulsoMedir('generate_lead', { origen: 'Simuladores' });
+    }
     var reintentar = pendiente;
     if (gate.classList.contains('is-modal')) { cerrarDatos(); if (reintentar) reintentar.click(); return; }
     setLocked(false);

@@ -111,6 +111,21 @@ def _ld(obj):
     return '<script type="application/ld+json">' + json.dumps(obj, ensure_ascii=False, separators=(',', ':')) + '</script>'
 
 
+# Páginas que cuentan como ViewContent en el píxel de Meta (sirven para audiencias de remarketing).
+CONTENIDO_META = {
+    'inversiones.html': 'Inversiones', 'garantias-y-documentos.html': 'Garantías y respaldo',
+    'como-funciona.html': 'Cómo funciona', 'simuladores.html': 'Simuladores',
+    'inversion-circular.html': 'Inversión Circular', 'mi-primera-inversion.html': 'Mi primera inversión',
+    'ya-tengo-experiencia.html': 'Ya tengo experiencia', 'verifica-a-pulso.html': 'Verifica a Pulso Inversor',
+    'nosotros.html': 'Nosotros', 'preguntas-frecuentes.html': 'Preguntas frecuentes',
+}
+
+
+def vista_contenido(slug):
+    n = CONTENIDO_META.get(slug)
+    return f"fbq('track', 'ViewContent', {{content_name: '{n}', content_category: 'Página'}});" if n else ''
+
+
 def analytics():
     """Etiqueta de Google Analytics 4 y pulsoMedir(evento, datos), que usan main.js, simuladores.js y lorenzo.js."""
     medir = "<script>window.pulsoMedir=function(n,p){try{if(window.gtag)gtag('event',n,Object.assign({pagina:location.pathname},p||{}));}catch(e){}};</script>"
