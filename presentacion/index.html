@@ -1047,6 +1047,11 @@ h2, h3 { color: var(--green-900); }
 .evo-stat strong { color: #8fa82a; }
 .evo-stat-highlight strong { color: var(--green-900); }
 .evo-igr { border: 0; box-shadow: var(--shadow-soft); }
+.evo-stat em { font-style: normal; font-size: 18px; font-weight: 700; color: var(--green-900); margin-top: 2px; white-space: nowrap; }
+.evo-growth { display: flex; flex-direction: column; align-items: center; gap: 4px; margin: 14px 4% 0 0; padding: 12px 18px; text-align: center; background: #fff; border-left: 5px solid var(--lime); border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); }
+.evo-growth strong { font-size: 20px; line-height: 1.25; color: var(--green-900); }
+.evo-growth span { font-size: 17px; color: rgb(88, 106, 98); }
+.evo-growth b { color: #8fa82a; }
 .evo-igr-badge { background: radial-gradient(circle at 25% 20%, rgba(199,217,93,.28), transparent 45%), linear-gradient(135deg, var(--green-900), var(--dark)); }
 .evo-igr-badge strong::after { background: var(--lime); }
 
@@ -1628,13 +1633,14 @@ nav a { white-space: nowrap; }
   <div class="evo-stats">
     <div class="evo-stats-row">
       <span class="evo-line" aria-hidden="true"><i></i></span>
-      <div class="evo-stat"><span>Chile 2018:</span><strong>3,4%</strong></div>
+      <div class="evo-stat"><span>Chile 2018:</span><em>US$ 6.582 MM</em><strong>3,4%</strong></div>
       <span class="evo-line" aria-hidden="true"><i></i></span>
-      <div class="evo-stat evo-stat-highlight"><span>Julio 2024:</span><strong>10,4%</strong></div>
+      <div class="evo-stat evo-stat-highlight"><span>Julio 2024:</span><em>US$ 19.226 MM</em><strong>10,4%</strong></div>
       <span class="evo-arrow" aria-hidden="true"></span>
     </div>
     <div class="evo-bracket" aria-hidden="true"></div>
     <p class="evo-stats-caption">Participación de activos alternativos de las AFP, incluyendo inversión efectiva y comprometida.</p>
+    <p class="evo-growth"><strong>El capital destinado a activos alternativos se triplicó</strong><span>Crecimiento de <b>192%</b> entre 2018 y julio de 2024</span></p>
   </div>
   <article class="evo-card evo-card-central">
     <svg class="evo-icon evo-icon-bank" viewBox="0 0 64 64" aria-hidden="true" fill="none" stroke="#224c3f" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 22 32 8l24 14Z"/><path d="M8 22h48"/><path d="M14 27v20M24 27v20M34 27v20M44 27v20M52 27v20" stroke-width="3.6"/><path d="M10 51h44M6 56h52"/></svg>
