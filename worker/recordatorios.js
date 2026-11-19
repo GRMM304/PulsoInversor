@@ -1,13 +1,16 @@
 // Pulso Inversor · Recordatorios y seguimiento de reuniones de Brevo Meetings
 // Cuando Brevo avisa una reserva (webhook), se guarda la reunión. Un cron cada minuto envía:
 //   · 24 horas antes  · 1 hora antes  · 1 minuto antes
-//   · 1 hora después de terminada: agradecimiento + encuesta
-//   · 48 horas después de terminada: seguimiento para volver a agendar (remarketing)
+//   · al terminar: correo al ASESOR "¿se realizó la reunión?" (Sí / No se presentó)
+//   · 1 hora después de terminada, SOLO si el asesor confirmó "Sí": agradecimiento + encuesta
+//   · 48 horas después de terminada, SOLO si se realizó: seguimiento para volver a agendar (remarketing)
+//   · si el asesor marca "No se presentó": correo a la persona para reagendar
+// (El aviso "reunión iniciada" de Brevo no sirve para esto: llega apenas alguien abre el enlace de la sala.)
 // Cada correo trae el enlace a la videollamada y el enlace oficial de Brevo para reagendar o cancelar
 // (al cancelar, Brevo libera el cupo y nos avisa: los recordatorios pendientes se detienen).
 
 import { RESENAS_GOOGLE, asesorDeReunion, DEFAULT_SENDER, ASESORES, SITIO, WHATSAPP, WHATSAPP_TXT, C, P, esc, brevo, boton, bloqueResumen, plantilla } from './comun.js';
-import { firmar } from './seguimiento.js';
+import { firmar, procesarSeguimientos } from './seguimiento.js';
 
 const ETAPAS = [
   { col: 'r24', antes: 24 * 60, margenMin: 60 },   // si reservó con menos de ~25 h, no se envía el de 24 h
@@ -138,9 +141,52 @@ async function correoPosterior(env, r, col) {
 }
 
 const POSTERIORES = [
-  { col: 'p1h', despues: 60 },
-  { col: 'p48', despues: 48 * 60 },
+  { col: 'p1h', despues: 60, limite: 72 * 60 },        // si el asesor confirma tarde, se envía igual dentro de 3 días
+  { col: 'p48', despues: 48 * 60, limite: 54 * 60 },
 ];
+
+// Correo al asesor al terminar la reunión: ¿se realizó?
+async function avisoAsesor(env, r, sender) {
+  const x = asesorDeReunion(r.asesor);
+  const sim = await env.DB.prepare('SELECT grupo FROM simulaciones WHERE lower(email) = ? ORDER BY creado DESC LIMIT 1').bind(r.email).first().catch(() => null);
+  const asesores = x ? [x.asesor] : ASESORES[sim && sim.grupo != null ? sim.grupo : 0].personas;
+  const t = await firmar(env, { rid: r.id, f: Date.now() });
+  const nombre = r.nombre || r.email;
+  const html = plantilla({
+    preheader: `Confírmanos si la reunión con ${nombre} se realizó. Con eso le enviamos el correo que corresponde.`,
+    eyebrow: 'Reunión terminada', titulo: `¿Se realizó la reunión con ${esc(nombre)}?`,
+    cuerpo: P(`La reunión de las <strong>${hora(r.inicio)} h</strong> ya terminó. Confírmanos con un clic:`)
+      + bloqueResumen([`Persona: ${nombre}`, `Correo: ${r.email}`, `Hora: ${fechaLarga(r.inicio)} h`])
+      + P(`<strong>Sí, se realizó:</strong> en una hora le llega el agradecimiento con la encuesta y la invitación a dejar una reseña, y en 48 horas el seguimiento.<br><strong>No se presentó:</strong> le llega una invitación para reagendar. No recibe el agradecimiento.`)
+      + `<p style="margin:0 0 14px;font-size:13px;color:${C.gris}">Si no respondes, no se le envía nada después de la reunión.</p>`,
+    botones: boton('Sí, se realizó', `${SITIO}/seguimiento/reunion?r=si&t=${t}`) + boton('No se presentó', `${SITIO}/seguimiento/reunion?r=no&t=${t}`, false),
+    pie: 'Aviso interno de reuniones de pulsoinversor.cl.',
+  });
+  await brevo(env, { sender, to: asesores.map((a) => ({ email: a.email, name: a.nombre })), subject: `¿Se realizó la reunión con ${nombre}?`, htmlContent: html, tags: ['reunion-confirmar'] }, r.email);
+}
+
+// Correo a la persona que no se presentó: invitación a reagendar.
+async function correoNoShow(env, r) {
+  const x = asesorDeReunion(r.asesor);
+  const asesor = x ? x.asesor : null;
+  const primer = esc((r.nombre || '').split(' ')[0] || 'Hola');
+  const quien = asesor ? esc(asesor.nombre.split(' ')[0]) : 'nuestro equipo';
+  const sim = await env.DB.prepare('SELECT * FROM simulaciones WHERE lower(email) = ? ORDER BY creado DESC LIMIT 1').bind(r.email).first().catch(() => null);
+  const t = await firmar(env, { a: asesor ? asesor.nombre : undefined, i: sim ? sim.id : null, n: r.nombre || r.email, e: r.email, p: sim ? sim.telefono : '', s: sim ? sim.tipo : 'Reunión con Pulso', m: sim ? sim.monto : 0, g: x ? x.grupo : (sim && sim.grupo != null ? sim.grupo : 0), f: Date.now() });
+  const enlace = r.url_cambio || `${SITIO}/seguimiento/agendar?t=${t}`;
+  return {
+    asunto: `${(r.nombre || '').split(' ')[0] || 'Hola'}, ¿buscamos otro horario?`,
+    replyTo: asesor,
+    html: plantilla({
+      preheader: 'No pudimos conectarnos hoy. Elige otro horario cuando te acomode.',
+      eyebrow: 'Reagendar', titulo: `${primer}, ¿buscamos otro horario?`,
+      cuerpo: P(`Te esperábamos hoy a las <strong>${hora(r.inicio)} h</strong>${asesor ? ` con <strong>${esc(asesor.nombre)}</strong>` : ''} y no pudimos conectarnos. Entendemos que a veces surgen imprevistos.`)
+        + P(`Si sigues interesado en revisar tu inversión, elige otro día y hora con un clic. ${quien === 'nuestro equipo' ? 'Te esperamos.' : quien + ' te espera.'}`),
+      botones: boton('Elegir otro horario', enlace) + boton('Escribirnos por WhatsApp', 'https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent('Hola, no pude conectarme a la reunión y quiero reagendar.'), false),
+      pie: 'Recibes este correo porque agendaste una reunión con Pulso Inversor.',
+    }),
+  };
+}
 
 // Llamado por el cron cada minuto.
 export async function procesarRecordatorios(env) {
@@ -148,7 +194,7 @@ export async function procesarRecordatorios(env) {
   const ahora = Date.now();
   const hasta = new Date(ahora + 24 * 3600e3 + 5 * 60e3).toISOString();
   const desde = new Date(ahora - 4 * 864e5).toISOString();
-  const { results } = await env.DB.prepare('SELECT * FROM recordatorios WHERE cancelada IS NULL AND inicio BETWEEN ? AND ? AND (r24 IS NULL OR r1h IS NULL OR r1m IS NULL OR p1h IS NULL OR p48 IS NULL)').bind(desde, hasta).all();
+  const { results } = await env.DB.prepare("SELECT * FROM recordatorios WHERE cancelada IS NULL AND inicio BETWEEN ? AND ? AND (r24 IS NULL OR r1h IS NULL OR r1m IS NULL OR p1h IS NULL OR p48 IS NULL OR aviso_asesor IS NULL OR (realizada = 'no' AND noshow IS NULL))").bind(desde, hasta).all();
   const sender = { name: 'Pulso Inversor', email: env.SENDER_EMAIL || DEFAULT_SENDER };
   let enviados = 0;
   for (const r of results) {
@@ -173,12 +219,40 @@ export async function procesarRecordatorios(env) {
     }
     // Después de la reunión (se cuenta desde la hora de término; si no viene, 1 hora después del inicio).
     const fin = r.fin ? Date.parse(r.fin) : inicio + 3600e3;
+    // 1) Al terminar: pregunta al asesor si se realizó.
+    if (!r.aviso_asesor && ahora >= fin) {
+      let estado = 'omitido';
+      if (ahora < fin + 24 * 3600e3 && env.FIRMA_SEGUIMIENTO) {
+        try { await avisoAsesor(env, r, sender); estado = new Date().toISOString(); enviados++; } catch (x) { estado = 'error: ' + String(x.message || x).slice(0, 150); }
+      }
+      await env.DB.prepare('UPDATE recordatorios SET aviso_asesor = ? WHERE id = ?').bind(estado, r.id).run();
+      r.aviso_asesor = estado;
+    }
+    // 2) No se presentó: invitación a reagendar (una vez).
+    if (r.realizada === 'no' && !r.noshow) {
+      let estado;
+      try {
+        const c = await correoNoShow(env, r);
+        await brevo(env, { sender, to: [{ email: r.email, name: r.nombre || undefined }], replyTo: c.replyTo ? { email: c.replyTo.email, name: c.replyTo.nombre } : undefined, subject: c.asunto, htmlContent: c.html, tags: ['reunion-noshow'] }, r.email);
+        estado = new Date().toISOString(); enviados++;
+      } catch (x) { estado = 'error: ' + String(x.message || x).slice(0, 150); }
+      await env.DB.prepare('UPDATE recordatorios SET noshow = ?, p1h = COALESCE(p1h, ?), p48 = COALESCE(p48, ?) WHERE id = ?').bind(estado, 'omitido: no se presentó', 'omitido: no se presentó', r.id).run();
+      continue;
+    }
+    // 3) Agradecimiento y seguimiento: solo si el asesor confirmó que se realizó.
     for (const e of POSTERIORES) {
       if (r[e.col]) continue;
       const momento = fin + e.despues * 60e3;
       if (ahora < momento) continue;
+      if (r.realizada !== 'si') {
+        if (ahora > fin + e.limite * 60e3) {   // nadie confirmó: no se envía nada
+          await env.DB.prepare(`UPDATE recordatorios SET ${e.col} = ? WHERE id = ?`).bind('omitido: sin confirmar', r.id).run();
+          r[e.col] = 'omitido: sin confirmar';
+        }
+        continue;
+      }
       let estado = 'omitido';
-      if (ahora < momento + 6 * 3600e3 && env.FIRMA_SEGUIMIENTO) {   // si el cron estuvo detenido mucho rato, no se envía tarde
+      if (ahora < fin + e.limite * 60e3 && env.FIRMA_SEGUIMIENTO) {
         try {
           const c = await correoPosterior(env, r, e.col);
           await brevo(env, { sender, to: [{ email: r.email, name: r.nombre || undefined }], replyTo: { email: c.replyTo.email, name: c.replyTo.nombre }, subject: c.asunto, htmlContent: c.html, tags: ['reunion-posterior', e.col] }, r.email);
@@ -189,5 +263,7 @@ export async function procesarRecordatorios(env) {
       r[e.col] = estado;
     }
   }
-  return { ok: true, revisadas: results.length, enviados };
+  // Correos de 48 h de las simulaciones (solo a quienes aún no agendan ni fueron contactados).
+  const seg = await procesarSeguimientos(env).catch((e) => { console.error('seguimientos', e); return { enviados: 0 }; });
+  return { ok: true, revisadas: results.length, enviados: enviados + seg.enviados };
 }

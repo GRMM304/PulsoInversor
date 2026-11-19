@@ -129,13 +129,13 @@ async function enviarSimulacion(request, env) {
   // 3) Correo de seguimiento programado a las 48 horas (si falla, no afecta lo anterior)
   let seguimiento = 'no';
   try {
-    seguimiento = await programarSeguimiento(env, { id, nombre, email, telefono, tipo, monto, grupo });
+    seguimiento = await programarSeguimiento(env);
   } catch (e) { console.error('seguimiento', e); seguimiento = 'error: ' + String(e.message || e).slice(0, 150); }
   console.log('simulacion', d.tipo, id, 'seguimiento', seguimiento);
   if (env.DB && id) {
     const ok = !/^(error|sin_firma)/.test(seguimiento);
     await env.DB.prepare('UPDATE simulaciones SET seguimiento_estado = ?, seguimiento_para = ? WHERE id = ?')
-      .bind(ok ? 'programado' : seguimiento, ok ? new Date(Date.now() + (esPrueba(email) ? 3 * 60e3 : HORAS_SEGUIMIENTO * 3600e3)).toISOString() : null, id).run().catch((e) => console.error('db seg', e));
+      .bind(ok ? 'pendiente' : seguimiento, ok ? new Date(Date.now() + (esPrueba(email) ? 3 * 60e3 : HORAS_SEGUIMIENTO * 3600e3)).toISOString() : null, id).run().catch((e) => console.error('db seg', e));
   }
 
   // 4) Meta (API de conversiones): el mismo SubmitApplication que envió el navegador, con el mismo ID para no duplicarlo.

@@ -26,7 +26,7 @@ export async function firmar(env, datos) {
   const firma = b64u(await crypto.subtle.sign('HMAC', await clave(env), enc.encode(cuerpo)));
   return cuerpo + '.' + firma;
 }
-async function leer(env, token) {
+export async function leer(env, token) {
   if (!env.FIRMA_SEGUIMIENTO || !token || token.indexOf('.') < 0) return null;
   const [cuerpo, firma] = token.split('.');
   try {
@@ -48,8 +48,7 @@ const nombres = (ps) => ps.map((a) => a.nombre).join(' y ');
 const cortos = (ps) => ps.map((a) => a.nombre.split(' ')[0]).join(' y ');
 
 /* ---------- Correo de seguimiento (48 h) ---------- */
-export async function programarSeguimiento(env, { id, nombre, email, telefono, tipo, monto, grupo }) {
-  if (!env.FIRMA_SEGUIMIENTO) return 'sin_firma';
+async function correoSeguimiento(env, { id, nombre, email, telefono, tipo, monto, grupo }) {
   const t = await firmar(env, { i: id, n: nombre, e: email, p: telefono, s: tipo, m: Math.round(monto || 0), g: grupo, f: Date.now() });
   const ps = ASESORES[grupo].personas, varios = ps.length > 1, quien = cortos(ps);
   const html = plantilla({
@@ -63,16 +62,42 @@ export async function programarSeguimiento(env, { id, nombre, email, telefono, t
       + boton('Ya me contactaron', `${SITIO}/seguimiento/encuesta?t=${t}`, false),
     pie: 'Recibes este correo porque pediste tu simulación en nuestro sitio.',
   });
-  const r = await brevo(env, {
+  return {
     sender: { name: 'Pulso Inversor', email: env.SENDER_EMAIL || DEFAULT_SENDER },
     to: [{ email, name: nombre }],
     replyTo: { email: ps[0].email, name: ps[0].nombre },
     subject: `${nombre.split(' ')[0]}, ¿te quedó alguna duda con tu simulación?`,
     htmlContent: html,
-    scheduledAt: new Date(Date.now() + HORAS_SEGUIMIENTO * 3600e3).toISOString(),
     tags: ['simulacion-seguimiento'],
-  }, email);
-  return r.messageId || r.batchId || 'programado';
+  };
+}
+
+// El correo de 48 h ya no se programa en Brevo al simular: lo envía el cron cuando corresponde, y solo si la persona
+// todavía no agenda, no dijo que la contactaron, no respondió la encuesta y no invirtió.
+export async function programarSeguimiento(env) {
+  return env.FIRMA_SEGUIMIENTO ? 'pendiente' : 'sin_firma';
+}
+
+export async function procesarSeguimientos(env) {
+  if (!env.DB || !env.FIRMA_SEGUIMIENTO) return { enviados: 0 };
+  const { results } = await env.DB.prepare("SELECT * FROM simulaciones WHERE seguimiento_estado = 'pendiente' AND seguimiento_para <= ? LIMIT 20").bind(new Date(Date.now()).toISOString()).all();
+  let enviados = 0;
+  for (const s of results) {
+    let estado;
+    const reunion = await env.DB.prepare("SELECT evento FROM reuniones WHERE email = ? AND recibido >= ? AND evento = 'reservada' LIMIT 1").bind(String(s.email).toLowerCase(), s.creado).first().catch(() => null);
+    if (s.contactado_click || s.encuesta) estado = 'omitido: ya lo contactaron';
+    else if (reunion || s.agendado || s.agenda_form) estado = 'omitido: ya agendó';
+    else if (s.invirtio) estado = 'omitido: ya invirtió';
+    else if (Date.now() - Date.parse(s.seguimiento_para) > 24 * 3600e3) estado = 'omitido: atrasado';
+    else {
+      try {
+        await brevo(env, await correoSeguimiento(env, { id: s.id, nombre: s.nombre, email: s.email, telefono: s.telefono, tipo: s.tipo, monto: s.monto, grupo: s.grupo || 0 }), s.email);
+        estado = 'enviado'; enviados++;
+      } catch (e) { estado = 'error: ' + String(e.message || e).slice(0, 120); }
+    }
+    await env.DB.prepare('UPDATE simulaciones SET seguimiento_estado = ?, seguimiento_enviado = ? WHERE id = ?').bind(estado, new Date(Date.now()).toISOString(), s.id).run();
+  }
+  return { enviados };
 }
 
 /* ---------- Páginas ---------- */
@@ -255,9 +280,33 @@ async function encuesta(request, env, url) {
 <p>Si te quedó alguna duda, escríbenos por WhatsApp cuando quieras.</p>`);
 }
 
+// El asesor responde desde su correo si la reunión se realizó. Solo con "Sí" se envían el agradecimiento y la encuesta;
+// con "No se presentó" la persona recibe una invitación a reagendar.
+async function confirmarReunion(env, url) {
+  const d = await leer(env, url.searchParams.get('t'));
+  const r = url.searchParams.get('r');
+  if (!d || !d.rid || !['si', 'no'].includes(r)) return enlaceVencido();
+  const rec = await env.DB.prepare('SELECT * FROM recordatorios WHERE id = ?').bind(d.rid).first();
+  if (!rec) return enlaceVencido();
+  const yaEnviado = rec.p1h && rec.p1h.startsWith('20') || rec.noshow && rec.noshow.startsWith('20');
+  if (!yaEnviado) {
+    await env.DB.prepare('UPDATE recordatorios SET realizada = ?, realizada_en = ? WHERE id = ?').bind(r, ahora(), d.rid).run();
+    if (r === 'si' && rec.realizada !== 'si') {
+      const { eventoMeta } = await import('./meta.js');
+      await eventoMeta(env, { nombreEvento: 'ReunionRealizada', eventoId: 'reunion-realizada-' + rec.id, persona: { email: rec.email, nombre: rec.nombre }, datos: { content_name: rec.asesor || 'Reunión' } });
+    }
+  }
+  const final = yaEnviado ? rec.realizada : r;
+  const nombre = esc(rec.nombre || rec.email);
+  return pagina('Reunión', `<p class="eyebrow">Reunión con ${nombre}</p><h1>${final === 'si' ? '¡Gracias! Quedó registrada como realizada' : 'Registramos que no se presentó'}</h1>`
+    + `<p>${final === 'si' ? 'En una hora le llegará el correo de agradecimiento con la encuesta y la invitación a dejar una reseña. En 48 horas, el de seguimiento.' : 'Le enviaremos un correo para reagendar la reunión cuando le acomode. No recibirá el agradecimiento ni la encuesta.'}</p>`
+    + (yaEnviado && final !== r ? '<p class="err">Ya se habían enviado los correos de la respuesta anterior, así que no se cambió.</p>' : ''));
+}
+
 export async function rutaSeguimiento(request, env, url) {
   if (!['GET', 'POST'].includes(request.method)) return new Response('Método no permitido', { status: 405 });
   if (url.pathname === '/seguimiento/agendar') return agendar(request, env, url);
   if (url.pathname === '/seguimiento/encuesta') return encuesta(request, env, url);
+  if (url.pathname === '/seguimiento/reunion') return confirmarReunion(env, url);
   return null;
 }

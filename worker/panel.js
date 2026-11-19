@@ -51,6 +51,9 @@ async function entrar(request, env) {
 }
 
 function estadoSeguimiento(s) {
+  if (s.seguimiento_estado === 'pendiente') return `<span class="pill wait">Programado</span><br><small>${esc(fmt(s.seguimiento_para))}</small>`;
+  if (s.seguimiento_estado === 'enviado') return `<span class="pill ok">✓ Enviado</span><br><small>${esc(fmt(s.seguimiento_enviado))}</small>`;
+  if (String(s.seguimiento_estado || '').startsWith('omitido')) return `<span class="pill">No se envió</span><br><small>${esc(s.seguimiento_estado.replace('omitido: ', ''))}</small>`;
   if (s.seguimiento_estado === 'programado') {
     const enviado = s.seguimiento_para && Date.parse(s.seguimiento_para) <= Date.now();
     return `<span class="pill ${enviado ? 'ok' : 'wait'}" title="${esc(fmt(s.seguimiento_para))}">${enviado ? '✓ Enviado' : 'Programado'}</span><br><small>${esc(fmt(s.seguimiento_para))}</small>`;
@@ -87,7 +90,7 @@ async function panel(env, url) {
   const asesorSel = url.searchParams.get('asesor') || '';
   const filas0 = asesorSel === '' ? results : results.filter((s) => String(s.grupo) === asesorSel);
   const n = filas0.length;
-  const enviados = filas0.filter((s) => s.seguimiento_estado === 'programado' && Date.parse(s.seguimiento_para) <= Date.now()).length;
+  const enviados = filas0.filter((s) => s.seguimiento_estado === 'enviado' || (s.seguimiento_estado === 'programado' && Date.parse(s.seguimiento_para) <= Date.now())).length;
   const abrieron = filas0.filter((s) => s.agenda_click || s.agenda_form).length;
   const agendados = filas0.filter((s) => s.agendado || (s._reunion && s._reunion.evento !== 'cancelada')).length;
   const iniciadas = filas0.filter((s) => s._reunion && s._reunion.evento === 'iniciada').length;

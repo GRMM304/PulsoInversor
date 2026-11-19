@@ -37,12 +37,12 @@ export async function recibirReunion(request, env, url) {
       if (evento === 'reservada') await guardarReserva(env, m);
       if (evento === 'cancelada') await cancelarReserva(env, m);
     } catch (e) { console.error('recordatorios', e); }
-    // Meta (API de conversiones): reunión reservada de verdad = Schedule; reunión iniciada = ReunionRealizada.
-    if (evento === 'reservada' || evento === 'iniciada') {
+    // Meta (API de conversiones): reunión reservada de verdad = Schedule. ReunionRealizada sale de la confirmación del asesor.
+    if (evento === 'reservada') {
       const email = String(p.EMAIL || '').trim().toLowerCase();
       const clave = [evento, email, m.meeting_start_timestamp || '', m.reschedule_cancel_url || ''].join('|');
       await eventoMeta(env, {
-        nombreEvento: evento === 'reservada' ? 'Schedule' : 'ReunionRealizada',
+        nombreEvento: 'Schedule',
         eventoId: 'reunion-' + clave.slice(0, 180),
         persona: { email, nombre: [p.FIRSTNAME, p.LASTNAME].filter(Boolean).join(' '), telefono: p.SMS || p.PHONE || p.WHATSAPP || '' },
         datos: { content_name: m.meeting_name || 'Reunión' },

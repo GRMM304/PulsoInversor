@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS simulaciones (
   recomienda INTEGER,
   notas TEXT,
   publicidad INTEGER,              -- 1 si aceptó recibir publicidad (casilla opcional)
+  seguimiento_enviado TEXT,        -- envío real del correo de 48 h (lo hace el cron; se omite si ya agendó o lo contactaron)
   invirtio TEXT                    -- marcado por el equipo: concretó su inversión (Purchase en Meta)
 );
 CREATE INDEX IF NOT EXISTS idx_sim_creado ON simulaciones(creado);
@@ -58,7 +59,11 @@ CREATE TABLE IF NOT EXISTS recordatorios (
   r1h TEXT,
   r1m TEXT,
   p1h TEXT,                         -- agradecimiento + encuesta, 1 h después de terminada
-  p48 TEXT                          -- seguimiento (remarketing), 48 h después de terminada
+  p48 TEXT,                         -- seguimiento (remarketing), 48 h después de terminada (solo si se realizó)
+  aviso_asesor TEXT,                -- correo al asesor al terminar: "¿se realizó la reunión?"
+  realizada TEXT,                   -- 'si' / 'no' según responde el asesor (fecha en realizada_en)
+  realizada_en TEXT,
+  noshow TEXT                       -- correo "¿reagendamos?" si la persona no se presentó
 );
 CREATE INDEX IF NOT EXISTS idx_rec_inicio ON recordatorios(inicio);
 
