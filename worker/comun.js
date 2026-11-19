@@ -25,18 +25,17 @@ export const TIPOS = {
 // Si un tramo no tiene enlace, el correo de seguimiento usa el formulario propio de /seguimiento/agendar.
 // Con un enlace se redirige directo; con varios, la persona elige con quién agendar.
 export const AGENDA_BREVO = {
-  0: [{ nombre: 'Renato Vargas', url: 'https://meet.brevo.com/pulsoinversor/renato-vargas' }], // hasta $25 MM
-  1: [{ nombre: 'Pamela Herrera', url: 'https://meet.brevo.com/pulsoinversor/pamela-herrera' }], // $25 a $50 MM
-  2: [ // $50 MM o más
-    { nombre: 'Iván Barboza', url: 'https://meet.brevo.com/pulsoinversor/ivan-barboza' },
-    { nombre: 'Felipe Rojas', url: 'https://meet.brevo.com/pulsoinversor/felipe-rojas' },
-  ],
+  0: [{ nombre: 'Renato Vargas', url: 'https://meet.brevo.com/pulsoinversor/renato-vargas' }],  // hasta 40 años
+  1: [{ nombre: 'Pamela Herrera', url: 'https://meet.brevo.com/pulsoinversor/pamela-herrera' }], // 41 años o más
+  // Tramo antiguo (Iván y Felipe, simulaciones anteriores al 19-nov-2026): ya no toman reuniones; sus enlaces van a Pamela.
+  2: [{ nombre: 'Pamela Herrera', url: 'https://meet.brevo.com/pulsoinversor/pamela-herrera' }],
 };
 
-// Asesor según el monto simulado (en pesos).
-//   hasta $25 MM        → Renato Vargas
-//   $25 MM a $50 MM     → Pamela Herrera
-//   $50 MM o más        → Iván Barboza y Felipe Rojas
+// Asesor según la EDAD de la persona (desde el 19-nov-2026):
+//   hasta 40 años       → Renato Vargas   (grupo 0)
+//   41 años o más       → Pamela Herrera  (grupo 1)
+// El grupo 2 (Iván Barboza y Felipe Rojas) queda solo para leer simulaciones antiguas: ya no se asigna ni toma reuniones,
+// pero ambos siguen recibiendo copia de cada simulación (EQUIPO y copia a todos los asesores).
 export const ASESORES = [
   { hasta: 25e6, personas: [{ nombre: 'Renato Vargas', cargo: 'Asesor de inversiones', email: 'rvargas@grupomm.cl' }] },
   { hasta: 50e6, personas: [{ nombre: 'Pamela Herrera', cargo: 'Asesora de inversiones', email: 'pherrera@partnersadvisers.cl' }] },
@@ -55,7 +54,8 @@ export function asesorDeReunion(nombreReunion) {
   }
   return null;
 }
-export const asesoresPara = (monto) => ASESORES.find((a) => (monto || 0) < a.hasta).personas;
+export const EDAD_CORTE = 40;
+export const asesoresPara = (edad) => (Number(edad) > EDAD_CORTE ? ASESORES[1] : ASESORES[0]).personas;
 
 export const json = (obj, status = 200) => new Response(JSON.stringify(obj), {
   status, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' },

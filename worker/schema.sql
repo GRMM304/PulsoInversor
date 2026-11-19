@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS simulaciones (
   recomienda INTEGER,
   notas TEXT,
   publicidad INTEGER,              -- 1 si aceptó recibir publicidad (casilla opcional)
+  edad INTEGER,                    -- define el asesor: hasta 40 → Renato; 41+ → Pamela
   seguimiento_enviado TEXT,        -- envío real del correo de 48 h (lo hace el cron; se omite si ya agendó o lo contactaron)
   invirtio TEXT                    -- marcado por el equipo: concretó su inversión (Purchase en Meta)
 );

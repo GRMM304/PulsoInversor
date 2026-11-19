@@ -43,7 +43,7 @@ function correoInversionista({ tipo, nombre, lineas, personas }) {
   });
 }
 
-function correoEquipo({ tipo, nombre, email, telefono, monto, lineas, personas, publicidad, consentimiento }) {
+function correoEquipo({ tipo, nombre, email, telefono, monto, edad, lineas, personas, publicidad, consentimiento }) {
   const fecha = new Date().toLocaleString('es-CL', { timeZone: 'America/Santiago', dateStyle: 'long', timeStyle: 'short' });
   const asignado = personas.map((a) => a.nombre).join(' y ');
   return plantilla({
@@ -51,7 +51,7 @@ function correoEquipo({ tipo, nombre, email, telefono, monto, lineas, personas, 
     eyebrow: `Nueva simulación · ${tipo}`,
     titulo: `${esc(nombre)}${monto ? ' · ' + clp(monto) : ''}`,
     cuerpo: P(`Asesor asignado: <strong>${esc(asignado)}</strong>. Al inversionista le dijimos que ${esc(personas.map((a) => a.nombre.split(' ')[0]).join(' y '))} le escribirá en las próximas horas hábiles.`)
-      + bloqueResumen([`Nombre: ${nombre}`, `Correo: ${email}`, `Teléfono: ${telefono ? '+56 ' + telefono : '—'}`, `Simulador: ${tipo}`, `Monto simulado: ${monto ? clp(monto) : '—'}`, `Fecha: ${fecha}`, `Acepta recibir publicidad: ${publicidad ? 'Sí' : 'No'}${consentimiento ? ' (' + new Date(consentimiento).toLocaleString('es-CL', { timeZone: 'America/Santiago', dateStyle: 'short', timeStyle: 'short' }) + ')' : ''}`])
+      + bloqueResumen([`Nombre: ${nombre}`, `Correo: ${email}`, `Teléfono: ${telefono ? '+56 ' + telefono : '—'}`, `Edad: ${edad || '—'}`, `Simulador: ${tipo}`, `Monto simulado: ${monto ? clp(monto) : '—'}`, `Fecha: ${fecha}`, `Acepta recibir publicidad: ${publicidad ? 'Sí' : 'No'}${consentimiento ? ' (' + new Date(consentimiento).toLocaleString('es-CL', { timeZone: 'America/Santiago', dateStyle: 'short', timeStyle: 'short' }) + ')' : ''}`])
       + bloqueResumen(lineas)
       + avisoWhatsapp(telefono)
       + P('El PDF que recibió va adjunto. Si respondes este correo, le escribes directamente.'),
@@ -76,6 +76,7 @@ async function enviarSimulacion(request, env) {
   const telefono = String(c.telefono || '').replace(/\D/g, '').slice(0, 15);
   const publicidad = c.publicidad === true;
   const consentimiento = String(c.consentimiento || '').slice(0, 40);
+  const edad = Math.round(Number(c.edad)) || null;   // define el asesor (hasta 40 → Renato; 41+ → Pamela)
   if (!tipo || nombre.length < 2 || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return json({ ok: false, error: 'datos_invalidos' }, 400);
 
   const pdf = String(d.pdfBase64 || '').replace(/^data:application\/pdf;[^,]*,/, '');
@@ -84,7 +85,7 @@ async function enviarSimulacion(request, env) {
   const lineas = Array.isArray(d.resumen) ? d.resumen.slice(0, 30).map((l) => String(l).slice(0, 200)) : [];
   const monto = Math.max(0, Math.min(Number(d.monto) || 0, 1e12));
 
-  const personas = asesoresPara(monto);
+  const personas = asesoresPara(edad);
   const sender = { name: 'Pulso Inversor', email: env.SENDER_EMAIL || DEFAULT_SENDER };
   const adjunto = [{ content: pdf, name: archivo }];
   const equipo = (env.EQUIPO_EMAIL ? env.EQUIPO_EMAIL.split(',') : EQUIPO).map((s) => s.trim().toLowerCase()).filter(Boolean);
@@ -98,8 +99,8 @@ async function enviarSimulacion(request, env) {
   let id = null;
   if (env.DB) {
     try {
-      const r = await env.DB.prepare('INSERT INTO simulaciones (creado, nombre, email, telefono, tipo, monto, grupo, asesor, publicidad) VALUES (?,?,?,?,?,?,?,?,?) RETURNING id')
-        .bind(new Date().toISOString(), nombre, email, telefono, tipo, Math.round(monto), grupo, personas.map((a) => a.nombre).join(' y '), publicidad ? 1 : 0).first();
+      const r = await env.DB.prepare('INSERT INTO simulaciones (creado, nombre, email, telefono, tipo, monto, grupo, asesor, publicidad, edad) VALUES (?,?,?,?,?,?,?,?,?,?) RETURNING id')
+        .bind(new Date().toISOString(), nombre, email, telefono, tipo, Math.round(monto), grupo, personas.map((a) => a.nombre).join(' y '), publicidad ? 1 : 0, edad).first();
       id = r && r.id;
     } catch (e) { console.error('db insert', e); }
   }
@@ -121,7 +122,7 @@ async function enviarSimulacion(request, env) {
     cc: copias.length ? copias.map((e) => ({ email: e })) : undefined,
     replyTo: { email, name: nombre },
     subject: `Nueva simulación ${tipo}${monto ? ' · ' + clp(monto) : ''} · ${nombre}`,
-    htmlContent: correoEquipo({ tipo, nombre, email, telefono, monto, lineas, personas, publicidad, consentimiento }),
+    htmlContent: correoEquipo({ tipo, nombre, email, telefono, monto, edad, lineas, personas, publicidad, consentimiento }),
     attachment: adjunto,
     tags: ['simulacion-equipo', d.tipo],
   }, email);

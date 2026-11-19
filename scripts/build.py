@@ -799,6 +799,7 @@ GATE = """  <div class="gate" id="sim-gate" aria-labelledby="gate-title">
       <label>Nombre y apellido<input id="gate-nombre" name="nombre" autocomplete="name" placeholder="Tu nombre" required></label>
       <label>Correo electrónico<input name="email" type="email" autocomplete="email" placeholder="nombre@correo.cl" required></label>
       <label>Teléfono / WhatsApp<span class="gate-tel"><span>+56</span><input name="telefono" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="9 1234 5678" required></span></label>
+      <label>Edad<input name="edad" type="number" inputmode="numeric" min="18" max="110" placeholder="Ej: 38" required></label>
       <label class="check"><input type="checkbox" name="terminos" required><span>Acepto la <a href="privacidad.html" target="_blank">Política de privacidad</a>.</span></label>
       <label class="check"><input type="checkbox" name="contenido"><span>(Opcional) Acepto recibir información comercial y publicidad de Pulso Inversor por correo y WhatsApp.</span></label>
       <p class="gate-aut">Al completar tus datos personales, Pulso Inversor SpA podrá usarlos para contactarte y entregarte opciones de inversión, además de verificar el funcionamiento de la plataforma. Si quieres saber más sobre el uso y resguardo de tu información, revisa nuestra <a href="privacidad.html" target="_blank">Política de privacidad</a>.</p>
@@ -1055,6 +1056,7 @@ page('inversion-circular.html', 'Inversión Inmobiliaria Circular',
       <label>Nombre y apellido<input id="gate-nombre" name="nombre" autocomplete="name" placeholder="Tu nombre" required></label>
       <label>Correo electrónico<input name="email" type="email" autocomplete="email" placeholder="nombre@correo.cl" required></label>
       <label>Teléfono / WhatsApp<span class="gate-tel"><span>+56</span><input name="telefono" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="9 1234 5678" required></span></label>
+      <label>Edad<input name="edad" type="number" inputmode="numeric" min="18" max="110" placeholder="Ej: 38" required></label>
       <label class="check"><input type="checkbox" name="terminos" required><span>Acepto la <a href="privacidad.html" target="_blank">Política de privacidad</a>.</span></label>
       <label class="check"><input type="checkbox" name="contenido"><span>(Opcional) Acepto recibir información comercial y publicidad de Pulso Inversor por correo y WhatsApp.</span></label>
       <p class="gate-aut">Al completar tus datos personales, Pulso Inversor SpA podrá usarlos para contactarte y entregarte opciones de inversión, además de verificar el funcionamiento de la plataforma. Si quieres saber más sobre el uso y resguardo de tu información, revisa nuestra <a href="privacidad.html" target="_blank">Política de privacidad</a>.</p>
@@ -1139,7 +1141,7 @@ page('privacidad.html', 'Política de privacidad',
 <section class="section"><div class="container legal-text">
   <p>En Pulso Inversor, empresa de Grupo Matchmaking, cuidamos los datos personales que nos entregas a través de este sitio. Aquí te contamos qué datos recogemos, para qué los usamos y cómo puedes ejercer tus derechos, conforme a la Ley N° 19.628 sobre protección de la vida privada y sus modificaciones.</p>
   <h2>1. Qué datos recogemos</h2>
-  <p>Cuando usas los simuladores o nos contactas, recogemos tu nombre, correo, teléfono o WhatsApp, los datos de tu simulación (estrategia, monto, plazo y resultado referencial) y, en Hipoteca Inteligente, la capacidad financiera que declares.</p>
+  <p>Cuando usas los simuladores o nos contactas, recogemos tu nombre, correo, teléfono o WhatsApp, tu edad (para asignarte el asesor que corresponde), los datos de tu simulación (estrategia, monto, plazo y resultado referencial) y, en Hipoteca Inteligente, la capacidad financiera que declares.</p>
   <h2>2. Para qué los usamos</h2>
   <ul><li>Responder tu solicitud: un asesor puede contactarte para revisar tu simulación y orientarte.</li>
     <li>Enviarte contenido e información sobre inversiones por correo y WhatsApp, si lo autorizaste. Puedes darte de baja cuando quieras.</li></ul>

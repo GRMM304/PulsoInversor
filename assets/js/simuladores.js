@@ -46,6 +46,7 @@
   var tabs = $$('[data-sim-tab]'), panels = $$('[data-sim-panel]');
   var stage = $('#sim-stage'), gate = $('#sim-gate');
   var contacto = ses.get('pulsoContacto');
+  if (contacto && !contacto.edad) contacto = null; // datos guardados antes de pedir la edad: se vuelven a pedir
   // Página del equipo (/panel/simuladores): ya entró con la clave, así que no se piden datos.
   var EQUIPO = root.hasAttribute('data-equipo');
   function setLocked(locked) {
@@ -100,10 +101,9 @@
   function slugNombre() { return String(contacto ? contacto.nombre : 'cliente').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40) || 'cliente'; }
   // PDF sencillo: encabezado de marca + secciones de filas clave/valor y párrafos.
   // Asesor según el monto simulado (los correos viven en el Worker).
-  function asesoresPara(monto) {
-    if ((monto || 0) < 25e6) return ['Renato Vargas'];
-    if (monto < 50e6) return ['Pamela Herrera'];
-    return ['Iván Barboza', 'Felipe Rojas'];
+  // Asesor según la edad (los correos viven en el Worker): hasta 40 años → Renato; 41 o más → Pamela.
+  function asesoresPara() {
+    return Number(contacto && contacto.edad) > 40 ? ['Pamela Herrera'] : ['Renato Vargas'];
   }
   var primerNombre = function () { return String(contacto ? contacto.nombre : '').trim().split(/\s+/)[0] || ''; };
   // Bloques con empatía, comunes a todos los PDF.
@@ -191,7 +191,7 @@
     var b64 = doc.output('datauristring').split(',')[1];
     var archivo = prefijo + '_' + (doc.__folio || folioPI()) + '_' + slugNombre() + '.pdf';
     fetch(API_CORREO, { method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ metaEventId: metaEventId || undefined, pageUrl: location.href.split('#')[0], tipo: tipo, cliente: { nombre: contacto.nombre, email: contacto.email, telefono: contacto.telefono, publicidad: contacto.publicidad === true, consentimiento: contacto.consentimiento || null }, pdfBase64: b64, archivo: archivo, resumen: resumen, monto: Math.round(monto || 0), website: '' }) })
+      body: JSON.stringify({ metaEventId: metaEventId || undefined, pageUrl: location.href.split('#')[0], tipo: tipo, cliente: { nombre: contacto.nombre, email: contacto.email, telefono: contacto.telefono, edad: contacto.edad, publicidad: contacto.publicidad === true, consentimiento: contacto.consentimiento || null }, pdfBase64: b64, archivo: archivo, resumen: resumen, monto: Math.round(monto || 0), website: '' }) })
       .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return r.ok && j.ok; }); })
       .then(function (ok) {
         st.classList.add(ok ? 'is-ok' : 'is-err');
@@ -206,17 +206,18 @@
     e.preventDefault();
     var f = e.target, err = $('#gate-err');
     if (f.website.value) return; // trampa para bots
-    var nombre = f.nombre.value.trim(), email = f.email.value.trim(), tel = f.telefono.value.replace(/\D/g, '');
+    var nombre = f.nombre.value.trim(), email = f.email.value.trim(), tel = f.telefono.value.replace(/\D/g, ''), edad = parseInt(f.edad ? f.edad.value : '', 10);
     var faltan = [];
     if (nombre.length < 2) faltan.push('nombre');
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) faltan.push('correo');
     if (tel.length < 8) faltan.push('teléfono');
+    if (!(edad >= 18 && edad <= 110)) faltan.push('edad');
     var msg = faltan.length ? 'Completa correctamente: ' + faltan.join(', ') + '.' : '';
     if (!f.terminos.checked) msg += (msg ? ' ' : '') + 'Para continuar debes aceptar la Política de privacidad.';
     err.textContent = msg;
-    ['nombre', 'email', 'telefono'].forEach(function (n) { f[n].classList.toggle('invalid', faltan.indexOf(n === 'telefono' ? 'teléfono' : n === 'email' ? 'correo' : n) >= 0); });
+    ['nombre', 'email', 'telefono', 'edad'].forEach(function (n) { if (f[n]) f[n].classList.toggle('invalid', faltan.indexOf(n === 'telefono' ? 'teléfono' : n === 'email' ? 'correo' : n) >= 0); });
     if (msg) return;
-    contacto = { nombre: nombre, email: email, telefono: tel, publicidad: !!f.contenido.checked, consentimiento: new Date().toISOString() };
+    contacto = { nombre: nombre, email: email, telefono: tel, edad: edad, publicidad: !!f.contenido.checked, consentimiento: new Date().toISOString() };
     ses.set('pulsoContacto', contacto);
     if (!EQUIPO) {
       if (window.fbq) {
