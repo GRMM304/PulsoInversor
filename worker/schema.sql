@@ -70,5 +70,8 @@ CREATE TABLE IF NOT EXISTS recordatorios (
 );
 CREATE INDEX IF NOT EXISTS idx_rec_inicio ON recordatorios(inicio);
 
+-- Conversaciones abiertas en respond.io (para armar la transcripción al cerrarse y dejarla en Brevo)
+CREATE TABLE IF NOT EXISTS rio_conversaciones (contacto TEXT PRIMARY KEY, abierta TEXT, canal TEXT);
+
 -- Informe semanal enviado (lunes 10:00 Chile). semana = lunes de la semana informada.
 CREATE TABLE IF NOT EXISTS informes (semana TEXT PRIMARY KEY, enviado TEXT, detalle TEXT);

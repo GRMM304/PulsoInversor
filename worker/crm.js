@@ -36,6 +36,8 @@ export async function sincronizarContacto(env, id, extra = {}) {
   const monto = Number(campo(c, 'monto_pulso')); if (monto) atributos.MONTO = monto;
   if (extra.canal) atributos.CANAL = CANALES[extra.canal] || extra.canal;
   if (fono) { atributos.SMS = fono; atributos.WHATSAPP = fono; }
+  const etiquetas = (c.tags || []).map((t) => (typeof t === 'string' ? t : t && (t.name || t.label))).filter(Boolean);
+  atributos.ETIQUETAS = etiquetas.join(', ');
   const cuerpo = { attributes: atributos, listIds: [LISTA_LEADS], updateEnabled: true, ext_id: 'rio-' + c.id };
   if (correoValido(c.email)) cuerpo.email = String(c.email).trim().toLowerCase();
   let r = await brevoContacto(env, cuerpo);
@@ -46,7 +48,78 @@ export async function sincronizarContacto(env, id, extra = {}) {
   }
   const etapa = etapaDesdeRespond(c.lifecycle, asesor);
   const neg = etapa ? await avanzarNegocio(env, cuerpo.email ? { email: cuerpo.email } : { extId: 'rio-' + c.id }, etapa, { nombre: [c.firstName, c.lastName].filter(Boolean).join(' '), estrategia: atributos.ESTRATEGIA, monto: atributos.MONTO }) : null;
-  return { ...r, id: c.id, conCorreo: !!cuerpo.email, negocio: neg };
+  let brevoId = null;
+  try { brevoId = (await brevoApi(env, 'GET', cuerpo.email ? '/contacts/' + encodeURIComponent(cuerpo.email) : '/contacts/' + encodeURIComponent('rio-' + c.id) + '?identifierType=ext_id')).id; } catch (e) { /* sin ID: no hay notas */ }
+  return { ...r, id: c.id, conCorreo: !!cuerpo.email, negocio: neg, brevoId, contacto: c, etiquetas };
+}
+
+// ---------- Historial de respond.io en Brevo (notas en la ficha del contacto) ----------
+let cacheUsuarios = null;
+async function usuariosRespond(env) {
+  if (cacheUsuarios && Date.now() - cacheUsuarios.t < 30 * 60e3) return cacheUsuarios.v;
+  const r = await fetch('https://api.respond.io/v2/space/user?limit=100', { headers: { Authorization: 'Bearer ' + env.RESPONDIO_TOKEN, accept: 'application/json' } });
+  const d = r.ok ? await r.json() : { items: [] };
+  const v = Object.fromEntries((d.items || []).map((u) => [String(u.id), [u.firstName, u.lastName].filter(Boolean).join(' ')]));
+  cacheUsuarios = { t: Date.now(), v };
+  return v;
+}
+const nombreCanal = (c) => CANALES[c] || c || '';
+const horaChile = (ms) => new Date(ms).toLocaleString('es-CL', { timeZone: 'America/Santiago', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', hour12: false });
+const textoEn = (o, prof = 0) => {
+  if (!o || typeof o !== 'object' || prof > 3) return '';
+  for (const k of ['text', 'comment', 'body', 'content']) if (typeof o[k] === 'string' && o[k].trim()) return o[k].trim();
+  for (const v of Object.values(o)) { const x = textoEn(v, prof + 1); if (x) return x; }
+  return '';
+};
+
+async function nota(env, brevoId, texto) {
+  if (!brevoId || !texto) return;
+  await brevoApi(env, 'POST', '/crm/notes', { text: texto.slice(0, 6000), contactIds: [brevoId] });
+}
+
+// Transcripción de la conversación desde que se abrió (máximo 100 mensajes).
+async function transcripcion(env, contactoId, desdeMs) {
+  const r = await fetch(`https://api.respond.io/v2/contact/id:${contactoId}/message/list?limit=100`, { headers: { Authorization: 'Bearer ' + env.RESPONDIO_TOKEN, accept: 'application/json' } });
+  if (!r.ok) return { lineas: [], desde: null, hasta: null };
+  const d = await r.json();
+  const usuarios = await usuariosRespond(env);
+  const ts = (m) => Number(((m.status || [])[0] || {}).timestamp) || 0;
+  const msgs = (d.items || []).filter((m) => !desdeMs || ts(m) >= desdeMs - 60e3).sort((a, b) => ts(a) - ts(b));
+  const lineas = msgs.map((m) => {
+    const quien = m.traffic === 'incoming' ? 'Cliente' : (m.sender && m.sender.userId && usuarios[String(m.sender.userId)]) || (m.sender && m.sender.source === 'workflow' ? 'Flujo automático' : 'Pulso Inversor');
+    const msg = m.message || {};
+    const texto = msg.text || (msg.type && msg.type !== 'text' ? `[${msg.type}]` : '');
+    return `${horaChile(ts(m))} · ${quien}: ${texto}`;
+  }).filter((l) => !/: $/.test(l));
+  return { lineas, desde: msgs.length ? ts(msgs[0]) : null, hasta: msgs.length ? ts(msgs[msgs.length - 1]) : null };
+}
+
+async function registrarHistorial(env, d, evento, canal, r) {
+  if (!r || !r.brevoId) return;
+  const c = r.contacto || {};
+  const ev = String(evento || '').toLowerCase();
+  if (ev === 'contact.created') return nota(env, r.brevoId, `🆕 Nuevo contacto en respond.io${canal ? ' por ' + nombreCanal(canal) : ''}.`);
+  if (/lifecycle/.test(ev)) return nota(env, r.brevoId, `🔄 Etapa en respond.io: ${c.lifecycle || 'sin etapa'}.`);
+  if (/assignee/.test(ev)) return nota(env, r.brevoId, c.assignee ? `👤 Conversación asignada a ${[c.assignee.firstName, c.assignee.lastName].filter(Boolean).join(' ')}.` : '👤 Conversación sin asignar.');
+  if (/tag/.test(ev)) return nota(env, r.brevoId, `🏷️ Etiquetas en respond.io: ${r.etiquetas && r.etiquetas.length ? r.etiquetas.join(', ') : 'ninguna'}.`);
+  if (/comment/.test(ev)) { const t = textoEn(d.comment || d.data || d); return nota(env, r.brevoId, `📝 Comentario interno en respond.io: ${t || '(sin texto)'}`); }
+  if (/call/.test(ev)) { const x = d.call || d.data || d; const dur = Number(x.duration || x.durationInSeconds || 0); return nota(env, r.brevoId, `📞 Llamada por respond.io${dur ? ' · ' + Math.round(dur / 60) + ' min' : ''}${x.status ? ' · ' + x.status : ''}.`); }
+  if (/conversation/.test(ev) && /open/.test(ev)) {
+    await env.DB.prepare('INSERT INTO rio_conversaciones (contacto, abierta, canal) VALUES (?, ?, ?) ON CONFLICT(contacto) DO UPDATE SET abierta = excluded.abierta, canal = excluded.canal').bind(String(c.id), new Date().toISOString(), canal || '').run().catch(() => {});
+    let previo = null; try { previo = await brevoApi(env, 'GET', '/contacts/' + r.brevoId); } catch (e) { /* nada */ }
+    const n = Number((previo && previo.attributes && previo.attributes.CONVERSACIONES) || 0) + 1;
+    await brevoApi(env, 'PUT', '/contacts/' + r.brevoId + '?identifierType=contact_id', { attributes: { CONVERSACIONES: n, ULTIMA_CONVERSACION: new Date().toISOString().slice(0, 10) } }).catch((e) => console.error('crm conv', e.message));
+    return nota(env, r.brevoId, `💬 Conversación abierta en respond.io${canal ? ' por ' + nombreCanal(canal) : ''}.`);
+  }
+  if (/conversation/.test(ev) && /clos/.test(ev)) {
+    const fila = await env.DB.prepare('SELECT * FROM rio_conversaciones WHERE contacto = ?').bind(String(c.id)).first().catch(() => null);
+    const desde = fila && fila.abierta ? Date.parse(fila.abierta) : Date.now() - 24 * 3600e3;
+    const t = await transcripcion(env, c.id, desde);
+    const via = nombreCanal(canal || (fila && fila.canal));
+    const cabecera = `💬 Conversación cerrada en respond.io${via ? ' (' + via + ')' : ''}${t.desde ? ' · ' + horaChile(t.desde) + ' a ' + horaChile(t.hasta) : ''} · ${t.lineas.length} mensajes`;
+    await nota(env, r.brevoId, cabecera + (t.lineas.length ? '\n\n' + t.lineas.join('\n') : ''));
+    await env.DB.prepare('DELETE FROM rio_conversaciones WHERE contacto = ?').bind(String(c.id)).run().catch(() => {});
+  }
 }
 
 // POST /api/respondio-webhook?token=...  (respond.io › Integraciones › Webhooks)
@@ -74,7 +147,8 @@ export async function recibirRespondio(request, env, url) {
   if (!id) return json({ ok: true, omitido: 'sin contacto' });
   try {
     const r = await sincronizarContacto(env, id, { canal });
-    console.log('respondio → brevo', id, JSON.stringify(r));
+    await registrarHistorial(env, d, d.event_type || d.event || d.type, canal, r).catch((e) => console.error('crm historial', e.message));
+    console.log('respondio → brevo', id, JSON.stringify({ ok: r.ok, conCorreo: r.conCorreo, negocio: r.negocio }));
     return json({ ok: true });
   } catch (e) {
     console.error('respondio → brevo', id, e.message);
