@@ -190,7 +190,7 @@
     var b64 = doc.output('datauristring').split(',')[1];
     var archivo = prefijo + '_' + (doc.__folio || folioPI()) + '_' + slugNombre() + '.pdf';
     fetch(API_CORREO, { method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ metaEventId: metaEventId || undefined, pageUrl: location.href.split('#')[0], tipo: tipo, cliente: { nombre: contacto.nombre, email: contacto.email, telefono: contacto.telefono, edad: contacto.edad, publicidad: contacto.publicidad === true, consentimiento: contacto.consentimiento || null }, pdfBase64: b64, archivo: archivo, resumen: resumen, monto: Math.round(monto || 0), website: '' }) })
+      body: JSON.stringify({ equipo: EQUIPO || undefined, metaEventId: metaEventId || undefined, pageUrl: location.href.split('#')[0], tipo: tipo, cliente: { nombre: contacto.nombre, email: contacto.email, telefono: contacto.telefono, edad: contacto.edad, publicidad: contacto.publicidad === true, consentimiento: contacto.consentimiento || null }, pdfBase64: b64, archivo: archivo, resumen: resumen, monto: Math.round(monto || 0), website: '' }) })
       .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return r.ok && j.ok; }); })
       .then(function (ok) {
         st.classList.add(ok ? 'is-ok' : 'is-err');

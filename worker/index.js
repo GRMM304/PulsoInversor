@@ -15,6 +15,7 @@
 
 import { informeSemanal } from './informe.js';
 import { eventoMeta, datosWeb } from './meta.js';
+import { whatsappSimulacion } from './respondio.js';
 import { avisoWhatsapp, esPrueba, DEFAULT_SENDER, EQUIPO, MAX_PDF_BYTES, ORIGENES, TIPOS, ASESORES, asesoresPara, json, esc, clp, brevo, plantilla, boton, bloqueResumen, P, C, WHATSAPP } from './comun.js';
 import { programarSeguimiento, rutaSeguimiento, HORAS_SEGUIMIENTO } from './seguimiento.js';
 import { rutaPanel } from './panel.js';
@@ -139,7 +140,15 @@ async function enviarSimulacion(request, env) {
       .bind(ok ? 'pendiente' : seguimiento, ok ? new Date(Date.now() + (esPrueba(email) ? 3 * 60e3 : HORAS_SEGUIMIENTO * 3600e3)).toISOString() : null, id).run().catch((e) => console.error('db seg', e));
   }
 
-  // 4) Meta (API de conversiones): el mismo SubmitApplication que envió el navegador, con el mismo ID para no duplicarlo.
+  // 4) WhatsApp (respond.io): Lorenzo le escribe al inversionista con la plantilla aprobada y lo deja en respond.io
+  //    con rango de edad, estrategia y monto. No se envía desde los simuladores asistidos del equipo.
+  if (!d.equipo) {
+    const wa = await whatsappSimulacion(env, { nombre, email, telefono, edad, tipo, monto, asesor: personas.map((a) => a.nombre).join(' y ') });
+    console.log('whatsapp simulacion', id, JSON.stringify(wa));
+    if (env.DB && id) await env.DB.prepare('UPDATE simulaciones SET whatsapp = ? WHERE id = ?').bind(wa.ok ? 'enviado ' + new Date().toISOString() : (wa.omitido ? 'omitido: ' + wa.omitido : 'error: ' + (wa.error || '')).slice(0, 200), id).run().catch(() => {});
+  }
+
+  // 5) Meta (API de conversiones): el mismo SubmitApplication que envió el navegador, con el mismo ID para no duplicarlo.
   //    Llega aunque la persona tenga bloqueador de anuncios. No se envía en pruebas ni desde los simuladores del equipo.
   const metaId = String(d.metaEventId || '').slice(0, 80);
   if (metaId && !esPrueba(email)) {
