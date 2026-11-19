@@ -291,6 +291,10 @@ async function confirmarReunion(env, url) {
   const yaEnviado = rec.p1h && rec.p1h.startsWith('20') || rec.noshow && rec.noshow.startsWith('20');
   if (!yaEnviado) {
     await env.DB.prepare('UPDATE recordatorios SET realizada = ?, realizada_en = ? WHERE id = ?').bind(r, ahora(), d.rid).run();
+    if (rec.realizada !== r) {
+      const { crmReunion } = await import('./crm.js');
+      await crmReunion(env, { email: rec.email, nombre: rec.nombre, estado: r === 'si' ? 'Realizada' : 'No se presentó', inicio: rec.inicio, asesor: rec.asesor, detalle: 'confirmado por el asesor' });
+    }
     if (r === 'si' && rec.realizada !== 'si') {
       const { eventoMeta } = await import('./meta.js');
       await eventoMeta(env, { nombreEvento: 'ReunionRealizada', eventoId: 'reunion-realizada-' + rec.id, persona: { email: rec.email, nombre: rec.nombre }, datos: { content_name: rec.asesor || 'Reunión' } });

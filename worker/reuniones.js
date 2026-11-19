@@ -9,6 +9,7 @@
 import { json } from './comun.js';
 import { guardarReserva, cancelarReserva } from './recordatorios.js';
 import { eventoMeta } from './meta.js';
+import { crmReunion } from './crm.js';
 
 const EVENTOS = { reservada: 'reservada', cancelada: 'cancelada', iniciada: 'iniciada' };
 
@@ -37,6 +38,11 @@ export async function recibirReunion(request, env, url) {
       if (evento === 'reservada') await guardarReserva(env, m);
       if (evento === 'cancelada') await cancelarReserva(env, m);
     } catch (e) { console.error('recordatorios', e); }
+    // CRM (Brevo): estado de la reunión en la ficha del contacto + nota en su historial.
+    if (evento === 'reservada' || evento === 'cancelada') {
+      const r = await crmReunion(env, { email: String(p.EMAIL || ''), nombre: [p.FIRSTNAME, p.LASTNAME].filter(Boolean).join(' '), estado: evento === 'reservada' ? 'Agendada' : 'Cancelada', inicio: m.meeting_start_timestamp, asesor: m.meeting_name || '', detalle: evento === 'reservada' && m.meeting_url ? 'videollamada' : '' });
+      if (!r.ok && !r.omitido) console.error('crm reunion', r.error);
+    }
     // Meta (API de conversiones): reunión reservada de verdad = Schedule. ReunionRealizada sale de la confirmación del asesor.
     if (evento === 'reservada') {
       const email = String(p.EMAIL || '').trim().toLowerCase();

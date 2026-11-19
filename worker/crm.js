@@ -68,3 +68,38 @@ export async function recibirRespondio(request, env, url) {
     return json({ ok: false }, 200); // 200 para que respond.io no desactive el webhook por un error puntual
   }
 }
+
+// ---------- Reuniones → Brevo (CRM) ----------
+// Cada cambio de una reunión deja: campos con el estado actual (REUNION_ESTADO, REUNION_FECHA, REUNION_ASESOR,
+// REUNIONES_REALIZADAS) y una nota en el historial del contacto. Nunca lanza error.
+const fechaChile = (iso) => new Date(iso).toLocaleString('es-CL', { timeZone: 'America/Santiago', weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit', hour12: false });
+
+async function brevoApi(env, metodo, ruta, cuerpo) {
+  const r = await fetch('https://api.brevo.com/v3' + ruta, { method: metodo, headers: { 'api-key': env.BREVO_CRM_KEY, 'content-type': 'application/json', accept: 'application/json' }, body: cuerpo ? JSON.stringify(cuerpo) : undefined });
+  const t = await r.text();
+  if (!r.ok) throw new Error(`Brevo ${metodo} ${ruta.split('?')[0]} ${r.status}: ${t.slice(0, 150)}`);
+  try { return t ? JSON.parse(t) : {}; } catch (e) { return {}; }
+}
+
+export async function crmReunion(env, { email, nombre, estado, inicio, asesor, detalle }) {
+  if (!env.BREVO_CRM_KEY || !correoValido(email)) return { omitido: true };
+  const correo = String(email).trim().toLowerCase();
+  try {
+    let previo = null;
+    try { previo = await brevoApi(env, 'GET', '/contacts/' + encodeURIComponent(correo)); } catch (e) { /* contacto nuevo */ }
+    const realizadas = Number((previo && previo.attributes && previo.attributes.REUNIONES_REALIZADAS) || 0) + (estado === 'Realizada' ? 1 : 0);
+    const partes = String(nombre || '').trim().split(/\s+/);
+    const attrs = { REUNION_ESTADO: estado, REUNION_ASESOR: asesor || '', REUNIONES_REALIZADAS: realizadas };
+    if (inicio) attrs.REUNION_FECHA = new Date(inicio).toISOString().slice(0, 10);
+    if (!previo && partes[0]) { attrs.NOMBRE = partes[0]; attrs.APELLIDOS = partes.slice(1).join(' '); }
+    await brevoApi(env, 'POST', '/contacts', { email: correo, attributes: attrs, updateEnabled: true });
+    const c = previo && previo.id ? previo : await brevoApi(env, 'GET', '/contacts/' + encodeURIComponent(correo));
+    const icono = { Agendada: '📅', Cancelada: '✖️', Reagendada: '🔁', Realizada: '✅', 'No se presentó': '⚠️' }[estado] || '📅';
+    const texto = `${icono} Reunión ${estado.toLowerCase()}${asesor ? ' con ' + asesor : ''}${inicio ? ' · ' + fechaChile(inicio) + ' h' : ''}${detalle ? ' · ' + detalle : ''}`;
+    if (c && c.id) await brevoApi(env, 'POST', '/crm/notes', { text: texto, contactIds: [c.id] });
+    return { ok: true };
+  } catch (e) {
+    console.error('crm reunion', estado, e.message);
+    return { ok: false, error: e.message };
+  }
+}
