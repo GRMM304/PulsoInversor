@@ -14,12 +14,11 @@ FACEBOOK = 'https://www.facebook.com/pulsoinversor.cl/'
 LINKEDIN = 'https://www.linkedin.com/company/pulsoinversor/'
 # Reseñas de Google (botón del pie de página).
 RESENAS_GOOGLE = 'https://g.page/r/CV1wmi0Qf_B7EAE/review'
-# Botón "Agendar una reunión" del menú: agenda de Brevo Meetings (hoy, la de Renato Vargas).
-AGENDA_URL = 'https://meet.brevo.com/pulsoinversor/renato-vargas'
-# Páginas cuyos botones de agendar (menú incluido) van a otra agenda.
-AGENDA_POR_PAGINA = {
-    'ya-tengo-experiencia.html': 'https://meet.brevo.com/pulsoinversor/pamela-herrera',  # Pamela Herrera
-}
+# Ningún botón del sitio va directo a la agenda de los asesores: todos pasan por el WhatsApp de
+# Pulso Inversor, donde Lorenzo precalifica (monto, perfil) antes de derivar y agendar.
+AGENDA_URL = 'https://wa.me/56958792038?text=' + urllib.parse.quote('Hola, quiero agendar una reunión con un asesor de Pulso Inversor.')
+WA_ASISTIDA = 'https://wa.me/56958792038?text=' + urllib.parse.quote('Hola, quiero hacer una simulación asistida con un asesor de Pulso Inversor.')
+AGENDA_POR_PAGINA = {}
 
 def mail(subject=None):
     """Enlace de contacto de los botones: abre WhatsApp con un mensaje que conserva el tema."""
@@ -625,13 +624,13 @@ ESTRATEGIAS_IGR = [
      'Personas con capacidad de crédito hipotecario y buen comportamiento financiero.',
      [('', 'Propiedades', 'Desde 2.000 UF', []), ('', 'Retorno', '5% + UF anual', []), ('', 'Horizonte', '2 a 5 años', [])],
      'Produces capital con financiamiento del banco, generas flujo por arriendo y construyes patrimonio.',
-     f'<a class="btn btn-primary btn-xl" href="{AGENDA_URL}" target="_blank" rel="noopener">Solicitar una simulación asistida <span aria-hidden="true">→</span></a><p class="inv-asist">Esta simulación la haces junto a un asesor de Pulso Inversor.</p>'),
+     f'<a class="btn btn-primary btn-xl" href="{WA_ASISTIDA}" target="_blank" rel="noopener">Solicitar una simulación asistida <span aria-hidden="true">→</span></a><p class="inv-asist">Esta simulación la haces junto a un asesor de Pulso Inversor.</p>'),
     ('arquitectura-de-capital', 'Arquitectura de Capital',
      'Te permite diseñar una estructura integral de inversión y patrimonio, combinando tus bienes, ingresos y ahorros, según tus objetivos, plazos y necesidades especiales (tributarias, sucesorias o familiares).',
      'Personas con bienes, ingresos y/o ahorros que buscan una estrategia patrimonial integral.',
      [('', 'Diseño a medida', 'Opciones de inversión', []), ('', 'Diseño a medida', 'Opciones de financiamiento', []), ('', 'Diseño a medida', 'Estructura legal', [])],
      'Protección, eficiencia, continuidad y crecimiento de tu patrimonio, con una configuración personalizada.',
-     f'<a class="btn btn-primary btn-xl" href="{AGENDA_URL}" target="_blank" rel="noopener">Solicitar una simulación asistida <span aria-hidden="true">→</span></a><p class="inv-asist">Esta simulación la haces junto a un asesor de Pulso Inversor.</p>'),
+     f'<a class="btn btn-primary btn-xl" href="{WA_ASISTIDA}" target="_blank" rel="noopener">Solicitar una simulación asistida <span aria-hidden="true">→</span></a><p class="inv-asist">Esta simulación la haces junto a un asesor de Pulso Inversor.</p>'),
 ]
 tipos = ''.join(f"""<button type="button" class="tipo tipo-solo" data-inv-tab="{a_}" aria-expanded="false" aria-controls="{a_}">
       <span class="tipo-n">0{i+1}</span><h3>{t}</h3>
@@ -996,7 +995,7 @@ def _asistido(id_, t, img, texto):
         <span class="asist-lock" aria-hidden="true">🔒</span>
         <h3>Este simulador lo usas junto a un asesor</h3>
         <p>{texto}</p>
-        <a class="btn btn-primary" href="{AGENDA_URL}" target="_blank" rel="noopener">Agendar hora con un asesor <span aria-hidden="true">→</span></a>
+        <a class="btn btn-primary" href="{WA_ASISTIDA}" target="_blank" rel="noopener">Agendar hora con un asesor <span aria-hidden="true">→</span></a>
         <a class="asist-acceso" href="/panel/simuladores">¿Eres asesor de Pulso Inversor? Ingresa aquí</a>
       </div>
     </div>

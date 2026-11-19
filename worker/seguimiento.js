@@ -56,8 +56,8 @@ async function correoSeguimiento(env, { id, nombre, email, telefono, tipo, monto
     eyebrow: `Seguimiento · ${tipo}`,
     titulo: `Hola ${esc(nombre.split(' ')[0])}, ¿pudiste revisar tu simulación?`,
     cuerpo: P(`Hace dos días te enviamos tu simulación de <strong>${esc(tipo)}</strong>. Sabemos que una decisión así se toma con calma, y queremos asegurarnos de que tengas todo lo que necesitas.`)
-      + P(`Si quieres revisarla con alguien, <strong>${esc(nombres(ps))}</strong> ${varios ? 'pueden' : 'puede'} reunirse contigo en nuestra oficina, por videollamada o por teléfono. Elige el día y el horario que te acomode.`),
-    botones: boton(`Agendar reunión con ${quien}`, `${SITIO}/seguimiento/agendar?t=${t}`)
+      + P(`Si quieres revisarla con alguien, escríbenos por WhatsApp. Resolvemos tus dudas y coordinamos tu reunión con <strong>${esc(nombres(ps))}</strong> en nuestra oficina, por videollamada o por teléfono.`),
+    botones: boton('Conversar por WhatsApp', `${SITIO}/seguimiento/agendar?t=${t}`)
       + `<p style="margin:22px 0 8px;font-size:15px;line-height:1.6;color:${C.texto}">¿${esc(quien)} ya ${varios ? 'conversaron' : 'conversó'} contigo? Cuéntanos cómo te fue, nos toma un minuto mejorar con tu opinión.</p>`
       + boton('Ya me contactaron', `${SITIO}/seguimiento/encuesta?t=${t}`, false),
     pie: 'Recibes este correo porque pediste tu simulación en nuestro sitio.',
@@ -145,6 +145,13 @@ async function agendar(request, env, url) {
   if (request.method !== 'POST') {
     const d = await leer(env, t);
     if (!d) return enlaceVencido();
+    // Sin una reunión previa con un asesor (d.a), nadie va directo a la agenda: pasa por el WhatsApp de
+    // Pulso Inversor, donde Lorenzo precalifica antes de derivar. Vale también para correos ya enviados.
+    if (!d.a) {
+      await registrar(env, d, 'UPDATE simulaciones SET agenda_click = COALESCE(agenda_click, ?) WHERE id = ?', ahora());
+      const texto = `Hola, soy ${String(d.n || '').split(' ')[0]}. Recibí mi simulación${d.s ? ' de ' + d.s : ''} y quiero conversar con un asesor de Pulso Inversor.`;
+      return Response.redirect('https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(texto), 302);
+    }
     // Si el tramo tiene agenda de Brevo, se redirige allí (el enlace del correo no cambia aunque se cambie la agenda).
     const agendas = (AGENDA_BREVO[d.g] || []).filter((a) => a.url);
     await registrar(env, d, 'UPDATE simulaciones SET agenda_click = COALESCE(agenda_click, ?) WHERE id = ?', ahora());
