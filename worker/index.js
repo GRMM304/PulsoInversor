@@ -16,6 +16,7 @@
 import { informeSemanal } from './informe.js';
 import { eventoMeta, datosWeb } from './meta.js';
 import { whatsappSimulacion } from './respondio.js';
+import { recibirRespondio } from './crm.js';
 import { avisoWhatsapp, esPrueba, DEFAULT_SENDER, EQUIPO, MAX_PDF_BYTES, ORIGENES, TIPOS, ASESORES, asesoresPara, json, esc, clp, brevo, plantilla, boton, bloqueResumen, P, C, WHATSAPP } from './comun.js';
 import { programarSeguimiento, rutaSeguimiento, HORAS_SEGUIMIENTO } from './seguimiento.js';
 import { rutaPanel } from './panel.js';
@@ -219,6 +220,7 @@ export default {
       const limpio = html[1] && html[1] !== 'index' ? '/' + html[1] : '/';
       return Response.redirect(url.origin + limpio + url.search, 301);
     }
+    if (url.pathname === '/api/respondio-webhook') return recibirRespondio(request, env, url);
     if (url.pathname === '/api/meta-lead') {
       if (request.method !== 'POST') return json({ ok: false, error: 'metodo_no_permitido' }, 405);
       try { return await metaLead(request, env); } catch (e) { console.error('meta-lead', e); return json({ ok: false }, 500); }
