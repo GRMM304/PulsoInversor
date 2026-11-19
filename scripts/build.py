@@ -246,6 +246,20 @@ def cta_rutas(eyebrow, titulo, texto):
   </div>
 </section>'''
 
+def cta_unico(eyebrow, titulo, texto, href, boton):
+    """Cierre de página con una sola invitación (Mi primera inversión y Ya tengo experiencia)."""
+    return f'''<section class="cta-final">
+  <div class="container">
+    <span class="eyebrow dark">{eyebrow}</span>
+    <h2>{titulo}</h2>
+    <p>{texto}</p>
+    <div class="cta-final-actions">
+      <a class="btn btn-primary btn-xl" href="{href}">{boton} <span aria-hidden="true">→</span></a>
+    </div>
+    <p class="cta-final-small">No te pedimos decidir en la reunión. Puedes venir con tu pareja, un socio o tu abogado.</p>
+  </div>
+</section>'''
+
 def cta_final(eyebrow='Tu siguiente paso', titulo='Cuéntanos qué quieres <span class="accent">construir</span>',
               texto='Una conversación para conocernos y ver por dónde partir. Sin apuro.', boton=None, tema=None):
     """Cierre de página: los mismos tres botones en todo el sitio (Simular, Es mi primera vez, Ya he invertido)."""
@@ -1438,9 +1452,9 @@ page('mi-primera-inversion.html', 'Mi primera inversión',
                    ('grafico', 'Reportes simples', 'Cada trimestre sabes cómo va tu inversión.'),
                    ('manos', 'Tu asesor al teléfono', 'Una persona a quien llamar si tienes una duda.'),
                    ('brote', 'Al terminar, decides', 'Recuperas tu capital y te ayudamos a evaluar si reinviertes.')])
-     + cta_final('Tu primer paso', 'Empieza por una <span class="accent">conversación</span>, no por una firma',
-                 'Cuéntanos cuánto tienes y para qué es. Te decimos con honestidad si esto es para ti hoy.',
-                 'Quiero una conversación sin compromiso', 'Mi primera inversión'))
+     + cta_unico('Tu primer paso', 'Antes de decidir, <span class="accent">entiende cómo funciona</span>',
+                 'Te explicamos paso a paso qué respalda tu inversión, cómo queda por escrito y cuándo recibes tus pagos.',
+                 'como-funciona.html', 'Conoce cómo funciona'))
 
 # ---------------- 4.2 Experiencia ----------------
 _rev = [('La propiedad', 'Dirección, rol y antecedentes de la propiedad vinculada a tu operación.'),
@@ -1482,9 +1496,9 @@ page('ya-tengo-experiencia.html', 'Ya tengo experiencia invirtiendo',
                    ('grafico', 'Reportes trimestrales', 'Sabes cómo va tu operación sin tener que preguntar.'),
                    ('manos', 'Una persona al teléfono', 'Tu asesor responde, no un bot.'),
                    ('brote', 'Al cierre, decides', 'Recuperas tu capital o evalúas una nueva operación.')])
-     + cta_final('Con los papeles sobre la mesa', 'Revisa una <span class="accent">operación real</span> con tu abogado',
-                 'Te mostramos la ficha completa, incluido el peor escenario. Tú decides si avanzas.',
-                 'Quiero una conversación sin compromiso', 'Ya tengo experiencia invirtiendo'))
+     + cta_unico('Tu siguiente paso', 'Conoce nuestras <span class="accent">inversiones</span>',
+                 'Revisa las tres estrategias de la Matriz IGR, sus condiciones y su respaldo, y elige la que va con tus objetivos.',
+                 'inversiones.html', 'Ver las inversiones'))
 
 # ---------------- 4.3 FAQ ----------------
 def qa(q, a):
