@@ -77,12 +77,12 @@ ORGANIZACION = {
     'description': 'Inversiones privadas respaldadas por propiedades en Chile: operaciones con hipoteca, título de '
                    'propiedad o pagaré, documentos firmados ante notario y asesoría personal.',
     'email': 'contacto@pulsoinversor.cl',
-    'telephone': '+56983554676',
+    'telephone': '+56958792038',
     'areaServed': {'@type': 'Country', 'name': 'Chile'},
     'knowsLanguage': 'es',
     'sameAs': REDES,
     'parentOrganization': {'@type': 'Organization', 'name': 'Grupo MatchMaking'},
-    'contactPoint': {'@type': 'ContactPoint', 'contactType': 'customer service', 'telephone': '+56983554676',
+    'contactPoint': {'@type': 'ContactPoint', 'contactType': 'customer service', 'telephone': '+56958792038',
                      'email': 'contacto@pulsoinversor.cl', 'availableLanguage': 'es', 'areaServed': 'CL'},
 }
 

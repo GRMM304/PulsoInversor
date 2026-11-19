@@ -48,7 +48,7 @@
 
   // Banner de inicio: con el nombre se abre WhatsApp para agendar una reunión.
   // PENDIENTE: confirmar el número (también está en scripts/build.py).
-  var WHATSAPP = '56983554676';
+  var WHATSAPP = '56958792038'; // respond.io (Lorenzo)
   document.querySelectorAll('form[data-agenda]').forEach(function (form) {
     form.addEventListener('submit', function (e) {
       e.preventDefault();
@@ -396,7 +396,7 @@ document.addEventListener('click', function (e) {
 
 // Botón "Agendar una reunión" del menú: primero se elige cómo partir (Google Meet, WhatsApp o presencial).
 (function () {
-  var WA = 'https://wa.me/56983554676?text=';
+  var WA = 'https://wa.me/56958792038?text=';
   var caja = null, abiertaDesde = null;
   function opcion(clase, href, titulo, detalle, icono) {
     return '<a class="ag-op ' + clase + '" href="' + href + '" target="_blank" rel="noopener"><span class="ag-ic" aria-hidden="true">' + icono + '</span><span class="ag-tx"><strong>' + titulo + '</strong><small>' + detalle + '</small></span><span class="ag-fl" aria-hidden="true">›</span></a>';

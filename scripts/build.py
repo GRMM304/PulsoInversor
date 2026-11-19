@@ -6,7 +6,7 @@ EMAIL = 'contacto@pulsoinversor.cl'
 
 # WhatsApp comercial. PENDIENTE: confirmar el número (hoy es el que aparecía en el sitio anterior).
 # Si cambia, actualizarlo también en assets/js/main.js (WHATSAPP).
-WHATSAPP = '56983554676'
+WHATSAPP = '56958792038'  # respond.io: contesta Lorenzo y deriva al asesor
 AGENDAR = 'Agendar una reunión'
 # Redes sociales oficiales (pie de página y Verifica).
 INSTAGRAM = 'https://www.instagram.com/pulsoinversorcl'
@@ -1291,7 +1291,7 @@ else:
 _datos = [('Razón social', 'Pulso Inversor SpA')]
 if RUT: _datos.append(('RUT', RUT))
 if OFICINA_DIR: _datos.append(('Oficina', OFICINA_DIR + '. Puedes venir a conocernos.'))
-_datos += [('WhatsApp', f'<a href="https://wa.me/{WHATSAPP}" target="_blank" rel="noopener">+56 9 8355 4676</a>'), ('Correo', f'<a href="mailto:{EMAIL}">{EMAIL}</a>'), ('Instagram', f'<a href="{INSTAGRAM}" target="_blank" rel="noopener">@pulsoinversorcl</a>'), ('Facebook', f'<a href="{FACEBOOK}" target="_blank" rel="noopener">pulsoinversor.cl</a>'), ('LinkedIn', f'<a href="{LINKEDIN}" target="_blank" rel="noopener">Pulso Inversor</a>'), ('Grupo', 'Una empresa de Grupo Matchmaking')]
+_datos += [('WhatsApp', f'<a href="https://wa.me/{WHATSAPP}" target="_blank" rel="noopener">+56 9 5879 2038</a>'), ('Correo', f'<a href="mailto:{EMAIL}">{EMAIL}</a>'), ('Instagram', f'<a href="{INSTAGRAM}" target="_blank" rel="noopener">@pulsoinversorcl</a>'), ('Facebook', f'<a href="{FACEBOOK}" target="_blank" rel="noopener">pulsoinversor.cl</a>'), ('LinkedIn', f'<a href="{LINKEDIN}" target="_blank" rel="noopener">Pulso Inversor</a>'), ('Grupo', 'Una empresa de Grupo Matchmaking')]
 datos = ''.join(f'<div class="of-row"><span>{k}</span><strong>{v}</strong></div>' for k, v in _datos)
 
 page('verifica-a-pulso.html', 'Verifica a Pulso',
