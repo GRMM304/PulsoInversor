@@ -1047,7 +1047,9 @@ h2, h3 { color: var(--green-900); }
 .evo-stat strong { color: #8fa82a; }
 .evo-stat-highlight strong { color: var(--green-900); }
 .evo-igr { border: 0; box-shadow: var(--shadow-soft); }
-@media (min-width: 801px){ .evo-timeline { grid-template-columns: minmax(0, 1fr) 34px minmax(0, 1.05fr) minmax(0, 2.5fr) minmax(0, 1.1fr); } }
+.evo-chevrons { display: flex; align-items: center; justify-content: center; margin: 0; font-size: 0; }
+.evo-chevrons svg { width: 34px; height: 34px; }
+@media (min-width: 801px){ .evo-timeline .evo-card { align-self: stretch; } .evo-chevrons { align-self: stretch; } .evo-timeline { grid-template-columns: minmax(0, 1fr) 34px minmax(0, 1.05fr) minmax(0, 2.5fr) minmax(0, 1.1fr); } }
 .evo-stat { padding: 12px 14px; }
 .evo-stat strong { font-size: 44px; }
 .evo-stat span { font-size: 19px; }
@@ -1055,7 +1057,7 @@ h2, h3 { color: var(--green-900); }
 .evo-stat-dic { align-self: stretch; justify-content: center; padding: 14px 18px; }
 .evo-stat-dic em { font-size: 28px; line-height: 1.15; margin-top: 6px; }
 .evo-stats-row .evo-line { min-width: 14px; }
-.evo-growth { display: flex; align-items: center; gap: 22px; max-width: 1150px; margin: 22px auto 0; padding: 14px 34px; background: #EEF3DA; border-radius: 999px; }
+.evo-growth { display: flex; align-items: center; gap: 22px; width: fit-content; max-width: 100%; margin: 22px auto 0; padding: 14px 34px; background: #EEF3DA; border-radius: 999px; }
 .evo-growth-ico { width: 56px; height: 56px; flex: 0 0 56px; }
 .evo-growth-div { width: 3px; align-self: stretch; background: var(--lime); border-radius: 3px; }
 .evo-growth p { margin: 0; display: flex; flex-direction: column; gap: 2px; }
@@ -1642,7 +1644,7 @@ nav a { white-space: nowrap; }
     <svg class="evo-icon" viewBox="0 0 64 64" aria-hidden="true" fill="none" stroke="#224c3f" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="10" width="48" height="40" rx="5"/><path d="M8 20h48"/><path d="M15 42l9-9 7 5 11-12 7 5" stroke="#8fb31c"/><path d="M22 56h20M32 50v6"/></svg>
     <div><h2>Inversiones tradicionales</h2><p>Renta fija y renta variable.</p></div>
   </article>
-  <span class="evo-chevrons" aria-hidden="true">»</span>
+  <span class="evo-chevrons" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 8l8 8-8 8"/><path d="M17 8l8 8-8 8"/></svg></span>
   <article class="evo-card">
     <svg class="evo-icon" viewBox="0 0 64 64" aria-hidden="true" fill="none" stroke="#224c3f" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M30 10a22 22 0 1 0 22 24H30Z"/><path d="M37 5v22h22A22 22 0 0 0 37 5Z" fill="#C7D95D" stroke="#8fb31c"/><path d="M12 26h12M16 40h10" stroke="#8fb31c"/></svg>
     <div><h2>Expansión de activos alternativos</h2><p>Mayor diversificación y nuevas fuentes de retorno.</p></div>
