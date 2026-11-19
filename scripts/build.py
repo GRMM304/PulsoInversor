@@ -975,13 +975,13 @@ f"""
 
 
 PICKS_PUBLICO = f'''    <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-proyecta" aria-selected="false">
-      <span class="sim-pick-ico">RC</span><strong>Renta de Capital</strong><span>Invierte tu capital con título, hipoteca o pagaré y compáralo con un depósito a plazo.</span><em>UF + Rentabilidad</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
+      <span class="sim-pick-ico">RC</span><strong>Renta de Capital</strong><span>Invierte tu capital con título, hipoteca o pagaré y compáralo con un depósito a plazo.</span><em>Simulación habilitada</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
     <button type="button" class="sim-pick sim-pick-asist" role="tab" data-sim-tab="sim-asistido-pc" aria-selected="false">
       <span class="sim-pick-ico">PC</span><strong>Producción de Capital</strong><span>Tu capacidad de crédito genera retorno y patrimonio. La simulas junto a un asesor.</span><em>Simulación asistida</em><span class="sim-pick-go">Ver simulador <i aria-hidden="true">↓</i></span></button>
     <button type="button" class="sim-pick sim-pick-asist" role="tab" data-sim-tab="sim-asistido-ac" aria-selected="false">
       <span class="sim-pick-ico">AC</span><strong>Arquitectura de Capital</strong><span>Una estructura a la medida de tus bienes, ingresos y ahorros. La simulas junto a un asesor.</span><em>Simulación asistida</em><span class="sim-pick-go">Ver simulador <i aria-hidden="true">↓</i></span></button>'''
 PICKS_EQUIPO = '''    <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-proyecta" aria-selected="false">
-      <span class="sim-pick-ico">RC</span><strong>Renta de Capital</strong><span>Invierte tu capital con título, hipoteca o pagaré y compáralo con un depósito a plazo.</span><em>UF + Rentabilidad</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
+      <span class="sim-pick-ico">RC</span><strong>Renta de Capital</strong><span>Invierte tu capital con título, hipoteca o pagaré y compáralo con un depósito a plazo.</span><em>Simulación habilitada</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
     <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-hipoteca" aria-selected="false">
       <span class="sim-pick-ico">PC</span><strong>Producción de Capital</strong><span>Hipoteca Inteligente: arma la configuración con la capacidad de crédito del cliente.</span><em>Desde 2.000 UF</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
     <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-patrimonial" aria-selected="false">

@@ -2289,3 +2289,12 @@ iframe[title="Webchat Widget"]{z-index:2147483000!important}
 .camino-bg-2 .es-up{transform:scaleY(.62)}
 .camino-bg-2 .es-win{opacity:.3}
 .camino-bg-2 .es-up{transform-box:view-box;transform-origin:0 300px}
+
+/* Simuladores: etiqueta habilitada / asistida más grande y con aspecto de botón (2026-11-19) */
+.sim-pick em{display:inline-flex;align-items:center;gap:10px;font-size:16px;padding:11px 20px 11px 16px;margin:6px 0 2px;background:var(--green-900);color:var(--lime);box-shadow:0 8px 20px -10px rgba(14,44,40,.6);transition:transform .25s,box-shadow .25s}
+.sim-pick em::before{content:"";flex:none;width:11px;height:11px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 0 rgba(199,217,93,.7);animation:simDot 1.8s ease-out infinite}
+.sim-pick-asist em{background:#fff;color:var(--green-900);border:2px solid var(--green-900);box-shadow:none}
+.sim-pick-asist em::before{background:var(--green-700);animation:none}
+.sim-pick:hover em{transform:translateY(-2px);box-shadow:0 12px 24px -10px rgba(14,44,40,.7)}
+@keyframes simDot{0%{box-shadow:0 0 0 0 rgba(199,217,93,.7)}80%,100%{box-shadow:0 0 0 9px rgba(199,217,93,0)}}
+@media (prefers-reduced-motion:reduce){.sim-pick em::before{animation:none}}
