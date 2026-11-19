@@ -127,6 +127,7 @@ INTERES_POR_PAGINA = {
     'mi-primera-inversion.html': 'PerfilPrimeraVez',
     'ya-tengo-experiencia.html': 'PerfilConExperiencia',
     'inversion-circular.html': 'VioInversionCircular',
+    'verifica-a-pulso.html': 'VerificoEmpresa',
 }
 INTERES_JS = ("window.pulsoInteres=function(n){try{var k='pi_'+n;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');}catch(e){}"
               "if(window.fbq)fbq('trackCustom',n);if(window.pulsoMedir)pulsoMedir('interes',{tema:n});};")

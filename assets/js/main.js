@@ -458,3 +458,13 @@ document.addEventListener('click', function (e) {
   }, true);
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') cerrar(); });
 })();
+
+// Píxel y Analytics: reproducir un video del sitio (testimonios, Iván, Felipe) = "VioVideo", una vez por video en la visita.
+document.addEventListener('play', function (e) {
+  var v = e.target;
+  if (!v || v.tagName !== 'VIDEO' || !v.controls) return; // el video de fondo de la portada no cuenta
+  var nombre = ((v.getAttribute('poster') || v.currentSrc || '').split('/').pop() || 'video').replace(/\.[a-z0-9]+$/i, '');
+  try { if (sessionStorage.getItem('pv_' + nombre)) return; sessionStorage.setItem('pv_' + nombre, '1'); } catch (er) {}
+  if (window.fbq) fbq('trackCustom', 'VioVideo', { content_name: nombre });
+  if (window.pulsoMedir) pulsoMedir('ver_video', { video: nombre });
+}, true);

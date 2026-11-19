@@ -54,6 +54,7 @@ fbq('init', '4384764601785320', _pc && _pc.email ? pulsoAM(_pc) : {});
 fbq('track', 'PageView');
 window.pulsoInteres=function(n){try{var k='pi_'+n;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');}catch(e){}if(window.fbq)fbq('trackCustom',n);if(window.pulsoMedir)pulsoMedir('interes',{tema:n});};
 fbq('track', 'ViewContent', {content_name: 'Verifica a Pulso Inversor', content_category: 'Página'});
+pulsoInteres('VerificoEmpresa');
 </script>
 <noscript><img height="1" width="1" style="display:none"
 src="https://www.facebook.com/tr?id=4384764601785320&ev=PageView&noscript=1"
