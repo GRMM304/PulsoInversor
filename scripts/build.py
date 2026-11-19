@@ -303,15 +303,15 @@ _ICONS['doc-check'] = '<path d="M6 3h9l3 3v8"/><path d="M6 3v18h7"/><path d="M9 
 CAMINOS = [
     ('renta-de-capital', 'Renta de Capital', 'Proyecto Nuevo Hogar',
      'Una estrategia para poner a trabajar tu capital disponible y generar una renta periódica alta, segura y con respaldo real.',
-     'Inversionistas con capital disponible desde $5.000.000.',
+     'Si tienes desde $5.000.000 para invertir y buscas rentabilizar tu capital con respaldo inmobiliario.',
      'Renta periódica, con garantía real y una rentabilidad muy superior a la de un depósito a plazo.'),
     ('produccion-de-capital', 'Producción de Capital', 'Hipoteca Inteligente',
      'Usa tu capacidad financiera para generar un activo que produce capital, combinando financiamiento bancario, control del arriendo y valorización del inmueble.',
-     'Personas con capacidad de crédito hipotecario y buen comportamiento financiero.',
+     'Si tienes capacidad de crédito hipotecario y quieres generar capital con Hipoteca Inteligente.',
      'Produces capital con financiamiento del banco, generas flujo por arriendo y construyes patrimonio.'),
     ('arquitectura-de-capital', 'Arquitectura de Capital', 'Configuración Patrimonial',
      'Diseña una estructura integral de inversión y patrimonio que combina tus bienes, ingresos y ahorros, según tus objetivos, plazos y necesidades (tributarias, sucesorias o familiares).',
-     'Personas con bienes, ingresos y/o ahorros que buscan una estrategia patrimonial integral.',
+     'Si tienes propiedades, ingresos o ahorros y quieres organizarlos en una estructura patrimonial más eficiente.',
      'Protección, eficiencia, continuidad y crecimiento de tu patrimonio, con una configuración personalizada.'),
 ]
 _ARROW = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>'
