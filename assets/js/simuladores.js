@@ -412,7 +412,7 @@
     var ret = tractionReturn(), months = H.years * 12, t = tractionData[H.tr];
     var picks = H.selected.map(function (i) { return { i: i, p: patrimonyData[i], d: dec(i), c: calcPat(patrimonyData[i]) }; });
     var d = function (a, b, k, sub) { return '<div class="hi-drow ' + (k || '') + '"><span>' + a + (sub ? '<em>' + sub + '</em>' : '') + '</span><b>' + b + '</b></div>'; };
-    var pdfBar = '<div class="hi-actions"><button class="btn btn-primary" id="hi-pdf" type="button">Enviar a mi correo</button></div><p class="sim-status" id="hi-pdfstatus" role="status"></p><p class="sim-aut">Al completar tus datos personales, Pulso Inversor SpA podrá usarlos para contactarte y entregarte opciones de inversión, además de verificar el funcionamiento de la plataforma. Si quieres saber más sobre el uso y resguardo de tu información, revisa nuestra <a href="/privacidad" target="_blank">Política de privacidad</a>.</p>';
+    var pdfBar = '<div class="hi-actions"><button class="btn btn-primary" id="hi-pdf" type="button">Enviar al correo</button></div><p class="sim-status" id="hi-pdfstatus" role="status"></p><p class="sim-aut">Al completar tus datos personales, Pulso Inversor SpA podrá usarlos para contactarte y entregarte opciones de inversión, además de verificar el funcionamiento de la plataforma. Si quieres saber más sobre el uso y resguardo de tu información, revisa nuestra <a href="/privacidad" target="_blank">Política de privacidad</a>.</p>';
     if (!picks.length) {
       var ok = H.tractionOnly === true;
       var concl0 = 'Elegiste enfocarte solo en el retorno del Portafolio Tracción. Al término de ' + H.years + ' años, el retorno acumulado estimado es ' + signed(ret) + ', sin propiedades del Portafolio Patrimonio ni equity asociado.';
