@@ -39,7 +39,6 @@ function correoInversionista({ tipo, nombre, lineas, personas, conWhatsapp }) {
       + bloqueResumen(lineas)
       + P(`<strong>${esc(quien)}</strong>, ${cargo}, ${varios ? 'se contactarán contigo' : 'se contactará contigo'} en las próximas horas hábiles para resolver tus dudas y, si quieres, mostrarte una operación real con su propiedad, su tasación y el documento que quedaría a tu favor.`)
       + (conWhatsapp ? P('También te escribirá <strong>Lorenzo</strong>, de nuestro equipo, por WhatsApp para saber si tienes dudas.') : '')
-      + P('No te vamos a pedir que decidas en esa conversación. Puedes venir con tu abogado cuando quieras.')
       + `<p style="margin:0 0 14px;font-size:13px;color:${C.gris}">La simulación es referencial: las condiciones finales dependen de la evaluación y del contrato de cada operación.</p>`,
     botones: boton('Conversar por WhatsApp', wa),
     pie: 'Recibes este correo porque pediste tu simulación en nuestro sitio.',
