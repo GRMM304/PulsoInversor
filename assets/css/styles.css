@@ -2219,3 +2219,46 @@ iframe[title="Webchat Widget"]{z-index:2147483000!important}
 .camino-ic .ic-line{stroke-width:3.6}
 .camino-ic .ic-node{transform:scale(.85);opacity:.8}
 @media (max-width:900px){.camino .camino-ic{width:112px;height:112px;border-radius:28px}}
+
+/* Matriz IGR del inicio, v4 (2026-11-19): escenas planas dibujadas con pequeñas animaciones */
+.camino-bg-1,.camino-bg-2,.camino-bg-3{background:linear-gradient(180deg,#1d3b31 0%,#24463a 55%,#16302a 100%)}
+.camino-bg-2{background:linear-gradient(180deg,#1b382f 0%,#28493c 55%,#15302a 100%)}
+.camino-bg-3{background:linear-gradient(180deg,#1a3a33 0%,#244a40 55%,#13302b 100%)}
+.camino-bg::after{background:linear-gradient(180deg,transparent 0%,transparent 50%,rgba(14,36,31,.75) 68%,rgba(12,30,26,.97) 100%);-webkit-mask:none;mask:none}
+.camino:not(.is-open) .camino-bg::after{background:linear-gradient(180deg,rgba(14,36,31,.15) 0%,rgba(14,36,31,.2) 50%,rgba(14,36,31,.8) 68%,rgba(12,30,26,.97) 100%)}
+.camino-ic,.camino-big{display:none}
+.es{position:absolute;inset:0;width:100%;height:100%}
+.es-grid path{stroke:rgba(255,255,255,.055);stroke-width:1}
+.es-mont{fill:rgba(160,190,120,.10)}
+.es-arc{fill:none;stroke:rgba(199,217,93,.28);stroke-width:1.5}
+.es-ground{fill:#1a352d}
+.es-bld{fill:#4b6553;fill-opacity:.62}
+.es-col{fill:#6f8a64;fill-opacity:.55}
+.es-door{fill:#2a463a}
+.es-win{fill:#a9bf55;opacity:.55}
+.es-tw{animation:esTw var(--t,5s) ease-in-out var(--d,0s) infinite}
+@keyframes esTw{0%,100%{opacity:.55}45%{opacity:.12}55%{opacity:.12}}
+.es-tree rect{fill:#3c5848}.es-tree circle{fill:#5c7a55;fill-opacity:.75}
+/* Al abrir la tarjeta, las construcciones suben en orden */
+.es-up{transform:translateY(26px);transition:transform .8s cubic-bezier(.2,.8,.2,1) calc(var(--i,0) * .08s)}
+.camino.is-open .es-up{transform:none}
+/* Renta: una moneda que flota y sube */
+.es-coin circle{fill:var(--lime);opacity:.85}
+.es-coin-in{fill:none!important;stroke:#1d3b31;stroke-width:2.4;opacity:1!important}
+.es-coin{opacity:0;transform:translateY(40px)}
+.camino.is-open .es-coin{animation:esCoin 3.6s ease-in-out .5s infinite}
+@keyframes esCoin{0%{opacity:0;transform:translateY(40px)}20%{opacity:1}70%{opacity:1;transform:translateY(-10px)}100%{opacity:0;transform:translateY(-30px)}}
+/* Producción: grúa con su gancho */
+.es-crane path{fill:none;stroke:#8aa168;stroke-width:3;stroke-linecap:round}
+.es-hook{animation:esHook 3s ease-in-out infinite;transform-box:fill-box;transform-origin:top}
+@keyframes esHook{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.7)}}
+/* Arquitectura: el plano se dibuja y las conexiones avanzan */
+.es-plan path{fill:none;stroke:rgba(199,217,93,.5);stroke-width:2;stroke-dasharray:1;stroke-dashoffset:0}
+.camino.is-open .es-plan path{animation:esDraw 1.8s ease .15s both}
+@keyframes esDraw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+.es-link path{fill:none;stroke:var(--lime);stroke-width:2;stroke-dasharray:6 8;opacity:.6;animation:esLink 1.4s linear infinite}
+@keyframes esLink{to{stroke-dashoffset:-28}}
+.es-pulse circle{fill:var(--lime);transform-box:fill-box;transform-origin:center;animation:esPulse 2.4s ease-in-out infinite}
+@keyframes esPulse{0%,100%{transform:scale(1);opacity:.9}50%{transform:scale(1.8);opacity:.35}}
+@media (max-width:900px){.es-up{transform:none}.camino .es-plan path{animation:none}.camino .es-coin{animation:esCoin 3.6s ease-in-out .5s infinite}}
+@media (prefers-reduced-motion:reduce){.es *{animation:none!important;transition:none!important}.es-up{transform:none}.es-coin{opacity:.85;transform:none}}
