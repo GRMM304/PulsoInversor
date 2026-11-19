@@ -383,20 +383,21 @@ page('index.html', 'Inicio',
     <p class="lead">No es lo mismo dar el primer paso fuera del banco que venir de fondos, acciones o crowdfunding. Elige y te llevamos a la información pensada para ti.</p></div>
   <div class="grid-2 choice-grid">
     <a class="card profile-card choice" href="mi-primera-inversion.html">
-      <h3><span class="choice-tag yes">Sí</span> es mi primera vez</h3>
-      <p>Tengo mis ahorros en el banco y quiero hacerlos crecer, pero me preocupa arriesgar mi dinero.</p>
-      {bullets(['<span><strong>Invierte desde $5 millones</strong>, sin necesidad de comprometer todos tus ahorros.</span>',
-                '<span>Tu inversión está <strong>respaldada por un inmueble</strong>, no solo por una promesa de pago.</span>',
-                '<span>Conoce <strong>cuánto podrías ganar y en qué plazo</strong>, antes de tomar una decisión.</span>'])}
+      <h3><span class="choice-tag yes">Sí</span> es mi primera inversión</h3>
+      <p>Si tienes ahorros y quieres dar el primer paso, conoce cómo invertir con Pulso Inversor.</p>
+      {bullets(['<span><strong>Invierte desde $5 millones</strong>Accede a intereses que podrían hasta triplicar los de un depósito a plazo fijo.*</span>',
+                '<span><strong>Respaldo patrimonial inmobiliario</strong>Conoce el respaldo que corresponde a tu modalidad de inversión.</span>',
+                '<span><strong>Interés y plazo por escrito</strong>Quedan pactados en escritura pública o pagaré, según la operación.</span>'])}
       <span class="btn btn-primary">Quiero conocer cómo funciona</span></a>
     <a class="card profile-card choice" href="ya-tengo-experiencia.html">
       <h3><span class="choice-tag no">No</span> ya he invertido</h3>
-      <p>¿Estás por renovar tu depósito a plazo o quieres saber si puedes invertir con financiamiento bancario? Conoce las nuevas alternativas de Pulso Inversor.</p>
-      {bullets(['<span><strong>Invierte parte de tus ahorros.</strong> Explora opciones de inversión inmobiliaria según el monto que quieras destinar.</span>',
-                '<span><strong>Aprovecha tu capacidad de crédito.</strong> Evalúa si puedes financiar la compra de una propiedad con un crédito hipotecario para construir patrimonio.</span>',
-                '<span><strong>Compara antes de decidir.</strong> Revisa cuánto podrías ganar, cómo y cuándo recuperarías tu dinero, y qué respaldo tiene cada opción.</span>'])}
-      <span class="btn btn-dark">Quiero comparar alternativas</span></a>
+      <p>Si ya has invertido en instrumentos financieros o depósitos a plazo, descubre nuevas alternativas para potenciar tu patrimonio.</p>
+      {bullets(['<span><strong>Hipoteca Inteligente</strong>Si tus ahorros ya están invertidos, evalúa cómo aprovechar tu capacidad de crédito hipotecario para construir patrimonio.</span>',
+                '<span><strong>Configuración Patrimonial</strong>Ordena tus propiedades y rentas personales con una estructura más eficiente.</span>',
+                '<span><strong>Inversión Inmobiliaria Circular</strong>Si ya arriendas propiedades, explora cómo aumentar el flujo mensual que generan.</span>'])}
+      <span class="btn btn-dark">Quiero conocer nuevas alternativas</span></a>
   </div>
+  <p class="choice-nota">*Comparación referencial. Depende de la tasa del depósito a plazo y de las condiciones de la inversión.</p>
 </div></section>
 
 <section class="section section-soft" id="por-que-pulso"><div class="container">
@@ -406,29 +407,29 @@ page('index.html', 'Inicio',
       <div class="why-col why-other">
         <span class="why-kicker">Otras alternativas</span>
         <h3>Lo que ya conoces</h3>
-        <p>Otros instrumentos financieros ofrecen tasas de interés más bajas y, con ellas, retornos más bajos.</p>
-        <p>Además, están expuestos a las variaciones del mercado.</p>
-        <p>Si compras una propiedad para invertir, muchas veces tienes que complementar el dividendo de tu bolsillo y hacerte cargo de mantenerla.</p>
+        <p><strong>Renta variable</strong>Las acciones pueden generar ganancias o pérdidas. Su precio está expuesto a la volatilidad del mercado y a eventos geopolíticos.</p>
+        <p><strong>Renta fija</strong>Depósitos a plazo y bonos tienen condiciones de pago definidas. En los depósitos a plazo, la tasa se conoce de antemano y el retorno suele ser más acotado.</p>
+        <p><strong>Fondos inmobiliarios</strong>Inviertes en un portafolio de inmuebles. El horizonte puede ser de varios años y la liquidez depende del fondo.</p>
       </div>
       <div class="why-col why-pulso">
-        <span class="why-kicker">Con nosotros</span>
+        <span class="why-kicker">Activo alternativo</span>
         <h3>Pulso Inversor</h3>
-        <p>Intereses que superan ampliamente a los de otros instrumentos financieros.</p>
-        <p>Retornos definidos por contrato, estructurados en escrituras públicas y pagarés.</p>
-        <p>Distintas estructuras de inversión, con acceso a oportunidades en remate y a portafolios con descuento.</p>
+        <p><strong>Deuda privada inmobiliaria</strong>Estructuramos inversiones vinculadas a propiedades, con interés y plazo pactados por contrato.</p>
+        <p><strong>Operaciones con inmuebles</strong>Originamos oportunidades en remates, en solicitudes de financiamiento con hipoteca y en operaciones con título de propiedad.</p>
+        <p><strong>Respaldo documentado</strong>Según la estrategia, la operación se formaliza con escritura pública, hipoteca inscrita o pagaré.</p>
       </div>
     </div>
-    <div class="why-m"><span class="why-kicker">Con nosotros</span><h3>Pulso Inversor</h3>
-      <div class="why-m-item"><p class="why-m-pulso">Intereses que superan ampliamente a los de otros instrumentos financieros.</p><p class="why-m-otra"><span>Otras alternativas</span>Otros instrumentos financieros ofrecen tasas de interés más bajas y, con ellas, retornos más bajos.</p></div>
-      <div class="why-m-item"><p class="why-m-pulso">Retornos definidos por contrato, estructurados en escrituras públicas y pagarés.</p><p class="why-m-otra"><span>Otras alternativas</span>Además, están expuestos a las variaciones del mercado.</p></div>
-      <div class="why-m-item"><p class="why-m-pulso">Distintas estructuras de inversión, con acceso a oportunidades en remate y a portafolios con descuento.</p><p class="why-m-otra"><span>Otras alternativas</span>Si compras una propiedad para invertir, muchas veces tienes que complementar el dividendo de tu bolsillo y hacerte cargo de mantenerla.</p></div>
+    <div class="why-m"><span class="why-kicker">Activo alternativo</span><h3>Pulso Inversor</h3>
+      <div class="why-m-item"><p class="why-m-pulso"><strong>Deuda privada inmobiliaria</strong>Estructuramos inversiones vinculadas a propiedades, con interés y plazo pactados por contrato.</p><p class="why-m-otra"><span>Otras alternativas · Renta variable</span>Las acciones pueden generar ganancias o pérdidas. Su precio está expuesto a la volatilidad del mercado y a eventos geopolíticos.</p></div>
+      <div class="why-m-item"><p class="why-m-pulso"><strong>Operaciones con inmuebles</strong>Originamos oportunidades en remates, en solicitudes de financiamiento con hipoteca y en operaciones con título de propiedad.</p><p class="why-m-otra"><span>Otras alternativas · Renta fija</span>Depósitos a plazo y bonos tienen condiciones de pago definidas. En los depósitos a plazo, la tasa se conoce de antemano y el retorno suele ser más acotado.</p></div>
+      <div class="why-m-item"><p class="why-m-pulso"><strong>Respaldo documentado</strong>Según la estrategia, la operación se formaliza con escritura pública, hipoteca inscrita o pagaré.</p><p class="why-m-otra"><span>Otras alternativas · Fondos inmobiliarios</span>Inviertes en un portafolio de inmuebles. El horizonte puede ser de varios años y la liquidez depende del fondo.</p></div>
     </div>
     <div class="why-igr">
-      <p class="lead">Descubre cómo te acompañamos y qué información tendrás para evaluar tu alternativa. Antes de invertir, deberías poder responder estas tres preguntas con documentos en la mano. Así trabaja el Modelo IGR.</p>
+      <p class="lead">Antes de invertir, revisa los documentos de tu operación y responde estas tres preguntas.</p>
       <div class="igr-list">
-        <article class="igr-item">{icon('casa')}<div><h3>¿Qué respalda mi dinero?</h3><p>Una propiedad concreta, con su tasación y su precio de compra.</p></div></article>
-        <article class="igr-item">{icon('doc-check')}<div><h3>¿Qué queda a mi favor?</h3><p>Un documento firmado ante notario que puedes revisar con tu abogado.</p></div></article>
-        <article class="igr-item">{icon('calendario')}<div><h3>¿Cómo recupero mi dinero?</h3><p>Un calendario de pagos por escrito, antes de firmar.</p></div></article>
+        <article class="igr-item">{icon('casa')}<div><h3>¿Qué respalda mi inversión?</h3><p>Patrimonio inmobiliario vinculado de forma directa o indirecta, según la estrategia.</p></div></article>
+        <article class="igr-item">{icon('documento')}<div><h3>¿Qué queda a mi favor?</h3><p>Una propiedad inscrita a tu nombre, una hipoteca inscrita a tu favor o un pagaré con firma autorizada ante notario, según la modalidad.</p></div></article>
+        <article class="igr-item">{icon('escudo')}<div><h3>¿Qué pasa si hay un incumplimiento?</h3><p>Cada estrategia contempla respaldos a favor del inversionista. El contrato establece cómo hacer valer tus derechos en caso de incumplimiento.</p></div></article>
       </div>
     </div>
   </div>

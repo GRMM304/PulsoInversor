@@ -2150,3 +2150,14 @@ iframe[title="Webchat Widget"]{z-index:2147483000!important}
 .gdeck-stage{touch-action:pan-y}
 .footer .logo-foot{height:auto;width:210px;max-width:100%}
 @media (max-width:760px){.footer .logo-foot{width:170px}}
+
+/* Por qué invertir (2026-11-19): cada punto con título propio */
+.why-col p{flex-direction:column;align-items:flex-start;justify-content:center;gap:4px}
+.why-col p strong{display:block;font-size:17px;color:var(--green-900)}
+.why-pulso p strong{color:#fff}
+.why-m-pulso strong{display:block;margin-bottom:3px}
+.why-m-pulso{font-weight:400!important;font-size:14.5px!important;color:rgba(255,255,255,.88)!important}
+.why-m-pulso strong{font-size:16px;color:#fff;font-weight:700}
+/* Elección primera vez / ya invertí: título del punto en su propia línea */
+.choice li strong{display:block}
+.choice-nota{margin:18px auto 0;max-width:760px;text-align:center;font-size:13px;color:var(--gray-600,#5b6660)}
