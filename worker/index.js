@@ -174,8 +174,14 @@ export default {
     // Presentación comercial: solo en presentacion.pulsoinversor.cl (no enlazada ni indexada). En los otros dominios no existe.
     if (url.hostname === 'presentacion.pulsoinversor.cl') {
       if (url.pathname === '/robots.txt') return new Response('User-agent: *\nDisallow: /\n', { headers: { 'content-type': 'text/plain; charset=utf-8' } });
-      const r = await env.ASSETS.fetch(new Request(new URL('/presentacion/', url)));
-      return new Response(r.body, { status: r.status, headers: { 'content-type': 'text/html; charset=utf-8', 'x-robots-tag': 'noindex, nofollow', 'cache-control': 'no-cache' } });
+      // / = la presentación; /simuladores = los tres simuladores sin pedir clave ni datos (la vista del equipo).
+      // /assets y /api siguen su curso normal; cualquier otra ruta va al sitio en www.
+      const pagina = url.pathname === '/' ? '/presentacion/' : /^\/simuladores\/?$/.test(url.pathname) ? '/simuladores-equipo' : null;
+      if (pagina) {
+        const r = await env.ASSETS.fetch(new Request(new URL(pagina, url)));
+        return new Response(r.body, { status: r.status, headers: { 'content-type': 'text/html; charset=utf-8', 'x-robots-tag': 'noindex, nofollow', 'cache-control': 'no-cache' } });
+      }
+      if (!/^\/(assets\/|api\/|manifest\.webmanifest$)/.test(url.pathname)) return Response.redirect('https://www.pulsoinversor.cl' + url.pathname + url.search, 301);
     }
     if (/^\/presentacion(\/|$)/.test(url.pathname)) {
       const r = await env.ASSETS.fetch(new Request(new URL('/404', url)));
