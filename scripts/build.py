@@ -88,7 +88,7 @@ def footer():
       <div>
         <img class="logo-foot" src="assets/img/logo-pulso-blanco.webp" alt="Pulso Inversor" width="300" height="100">
         <p>Inversiones privadas vinculadas a bienes raíces mediante el modelo IGR: Inversión con Garantía Real.</p>
-        <p><strong>Pulso Inversor SpA</strong><br><a href="mailto:{EMAIL}">{EMAIL}</a></p>
+        <p><strong>Pulso Inversor SpA</strong><br><a href="mailto:{EMAIL}">{EMAIL}</a><br>Teléfono: <a href="tel:+56233655239">+56 2 3365 5239</a><br>WhatsApp: <a href="https://wa.me/{WHATSAPP}" target="_blank" rel="noopener">+56 9 5879 2038</a></p>
         <div class="footer-redes">
           <a href="{INSTAGRAM}" target="_blank" rel="noopener" aria-label="Pulso Inversor en Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r=".9" fill="currentColor" stroke="none"/></svg></a>
           <a href="{FACEBOOK}" target="_blank" rel="noopener" aria-label="Pulso Inversor en Facebook"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 21v-7.6h2.6l.4-3h-3V8.5c0-.9.3-1.5 1.5-1.5h1.6V4.3c-.3 0-1.2-.1-2.3-.1-2.3 0-3.9 1.4-3.9 4v2.2H7.8v3h2.6V21z"/></svg></a>
@@ -1151,7 +1151,7 @@ page('privacidad.html', 'Política de privacidad',
   <p>Este sitio usa el Píxel de Meta (Facebook e Instagram) para medir las visitas y la efectividad de nuestros anuncios, y para mostrar publicidad de Pulso Inversor a personas interesadas. El píxel usa cookies y datos de navegación; no le enviamos tu nombre, correo ni teléfono. Puedes bloquear estas cookies en la configuración de tu navegador y gestionar tus preferencias de anuncios en tu cuenta de Facebook o Instagram.</p>
   <p>También usamos Google Analytics para saber cuántas personas visitan el sitio, qué páginas leen y qué acciones realizan (por ejemplo, enviar una simulación o abrir WhatsApp), de forma estadística y sin enviarle tu nombre, correo ni teléfono. Google Analytics usa cookies; puedes bloquearlas en tu navegador o instalar el complemento de inhabilitación de Google Analytics.</p>
   <h2>7. Contacto</h2>
-  <p>Correo: <a href="mailto:{EMAIL}">{EMAIL}</a> · Teléfono: +56 2 3365 5239</p>
+  <p>Correo: <a href="mailto:{EMAIL}">{EMAIL}</a> · Teléfono: <a href="tel:+56233655239">+56 2 3365 5239</a> · WhatsApp: <a href="https://wa.me/{WHATSAPP}" target="_blank" rel="noopener">+56 9 5879 2038</a></p>
   <h2>8. Cambios a esta política</h2>
   <p>Si actualizamos esta política, publicaremos la nueva versión en esta página con su fecha.</p>
 </div></section>
