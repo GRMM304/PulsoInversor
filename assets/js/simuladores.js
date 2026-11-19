@@ -269,14 +269,14 @@
     $$('[data-serie]').forEach(function (b) { var on = b.getAttribute('data-serie') === P.serie; b.classList.toggle('is-active', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
     var s = SERIES[P.serie];
     if (!s) {
-      $('#p-plazos').innerHTML = '<span class="pro-help">Elige primero una garantía.</span>';
+      $('#p-plazos').innerHTML = '<span class="pro-help">Elige primero un respaldo.</span>';
       $('#p-quick').innerHTML = [5000000, 10000000, 25000000, 50000000, 100000000, 250000000].map(function (v) { return '<button type="button" class="chip-opt" data-monto="' + v + '">' + (v / 1e6) + ' millones</button>'; }).join('');
       $('#p-min').textContent = ''; $('#p-retiro-wrap').hidden = true; return;
     }
     $('#p-plazos').innerHTML = s.plazos.map(function (p) { return '<button type="button" class="chip-opt' + (p === P.plazo ? ' is-active' : '') + '" data-plazo="' + p + '" aria-pressed="' + (p === P.plazo) + '">' + p + ' meses</button>'; }).join('');
     $('#p-quick').innerHTML = [5000000, 10000000, 25000000, 50000000, 100000000, 250000000].filter(function (v) { return v >= s.minimo; })
       .map(function (v) { return '<button type="button" class="chip-opt" data-monto="' + v + '">' + (v / 1e6) + ' millones</button>'; }).join('');
-    $('#p-min').textContent = 'Mínimo para esta garantía: ' + fmtCLP(s.minimo);
+    $('#p-min').textContent = 'Mínimo para este respaldo: ' + fmtCLP(s.minimo);
     $('#p-retiro-wrap').hidden = !s.retiro;
     $$('[data-retiro]').forEach(function (b) { var on = P.retiro !== null && (b.getAttribute('data-retiro') === '1') === P.retiro; b.classList.toggle('is-active', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
   }
@@ -314,7 +314,7 @@
   window.__pulsoProyectaRender = render;
   function resumen() {
     var r = calcular(), s = SERIES[P.serie];
-    return 'Alternativa: Renta de Capital · Garantía ' + s.nombre + '\nMonto: ' + fmtCLP(r.monto) + '\nPlazo: ' + P.plazo + ' meses' +
+    return 'Alternativa: Renta de Capital · ' + s.nombre + '\nMonto: ' + fmtCLP(r.monto) + '\nPlazo: ' + P.plazo + ' meses' +
       (s.retiro ? '\nRetiro anticipado: ' + (P.retiro ? 'Sí' : 'No') : '') + '\nRentabilidad: ' + (s.uf ? 'UF + ' : '') + fmtPct(tasa(), 1) + ' mensual' +
       '\nTotal a recibir (referencial): ' + fmtCLP(r.total) + '\nGanancia: ' + fmtCLP(r.ganancia) +
       '\nDepósito a plazo a 365 días (' + fmtPct(DAP_ANUAL, 2) + ' anual): ' + fmtCLP(r.dapGanancia);
@@ -340,7 +340,7 @@
     var r = calcular(), sr = SERIES[P.serie];
     var resumenTxt = resumen();
     var doc = pdfSimple('Simulación Renta de Capital', 'Resultado referencial', [
-      { t: 'Tu simulación', rows: [['Alternativa', 'Renta de Capital · Garantía ' + sr.nombre], ['Monto a invertir', fmtCLP(r.monto)], ['Plazo', P.plazo + ' meses'],
+      { t: 'Tu simulación', rows: [['Alternativa', 'Renta de Capital · ' + sr.nombre], ['Monto a invertir', fmtCLP(r.monto)], ['Plazo', P.plazo + ' meses'],
         ['Rentabilidad', (sr.uf ? 'UF + ' : '') + fmtPct(tasa(), 1) + ' mensual']].concat(sr.retiro ? [['Retiro anticipado', P.retiro ? 'Sí' : 'No']] : []) },
       { t: 'Con Pulso Inversor', rows: [['Total a recibir', fmtCLP(r.total)], ['Ganancia', '+' + fmtCLP(r.ganancia), 'pos']] },
       { t: 'En un depósito a plazo a 365 días', rows: [['Tasa referencial', fmtPct(DAP_ANUAL, 2) + ' anual'], ['Total a recibir', fmtCLP(r.dapTotal)], ['Ganancia', '+' + fmtCLP(r.dapGanancia), 'red']] },

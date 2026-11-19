@@ -307,7 +307,7 @@ CAMINOS = [
     ('renta-de-capital', 'Renta de Capital', 'Proyecto Nuevo Hogar',
      'Una estrategia para poner a trabajar tu capital disponible y generar una renta periódica alta, segura y con respaldo real.',
      'Si tienes desde $5.000.000 para invertir y buscas rentabilizar tu capital con respaldo inmobiliario.',
-     'Renta periódica, con garantía real y una rentabilidad muy superior a la de un depósito a plazo.'),
+     'Renta periódica, con respaldo patrimonial inmobiliario y una rentabilidad muy superior a la de un depósito a plazo.'),
     ('produccion-de-capital', 'Producción de Capital', 'Hipoteca Inteligente',
      'Usa tu capacidad financiera para generar un activo que produce capital, combinando financiamiento bancario, control del arriendo y valorización del inmueble.',
      'Si tienes capacidad de crédito hipotecario y quieres generar capital con Hipoteca Inteligente.',
@@ -317,11 +317,13 @@ CAMINOS = [
      'Si tienes propiedades, ingresos o ahorros y quieres organizarlos en una estructura patrimonial más eficiente.',
      'Protección, eficiencia, continuidad y crecimiento de tu patrimonio, con una configuración personalizada.'),
 ]
+_ILU_IGR = ['<svg class="camino-ilu" viewBox="0 0 240 110" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">\n<path d="M6 104h228"/>\n<path d="M12 104V62l26-22 26 22v42"/><path d="M8 65l30-26 30 26"/><path d="M52 48V38h7v16"/><rect x="21" y="68" width="10" height="10"/><rect x="45" y="68" width="10" height="10"/><path d="M32 104V88h12v16"/>\n<path d="M70 104V78l20-17 20 17v26"/><path d="M66 81l24-21 24 21"/><path d="M85 104V91h10v13"/>\n<ellipse cx="138" cy="94" rx="13" ry="4.5"/><path d="M125 94v8c0 2.5 5.8 4.5 13 4.5s13-2 13-4.5v-8"/>\n<ellipse cx="170" cy="78" rx="13" ry="4.5"/><path d="M157 78v24c0 2.5 5.8 4.5 13 4.5s13-2 13-4.5V78"/><path d="M157 86c0 2.5 5.8 4.5 13 4.5s13-2 13-4.5M157 94c0 2.5 5.8 4.5 13 4.5s13-2 13-4.5"/>\n<ellipse cx="204" cy="58" rx="13" ry="4.5"/><path d="M191 58v44c0 2.5 5.8 4.5 13 4.5s13-2 13-4.5V58"/><path d="M191 66c0 2.5 5.8 4.5 13 4.5s13-2 13-4.5M191 74c0 2.5 5.8 4.5 13 4.5s13-2 13-4.5M191 82c0 2.5 5.8 4.5 13 4.5s13-2 13-4.5M191 90c0 2.5 5.8 4.5 13 4.5s13-2 13-4.5"/>\n<path d="M124 46c30 0 58-12 82-34"/><path d="M194 11h13v13"/>\n</svg>', '<svg class="camino-ilu" viewBox="0 0 240 110" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">\n<path d="M6 104h228"/>\n<text x="10" y="22" fill="currentColor" stroke="none" font-size="13" font-weight="700" font-family="inherit">Banco</text>\n<path d="M8 50l28-16 28 16z"/><path d="M12 54h48"/><path d="M17 58v34M29 58v34M43 58v34M55 58v34"/><path d="M12 94h48M8 100h56"/>\n<path d="M72 74h20"/><path d="M86 68l6 6-6 6"/>\n<path d="M102 104V44h30v60"/><path d="M110 44v-8h14v8"/><path d="M132 62h16v42"/>\n<path d="M109 54h5M120 54h5M109 66h5M120 66h5M109 78h5M120 78h5M138 72h4M138 84h4"/><path d="M113 104V92h8v12"/>\n<path d="M150 88l20-16 20-10 22-22"/><circle cx="170" cy="72" r="3.5"/><circle cx="190" cy="62" r="3.5"/><circle cx="212" cy="40" r="3.5"/>\n<ellipse cx="216" cy="84" rx="11" ry="4"/><path d="M205 84v18c0 2.2 4.9 4 11 4s11-1.8 11-4V84"/><path d="M205 93c0 2.2 4.9 4 11 4s11-1.8 11-4"/>\n</svg>', '<svg class="camino-ilu" viewBox="0 0 240 110" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">\n<path d="M20 6h100v94H20c-6 0-10-4-10-10V16c0-6 4-10 10-10z"/><path d="M20 6c6 0 10 4 10 10v84"/>\n<path d="M44 18h46v26H44z"/><path d="M66 18v12M44 31h12M76 31h14"/>\n<path d="M46 86V68l18-13 18 13v18z"/><path d="M58 86v-9h12v9"/>\n<path d="M88 92l18-26 6 4-18 26-8 3z"/>\n<path d="M120 54h22M142 22v66M142 22h14M142 54h14M142 88h14"/>\n<rect x="158" y="8" width="44" height="28" rx="6"/><path d="M173 31V15h14v16M177 20h2M182 20h2M177 25h2M182 25h2"/>\n<rect x="158" y="40" width="44" height="28" rx="6"/><ellipse cx="180" cy="49" rx="8" ry="3"/><path d="M172 49v9c0 1.7 3.6 3 8 3s8-1.3 8-3v-9"/>\n<rect x="158" y="74" width="44" height="28" rx="6"/><path d="M170 88c0-5 4.5-8 10-8 3 0 5 .8 6.5 2l3-1-1 4c.8 1 1.5 2 1.5 3.5h2v4h-3c-1 1.5-2.5 2.5-4 3v2h-4v-1.5h-4v1.5h-4v-3c-2-1.5-3.5-3.5-3.5-6.5z"/><circle cx="184" cy="86" r=".8" fill="currentColor"/>\n</svg>']
 _ARROW = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>'
 cards = ''.join(f'''<a class="camino{' is-open' if i == 0 else ''}" href="inversiones.html#{a}" data-camino>
   <div class="camino-bg camino-bg-{i+1}" aria-hidden="true"></div>
   <div class="camino-top"><span class="camino-num">0{i+1}</span><span class="camino-arrow">{_ARROW}</span></div>
   <div class="camino-bottom">
+    <div class="camino-ilu-w">{_ILU_IGR[i]}</div>
     <h3>{t}</h3>
     <div class="camino-detail"><div class="camino-inner">
       <div class="camino-rows uno">
@@ -596,7 +598,7 @@ estrategias = ''.join(f"""<article class="aht" id="estrategia-{n.lower().replace
       <h3>{n}</h3>
       <p class="aht-tag">{tag}</p>
       <dl class="aht-rows">
-        <div><dt>Garantía real</dt><dd>{gar}</dd></div>
+        <div><dt>{'Respaldo patrimonial' if gar == 'Pagaré' else 'Garantía real'}</dt><dd>{gar}</dd></div>
         <div><dt>Ticket mínimo</dt><dd>{tk}</dd></div>
         <div><dt>Plazo</dt><dd>{pl}</dd></div>
         <div><dt>Interés mensual</dt><dd>{it}</dd></div>
@@ -614,8 +616,8 @@ ESTRATEGIAS_IGR = [
      'Inversionistas con capital disponible desde $5.000.000.',
      [('estrategia-titulo', 'Garantía real', 'Título', [('Plazo', '15, 21 o 27 meses'), ('Interés mensual', '0,8% · 0,9% · 1,0% + UF'), ('Retiros', 'No'), ('Ticket mínimo', '$100.000.000')]),
       ('estrategia-hipoteca', 'Garantía real', 'Hipoteca', [('Plazo', '15, 21 o 27 meses'), ('Interés mensual', '0,7% · 0,8% · 0,9% + UF'), ('Retiros', 'No'), ('Ticket mínimo', '$25.000.000')]),
-      ('estrategia-pagare', 'Garantía real', 'Pagaré', [('Plazo', '12, 18 o 24 meses'), ('Interés mensual', '1,0% · 1,1% · 1,2%'), ('Retiros', 'Sí'), ('Ticket mínimo', '$5.000.000')])],
-     'Renta periódica, con garantía real y una rentabilidad muy superior a la de un depósito a plazo.',
+      ('estrategia-pagare', 'Respaldo patrimonial', 'Pagaré', [('Plazo', '12, 18 o 24 meses'), ('Interés mensual', '1,0% · 1,1% · 1,2%'), ('Retiros', 'Sí'), ('Ticket mínimo', '$5.000.000')])],
+     'Renta periódica, con respaldo patrimonial inmobiliario y una rentabilidad muy superior a la de un depósito a plazo.',
      '<a class="btn btn-primary btn-xl" href="simuladores.html#sim-proyecta">Simular Renta de Capital <span aria-hidden="true">→</span></a>'),
     ('produccion-de-capital', 'Producción de Capital',
      'Utiliza tu capacidad financiera (scoring) para generar un activo que produce capital, combinando financiamiento bancario, control del arriendo y valorización del inmueble.',
@@ -906,10 +908,10 @@ f"""
   {GATE}
 
 <div class="sim-panel" id="sim-proyecta" data-sim-panel="sim-proyecta"><div class="sim-panel-body">
-    <div class="sim-head"><span class="sim-ufr">UF + Rentabilidad</span><h2>Renta de Capital</h2><p class="muted">Tu capital se reajusta en UF y además gana la rentabilidad pactada. Elige la garantía, el monto y el plazo, y compara con lo que te daría un depósito a plazo.</p></div>
+    <div class="sim-head"><span class="sim-ufr">UF + Rentabilidad</span><h2>Renta de Capital</h2><p class="muted">Tu capital se reajusta en UF y además gana la rentabilidad pactada. Elige el respaldo, el monto y el plazo, y compara con lo que te daría un depósito a plazo.</p></div>
     <div class="pro">
       <div class="pro-form">
-        <span class="pro-label">Garantía real</span>
+        <span class="pro-label">Respaldo</span>
         <div class="pro-series">
           <button type="button" data-serie="T"><span>Título<small>Desde $100MM · UF + 0,8% a 1,0% mensual</small></span></button>
           <button type="button" data-serie="H"><span>Hipoteca<small>Desde $25MM · UF + 0,7% a 0,9% mensual</small></span></button>
@@ -929,7 +931,7 @@ f"""
         </div>
       </div>
       <div class="pro-out">
-        <p class="pro-falta" id="p-falta">Elige la garantía, el monto y el plazo para ver tu resultado</p>
+        <p class="pro-falta" id="p-falta">Elige el respaldo, el monto y el plazo para ver tu resultado</p>
         <div class="pro-cols">
           <div class="pro-result">
             <span class="pro-tag">Con Pulso Inversor</span>

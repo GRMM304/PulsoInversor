@@ -2161,3 +2161,11 @@ iframe[title="Webchat Widget"]{z-index:2147483000!important}
 /* Elección primera vez / ya invertí: título del punto en su propia línea */
 .choice li strong{display:block}
 .choice-nota{margin:18px auto 0;max-width:760px;text-align:center;font-size:13px;color:var(--gray-600,#5b6660)}
+
+/* Matriz IGR del inicio: ilustración de línea en cada tarjeta (2026-11-19) */
+.camino-bg-2{background:radial-gradient(circle at 75% 12%,rgba(199,217,93,.42),transparent 42%),linear-gradient(170deg,#24604c,#0f3530)}
+.camino-ilu-w{margin-bottom:18px;color:#fff}
+.camino-ilu{display:block;width:100%;max-width:300px;height:auto;opacity:.92;transition:max-width .55s cubic-bezier(.2,.8,.2,1),opacity .4s}
+.camino:not(.is-open) .camino-ilu{max-width:210px;opacity:.75}
+.camino.is-open .camino-ilu{max-width:330px}
+@media (max-width:900px){.camino .camino-ilu{max-width:280px;opacity:.92}}
