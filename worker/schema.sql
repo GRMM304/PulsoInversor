@@ -21,7 +21,8 @@ CREATE TABLE IF NOT EXISTS simulaciones (
   satisfaccion INTEGER,
   recomienda INTEGER,
   notas TEXT,
-  publicidad INTEGER               -- 1 si aceptó recibir publicidad (casilla opcional)
+  publicidad INTEGER,              -- 1 si aceptó recibir publicidad (casilla opcional)
+  invirtio TEXT                    -- marcado por el equipo: concretó su inversión (Purchase en Meta)
 );
 CREATE INDEX IF NOT EXISTS idx_sim_creado ON simulaciones(creado);
 

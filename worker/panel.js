@@ -3,6 +3,7 @@
 
 import { ASESORES, esc, clp } from './comun.js';
 import { reunionesPorEmail } from './reuniones.js';
+import { eventoMeta } from './meta.js';
 
 const enc = new TextEncoder();
 async function firmarSesion(env, valor) {
@@ -26,6 +27,7 @@ const ESTILO = `body{margin:0;background:#F3F5F2;font-family:Inter,Helvetica,Ari
 .acc{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.acc a,.acc input,.acc select{padding:10px 14px;border-radius:999px;border:1px solid #dfe5dc;background:#fff;color:#0E2C28;font-weight:700;text-decoration:none;font:inherit;font-size:14px}.acc input{flex:1;min-width:200px;font-weight:400}
 .tabla{overflow-x:auto;background:#fff;border-radius:16px;border:1px solid #E3E8E1}table{border-collapse:collapse;width:100%;font-size:14px;min-width:1150px}th{text-align:left;background:#F7F9F6;color:#4E5A56;font-size:12px;text-transform:uppercase;letter-spacing:.04em;padding:10px;position:sticky;top:0}td{padding:10px;border-top:1px solid #EEF1EC;vertical-align:top}td.c,th.c{text-align:center}a{color:#1E5746}small{color:#4E5A56}
 button{border-radius:999px;padding:8px 12px;font-weight:800;cursor:pointer;font:inherit;font-size:13px;border:1px solid #dfe5dc;background:#fff;color:#0E2C28;white-space:nowrap}button.si{background:#C7D95D;border-color:#C7D95D}.err{color:#b3261e;cursor:help}
+.btn-mini{font:inherit;font-size:12px;font-weight:700;padding:5px 10px;border-radius:999px;border:1px solid #1E5746;background:#fff;color:#0E2C28;cursor:pointer}.btn-mini:hover{background:#C7D95D;border-color:#C7D95D}
 .pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:700;background:#EEF1EC;color:#1E5746;white-space:nowrap}.pill.ok{background:#C7D95D;color:#0E2C28}.pill.wait{background:#FFF4CC;color:#7A5B00}
 details summary{cursor:pointer;color:#1E5746;font-weight:700}details div{margin-top:6px;font-size:13px;line-height:1.5}
 .card{max-width:420px;margin:60px auto;background:#fff;border:1px solid #E3E8E1;border-radius:20px;padding:26px}.b{width:100%;min-height:48px;border-radius:999px;background:#C7D95D;border:0;font-weight:800;font:inherit;cursor:pointer}`;
@@ -107,6 +109,7 @@ async function panel(env, url) {
       <td class="c">${s._reunion ? `<span class="pill ${s._reunion.evento === 'cancelada' ? 'wait' : 'ok'}">${({ cancelada: 'Canceló', iniciada: '✓ Reunión iniciada', reservada: '✓ Reservó en Brevo' })[s._reunion.evento] || s._reunion.evento}</span><br><small>${esc(fmt(s._reunion.inicio))}${s._reunion.reunion ? '<br>con ' + esc(s._reunion.reunion) : ''}</small>${s._reunion._rec && !s._reunion._rec.cancelada ? '<br><small title="Recordatorios por correo">' + [['r24', '24 h'], ['r1h', '1 h'], ['r1m', '1 min'], ['p1h', 'gracias'], ['p48', '48 h después']].map(([k, t]) => { const v = s._reunion._rec[k]; return t + (v && /^\d{4}-/.test(v) ? ' ✓' : v === 'omitido' ? ' —' : v ? ' ⚠' : ' ·'); }).join(' &nbsp;') + '</small>' : ''}<br>` : ''}<form method="post" action="/panel/agendado"><input type="hidden" name="id" value="${s.id}"><input type="hidden" name="valor" value="${s.agendado ? 0 : 1}"><input type="hidden" name="asesor" value="${esc(asesorSel)}"><button class="${s.agendado ? 'si' : ''}" type="submit" title="${esc(fmt(s.agendado))}">${s.agendado ? '✓ Agendada' : 'Marcar agendada'}</button></form></td>
       <td>${s.contactado_click ? `<span class="pill ok">Sí</span><br><small>${esc(fmt(s.contactado_click))}</small>` : '<small>—</small>'}</td>
       <td>${celdaEncuesta(s)}</td>
+      <td class="c">${s.invirtio ? `<span class="pill ok">✓ Invirtió</span><br><small>${esc(fmt(s.invirtio))}</small>` : `<form method="post" action="/panel/invirtio" onsubmit="return confirm('¿Confirmas que esta persona invirtió? Se le avisará a Meta como inversionista.')"><input type="hidden" name="id" value="${s.id}"><button class="btn-mini" type="submit">Invirtió</button></form>`}</td>
     </tr>`).join('');
 
   const opciones = [['', 'Todos los asesores']].concat(ASESORES.map((g, i) => [String(i), g.personas.map((a) => a.nombre).join(' y ')]))
@@ -127,7 +130,7 @@ async function panel(env, url) {
     <div class="kpi"><b>${nps}</b><span>NPS (−100 a 100)</span></div>
   </div>
   <div class="acc"><input type="search" id="q" placeholder="Buscar por nombre, email o teléfono"><form method="get" action="/panel" style="margin:0"><select name="asesor" onchange="this.form.submit()">${opciones}</select></form><a href="/panel/simulaciones.csv">Descargar Excel (CSV)</a><a href="/panel${asesorSel ? '?asesor=' + esc(asesorSel) : ''}">Actualizar</a><a href="/panel/salir">Salir</a></div>
-  <div class="tabla"><table id="t"><thead><tr><th>Persona</th><th>Contacto</th><th>Monto</th><th>Asesor</th><th>Simuló</th><th>Seguimiento 48 h</th><th>Agenda</th><th class="c">Reunión</th><th>Ya contactado</th><th>Encuesta</th></tr></thead><tbody>${filas || '<tr><td colspan="10" style="padding:30px;text-align:center;color:#4E5A56">Aún no hay simulaciones registradas.</td></tr>'}</tbody></table></div>
+  <div class="tabla"><table id="t"><thead><tr><th>Persona</th><th>Contacto</th><th>Monto</th><th>Asesor</th><th>Simuló</th><th>Seguimiento 48 h</th><th>Agenda</th><th class="c">Reunión</th><th>Ya contactado</th><th>Encuesta</th><th class="c">Inversión</th></tr></thead><tbody>${filas || '<tr><td colspan="11" style="padding:30px;text-align:center;color:#4E5A56">Aún no hay simulaciones registradas.</td></tr>'}</tbody></table></div>
   <p style="color:#4E5A56;font-size:13px;line-height:1.6">“Abrió la agenda” = tocó el botón del correo y fue a la agenda Brevo del asesor. “Reservó en Brevo”, “Reunión iniciada” o “Canceló” = avisos automáticos de Brevo Meetings, con la fecha y hora de la reunión. Recordatorios: 24 h, 1 h y 1 min antes; “gracias” (1 h después, con encuesta) y “48 h después” (volver a agendar). ✓ enviado · = pendiente · — no correspondía. Si la reunión se coordinó por otra vía, márcala con “Marcar agendada”.<br>“Ya contactado” = tocó “Ya me contactaron” en el correo de seguimiento. Encuesta: toca el resultado para ver el detalle.</p>
 </div>
 <script>document.getElementById('q').addEventListener('input',function(e){var q=e.target.value.toLowerCase();document.querySelectorAll('#t tbody tr').forEach(function(tr){tr.style.display=tr.textContent.toLowerCase().indexOf(q)>-1?'':'none'})});</script>
@@ -139,6 +142,23 @@ async function marcarAgendado(request, env) {
   const id = parseInt(f.get('id'), 10), valor = f.get('valor') === '1', asesor = String(f.get('asesor') || '');
   await env.DB.prepare('UPDATE simulaciones SET agendado = ? WHERE id = ?').bind(valor ? new Date().toISOString() : null, id).run();
   return new Response(null, { status: 303, headers: { location: '/panel' + (asesor ? '?asesor=' + encodeURIComponent(asesor) : '') } });
+}
+
+// "Invirtió": lo marca el equipo cuando la persona concreta su inversión → Purchase en Meta (API de conversiones).
+async function marcarInvirtio(request, env) {
+  const f = await request.formData();
+  const id = parseInt(f.get('id'), 10);
+  await env.DB.prepare('ALTER TABLE simulaciones ADD COLUMN invirtio TEXT').run().catch(() => {});
+  const s = await env.DB.prepare('SELECT * FROM simulaciones WHERE id = ?').bind(id).first();
+  if (s && !s.invirtio) {
+    await env.DB.prepare('UPDATE simulaciones SET invirtio = ? WHERE id = ?').bind(new Date().toISOString(), id).run();
+    await eventoMeta(env, {
+      nombreEvento: 'Purchase', eventoId: 'inversion-' + id,
+      persona: { email: s.email, telefono: s.telefono, nombre: s.nombre },
+      datos: { value: Number(s.monto) || 0, currency: 'CLP', content_name: s.tipo },
+    });
+  }
+  return new Response(null, { status: 303, headers: { location: '/panel' } });
 }
 
 async function csv(env) {
@@ -206,6 +226,7 @@ export async function rutaPanel(request, env, url) {
   if (p === '/panel/salir') return new Response(null, { status: 303, headers: { location: '/panel', 'set-cookie': 'panel_sim=; Path=/panel; Max-Age=0; HttpOnly; Secure; SameSite=Lax' } });
   if (!(await sesionValida(request, env))) return login();
   if (p === '/panel/agendado' && m === 'POST') return marcarAgendado(request, env);
+  if (p === '/panel/invirtio' && m === 'POST') return marcarInvirtio(request, env);
   if (p === '/panel/simulaciones.csv') return csv(env);
   // Informe semanal: vista previa (GET) y envío de prueba a INFORME_PARA (POST).
   if (p === '/panel/informe') {
