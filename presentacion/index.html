@@ -1607,6 +1607,30 @@ nav a { white-space: nowrap; }
 @media (max-width: 1180px){ .brand-image { width: 262px; height: 36px; } nav a { padding: 10px 13px; font-size: 13px; } }
 @media (max-width: 960px){ :root { --header: 150px; } .header { flex-direction: column; justify-content: center; gap: 14px; padding: 14px 4%; } }
 @media (max-width: 800px){ :root { --header: 190px; } nav { max-width: none; flex-wrap: wrap; justify-content: center; } nav a { flex: 0 1 auto; } }
+
+/* ================= Transiciones entre láminas ================= */
+@keyframes pi-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pi-up { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+@keyframes pi-pop { from { opacity: 0; transform: translateY(14px) scale(.97); } to { opacity: 1; transform: none; } }
+.slide:not([hidden]) { animation: pi-fade .45s ease-out both; }
+.slide:not([hidden]) .slide-content > * { animation: pi-up .7s cubic-bezier(.2,.7,.2,1) both; }
+.slide:not([hidden]) .slide-content > :nth-child(2) { animation-delay: .12s; }
+.slide:not([hidden]) .slide-content > :nth-child(3) { animation-delay: .24s; }
+.slide:not([hidden]) .slide-content > :nth-child(4) { animation-delay: .36s; }
+.slide:not([hidden]) .slide-content > :nth-child(5) { animation-delay: .48s; }
+.slide:not([hidden]) .slide-content > :nth-child(n+6) { animation-delay: .6s; }
+/* Tarjetas y bloques dentro de cada lámina entran en cascada */
+.slide:not([hidden]) :is(.evo-timeline, .mx-grid, .circ-flow, .value-outcomes, .patrimony-grid, .config-pillar-grid, .choices, .lease-reference-panels) > * { animation: pi-pop .6s cubic-bezier(.2,.7,.2,1) both; animation-delay: .25s; }
+.slide:not([hidden]) :is(.evo-timeline, .mx-grid, .circ-flow, .value-outcomes, .patrimony-grid, .config-pillar-grid, .choices, .lease-reference-panels) > :nth-child(2) { animation-delay: .35s; }
+.slide:not([hidden]) :is(.evo-timeline, .mx-grid, .circ-flow, .value-outcomes, .patrimony-grid, .config-pillar-grid, .choices, .lease-reference-panels) > :nth-child(3) { animation-delay: .45s; }
+.slide:not([hidden]) :is(.evo-timeline, .mx-grid, .circ-flow, .value-outcomes, .patrimony-grid, .config-pillar-grid, .choices, .lease-reference-panels) > :nth-child(4) { animation-delay: .55s; }
+.slide:not([hidden]) :is(.evo-timeline, .mx-grid, .circ-flow, .value-outcomes, .patrimony-grid, .config-pillar-grid, .choices, .lease-reference-panels) > :nth-child(n+5) { animation-delay: .65s; }
+.slide:not([hidden]) .evo-stats-row > .evo-stat { animation: pi-pop .55s cubic-bezier(.2,.7,.2,1) both; animation-delay: .5s; }
+.slide:not([hidden]) .evo-stats-row > .evo-stat:nth-of-type(2) { animation-delay: .7s; }
+.slide:not([hidden]) .evo-stats-row > .evo-stat:nth-of-type(3) { animation-delay: .9s; }
+#strategy-dialog[open] { animation: pi-pop .35s cubic-bezier(.2,.7,.2,1) both; }
+#strategy-dialog[open]::backdrop { animation: pi-fade .3s ease-out both; }
+@media (prefers-reduced-motion: reduce){ .slide, .slide *, #strategy-dialog, #strategy-dialog::backdrop { animation: none !important; } }
 </style></head>
 <body>
 <header class="header"><a class="brand" href="#inicio" aria-label="Pulso Inversor, una empresa de Grupo Matchmaking"><span class="brand-image" role="img" aria-label="Pulso Inversor y Grupo Matchmaking"></span></a><nav aria-label="Menú principal"><a href="#inicio" data-nav="inicio">Inicio</a><a href="#nosotros" data-nav="nosotros">Nosotros</a><a href="#propuesta-valor" data-nav="propuesta-valor">Propuesta de Valor</a><a href="#evolucion-inversion" data-nav="activos-alternativos">Activos alternativos</a><a href="#consolidado" data-nav="matriz-igr">Matriz IGR</a></nav></header>
@@ -1874,6 +1898,7 @@ nav a { white-space: nowrap; }
     slides.forEach(slide => { slide.hidden = slide !== active; });
     fitSlide();
     requestAnimationFrame(() => { fitSlide(); drawPatrimonyConnections(); });
+    setTimeout(drawPatrimonyConnections, 1300);
     const navId = active.dataset.navParent || active.dataset.slide;
     navigation.forEach(link => {
       if (link.dataset.nav === navId) link.setAttribute('aria-current', 'page');
