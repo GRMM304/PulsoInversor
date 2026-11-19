@@ -15,7 +15,7 @@
 
 import { informeSemanal } from './informe.js';
 import { eventoMeta, datosWeb } from './meta.js';
-import { whatsappSimulacion } from './respondio.js';
+import { whatsappSimulacion, telefonoChile } from './respondio.js';
 import { recibirRespondio, avanzarNegocio } from './crm.js';
 import { avisoWhatsapp, esPrueba, DEFAULT_SENDER, EQUIPO, MAX_PDF_BYTES, ORIGENES, TIPOS, ASESORES, asesoresPara, json, esc, clp, brevo, plantilla, boton, bloqueResumen, P, C, WHATSAPP } from './comun.js';
 import { programarSeguimiento, rutaSeguimiento, HORAS_SEGUIMIENTO } from './seguimiento.js';
@@ -24,7 +24,7 @@ import { recibirReunion } from './reuniones.js';
 import { procesarRecordatorios } from './recordatorios.js';
 
 
-function correoInversionista({ tipo, nombre, lineas, personas }) {
+function correoInversionista({ tipo, nombre, lineas, personas, conWhatsapp }) {
   const primer = esc(nombre.split(/\s+/)[0]);
   const varios = personas.length > 1;
   const quien = personas.map((a) => a.nombre).join(' y ');
@@ -38,6 +38,7 @@ function correoInversionista({ tipo, nombre, lineas, personas }) {
     cuerpo: P(`Te adjuntamos en PDF la simulación de <strong>${esc(tipo)}</strong> que hiciste en nuestro sitio, para que la revises con calma, la compartas con tu familia o se la muestres a tu abogado.`)
       + bloqueResumen(lineas)
       + P(`<strong>${esc(quien)}</strong>, ${cargo}, ${varios ? 'se contactarán contigo' : 'se contactará contigo'} en las próximas horas hábiles para resolver tus dudas y, si quieres, mostrarte una operación real con su propiedad, su tasación y el documento que quedaría a tu favor.`)
+      + (conWhatsapp ? P('También te escribirá <strong>Lorenzo</strong>, de nuestro equipo, por WhatsApp para saber si tienes dudas.') : '')
       + P('No te vamos a pedir que decidas en esa conversación. Puedes venir con tu abogado cuando quieras.')
       + `<p style="margin:0 0 14px;font-size:13px;color:${C.gris}">La simulación es referencial: las condiciones finales dependen de la evaluación y del contrato de cada operación.</p>`,
     botones: boton('Conversar por WhatsApp', wa),
@@ -112,7 +113,7 @@ async function enviarSimulacion(request, env) {
     sender, to: [{ email, name: nombre }],
     replyTo: { email: personas[0].email, name: personas[0].nombre },
     subject: `Tu simulación de ${tipo} · Pulso Inversor`,
-    htmlContent: correoInversionista({ tipo, nombre, lineas, personas }),
+    htmlContent: correoInversionista({ tipo, nombre, lineas, personas, conWhatsapp: !d.equipo && !!telefonoChile(telefono) && !!env.RESPONDIO_TOKEN }),
     attachment: adjunto,
     tags: ['simulacion', d.tipo],
   }, email);
