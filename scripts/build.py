@@ -455,7 +455,6 @@ page('index.html', 'Inicio',
     </div>
   </div>
   {P("INCORPORAR enlace al perfil oficial de Pulso en Google: botón 'Ver opiniones en Google'.")}
-  <p class="disclaimer" style="text-align:center">Las experiencias corresponden a casos particulares y no aseguran resultados futuros.</p>
 </div></section>
 ''' + cta_rutas('Tu siguiente paso', 'Cuéntanos qué quieres <span class="accent">construir</span>',
                'Simula tu inversión o dinos si es tu primera vez, y te llevamos a lo que te sirve.'))
