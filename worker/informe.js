@@ -7,7 +7,7 @@
 // Se registra en la tabla informes para no enviarlo dos veces. Prueba manual: /panel/informe (con la clave del panel).
 import { DEFAULT_SENDER, C, FUENTE, esc, clp, brevo, plantilla } from './comun.js';
 
-export const INFORME_PARA = ['aorrego@grupomm.cl'];
+export const INFORME_PARA = ['eorrego@grupomm.cl', 'ibarboza@grupomm.cl', 'frojas@grupomm.cl'];
 const ZONA = 'America/Santiago';
 const WINDSOR = 'https://connectors.windsor.ai';
 
