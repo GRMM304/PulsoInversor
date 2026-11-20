@@ -814,7 +814,7 @@ GATE = """  <div class="gate" id="sim-gate" aria-labelledby="gate-title">
 """
 
 _PANELES_EQUIPO = f"""  <div class="sim-panel" id="sim-hipoteca" data-sim-panel="sim-hipoteca" hidden><div class="sim-panel-body">
-    <div class="sim-head"><h2>Hipoteca Inteligente</h2><p class="muted">Arma tu configuración: el Portafolio Tracción genera el retorno y el Portafolio Patrimonio construye tu patrimonio.</p></div>
+    <div class="sim-head"><h2>Producción de Capital</h2><p class="muted">Arma tu configuración: el Portafolio Tracción genera el retorno y el Portafolio Patrimonio construye tu patrimonio.</p></div>
     <form class="hi-capform" id="hi-cap-form" novalidate>
       <div><strong>Tu capacidad financiera</strong><p>Indica cuánto crédito hipotecario podrías obtener por operación. Cada propiedad se valida por separado; los créditos no se suman.</p></div>
       <label class="hi-capfield"><span class="sr-only">Capacidad financiera por crédito</span><input id="hi-cap" inputmode="decimal" autocomplete="off" placeholder="Ej. 3.000"><span>UF</span></label>
@@ -849,7 +849,7 @@ _PANELES_EQUIPO = f"""  <div class="sim-panel" id="sim-hipoteca" data-sim-panel=
   </div></div>
 
   <div class="sim-panel" id="sim-patrimonial" data-sim-panel="sim-patrimonial" hidden><div class="sim-panel-body">
-    <div class="sim-head"><h2>Simulador de Arquitectura de Capital</h2><p class="muted">Elige propiedades del catálogo (cada una ya trae su precio con descuento) y cuánto financia el banco, y mira cuánto aportas y cómo crece tu patrimonio.</p></div>
+    <div class="sim-head"><h2>Arquitectura de Capital</h2><p class="muted">Elige propiedades del catálogo (cada una ya trae su precio con descuento) y cuánto financia el banco, y mira cuánto aportas y cómo crece tu patrimonio.</p></div>
     <div class="pro sp">
       <div class="pro-form sp-form">
         <div class="sp-block" id="sp-s1">
@@ -983,7 +983,7 @@ PICKS_PUBLICO = f'''    <button type="button" class="sim-pick" role="tab" data-s
 PICKS_EQUIPO = '''    <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-proyecta" aria-selected="false">
       <span class="sim-pick-ico">RC</span><strong>Renta de Capital</strong><span>Invierte tu capital con título, hipoteca o pagaré y compáralo con un depósito a plazo.</span><em>Simulación habilitada</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
     <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-hipoteca" aria-selected="false">
-      <span class="sim-pick-ico">PC</span><strong>Producción de Capital</strong><span>Hipoteca Inteligente: arma la configuración con la capacidad de crédito del cliente.</span><em>Desde 2.000 UF</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
+      <span class="sim-pick-ico">PC</span><strong>Producción de Capital</strong><span>Arma la configuración con la capacidad de crédito del cliente.</span><em>Simulación asistida</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
     <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-patrimonial" aria-selected="false">
       <span class="sim-pick-ico">AC</span><strong>Arquitectura de Capital</strong><span>Portafolio de propiedades con descuento y financiamiento bancario, y cómo crece el patrimonio.</span><em>Simulación asistida</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>'''
 
@@ -1018,8 +1018,8 @@ _sim_page('simuladores.html', 'Simuladores',
 
 # Simuladores asistidos: solo para el equipo. Se sirven en /panel/simuladores (con la clave del panel);
 # el Worker bloquea el acceso directo a /simuladores-equipo.
-_sim_page('simuladores-equipo.html', 'Simuladores asistidos', 'Uso interno del equipo de Pulso Inversor.',
-          'Simuladores asistidos', 'Uso interno del equipo de Pulso Inversor. Simula junto al cliente; al enviar te pediremos sus datos para mandarle la simulación a su correo.',
+_sim_page('simuladores-equipo.html', 'Simuladores', 'Uso interno del equipo de Pulso Inversor.',
+          'Simuladores', 'Uso interno del equipo de Pulso Inversor. Simula junto al cliente; al enviar te pediremos sus datos para mandarle la simulación a su correo.',
           PICKS_EQUIPO, _PANELES_EQUIPO, '')
 _fe = os.path.join(R, 'simuladores-equipo.html')
 _he = open(_fe).read().replace('<head>\n', '<head>\n<meta name="robots" content="noindex">\n', 1).replace('<div data-simuladores>', '<div data-simuladores data-equipo>', 1)
