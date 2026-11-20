@@ -16,8 +16,13 @@ const ADMINS = [
   { email: 'ibarboza@grupomm.cl', nombre: 'Iván Barboza' },
   { email: 'frojas@grupomm.cl', nombre: 'Felipe Rojas' },
 ];
+// Personas de Grupo MM que venden Pulso Inversor sin tramo de edad asignado (todavía sin leads ni agenda propia).
+const VENDEDORES = [
+  { email: 'jvalenzuela@grupomm.cl', nombre: 'Jessica Valenzuela', cargo: 'Asesora de inversiones' },
+];
 export const EQUIPO_PORTAL = [
   ...[0, 1].map((g) => ({ ...ASESORES[g].personas[0], grupo: g, rol: 'asesor', acceso: false })),
+  ...VENDEDORES.map((v) => ({ ...v, rol: 'asesor', acceso: true })),
   ...ADMINS.map((a) => ({ ...a, rol: 'admin', acceso: true })),
 ];
 const persona = (email) => EQUIPO_PORTAL.find((p) => p.acceso && p.email === String(email || '').trim().toLowerCase()) || null;
@@ -196,6 +201,7 @@ function vistaInicio(yo, ver, datos, dias, q) {
   const max = Math.max(1, ...sem.map((s) => Math.max(s.leads, s.reus)));
   let cuerpo = `<h1>Hola, ${esc(yo.nombre.split(' ')[0])}</h1><p class="sub">${ver ? `Métricas de ${esc(ver.nombre)}` : 'Métricas de todo el equipo'} · solo cuentan personas reales (sin pruebas).</p>
 <div class="barra">${selectorPeriodo('inicio', dias, q)}${selectorAsesor(yo, 'inicio', dias, ver)}</div>`;
+  if (ver && ver.grupo == null) cuerpo += `<div class="aviso"><strong>Todavía no tienes leads ni agenda asignados.</strong> Cuando te asignemos personas, aquí verás tus métricas y reuniones. Mientras tanto, en <a href="/asesores?v=recursos">Recursos de venta</a> tienes la presentación, los simuladores y mensajes listos para WhatsApp.</div>`;
   if (m.porConfirmar.length) cuerpo += `<div class="aviso"><strong>${ver ? 'Tienes' : 'El equipo tiene'} ${m.porConfirmar.length} reunión${m.porConfirmar.length > 1 ? 'es' : ''} por confirmar.</strong> Sin tu confirmación, la persona no recibe el agradecimiento ni el seguimiento. <a href="/asesores?v=reuniones${q}">Confirmar ahora →</a></div>`;
   cuerpo += `<div class="kpis">
 ${kpi(m.leads.length, 'Leads (simulaciones)', m.montoLeads ? clp(m.montoLeads) + ' simulados' : '')}
@@ -256,7 +262,7 @@ function vistaLeads(yo, ver, datos, dias, q) {
     const asesorTxt = ASESORES[s.grupo] ? ASESORES[s.grupo].personas.map((p) => p.nombre.split(' ')[0]).join(' y ') : '—';
     return `<tr data-fila><td>${esc(fFecha(s.creado))}</td><td><strong>${esc(s.nombre)}</strong><br><small style="color:var(--g)">${esc(s.email)}${s.telefono ? ' · +56 ' + esc(s.telefono) : ''}</small></td>${equipo ? `<td>${esc(asesorTxt)}</td>` : ''}<td>${esc(s.edad || '—')}</td><td>${esc(s.tipo)}</td><td>${s.monto ? clp(s.monto) : '—'}</td><td>${wa}</td><td>${reu}</td>${yo.rol === 'admin' ? `<td>${enc}</td>` : ''}<td>${inv}</td></tr>`;
   }).join('');
-  return `<h1>Leads</h1><p class="sub">Simulaciones ${ver ? 'asignadas a ' + esc(ver.nombre) : 'de todo el equipo'} (asignación por edad: hasta 40 años Renato, 41 y más Pamela).</p>
+  return `<h1>Leads</h1><p class="sub">Simulaciones ${ver ? 'asignadas a ' + esc(ver.nombre) : 'de todo el equipo'}${ver && ver.grupo == null ? '. Todavía no tienes leads asignados' : ' (asignación por edad: hasta 40 años Renato, 41 y más Pamela)'}.</p>
 <div class="aviso"><strong>Contacta solo desde el WhatsApp de Pulso Inversor (+56 9 5879 2038)</strong>, nunca desde tu WhatsApp personal. Así la conversación queda registrada y Lorenzo puede precalificar. <a href="${BANDEJA_WHATSAPP}" target="_blank" rel="noopener">Abrir la bandeja de WhatsApp →</a></div>
 <div class="barra">${selectorPeriodo('leads', dias, q)}${selectorAsesor(yo, 'leads', dias, ver)}</div>
 <input id="buscar" type="search" placeholder="Buscar por nombre, correo, estrategia…" style="max-width:420px;margin:0 0 12px">
