@@ -21,6 +21,7 @@ import { avisoWhatsapp, esPrueba, DEFAULT_SENDER, EQUIPO, MAX_PDF_BYTES, ORIGENE
 import { programarSeguimiento, rutaSeguimiento, HORAS_SEGUIMIENTO } from './seguimiento.js';
 import { rutaPanel } from './panel.js';
 import { rutaAsesores } from './asesores.js';
+import { paginaNoticias, paginaNoticia, medioNoticia, sitemapConNoticias } from './noticias.js';
 import { recibirReunion } from './reuniones.js';
 import { procesarRecordatorios } from './recordatorios.js';
 
@@ -186,7 +187,7 @@ async function metaLead(request, env) {
 }
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
     // Presentación comercial: solo en presentacion.pulsoinversor.cl (no enlazada ni indexada). En los otros dominios no existe.
     if (url.hostname === 'presentacion.pulsoinversor.cl') {
@@ -264,6 +265,24 @@ export default {
     if (url.pathname === '/asesores' || url.pathname.startsWith('/asesores/')) {
       try { return await rutaAsesores(request, env, url); }
       catch (e) { console.error('asesores', e); return new Response('No pudimos cargar el portal. Intenta de nuevo en un momento.', { status: 502, headers: { 'content-type': 'text/plain; charset=utf-8' } }); }
+    }
+    // Noticias y blog: la lista y cada noticia se arman con lo publicado desde el portal (worker/noticias.js).
+    if (/^\/noticia-plantilla(\.html)?\/?$/.test(url.pathname)) {
+      const r = await env.ASSETS.fetch(new Request(new URL('/404', url)));
+      return new Response(r.body, { status: 404, headers: { 'content-type': 'text/html; charset=utf-8', 'x-robots-tag': 'noindex' } });
+    }
+    if (request.method === 'GET' || request.method === 'HEAD') {
+      const mMedio = url.pathname.match(/^\/noticias\/medios\/(\d+)$/);
+      const mNoticia = url.pathname.match(/^\/noticias\/([a-z0-9-]{1,120})\/?$/);
+      try {
+        if (url.pathname === '/sitemap.xml') return await sitemapConNoticias(env, url);
+        if (url.pathname === '/noticias' || url.pathname === '/noticias/') return await paginaNoticias(request, env, url);
+        if (mMedio) return await medioNoticia(request, env, url, ctx, parseInt(mMedio[1], 10));
+        if (mNoticia) return await paginaNoticia(request, env, url, mNoticia[1]);
+      } catch (e) {
+        console.error('noticias', e);
+        if (url.pathname !== '/sitemap.xml') return new Response('No pudimos cargar las noticias. Intenta de nuevo en un momento.', { status: 502, headers: { 'content-type': 'text/plain; charset=utf-8' } });
+      }
     }
     if (url.pathname.startsWith('/seguimiento/')) {
       try { const r = await rutaSeguimiento(request, env, url); if (r) return r; }

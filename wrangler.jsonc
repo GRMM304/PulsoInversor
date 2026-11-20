@@ -23,6 +23,10 @@
   "d1_databases": [
     { "binding": "DB", "database_name": "pulso-simulaciones", "database_id": "fbeffb74-286a-4f0f-8e71-6695e7a079f2" }
   ],
+  // Fotos y videos de las noticias (/noticias), en partes de 5 MB. Los datos de cada noticia van en D1.
+  "kv_namespaces": [
+    { "binding": "NOTICIAS_KV", "id": "61c39b4d36544ada9ea05eecf8180c06" }
+  ],
   "assets": {
     "directory": "./",
     "binding": "ASSETS",

@@ -58,10 +58,14 @@ SEO = {
     'preguntas-frecuentes.html': (
         'Preguntas frecuentes sobre invertir | Pulso Inversor',
         None),
+    'noticias.html': (
+        'Noticias y blog | Pulso Inversor',
+        'Noticias de Pulso Inversor y de las empresas de Grupo Matchmaking: encuentros con inversionistas, novedades '
+        'y artículos para invertir con más información.'),
     'privacidad.html': (None, None),
 }
 
-NO_INDEXAR = {'simuladores-equipo.html', '404.html', 'inversion-circular.html', 'reunion-agendada.html'}
+NO_INDEXAR = {'simuladores-equipo.html', '404.html', 'inversion-circular.html', 'reunion-agendada.html', 'noticia-plantilla.html'}
 
 REDES = ['https://www.instagram.com/pulsoinversorcl', 'https://www.facebook.com/pulsoinversor.cl/',
          'https://www.linkedin.com/company/pulsoinversor/']
@@ -117,7 +121,7 @@ CONTENIDO_META = {
     'como-funciona.html': 'Cómo funciona', 'simuladores.html': 'Simuladores',
     'inversion-circular.html': 'Inversión Circular', 'mi-primera-inversion.html': 'Mi primera inversión',
     'ya-tengo-experiencia.html': 'Ya tengo experiencia', 'verifica-a-pulso.html': 'Verifica a Pulso Inversor',
-    'nosotros.html': 'Nosotros', 'preguntas-frecuentes.html': 'Preguntas frecuentes',
+    'nosotros.html': 'Nosotros', 'preguntas-frecuentes.html': 'Preguntas frecuentes', 'noticias.html': 'Noticias',
 }
 
 
@@ -229,7 +233,7 @@ def html_final(html, slug):
     # Separa título y bajada del <h1> para que Google lea "detrás. Míralo…" y no "detrásMíralo".
     html = html.replace('<span class="h-sub">', ' <span class="h-sub">')
     html = _diferir_imagenes(html)
-    if slug == '404.html':  # se muestra en cualquier ruta: los archivos van con ruta absoluta
+    if slug in ('404.html', 'noticia-plantilla.html'):  # se muestran en cualquier ruta: los archivos van con ruta absoluta
         html = re.sub(r'((?:href|src)=")(?!https?:|/|#|mailto:|tel:|data:|javascript:)', r'\1/', html)
     if slug == 'preguntas-frecuentes.html':
         items = _faq(html)

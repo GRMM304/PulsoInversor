@@ -49,6 +49,8 @@ def header(slug):
         active = any(s == slug for s, _ in subs)
         links = ''.join(f'<li><a href="{s}"{" aria-current=page" if s==slug else ""}>{t}</a></li>' for s, t in subs)
         items.append(f'<li class="has-sub{" active" if active else ""}"><button type="button" aria-expanded="false" aria-controls="sub{i}">{label}</button><ul class="submenu" id="sub{i}">{links}</ul></li>')
+    es_noticia = slug in ('noticias.html', 'noticia-plantilla.html')
+    items.append(f'<li class="{"active" if es_noticia else ""}"><a href="noticias.html"{" aria-current=page" if slug=="noticias.html" else ""}>Noticias</a></li>')
     items.append(f'<li class="nav-cta-item" hidden-desktop><a href="{WA_MENU}" target="_blank" rel="noopener">{AGENDAR}</a></li>')
     return f'''<a class="skip" href="#contenido">Saltar al contenido</a>
 <header class="header">
@@ -83,7 +85,8 @@ def tabbar(slug):
             + '</nav>')
 
 def footer():
-    cols = ''.join(f'<div><h4>{label}</h4><ul>' + ''.join(f'<li><a href="{s}">{t}</a></li>' for s, t in subs) + '</ul></div>' for label, subs in NAV)
+    extra = {'Conócenos': [('noticias.html', 'Noticias')]}  # en el menú va como enlace propio
+    cols = ''.join(f'<div><h4>{label}</h4><ul>' + ''.join(f'<li><a href="{s}">{t}</a></li>' for s, t in subs + extra.get(label, [])) + '</ul></div>' for label, subs in NAV)
     return f'''<footer class="footer">
   <div class="container">
     <div class="footer-grid">
@@ -1559,6 +1562,19 @@ page('reunion-agendada.html', 'Tu reunión quedó agendada', 'Tu reunión con un
 <p style="display:flex;gap:12px;flex-wrap:wrap;margin-top:26px"><a class="btn btn-primary" href="verifica-a-pulso.html">Verifica a Pulso Inversor</a> <a class="btn btn-outline" href="como-funciona.html">Cómo funciona</a> <a class="btn btn-outline" href="https://wa.me/{WHATSAPP}?text={urllib.parse.quote('Hola, acabo de agendar una reunión con Pulso Inversor y tengo una consulta.')}" target="_blank" rel="noopener">Escribirnos por WhatsApp</a></p>
 </div></section>''',
      scripts='<script>window.addEventListener("load",function(){if(window.pulsoMedir)pulsoMedir("agendar_reunion",{origen:"Reserva confirmada en la agenda"});});</script>')
+
+# ---------------- Noticias y blog ----------------
+# Plantillas: el Worker (worker/noticias.js) reemplaza <!--NOTICIAS--> por las tarjetas y <!--NOTICIA--> por la noticia,
+# con lo que se publica desde el portal de asesores (/asesores?v=noticias). noticia-plantilla no se publica sola (404).
+page('noticias.html', 'Noticias',
+     'Noticias de Pulso Inversor y de las empresas de Grupo Matchmaking: encuentros con inversionistas, novedades y artículos para invertir con más información.',
+     '''<section class="page-hero"><div class="container">
+<div class="breadcrumb"><a href="index.html">Inicio</a> / Noticias</div>
+<h1>Noticias</h1><p>Lo que pasa en Pulso Inversor y en las empresas de Grupo Matchmaking: encuentros, novedades y artículos para invertir con más información.</p></div></section>
+<section class="section nt-lista"><div class="container">
+<!--NOTICIAS-->
+</div></section>''')
+page('noticia-plantilla.html', 'Noticia', 'Noticia de Pulso Inversor.', '<!--NOTICIA-->')
 
 # ---------------- sitemap.xml y robots.txt (Google Search Console) ----------------
 import datetime as _dt

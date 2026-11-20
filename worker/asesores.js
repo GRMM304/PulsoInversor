@@ -4,8 +4,9 @@
 //   · Reuniones: su enlace de agenda para copiar, próximas reuniones, las que debe confirmar y el historial.
 //   · Leads: las simulaciones que le corresponden y el botón "Invirtió".
 //   · Recursos: presentación, simuladores, páginas para compartir, mensajes listos y lo que vaya sumando el equipo.
-// Los administradores (EQUIPO_PORTAL con rol 'admin') ven a todo el equipo y pueden agregar o quitar recursos.
+// Los administradores (EQUIPO_PORTAL con rol 'admin') ven a todo el equipo, pueden agregar o quitar recursos y publican las noticias del sitio (worker/noticias.js).
 
+import { vistaNoticiasAdmin, rutaNoticiasAdmin } from './noticias.js';
 import { ASESORES, AGENDA_BREVO, RESENAS_GOOGLE, asesorDeReunion, esPrueba, SITIO, DEFAULT_SENDER, P, esc, clp, brevo, boton, plantilla } from './comun.js';
 
 // Quiénes entran. Los asesores salen de ASESORES (grupo 0 = Renato, grupo 1 = Pamela).
@@ -102,7 +103,7 @@ if(navigator.clipboard)navigator.clipboard.writeText(t).then(ok,function(){promp
 var q=document.getElementById('buscar');if(q)q.addEventListener('input',function(){var v=q.value.toLowerCase();document.querySelectorAll('[data-fila]').forEach(function(f){f.style.display=f.textContent.toLowerCase().indexOf(v)>-1?'':'none'})});</script>`;
 
 function marco(yo, vista, cuerpo, q = '') {
-  const tabs = [['inicio', 'Inicio'], ['reuniones', 'Reuniones'], ['leads', 'Leads'], ...(yo.rol === 'admin' ? [['encuestas', 'Encuestas']] : []), ['recursos', 'Recursos de venta']];
+  const tabs = [['inicio', 'Inicio'], ['reuniones', 'Reuniones'], ['leads', 'Leads'], ...(yo.rol === 'admin' ? [['encuestas', 'Encuestas']] : []), ['recursos', 'Recursos de venta'], ...(yo.rol === 'admin' ? [['noticias', 'Noticias']] : [])];
   return html(`<!DOCTYPE html><html lang="es-CL"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow">
 <title>Portal de asesores · Pulso Inversor</title><link rel="icon" href="/assets/img/favicon-32.png"><style>${CSS}</style></head><body>
 <header><div class="in"><div class="marca">Pulso Inversor · <span>Portal de asesores</span></div><div class="yo">${esc(yo.nombre)} · <a href="/asesores/salir">Salir</a></div></div></header>
@@ -456,13 +457,15 @@ export async function rutaAsesores(request, env, url) {
     await env.DB.prepare('DELETE FROM recursos WHERE id = ?').bind(parseInt(f.get('id'), 10)).run().catch(() => {});
     return ir('/asesores?v=recursos');
   }
-  const vistas = ['inicio', 'reuniones', 'leads', 'recursos', ...(yo.rol === 'admin' ? ['encuestas'] : [])];
+  if (p.startsWith('/asesores/noticias/') && yo.rol === 'admin') { const r = await rutaNoticiasAdmin(request, env, url, yo); if (r) return r; }
+  const vistas = ['inicio', 'reuniones', 'leads', 'recursos', ...(yo.rol === 'admin' ? ['encuestas', 'noticias'] : [])];
   const vista = vistas.includes(url.searchParams.get('v')) ? url.searchParams.get('v') : 'inicio';
   const dias = [7, 30, 90, 365].includes(Number(url.searchParams.get('dias'))) ? Number(url.searchParams.get('dias')) : 30;
   // Un asesor solo se ve a sí mismo; un administrador elige (vacío = todo el equipo).
   const ver = yo.rol === 'asesor' ? yo : ASESORES_PORTAL.find((a) => a.email === url.searchParams.get('ver')) || null;
   const q = yo.rol === 'admin' && ver ? '&ver=' + encodeURIComponent(ver.email) : '';
   if (vista === 'recursos') return marco(yo, vista, await vistaRecursos(env, yo, ver), q);
+  if (vista === 'noticias') return marco(yo, vista, await vistaNoticiasAdmin(env, yo, url), q);
   const datos = await cargar(env);
   const cuerpo = vista === 'reuniones' ? vistaReuniones(yo, ver, datos, dias, q) : vista === 'leads' ? vistaLeads(yo, ver, datos, dias, q) : vista === 'encuestas' ? vistaEncuestas(yo, ver, datos, dias, q) : vistaInicio(yo, ver, datos, dias, q);
   return marco(yo, vista, cuerpo, q + (dias !== 30 ? '&dias=' + dias : ''));

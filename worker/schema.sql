@@ -76,3 +76,8 @@ CREATE TABLE IF NOT EXISTS rio_conversaciones (contacto TEXT PRIMARY KEY, abiert
 
 -- Informe semanal enviado (lunes 10:00 Chile). semana = lunes de la semana informada.
 CREATE TABLE IF NOT EXISTS informes (semana TEXT PRIMARY KEY, enviado TEXT, detalle TEXT);
+
+-- Noticias y blog (/noticias). Las tablas también se crean solas al primer uso (worker/noticias.js).
+CREATE TABLE IF NOT EXISTS noticias (id INTEGER PRIMARY KEY AUTOINCREMENT, slug TEXT UNIQUE, titulo TEXT, categoria TEXT, fecha TEXT, bajada TEXT, cuerpo TEXT, video_texto TEXT, fuente_url TEXT, publicada INTEGER DEFAULT 0, creado TEXT, actualizado TEXT, autor TEXT);
+-- Fotos y video de cada noticia. Los archivos están en Workers KV (NOTICIAS_KV) con la clave medio/<id>/<parte>; url = archivo estático del sitio.
+CREATE TABLE IF NOT EXISTS noticias_medios (id INTEGER PRIMARY KEY AUTOINCREMENT, noticia_id INTEGER, tipo TEXT, orden INTEGER, mime TEXT, bytes INTEGER, parte INTEGER, partes INTEGER, subidas INTEGER DEFAULT 0, ancho INTEGER, alto INTEGER, url TEXT, creado TEXT);
