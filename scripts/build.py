@@ -908,7 +908,7 @@ f"""
   {GATE}
 
 <div class="sim-panel" id="sim-proyecta" data-sim-panel="sim-proyecta"><div class="sim-panel-body">
-    <div class="sim-head"><span class="sim-ufr">UF + Rentabilidad</span><h2>Renta de Capital</h2><p class="muted">Tu capital se reajusta en UF y además gana la rentabilidad pactada. Elige el respaldo, el monto y el plazo, y compara con lo que te daría un depósito a plazo.</p></div>
+    <div class="sim-head"><h2>Renta de Capital</h2><p class="muted">Tu capital se reajusta en UF y además gana la rentabilidad pactada. Elige el respaldo, el monto y el plazo, y compara con lo que te daría un depósito a plazo.</p></div>
     <div class="pro">
       <div class="pro-form">
         <span class="pro-label">Respaldo</span>
@@ -953,13 +953,14 @@ f"""
               <li><span>Plazo</span><strong id="d-plazo">—</strong></li>
               <li><span>Tasa</span><strong><span id="d-tasa">—</span> anual</strong></li>
             </ul>
+            <p class="pro-dap-base" id="d-base">Calculado con un depósito a plazo a 365 días renovable (4,8% anual).</p>
           </div>
         </div>
         <p class="pro-pref" id="p-pref" hidden>Sobre $250.000.000 puedes acceder a condiciones preferentes. Pregúntale a tu asesor.</p>
         <div class="pro-actions"><button type="button" class="btn btn-primary btn-xl" id="p-correo">Enviar a mi correo <span aria-hidden="true">→</span></button></div>
         <p class="sim-aut">Al completar tus datos personales, Pulso Inversor SpA podrá usarlos para contactarte por correo y WhatsApp, enviarte tu simulación y entregarte opciones de inversión, además de verificar el funcionamiento de la plataforma. Si quieres saber más sobre el uso y resguardo de tu información, revisa nuestra <a href="privacidad.html" target="_blank">Política de privacidad</a>.</p>
         <p class="sim-status" id="p-status" role="status"></p>
-        <p class="pro-note">Esta simulación no constituye una cotización ni asegura rentabilidades futuras. La rentabilidad simulada es referencial a esta fecha y no compromete a Pulso Inversor SpA. La rentabilidad y las condiciones finales se fijan al momento de la firma del contrato respectivo. Depósito a plazo: a 365 días, renovado al vencimiento con interés compuesto; para plazos que no son años completos, el último período se calcula en proporción al tiempo. <span id="r-nota-uf">Hipoteca y Título se reajustan en UF (UF de hoy <span id="r-uf">—</span>, IPC estimado 4,5% anual).</span></p>
+        <p class="pro-note">Esta simulación no constituye una cotización ni asegura rentabilidades futuras. La rentabilidad simulada es referencial a esta fecha y no compromete a Pulso Inversor SpA. La rentabilidad y las condiciones finales se fijan al momento de la firma del contrato respectivo. Depósito a plazo: se calcula al mismo plazo que elegiste, simulado en base a un depósito a 365 días renovable (4,8% anual), renovado al vencimiento con interés compuesto; para plazos que no son años completos, el último período se calcula en proporción al tiempo. <span id="r-nota-uf">Hipoteca y Título se reajustan en UF (UF de hoy <span id="r-uf">—</span>, IPC estimado 4,5% anual).</span></p>
       </div>
     </div>
     {P("TASA del depósito a plazo a 365 días (DAP_ANUAL en assets/js/simuladores.js): 4,8% anual referencial; CONFIRMAR el valor vigente a usar.")}

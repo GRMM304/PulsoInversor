@@ -310,7 +310,7 @@
     if (!listo) {
       ['r-estrategia', 'r-monto', 'r-plazo', 'r-tasa', 'r-total', 'r-ganancia', 'd-total', 'd-dap', 'd-monto', 'd-plazo'].forEach(function (id) { $('#' + id).textContent = '—'; });
       $('#d-tasa').textContent = fmtPct(DAP_ANUAL, 1);
-      $('#d-base').textContent = 'Calculado con un depósito a plazo a 365 días renovable (' + fmtPct(DAP_ANUAL, 1) + ' anual).';
+      if ($('#d-base')) $('#d-base').textContent = 'Calculado con un depósito a plazo a 365 días renovable (' + fmtPct(DAP_ANUAL, 1) + ' anual).';
       $('#p-warn').hidden = !(P.serie && P.monto && P.monto < SERIES[P.serie].minimo);
       $('#p-pref').hidden = true; $('#r-nota-uf').hidden = !(P.serie && SERIES[P.serie].uf); $('#r-uf').textContent = fmtCLP(UF);
       return;
@@ -330,7 +330,7 @@
     $('#d-plazo').textContent = P.plazo + ' meses';
     $('#p-pref').hidden = r.monto < 250000000;
     $('#d-tasa').textContent = fmtPct(DAP_ANUAL, 1);
-    $('#d-base').textContent = 'Calculado a ' + P.plazo + ' meses, en base a un depósito a 365 días renovable (' + fmtPct(DAP_ANUAL, 1) + ' anual).';
+    if ($('#d-base')) $('#d-base').textContent = 'Calculado a ' + P.plazo + ' meses, en base a un depósito a 365 días renovable (' + fmtPct(DAP_ANUAL, 1) + ' anual).';
     $('#r-nota-uf').hidden = !s.uf;
     $('#r-uf').textContent = fmtCLP(UF);
   }
