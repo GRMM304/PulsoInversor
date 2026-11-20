@@ -12,7 +12,6 @@ import { ASESORES, AGENDA_BREVO, RESENAS_GOOGLE, asesorDeReunion, esPrueba, SITI
 const ADMINS = [
   { email: 'ibarboza@grupomm.cl', nombre: 'Iván Barboza' },
   { email: 'frojas@grupomm.cl', nombre: 'Felipe Rojas' },
-  { email: 'aorrego@grupomm.cl', nombre: 'Dirección comercial' },
   { email: 'eorrego@grupomm.cl', nombre: 'Pruebas' },
 ];
 export const EQUIPO_PORTAL = [
