@@ -13,6 +13,7 @@
   "routes": [
     { "pattern": "1.pulsoinversor.cl", "custom_domain": true },
     { "pattern": "presentacion.pulsoinversor.cl", "custom_domain": true },
+    { "pattern": "portafolio.pulsoinversor.cl", "custom_domain": true },
     { "pattern": "www.pulsoinversor.cl/*", "zone_name": "pulsoinversor.cl" },
     { "pattern": "pulsoinversor.cl/*", "zone_name": "pulsoinversor.cl" }
   ],

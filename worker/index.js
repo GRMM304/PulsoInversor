@@ -205,6 +205,26 @@ export default {
       }
       if (!/^\/(assets\/|api\/|manifest\.webmanifest$)/.test(url.pathname)) return Response.redirect('https://www.pulsoinversor.cl' + url.pathname + url.search, 301);
     }
+    // Portafolio mensual de proyectos: solo en portafolio.pulsoinversor.cl. Independiente del sitio: no enlazado, no indexado,
+    // sin redirecciones a www. Archivos en /portafolio (index.html + img/). En los otros dominios no existe.
+    if (url.hostname === 'portafolio.pulsoinversor.cl') {
+      if (url.pathname === '/robots.txt') return new Response('User-agent: *\nDisallow: /\n', { headers: { 'content-type': 'text/plain; charset=utf-8' } });
+      const cab = { 'x-robots-tag': 'noindex, nofollow' };
+      if (url.pathname === '/' || url.pathname === '/index.html') {
+        const r = await env.ASSETS.fetch(new Request(new URL('/portafolio/', url)));
+        return new Response(r.body, { status: r.status, headers: { ...cab, 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-cache' } });
+      }
+      if (/^\/img\/[a-z0-9-]+\.(jpg|webp)$/.test(url.pathname)) {
+        const r = await env.ASSETS.fetch(new Request(new URL('/portafolio' + url.pathname, url)));
+        const h = new Headers(r.headers); h.set('x-robots-tag', cab['x-robots-tag']); h.set('cache-control', 'public, max-age=86400');
+        return new Response(r.body, { status: r.status, headers: h });
+      }
+      return new Response('No encontrado', { status: 404, headers: { ...cab, 'content-type': 'text/plain; charset=utf-8' } });
+    }
+    if (/^\/portafolio(\/|$)/.test(url.pathname)) {
+      const r = await env.ASSETS.fetch(new Request(new URL('/404', url)));
+      return new Response(r.body, { status: 404, headers: { 'content-type': 'text/html; charset=utf-8', 'x-robots-tag': 'noindex' } });
+    }
     if (/^\/presentacion(\/|$)/.test(url.pathname)) {
       const r = await env.ASSETS.fetch(new Request(new URL('/404', url)));
       return new Response(r.body, { status: 404, headers: { 'content-type': 'text/html; charset=utf-8', 'x-robots-tag': 'noindex' } });
