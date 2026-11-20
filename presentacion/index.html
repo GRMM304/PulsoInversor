@@ -1609,53 +1609,85 @@ nav a { white-space: nowrap; }
 @media (max-width: 800px){ :root { --header: 190px; } nav { max-width: none; flex-wrap: wrap; justify-content: center; } nav a { flex: 0 1 auto; } }
 
 /* ================= Transiciones entre láminas ================= */
-:root { --pi-in: 56px; --pi-out: -56px; --pi-ease: cubic-bezier(.16,1,.3,1); }
-body[data-dir="prev"] { --pi-in: -56px; --pi-out: 56px; }
+:root { --pi-ease: cubic-bezier(.16,1,.3,1); --pi-in: 1; }
+body[data-dir="prev"] { --pi-in: -1; }
 @keyframes pi-fade { from { opacity: 0; } to { opacity: 1; } }
-@keyframes pi-in { from { opacity: 0; transform: translateX(var(--pi-in)); filter: blur(8px); } to { opacity: 1; transform: none; filter: none; } }
-@keyframes pi-out { to { opacity: 0; transform: translateX(var(--pi-out)); filter: blur(6px); } }
-@keyframes pi-rise { from { opacity: 0; transform: translateY(34px) scale(.96); } to { opacity: 1; transform: none; } }
-@keyframes pi-pop { from { opacity: 0; transform: scale(.86); } 60% { opacity: 1; transform: scale(1.04); } to { opacity: 1; transform: none; } }
+@keyframes pi-in { from { opacity: 0; transform: translate(calc(var(--pi-in) * 140px), 40px) scale(.92); filter: blur(14px); } to { opacity: 1; transform: none; filter: none; } }
+@keyframes pi-card { from { opacity: 0; transform: perspective(1200px) translateY(120px) rotateX(28deg) scale(.9); } to { opacity: 1; transform: none; } }
+@keyframes pi-pop { 0% { opacity: 0; transform: scale(.5) translateY(30px); } 60% { opacity: 1; transform: scale(1.08); } 80% { transform: scale(.97); } 100% { opacity: 1; transform: none; } }
+@keyframes pi-word { from { transform: translateY(115%) rotate(4deg); } to { transform: none; } }
 @keyframes pi-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-@keyframes pi-wipe { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
-@keyframes pi-glow { 0%, 100% { box-shadow: 0 0 0 0 rgba(199,217,93,.0), var(--shadow-soft, 0 8px 22px rgba(0,0,0,.08)); } 50% { box-shadow: 0 0 0 10px rgba(199,217,93,.28), var(--shadow-soft, 0 8px 22px rgba(0,0,0,.08)); } }
-.slide:not([hidden]) { animation: pi-fade .4s ease-out both; }
-/* Entrada: los bloques llegan deslizándose desde el lado de avance, con desenfoque */
-.slide:not([hidden]) .slide-content > * { animation: pi-in .8s var(--pi-ease) both; }
-.slide:not([hidden]) .slide-content > :nth-child(2) { animation-delay: .1s; }
-.slide:not([hidden]) .slide-content > :nth-child(3) { animation-delay: .2s; }
-.slide:not([hidden]) .slide-content > :nth-child(4) { animation-delay: .3s; }
-.slide:not([hidden]) .slide-content > :nth-child(5) { animation-delay: .4s; }
-.slide:not([hidden]) .slide-content > :nth-child(n+6) { animation-delay: .5s; }
-/* Salida: la lámina anterior se va hacia el lado contrario */
-.slide.is-leaving .slide-content > * { animation: pi-out .3s cubic-bezier(.4,0,1,1) both !important; }
-/* Títulos: barrido de izquierda a derecha */
-.slide:not([hidden]) h1 { animation: pi-wipe .9s var(--pi-ease) .15s both; }
-/* Tarjetas: suben en cascada */
-.slide:not([hidden]) :is(.evo-timeline, .mx-grid, .circ-flow, .patrimony-grid, .choices, .lease-reference-panels) > * { animation: pi-rise .75s var(--pi-ease) both; animation-delay: .3s; }
-.slide:not([hidden]) :is(.evo-timeline, .mx-grid, .circ-flow, .patrimony-grid, .choices, .lease-reference-panels) > :nth-child(2) { animation-delay: .42s; }
-.slide:not([hidden]) :is(.evo-timeline, .mx-grid, .circ-flow, .patrimony-grid, .choices, .lease-reference-panels) > :nth-child(3) { animation-delay: .54s; }
-.slide:not([hidden]) :is(.evo-timeline, .mx-grid, .circ-flow, .patrimony-grid, .choices, .lease-reference-panels) > :nth-child(4) { animation-delay: .66s; }
-.slide:not([hidden]) :is(.evo-timeline, .mx-grid, .circ-flow, .patrimony-grid, .choices, .lease-reference-panels) > :nth-child(n+5) { animation-delay: .78s; }
-/* Activos alternativos: cifras que saltan, línea de tiempo que se dibuja y dato destacado que late */
-.slide:not([hidden]) .evo-stats-row > .evo-stat { animation: pi-pop .6s var(--pi-ease) both; animation-delay: .55s; }
-.slide:not([hidden]) .evo-stats-row > .evo-stat:nth-of-type(2) { animation-delay: .75s; }
-.slide:not([hidden]) .evo-stats-row > .evo-stat-dic { animation: pi-pop .6s var(--pi-ease) .95s both, pi-glow 2.4s ease-in-out 1.8s 2; }
-.slide:not([hidden]) .evo-stats-row > :is(.evo-line, .evo-arrow) { transform-origin: left center; animation: pi-grow .5s ease-out both; animation-delay: .45s; }
-.slide:not([hidden]) .evo-stats-row > :is(.evo-line, .evo-arrow):nth-child(3) { animation-delay: .65s; }
-.slide:not([hidden]) .evo-stats-row > :is(.evo-line, .evo-arrow):nth-child(5) { animation-delay: .85s; }
-.slide:not([hidden]) .evo-stats-row > .evo-arrow { animation-delay: 1.05s; }
-.slide:not([hidden]) .evo-bracket { transform-origin: center; animation: pi-grow .6s var(--pi-ease) 1.1s both; }
-.slide:not([hidden]) .evo-growth { animation: pi-rise .7s var(--pi-ease) 1.2s both; }
+@keyframes pi-glow { 0%, 100% { box-shadow: 0 0 0 0 rgba(199,217,93,0), 0 8px 22px rgba(0,0,0,.08); } 50% { box-shadow: 0 0 0 14px rgba(199,217,93,.35), 0 8px 22px rgba(0,0,0,.08); } }
+@keyframes pi-cover { from { transform: translateX(-101%); } to { transform: none; } }
+@keyframes pi-uncover { from { transform: none; } to { transform: translateX(101%); } }
+@keyframes pi-logo { 0% { opacity: 0; letter-spacing: .6em; } 100% { opacity: 1; letter-spacing: .32em; } }
+@keyframes pi-zoom { from { opacity: 0; transform: scale(1.35); filter: blur(18px); letter-spacing: .08em; } to { opacity: 1; transform: none; filter: none; } }
+@keyframes pi-rise { from { opacity: 0; transform: translateY(70px); } to { opacity: 1; transform: none; } }
+
+/* Cortina de marca entre láminas: banda lima + panel verde que cruzan la pantalla */
+#pi-wipe { position: fixed; left: 0; right: 0; bottom: 0; top: 0; z-index: 900; pointer-events: none; visibility: hidden; overflow: hidden; }
+#pi-wipe[data-dir="prev"] { transform: scaleX(-1); }
+#pi-wipe i, #pi-wipe b { position: absolute; inset: 0; transform: translateX(-101%); }
+#pi-wipe i { background: linear-gradient(90deg, #C7D95D, #FFC33F); }
+#pi-wipe b { background: radial-gradient(circle at 30% 20%, rgba(199,217,93,.18), transparent 45%), linear-gradient(135deg, #0E2C28, #1d4a3c 60%, #0b211d); display: grid; place-items: center; }
+#pi-wipe b span { font-size: clamp(22px, 3vw, 44px); font-weight: 800; letter-spacing: .32em; text-transform: uppercase; color: #C7D95D; padding-left: .32em; opacity: 0; }
+#pi-wipe[data-dir="prev"] b span { transform: scaleX(-1); }
+#pi-wipe.is-covering, #pi-wipe.is-revealing { visibility: visible; }
+#pi-wipe.is-covering i { animation: pi-cover .42s cubic-bezier(.77,0,.18,1) both; }
+#pi-wipe.is-covering b { animation: pi-cover .42s cubic-bezier(.77,0,.18,1) .08s both; }
+#pi-wipe.is-covering b span { animation: pi-logo .3s ease-out .3s both; }
+#pi-wipe.is-revealing b { transform: none; animation: pi-uncover .55s cubic-bezier(.77,0,.18,1) both; }
+#pi-wipe.is-revealing i { transform: none; animation: pi-uncover .55s cubic-bezier(.77,0,.18,1) .1s both; }
+#pi-wipe.is-revealing b span { opacity: 1; }
+
+/* Barra de avance de la presentación */
+#pi-progress { position: fixed; left: 0; right: 0; bottom: 0; height: 4px; z-index: 901; background: linear-gradient(90deg, #C7D95D, #FFC33F); transform-origin: left center; transform: scaleX(0); transition: transform .8s var(--pi-ease); }
+
+/* Contenido: llega con fuerza desde el lado de avance, con desenfoque y escala */
+.slide:not([hidden]) .slide-content > * { animation: pi-in 1s var(--pi-ease) both; animation-delay: .15s; }
+.slide:not([hidden]) .slide-content > :nth-child(2) { animation-delay: .3s; }
+.slide:not([hidden]) .slide-content > :nth-child(3) { animation-delay: .45s; }
+.slide:not([hidden]) .slide-content > :nth-child(4) { animation-delay: .6s; }
+.slide:not([hidden]) .slide-content > :nth-child(5) { animation-delay: .75s; }
+.slide:not([hidden]) .slide-content > :nth-child(n+6) { animation-delay: .9s; }
+
+/* Títulos palabra por palabra */
+.pi-w { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .08em; margin-bottom: -.08em; }
+.pi-w > span { display: inline-block; }
+.slide:not([hidden]) .pi-w > span { animation: pi-word .9s var(--pi-ease) both; animation-delay: calc(.3s + var(--i) * .07s); }
+
+/* Portada: el título aparece con un zoom cinematográfico */
+.slide.home:not([hidden]) .cover-model { display: inline-block; animation: pi-zoom 1.4s var(--pi-ease) .2s both; }
+.slide.home:not([hidden]) .cover-main { display: inline-block; animation: pi-rise 1s var(--pi-ease) .7s both; }
+.slide.home:not([hidden]) .cover-badge, .slide.home:not([hidden]) .cover-subtitle { animation: pi-rise .9s var(--pi-ease) 1s both; }
+
+/* Tarjetas: entran en 3D, una tras otra */
+.slide:not([hidden]) :is(.evo-timeline, .mx-grid, .circ-flow, .patrimony-grid, .choices, .lease-reference-panels, .history-grid, .vp-outcomes) > * { animation: pi-card 1s var(--pi-ease) both; animation-delay: .45s; }
+.slide:not([hidden]) :is(.evo-timeline, .mx-grid, .circ-flow, .patrimony-grid, .choices, .lease-reference-panels, .history-grid, .vp-outcomes) > :nth-child(2) { animation-delay: .6s; }
+.slide:not([hidden]) :is(.evo-timeline, .mx-grid, .circ-flow, .patrimony-grid, .choices, .lease-reference-panels, .history-grid, .vp-outcomes) > :nth-child(3) { animation-delay: .75s; }
+.slide:not([hidden]) :is(.evo-timeline, .mx-grid, .circ-flow, .patrimony-grid, .choices, .lease-reference-panels, .history-grid, .vp-outcomes) > :nth-child(4) { animation-delay: .9s; }
+.slide:not([hidden]) :is(.evo-timeline, .mx-grid, .circ-flow, .patrimony-grid, .choices, .lease-reference-panels, .history-grid, .vp-outcomes) > :nth-child(n+5) { animation-delay: 1.05s; }
+
+/* Activos alternativos: cifras que rebotan, línea de tiempo que se dibuja y dato destacado que late */
+.slide:not([hidden]) .evo-stats-row > .evo-stat { animation: pi-pop .8s var(--pi-ease) both; animation-delay: .9s; }
+.slide:not([hidden]) .evo-stats-row > .evo-stat:nth-of-type(2) { animation-delay: 1.15s; }
+.slide:not([hidden]) .evo-stats-row > .evo-stat-dic { animation: pi-pop .8s var(--pi-ease) 1.4s both, pi-glow 1.6s ease-in-out 2.3s 3; }
+.slide:not([hidden]) .evo-stats-row > :is(.evo-line, .evo-arrow) { transform-origin: left center; animation: pi-grow .45s ease-out both; animation-delay: .8s; }
+.slide:not([hidden]) .evo-stats-row > :is(.evo-line, .evo-arrow):nth-child(3) { animation-delay: 1.05s; }
+.slide:not([hidden]) .evo-stats-row > :is(.evo-line, .evo-arrow):nth-child(5) { animation-delay: 1.3s; }
+.slide:not([hidden]) .evo-stats-row > .evo-arrow { animation-delay: 1.6s; }
+.slide:not([hidden]) .evo-bracket { transform-origin: center; animation: pi-grow .7s var(--pi-ease) 1.7s both; }
+.slide:not([hidden]) .evo-growth { animation: pi-pop .9s var(--pi-ease) 1.9s both; }
+
 /* Tarjetas que responden al pasar el mouse */
-@media (hover: hover) { :is(.evo-card, .evo-stat, .mx-card, .circ-step, .circ-pause, .config-pillar, .patrimony-item, .vp-outcome):hover { translate: 0 -5px; box-shadow: 0 18px 40px rgba(14,44,40,.14); transition: translate .25s ease-out, box-shadow .25s; } }
+@media (hover: hover) { :is(.evo-card, .evo-stat, .mx-card, .circ-step, .circ-pause, .config-pillar, .patrimony-item, .vp-outcome):hover { translate: 0 -6px; box-shadow: 0 22px 44px rgba(14,44,40,.16); transition: translate .25s ease-out, box-shadow .25s; } }
 /* Botones con brillo que los recorre */
 .gradient-action { position: relative; overflow: hidden; }
-.gradient-action::after { content: ""; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,.55) 50%, transparent 70%); transform: translateX(-120%); animation: pi-shine 3.2s ease-in-out 1.4s infinite; pointer-events: none; }
+.gradient-action::after { content: ""; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,.6) 50%, transparent 70%); transform: translateX(-120%); animation: pi-shine 3s ease-in-out 2s infinite; pointer-events: none; }
 @keyframes pi-shine { 0% { transform: translateX(-120%); } 35%, 100% { transform: translateX(120%); } }
-#strategy-dialog[open] { animation: pi-rise .4s var(--pi-ease) both; }
+#strategy-dialog[open] { animation: pi-card .6s var(--pi-ease) both; }
 #strategy-dialog[open]::backdrop { animation: pi-fade .3s ease-out both; }
-@media (prefers-reduced-motion: reduce){ .slide, .slide *, .slide *::after, #strategy-dialog, #strategy-dialog::backdrop { animation: none !important; transition: none !important; } }
+@media (prefers-reduced-motion: reduce){ .slide, .slide *, .slide *::after, #strategy-dialog, #strategy-dialog::backdrop, #pi-wipe * { animation: none !important; transition: none !important; } #pi-wipe { display: none; } }
 </style></head>
 <body>
 <header class="header"><a class="brand" href="#inicio" aria-label="Pulso Inversor, una empresa de Grupo Matchmaking"><span class="brand-image" role="img" aria-label="Pulso Inversor y Grupo Matchmaking"></span></a><nav aria-label="Menú principal"><a href="#inicio" data-nav="inicio">Inicio</a><a href="#nosotros" data-nav="nosotros">Nosotros</a><a href="#propuesta-valor" data-nav="propuesta-valor">Propuesta de Valor</a><a href="#evolucion-inversion" data-nav="activos-alternativos">Activos alternativos</a><a href="#consolidado" data-nav="matriz-igr">Matriz IGR</a></nav></header>
@@ -1915,6 +1947,25 @@ body[data-dir="prev"] { --pi-in: -56px; --pi-out: 56px; }
   window.addEventListener('resize', fitDetail);
   document.fonts.ready.then(fitDetail);
   let leaving = false, firstRender = true;
+  // Títulos: cada palabra sube desde una máscara, una tras otra.
+  document.querySelectorAll('.slide h1:not(#home-title)').forEach(h => {
+    let i = 0;
+    const walk = node => [...node.childNodes].forEach(n => {
+      if (n.nodeType === 3) {
+        const frag = document.createDocumentFragment();
+        n.nodeValue.split(/(\s+)/).forEach(part => {
+          if (!part) return;
+          if (/^\s+$/.test(part)) { frag.append(part); return; }
+          const w = document.createElement('span'); w.className = 'pi-w';
+          const inner = document.createElement('span'); inner.textContent = part; inner.style.setProperty('--i', i++);
+          w.append(inner); frag.append(w);
+        });
+        n.replaceWith(frag);
+      } else if (n.nodeType === 1 && n.tagName !== 'BR') walk(n);
+    });
+    walk(h);
+  });
+  document.body.insertAdjacentHTML('beforeend', '<div id="pi-wipe" aria-hidden="true"><i></i><b><span></span></b></div><div id="pi-progress" aria-hidden="true"></div>');
   function countUp(slide) {
     slide.querySelectorAll('.evo-stat strong, .evo-stat em').forEach((el, k) => {
       const node = [...el.childNodes].find(n => n.nodeType === 3 && /\d/.test(n.nodeValue));
@@ -1947,12 +1998,23 @@ body[data-dir="prev"] { --pi-in: -56px; --pi-out: 56px; }
     if (previous && previous !== active) document.body.dataset.dir = slides.indexOf(active) >= slides.indexOf(previous) ? 'next' : 'prev';
     if (previous && previous !== active && !reduce && !leaving) {
       leaving = true;
-      previous.classList.add('is-leaving');
-      setTimeout(() => { previous.classList.remove('is-leaving'); render(focus); leaving = false; }, 300);
+      const wipe = document.getElementById('pi-wipe');
+      wipe.style.top = document.querySelector('.header').offsetHeight + 'px';
+      wipe.dataset.dir = document.body.dataset.dir;
+      const dest = navigation.find(link => link.dataset.nav === (active.dataset.navParent || active.dataset.slide));
+      wipe.querySelector('span').textContent = dest ? dest.textContent : '';
+      wipe.className = 'is-covering';
+      setTimeout(() => {
+        render(focus); leaving = false;
+        wipe.className = 'is-revealing';
+        setTimeout(() => { if (wipe.className === 'is-revealing') wipe.className = ''; }, 700);
+      }, 520);
       return;
     }
     slides.forEach(slide => { slide.hidden = slide !== active; });
     if (!reduce) countUp(active);
+    const bar = document.getElementById('pi-progress');
+    if (bar) bar.style.transform = `scaleX(${(slides.indexOf(active) + 1) / slides.length})`;
     fitSlide();
     requestAnimationFrame(() => { fitSlide(); drawPatrimonyConnections(); });
     setTimeout(drawPatrimonyConnections, 1300);
