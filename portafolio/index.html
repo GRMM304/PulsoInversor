@@ -32,12 +32,12 @@ img{display:block}
 /* Barra superior común */
 .top{position:absolute;left:0;right:0;top:0;height:64px;display:flex;align-items:center;gap:22px;padding:0 64px}
 .top .rule{flex:1;height:2px;background:linear-gradient(90deg,var(--lime),var(--green))}
-.top .brand{height:46px;padding:7px 18px;border-radius:999px;background:var(--green);display:flex;align-items:center}
-.top .brand img{height:32px;width:auto}
+.top .brand{display:flex;align-items:center}
+.top .brand img{height:44px;width:auto}
 .top .tag{font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
 .foot{position:absolute;left:64px;right:64px;bottom:22px;display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--muted)}
-.foot .gmm{height:30px;padding:5px 14px;border-radius:999px;background:var(--green);display:flex;align-items:center}
-.foot .gmm img{height:20px;width:auto}
+.foot .gmm{display:flex;align-items:center}
+.foot .gmm img{height:30px;width:auto}
 
 .body{position:absolute;left:64px;right:64px;top:92px;bottom:64px}
 .kicker{font-size:15px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--green)}
@@ -224,7 +224,7 @@ body.idle .ui{opacity:0}
 
   <!-- 2 · Garantías reales -->
   <section class="slide" aria-label="Garantías reales">
-    <div class="top"><span class="brand"><img src="img/logo-pulso-blanco.webp" alt="Pulso Inversor"></span><div class="rule"></div><span class="tag">Garantías reales</span></div>
+    <div class="top"><span class="brand"><img src="img/logo-pulso-verde.webp" alt="Pulso Inversor"></span><div class="rule"></div><span class="tag">Garantías reales</span></div>
     <div class="body">
       <h2 class="h-title">GARANTÍAS REALES<span>INVERSIONES ESTRUCTURADAS CON RESPALDO INMOBILIARIO</span></h2>
       <p class="lead">Nuestra experiencia en el mercado inmobiliario nos ha enseñado que una decisión de inversión requiere comprender la oportunidad, su respaldo y cómo se recupera el capital. Con esa visión, reunimos en este portafolio todas las alternativas disponibles del mes, para que puedas comparar sus condiciones y evaluar cuáles se ajustan a tus objetivos.</p>
@@ -239,12 +239,12 @@ body.idle .ui{opacity:0}
         <div><h3>Invertir también puede generar impacto</h3><p>Tu inversión puede dar una segunda oportunidad a una familia para conservar su hogar o ayudar a un emprendedor a dar continuidad a su negocio. Detrás de cada operación hay una propiedad y un propósito.</p></div>
       </div>
     </div>
-    <div class="foot"><span class="gmm"><img src="img/logo-gmm-blanco.webp" alt="Grupo Matchmaking"></span><span class="pnum"></span></div>
+    <div class="foot"><span class="gmm"><img src="img/logo-gmm-verde.webp" alt="Grupo Matchmaking"></span><span class="pnum"></span></div>
   </section>
 
   <!-- 3 · Condiciones claras -->
   <section class="slide" aria-label="Condiciones claras desde el inicio">
-    <div class="top"><span class="brand"><img src="img/logo-pulso-blanco.webp" alt="Pulso Inversor"></span><div class="rule"></div><span class="tag">Nuestro modelo</span></div>
+    <div class="top"><span class="brand"><img src="img/logo-pulso-verde.webp" alt="Pulso Inversor"></span><div class="rule"></div><span class="tag">Nuestro modelo</span></div>
     <div class="body">
       <h2 class="h-title">CONDICIONES CLARAS<span>DESDE EL INICIO</span></h2>
       <div class="grid3" style="margin-top:30px">
@@ -264,12 +264,12 @@ body.idle .ui{opacity:0}
         <div class="box si"><h3>¿QUÉ ES PULSO?</h3><p>Inversiones con respaldo inmobiliario y una relación directa con cada inversionista.</p></div>
       </div>
     </div>
-    <div class="foot"><span class="gmm"><img src="img/logo-gmm-blanco.webp" alt="Grupo Matchmaking"></span><span class="pnum"></span></div>
+    <div class="foot"><span class="gmm"><img src="img/logo-gmm-verde.webp" alt="Grupo Matchmaking"></span><span class="pnum"></span></div>
   </section>
 
   <!-- 4 · Portafolios y formas de participación -->
   <section class="slide" aria-label="Portafolios y formas de participación">
-    <div class="top"><span class="brand"><img src="img/logo-pulso-blanco.webp" alt="Pulso Inversor"></span><div class="rule"></div><span class="tag">Formas de participación</span></div>
+    <div class="top"><span class="brand"><img src="img/logo-pulso-verde.webp" alt="Pulso Inversor"></span><div class="rule"></div><span class="tag">Formas de participación</span></div>
     <div class="body">
       <h2 class="h-title">PORTAFOLIOS<span>Y FORMAS DE PARTICIPACIÓN</span></h2>
       <p class="lead" style="font-size:18px">Estructuras disponibles para invertir con garantía real, todas en la categoría de inversión conservadora, con condiciones de plazo y retorno atractivas para inversionistas inmobiliarios que buscan resultados financieros. En el portafolio de propiedades se informan las condiciones de cada negocio.</p>
@@ -282,7 +282,7 @@ body.idle .ui{opacity:0}
       </div>
       <p class="fine">Intereses: las tasas indicadas como mensuales se calculan proporcionalmente al tiempo invertido. La periodicidad de pago y las condiciones de cada modalidad se establecen en el contrato pactado.</p>
     </div>
-    <div class="foot"><span class="gmm"><img src="img/logo-gmm-blanco.webp" alt="Grupo Matchmaking"></span><span class="pnum"></span></div>
+    <div class="foot"><span class="gmm"><img src="img/logo-gmm-verde.webp" alt="Grupo Matchmaking"></span><span class="pnum"></span></div>
   </section>
 
   <!-- Láminas de propiedades: se generan desde PORTAFOLIO (abajo) -->
@@ -387,11 +387,11 @@ const PORTAFOLIO = [
       d:'Sofisticado departamento de 65 m² con estacionamiento, ideal para disfrutar con comodidad. Excelente conectividad y cercanía a supermercados, colegios, comercios y restaurantes para tu día a día.',
       s:[['Valor publicado de venta','2.390 UF',1],['Hipot. máxima (60%)','1.434 UF'],['Dispon. hipoteca','884 UF']],
       tas:D('1JR6zZe7A5XTlcxrbxmPbBOrfb9gWKAJJ') },
+  ],[
     { t:'Las Quemas', l:'Osorno', img:'las-quemas', feats:['4 Habs.','3 Baños','5.200 m²'],
       d:'Casa de 1 piso en condominio, con 175 m² construidos y amplio terreno de 5.200 m². Cómoda y de estilo tradicional, con vigas de madera a la vista, a solo 5 minutos del Hospital Base de Osorno.',
       s:[['Valor publicado de venta','6.320 UF',1],['Hipot. máxima (60%)','3.792 UF'],['Dispon. hipoteca','0 UF']],
       tas:D('1VdPJWdQTpWzkbOPKsJ7IhhfeZyF0sNpL') },
-  ],[
     { t:'San Diego', l:'Santiago', img:'san-diego', feats:['2 Habs.','1 Baño','48 m²'],
       d:'Cómodo departamento de 48 m² en Santiago, ideal para vivir con comodidad y conectividad. Muy cerca de Metro Parque O’Higgins y Matta, con excelente acceso a servicios, cultura y transporte público.',
       s:[['Valor publicado de venta','2.190 UF',1],['Hipot. máxima (60%)','1.314 UF'],['Dispon. hipoteca','1.314 UF']],
@@ -426,13 +426,13 @@ PORTAFOLIO.forEach(g => g.laminas.forEach((props, i) => {
   const parte = g.laminas.length > 1 ? `<span class="pg">· ${i + 1}/${g.laminas.length}</span>` : '';
   html += `
   <section class="slide" aria-label="${g.nombre}" style="--c:${g.c}">
-    <div class="top"><span class="brand"><img src="img/logo-pulso-blanco.webp" alt="Pulso Inversor"></span><div class="rule"></div><span class="tag">Portafolio de propiedades</span></div>
+    <div class="top"><span class="brand"><img src="img/logo-pulso-verde.webp" alt="Pulso Inversor"></span><div class="rule"></div><span class="tag">Portafolio de propiedades</span></div>
     <div class="body">
       <div class="phead"><h2 class="h-title">PORTAFOLIO DE PROPIEDADES<span>${g.nombre.toUpperCase()}</span></h2>
         <span class="pill${g.oscuro ? ' dark' : ''}"><b>${g.n}</b>${g.nombre} ${parte}</span></div>
       <div class="cards n${props.length}">${props.map(tarjeta).join('')}</div>
     </div>
-    <div class="foot"><span class="gmm"><img src="img/logo-gmm-blanco.webp" alt="Grupo Matchmaking"></span><span class="pnum"></span></div>
+    <div class="foot"><span class="gmm"><img src="img/logo-gmm-verde.webp" alt="Grupo Matchmaking"></span><span class="pnum"></span></div>
   </section>`;
 }));
 document.getElementById('props').outerHTML = html;
