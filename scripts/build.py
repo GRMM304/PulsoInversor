@@ -1538,6 +1538,27 @@ page('404.html', 'Página no encontrada', 'La página que buscas no existe o cam
 <p style="display:flex;gap:12px;flex-wrap:wrap;margin-top:22px"><a class="btn btn-primary" href="index.html">Ir al inicio</a> <a class="btn btn-secondary" href="simuladores.html">Simular mi inversión</a> <a class="btn btn-secondary" href="inversiones.html">Ver inversiones</a></p>
 </div></section>''')
 
+# ---------------- Reunión agendada (Brevo Meetings redirige aquí después de reservar) ----------------
+# En Brevo: Meetings > tipo de reunión > "Enlace de redirección después de la reserva" = https://www.pulsoinversor.cl/reunion-agendada
+# El píxel de Meta (Schedule) sale desde el servidor con el aviso de Brevo; aquí solo se mide en Analytics para no contarlo doble.
+page('reunion-agendada.html', 'Tu reunión quedó agendada', 'Tu reunión con un asesor de Pulso Inversor quedó agendada. Te enviamos los detalles por correo y WhatsApp.',
+     f'''<section class="page-hero"><div class="container" style="max-width:760px">
+<span class="eyebrow">Reunión agendada</span>
+<h1>¡Listo! Tu reunión quedó agendada</h1>
+<p>Gracias por darte el tiempo. Tu asesor de Pulso Inversor ya tiene tu reserva y va a preparar la conversación según lo que nos contaste.</p>
+</div></section>
+<section class="section"><div class="container" style="max-width:760px">
+<h2>Qué pasa ahora</h2>
+<ol style="line-height:1.8;padding-left:22px">
+<li><strong>Revisa tu correo:</strong> te enviamos la confirmación con el día, la hora y el enlace para entrar a la reunión.</li>
+<li><strong>Revisa tu WhatsApp:</strong> te escribiremos desde el número de Pulso Inversor, <strong>+56 9 5879 2038</strong>. Guárdalo para reconocernos.</li>
+<li><strong>Te recordamos la reunión</strong> un día antes y una hora antes, por correo y WhatsApp.</li>
+</ol>
+<p>Puedes venir acompañado de tu pareja, tu socio o tu abogado. Si necesitas cambiar la hora, responde el WhatsApp o usa el enlace del correo de confirmación.</p>
+<p style="display:flex;gap:12px;flex-wrap:wrap;margin-top:26px"><a class="btn btn-primary" href="verifica-a-pulso.html">Verifica a Pulso Inversor</a> <a class="btn btn-outline" href="como-funciona.html">Cómo funciona</a> <a class="btn btn-outline" href="https://wa.me/{WHATSAPP}?text={urllib.parse.quote('Hola, acabo de agendar una reunión con Pulso Inversor y tengo una consulta.')}" target="_blank" rel="noopener">Escribirnos por WhatsApp</a></p>
+</div></section>''',
+     scripts='<script>window.addEventListener("load",function(){if(window.pulsoMedir)pulsoMedir("agendar_reunion",{origen:"Reserva confirmada en la agenda"});});</script>')
+
 # ---------------- sitemap.xml y robots.txt (Google Search Console) ----------------
 import datetime as _dt
 _DOMINIO = 'https://www.pulsoinversor.cl'
