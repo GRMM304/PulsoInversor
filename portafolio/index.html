@@ -24,7 +24,11 @@ img{display:block}
 
 /* ---------- Escenario: lienzo fijo 1600x900 escalado ---------- */
 .stage{position:fixed;inset:0;display:grid;place-items:center;background:radial-gradient(120% 90% at 50% 0%,#1d4639 0%,var(--deep) 70%)}
-.deck{width:1600px;height:900px;position:relative;transform-origin:center center;flex:none}
+.frame{position:fixed;left:var(--edge,32px);right:var(--edge,32px);z-index:25;display:flex;align-items:center;pointer-events:none}
+.frame img{width:auto;height:100%}
+.frame-top{top:0;height:var(--band,72px);padding:calc(var(--band,72px) * .16) 0}
+.frame-bot{bottom:0;height:var(--band,72px);padding:calc(var(--band,72px) * .2) 0}
+.deck{width:1600px;height:900px;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);transform-origin:center center}
 .slide{position:absolute;inset:0;background:var(--paper);border-radius:18px;overflow:hidden;opacity:0;visibility:hidden;transform:translateX(40px);transition:opacity .45s ease,transform .55s cubic-bezier(.2,.7,.2,1),visibility 0s .55s;box-shadow:0 30px 80px rgba(0,0,0,.35)}
 .slide.on{opacity:1;visibility:visible;transform:none;transition:opacity .45s ease,transform .55s cubic-bezier(.2,.7,.2,1),visibility 0s}
 .slide.prev{transform:translateX(-40px)}
@@ -35,7 +39,7 @@ img{display:block}
 .top .brand{display:flex;align-items:center}
 .top .brand img{height:44px;width:auto}
 .top .tag{font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-.foot{position:absolute;left:64px;right:64px;bottom:22px;display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--muted)}
+.foot{position:absolute;left:64px;right:64px;bottom:22px;display:flex;align-items:center;justify-content:flex-end;font-size:13px;color:var(--muted)}
 .foot .gmm{display:flex;align-items:center}
 .foot .gmm img{height:30px;width:auto}
 
@@ -164,9 +168,13 @@ body.idle .ui{opacity:0}
 @media (max-width:820px), (max-height:500px) and (orientation:portrait){
   body{overflow:auto;background:var(--paper)}
   .stage{position:static;display:block;background:none}
-  .deck{width:auto!important;height:auto!important;transform:none!important}
+  .deck{position:static;width:auto!important;height:auto!important;transform:none!important}
   .slide{position:relative;inset:auto;opacity:1;visibility:visible;transform:none;border-radius:0;box-shadow:none;min-height:auto;padding-bottom:28px;border-bottom:8px solid #e7ece4}
   .ui,.progress{display:none}
+  .frame{position:relative;left:auto;right:auto;height:64px;padding:12px 16px;background:var(--deep)}
+  .frame-bot{height:60px;padding:16px}
+  body{display:flex;flex-direction:column}
+  .frame-top{order:1}.stage{order:2}.frame-bot{order:3}
   .top{position:relative;padding:0 16px;height:56px}
   .top .tag{display:none}
   .foot{display:none}
@@ -199,14 +207,16 @@ body.idle .ui{opacity:0}
   @page{size:1600px 900px;margin:0}
   body{overflow:visible;background:#fff}
   .stage{position:static;display:block}
-  .deck{transform:none!important;height:auto}
+  .deck{position:static;transform:none!important;height:auto}
   .slide{position:relative;opacity:1;visibility:visible;transform:none;width:1600px;height:900px;border-radius:0;box-shadow:none;break-after:page}
-  .ui,.progress{display:none}
+  .ui,.progress,.frame{display:none}
 }
 </style>
 </head>
 <body>
 <div class="progress" id="progress"></div>
+<header class="frame frame-top"><img src="img/logo-pulso-blanco.webp" alt="Pulso Inversor"></header>
+<footer class="frame frame-bot"><img src="img/logo-gmm-blanco.webp" alt="Una empresa de Grupo Matchmaking"></footer>
 <main class="stage" id="stage">
 <div class="deck" id="deck">
 
@@ -214,17 +224,15 @@ body.idle .ui{opacity:0}
   <section class="slide cover" aria-label="Portada">
     <div class="top"><div class="site">PULSO <b>INVERSOR</b>.CL</div><div class="rule"></div></div>
     <div class="cover-in">
-      <img class="logo" src="img/logo-pulso-blanco.webp" alt="Pulso Inversor">
       <div class="k">PORTAFOLIO</div>
       <h1>PROYECTOS DE<br>INVERSIÓN</h1>
       <div class="month"><i></i>Noviembre 2026</div>
     </div>
-    <div class="gmm-big"><img src="img/logo-gmm-blanco.webp" alt="Una empresa de Grupo Matchmaking"></div>
   </section>
 
   <!-- 2 · Garantías reales -->
   <section class="slide" aria-label="Garantías reales">
-    <div class="top"><span class="brand"><img src="img/logo-pulso-verde.webp" alt="Pulso Inversor"></span><div class="rule"></div><span class="tag">Garantías reales</span></div>
+    <div class="top"><div class="rule"></div><span class="tag">Garantías reales</span></div>
     <div class="body">
       <h2 class="h-title">GARANTÍAS REALES<span>INVERSIONES ESTRUCTURADAS CON RESPALDO INMOBILIARIO</span></h2>
       <p class="lead">Nuestra experiencia en el mercado inmobiliario nos ha enseñado que una decisión de inversión requiere comprender la oportunidad, su respaldo y cómo se recupera el capital. Con esa visión, reunimos en este portafolio todas las alternativas disponibles del mes, para que puedas comparar sus condiciones y evaluar cuáles se ajustan a tus objetivos.</p>
@@ -239,12 +247,12 @@ body.idle .ui{opacity:0}
         <div><h3>Invertir también puede generar impacto</h3><p>Tu inversión puede dar una segunda oportunidad a una familia para conservar su hogar o ayudar a un emprendedor a dar continuidad a su negocio. Detrás de cada operación hay una propiedad y un propósito.</p></div>
       </div>
     </div>
-    <div class="foot"><span class="gmm"><img src="img/logo-gmm-verde.webp" alt="Grupo Matchmaking"></span><span class="pnum"></span></div>
+    <div class="foot"><span class="pnum"></span></div>
   </section>
 
   <!-- 3 · Condiciones claras -->
   <section class="slide" aria-label="Condiciones claras desde el inicio">
-    <div class="top"><span class="brand"><img src="img/logo-pulso-verde.webp" alt="Pulso Inversor"></span><div class="rule"></div><span class="tag">Nuestro modelo</span></div>
+    <div class="top"><div class="rule"></div><span class="tag">Nuestro modelo</span></div>
     <div class="body">
       <h2 class="h-title">CONDICIONES CLARAS<span>DESDE EL INICIO</span></h2>
       <div class="grid3" style="margin-top:30px">
@@ -264,12 +272,12 @@ body.idle .ui{opacity:0}
         <div class="box si"><h3>¿QUÉ ES PULSO?</h3><p>Inversiones con respaldo inmobiliario y una relación directa con cada inversionista.</p></div>
       </div>
     </div>
-    <div class="foot"><span class="gmm"><img src="img/logo-gmm-verde.webp" alt="Grupo Matchmaking"></span><span class="pnum"></span></div>
+    <div class="foot"><span class="pnum"></span></div>
   </section>
 
   <!-- 4 · Portafolios y formas de participación -->
   <section class="slide" aria-label="Portafolios y formas de participación">
-    <div class="top"><span class="brand"><img src="img/logo-pulso-verde.webp" alt="Pulso Inversor"></span><div class="rule"></div><span class="tag">Formas de participación</span></div>
+    <div class="top"><div class="rule"></div><span class="tag">Formas de participación</span></div>
     <div class="body">
       <h2 class="h-title">PORTAFOLIOS<span>Y FORMAS DE PARTICIPACIÓN</span></h2>
       <p class="lead" style="font-size:18px">Estructuras disponibles para invertir con garantía real, todas en la categoría de inversión conservadora, con condiciones de plazo y retorno atractivas para inversionistas inmobiliarios que buscan resultados financieros. En el portafolio de propiedades se informan las condiciones de cada negocio.</p>
@@ -282,7 +290,7 @@ body.idle .ui{opacity:0}
       </div>
       <p class="fine">Intereses: las tasas indicadas como mensuales se calculan proporcionalmente al tiempo invertido. La periodicidad de pago y las condiciones de cada modalidad se establecen en el contrato pactado.</p>
     </div>
-    <div class="foot"><span class="gmm"><img src="img/logo-gmm-verde.webp" alt="Grupo Matchmaking"></span><span class="pnum"></span></div>
+    <div class="foot"><span class="pnum"></span></div>
   </section>
 
   <!-- Láminas de propiedades: se generan desde PORTAFOLIO (abajo) -->
@@ -291,12 +299,10 @@ body.idle .ui{opacity:0}
   <!-- Cierre -->
   <section class="slide closing" aria-label="Cierre">
     <div class="in">
-      <img class="logo" src="img/logo-pulso-blanco.webp" alt="Pulso Inversor">
       <h2>Inversiones con respaldo inmobiliario<br>y condiciones claras desde el inicio</h2>
       <p>Compara las alternativas del mes y evalúa cuáles se ajustan a tus objetivos. Cada operación tiene una propiedad que la respalda y un contrato que define plazo, retorno y salida.</p>
       <div class="counts" id="counts"></div>
     </div>
-    <div class="gmm-big"><img src="img/logo-gmm-blanco.webp" alt="Una empresa de Grupo Matchmaking"></div>
   </section>
 
 </div>
@@ -426,13 +432,13 @@ PORTAFOLIO.forEach(g => g.laminas.forEach((props, i) => {
   const parte = g.laminas.length > 1 ? `<span class="pg">· ${i + 1}/${g.laminas.length}</span>` : '';
   html += `
   <section class="slide" aria-label="${g.nombre}" style="--c:${g.c}">
-    <div class="top"><span class="brand"><img src="img/logo-pulso-verde.webp" alt="Pulso Inversor"></span><div class="rule"></div><span class="tag">Portafolio de propiedades</span></div>
+    <div class="top"><div class="rule"></div><span class="tag">Portafolio de propiedades</span></div>
     <div class="body">
       <div class="phead"><h2 class="h-title">PORTAFOLIO DE PROPIEDADES<span>${g.nombre.toUpperCase()}</span></h2>
         <span class="pill${g.oscuro ? ' dark' : ''}"><b>${g.n}</b>${g.nombre} ${parte}</span></div>
       <div class="cards n${props.length}">${props.map(tarjeta).join('')}</div>
     </div>
-    <div class="foot"><span class="gmm"><img src="img/logo-gmm-verde.webp" alt="Grupo Matchmaking"></span><span class="pnum"></span></div>
+    <div class="foot"><span class="pnum"></span></div>
   </section>`;
 }));
 document.getElementById('props').outerHTML = html;
@@ -457,8 +463,12 @@ function ir(i) {
 }
 function escalar() {
   if (movil()) { slides.forEach(s => s.removeAttribute('aria-hidden')); return; }
-  const k = Math.min(innerWidth / 1600, (innerHeight - 8) / 900) * 0.97;
-  deck.style.transform = 'scale(' + k + ')';
+  // Deja una franja arriba y abajo para los logos, que van en el fondo oscuro, fuera de la lámina.
+  const band = Math.max(56, Math.min(96, innerHeight * 0.09));
+  const k = Math.min((innerWidth - 48) / 1600, (innerHeight - band * 2) / 900);
+  deck.style.transform = 'translate(-50%,-50%) scale(' + k + ')';
+  document.documentElement.style.setProperty('--band', band + 'px');
+  document.documentElement.style.setProperty('--edge', ((innerWidth - 1600 * k) / 2) + 'px');
   ir(cur);
 }
 addEventListener('resize', escalar);
