@@ -413,7 +413,7 @@ const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':
 const PIN = '<svg width="13" height="16" viewBox="0 0 12 16" fill="currentColor" aria-hidden="true"><path d="M6 0a6 6 0 00-6 6c0 4.5 6 10 6 10s6-5.5 6-10a6 6 0 00-6-6zm0 8.5A2.5 2.5 0 116 3.5a2.5 2.5 0 010 5z"/></svg>';
 const tarjeta = p => `
   <article class="card">
-    <div class="photo"><img src="img/${p.img}.jpg" alt="${esc(p.t)}, ${esc(p.l)}" loading="lazy">
+    <div class="photo"><img src="img/${p.img}.jpg?v=2" alt="${esc(p.t)}, ${esc(p.l)}" loading="lazy">
       ${p.chip ? `<div class="chip"><small>${p.chip[0]}</small><strong>${p.chip[1]}</strong></div>` : ''}
       ${p.feats ? `<div class="feats">${p.feats.map(f => `<span>${f}</span>`).join('')}</div>` : ''}
       ${p.desc ? `<div class="disc">${p.desc}<small>de descuento</small></div>` : ''}
