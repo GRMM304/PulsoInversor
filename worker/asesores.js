@@ -97,7 +97,7 @@ if(navigator.clipboard)navigator.clipboard.writeText(t).then(ok,function(){promp
 var q=document.getElementById('buscar');if(q)q.addEventListener('input',function(){var v=q.value.toLowerCase();document.querySelectorAll('[data-fila]').forEach(function(f){f.style.display=f.textContent.toLowerCase().indexOf(v)>-1?'':'none'})});</script>`;
 
 function marco(yo, vista, cuerpo, q = '') {
-  const tabs = [['inicio', 'Inicio'], ['reuniones', 'Reuniones'], ['leads', 'Leads'], ['recursos', 'Recursos de venta']];
+  const tabs = [['inicio', 'Inicio'], ['reuniones', 'Reuniones'], ['leads', 'Leads'], ...(yo.rol === 'admin' ? [['encuestas', 'Encuestas']] : []), ['recursos', 'Recursos de venta']];
   return html(`<!DOCTYPE html><html lang="es-CL"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow">
 <title>Portal de asesores · Pulso Inversor</title><link rel="icon" href="/assets/img/favicon-32.png"><style>${CSS}</style></head><body>
 <header><div class="in"><div class="marca">Pulso Inversor · <span>Portal de asesores</span></div><div class="yo">${esc(yo.nombre)} · <a href="/asesores/salir">Salir</a></div></div></header>
@@ -118,7 +118,7 @@ ${mensaje ? `<p style="${error ? 'color:#9b2c22;font-weight:700' : 'color:var(--
 async function cargar(env) {
   const desde = new Date(Date.now() - 400 * 864e5).toISOString();
   const [s, r] = await Promise.all([
-    env.DB.prepare('SELECT id, creado, nombre, email, telefono, tipo, monto, grupo, edad, whatsapp, seguimiento_estado, encuesta, satisfaccion, recomienda, invirtio FROM simulaciones WHERE creado >= ? ORDER BY creado DESC').bind(desde).all(),
+    env.DB.prepare('SELECT id, creado, nombre, email, telefono, tipo, monto, grupo, edad, whatsapp, seguimiento_estado, encuesta, encuesta_json, satisfaccion, recomienda, invirtio FROM simulaciones WHERE creado >= ? ORDER BY creado DESC').bind(desde).all(),
     env.DB.prepare('SELECT id, email, nombre, asesor, inicio, fin, url_video, lugar, cancelada, realizada, grabacion FROM recordatorios WHERE inicio >= ? ORDER BY inicio DESC').bind(desde).all(),
   ]);
   const sims = (s.results || []).filter((x) => !esPrueba(x.email));
@@ -203,7 +203,7 @@ ${kpi(m.agendadas.length, 'Reuniones agendadas', pct(m.leadsConReu.length, m.lea
 ${kpi(m.realizadas.length, 'Reuniones realizadas', 'Asistencia ' + pct(m.realizadas.length, m.realizadas.length + m.noshow.length))}
 ${kpi(m.noshow.length, 'No se presentaron')}
 ${kpi(m.inv.length, 'Invirtieron', m.montoInv ? clp(m.montoInv) + ' simulados' : '')}
-${kpi(m.prom === '—' ? '—' : m.prom + '/5', 'Satisfacción (encuesta)', m.enc.length ? m.enc.length + ' respuesta' + (m.enc.length > 1 ? 's' : '') + (m.nps != null ? ' · NPS ' + m.nps : '') : 'Sin respuestas aún')}
+${yo.rol !== 'admin' ? '' : kpi(m.prom === '—' ? '—' : m.prom + '/5', 'Satisfacción (encuesta)', m.enc.length ? m.enc.length + ' respuesta' + (m.enc.length > 1 ? 's' : '') + (m.nps != null ? ' · NPS ' + m.nps : '') : 'Sin respuestas aún')}
 </div>
 <div class="grid2" style="margin-top:14px">
 <div class="card"><strong>Últimas 8 semanas</strong><div class="ley"><i></i>Leads<i class="r"></i>Reuniones realizadas</div>
@@ -254,13 +254,56 @@ function vistaLeads(yo, ver, datos, dias, q) {
     const enc = s.satisfaccion ? `<span class="pill ok">${s.satisfaccion}/5 · ${s.recomienda}/10</span>` : '';
     const inv = s.invirtio ? `<span class="pill ok">Invirtió ${esc(fFecha(s.invirtio))}</span>` : `<form method="post" action="/asesores/invirtio" onsubmit="return confirm('¿Confirmas que ${esc(String(s.nombre).replace(/'/g, ''))} invirtió? Se registra en el CRM y en Meta.')"><input type="hidden" name="id" value="${s.id}"><input type="hidden" name="volver" value="${esc('/asesores?v=leads&dias=' + dias + q)}"><button class="btn peq" type="submit">Invirtió</button></form>`;
     const asesorTxt = ASESORES[s.grupo] ? ASESORES[s.grupo].personas.map((p) => p.nombre.split(' ')[0]).join(' y ') : '—';
-    return `<tr data-fila><td>${esc(fFecha(s.creado))}</td><td><strong>${esc(s.nombre)}</strong><br><small style="color:var(--g)">${esc(s.email)}${s.telefono ? ' · +56 ' + esc(s.telefono) : ''}</small></td>${equipo ? `<td>${esc(asesorTxt)}</td>` : ''}<td>${esc(s.edad || '—')}</td><td>${esc(s.tipo)}</td><td>${s.monto ? clp(s.monto) : '—'}</td><td>${wa}</td><td>${reu}</td><td>${enc}</td><td>${inv}</td></tr>`;
+    return `<tr data-fila><td>${esc(fFecha(s.creado))}</td><td><strong>${esc(s.nombre)}</strong><br><small style="color:var(--g)">${esc(s.email)}${s.telefono ? ' · +56 ' + esc(s.telefono) : ''}</small></td>${equipo ? `<td>${esc(asesorTxt)}</td>` : ''}<td>${esc(s.edad || '—')}</td><td>${esc(s.tipo)}</td><td>${s.monto ? clp(s.monto) : '—'}</td><td>${wa}</td><td>${reu}</td>${yo.rol === 'admin' ? `<td>${enc}</td>` : ''}<td>${inv}</td></tr>`;
   }).join('');
   return `<h1>Leads</h1><p class="sub">Simulaciones ${ver ? 'asignadas a ' + esc(ver.nombre) : 'de todo el equipo'} (asignación por edad: hasta 40 años Renato, 41 y más Pamela).</p>
 <div class="aviso"><strong>Contacta solo desde el WhatsApp de Pulso Inversor (+56 9 5879 2038)</strong>, nunca desde tu WhatsApp personal. Así la conversación queda registrada y Lorenzo puede precalificar. <a href="${BANDEJA_WHATSAPP}" target="_blank" rel="noopener">Abrir la bandeja de WhatsApp →</a></div>
 <div class="barra">${selectorPeriodo('leads', dias, q)}${selectorAsesor(yo, 'leads', dias, ver)}</div>
 <input id="buscar" type="search" placeholder="Buscar por nombre, correo, estrategia…" style="max-width:420px;margin:0 0 12px">
-${m.leads.length ? `<div class="tabla"><table><thead><tr><th>Fecha</th><th>Persona</th>${equipo ? '<th>Asesor</th>' : ''}<th>Edad</th><th>Estrategia</th><th>Monto</th><th>WhatsApp</th><th>Reunión</th><th>Encuesta</th><th>Inversión</th></tr></thead><tbody>${filas}</tbody></table></div>` : '<p class="vacio">Sin leads en este período.</p>'}`;
+${m.leads.length ? `<div class="tabla"><table><thead><tr><th>Fecha</th><th>Persona</th>${equipo ? '<th>Asesor</th>' : ''}<th>Edad</th><th>Estrategia</th><th>Monto</th><th>WhatsApp</th><th>Reunión</th>${yo.rol === 'admin' ? '<th>Encuesta</th>' : ''}<th>Inversión</th></tr></thead><tbody>${filas}</tbody></table></div>` : '<p class="vacio">Sin leads en este período.</p>'}`;
+}
+
+/* ---------- Encuestas (solo administradores) ---------- */
+function reparto(titulo, lista, opciones) {
+  const total = lista.length || 1;
+  return `<div class="card"><strong>${esc(titulo)}</strong><div style="margin-top:10px">${opciones.map((o) => {
+    const n = lista.filter((x) => String(x) === String(o)).length;
+    return `<div style="display:flex;align-items:center;gap:8px;margin:5px 0;font-size:13px"><span style="width:150px;flex:none">${esc(o)}</span><span style="flex:1;background:var(--f);border-radius:6px;height:14px;overflow:hidden"><i style="display:block;height:100%;width:${Math.round((n / total) * 100)}%;background:var(--l)"></i></span><span style="width:52px;text-align:right">${n} · ${Math.round((n / total) * 100)}%</span></div>`;
+  }).join('')}</div></div>`;
+}
+
+function vistaEncuestas(yo, ver, datos, dias, q) {
+  const d = deAsesor(datos, ver), desde = Date.now() - dias * 864e5;
+  const res = d.sims.filter((s) => s.encuesta && Date.parse(s.encuesta) >= desde).map((s) => {
+    let j = {}; try { j = JSON.parse(s.encuesta_json || '{}'); } catch (e) { /* sin detalle */ }
+    return { ...s, j, sat: Number(j.satisfaccion ?? s.satisfaccion), rec: Number(j.recomienda ?? s.recomienda) };
+  }).sort((a, b) => Date.parse(b.encuesta) - Date.parse(a.encuesta));
+  const n = res.length;
+  const prom = n ? (res.reduce((a, x) => a + x.sat, 0) / n).toFixed(1).replace('.', ',') : '—';
+  const prom10 = n ? (res.reduce((a, x) => a + x.rec, 0) / n).toFixed(1).replace('.', ',') : '—';
+  const pro = res.filter((x) => x.rec >= 9).length, neu = res.filter((x) => x.rec >= 7 && x.rec <= 8).length, det = res.filter((x) => x.rec <= 6).length;
+  const nps = n ? Math.round(((pro - det) / n) * 100) : null;
+  const todas = res.filter((x) => x.j.dudas === 'Sí, todas').length, avanzar = res.filter((x) => x.j.etapa === 'Quiero avanzar con una inversión').length;
+  const tipo = (r) => (r >= 9 ? '<span class="pill ok">Promotor</span>' : r >= 7 ? '<span class="pill">Neutro</span>' : '<span class="pill no">Detractor</span>');
+  const filas = res.map((x) => `<tr data-fila><td>${esc(fFecha(x.encuesta))}</td><td><strong>${esc(x.nombre)}</strong><br><small style="color:var(--g)">${esc(x.email)}</small></td>${ver ? '' : `<td>${esc(ASESORES[x.grupo] ? ASESORES[x.grupo].personas.map((a) => a.nombre.split(' ')[0]).join(' y ') : '—')}</td>`}<td>${esc(x.j.quien || '—')}<br><small style="color:var(--g)">${esc(x.j.medio || '')}</small></td><td><strong>${x.sat || '—'}/5</strong></td><td>${esc(x.j.dudas || '—')}</td><td><strong>${Number.isFinite(x.rec) ? x.rec : '—'}/10</strong><br>${Number.isFinite(x.rec) ? tipo(x.rec) : ''}</td><td>${esc(x.j.etapa || '—')}</td><td style="min-width:220px">${esc(x.j.comentario || '')}</td></tr>`).join('');
+  return `<h1>Encuestas</h1><p class="sub">Respuestas de la encuesta de experiencia (llega en el correo de agradecimiento después de la reunión). Solo la ven los administradores.</p>
+<div class="barra">${selectorPeriodo('encuestas', dias, q)}${selectorAsesor(yo, 'encuestas', dias, ver)}</div>
+<div class="kpis">
+${kpi(n, 'Respuestas')}
+${kpi(prom === '—' ? '—' : prom + '/5', 'Satisfacción con la atención')}
+${kpi(nps == null ? '—' : nps, 'NPS', n ? `${pro} promotores · ${neu} neutros · ${det} detractores` : '')}
+${kpi(prom10 === '—' ? '—' : prom10 + '/10', 'Recomendaría Pulso Inversor')}
+${kpi(pct(todas, n), 'Resolvió todas sus dudas')}
+${kpi(avanzar, 'Quieren avanzar con una inversión')}
+</div>
+${n ? `<div class="grid2" style="margin-top:14px">
+${reparto('Satisfacción (1 a 5)', res.map((x) => x.sat), [5, 4, 3, 2, 1])}
+${reparto('¿Le resolvieron sus dudas?', res.map((x) => x.j.dudas), ['Sí, todas', 'En parte', 'No'])}
+${reparto('¿En qué está hoy?', res.map((x) => x.j.etapa), ['Quiero avanzar con una inversión', 'Lo estoy evaluando', 'Por ahora no'])}
+${reparto('¿Cómo lo contactaron?', res.map((x) => x.j.medio), ['WhatsApp', 'Llamada', 'Correo', 'Reunión en la oficina', 'Videollamada'])}
+</div>
+<h2>Respuestas</h2><input id="buscar" type="search" placeholder="Buscar por nombre, comentario…" style="max-width:420px;margin:0 0 12px">
+<div class="tabla"><table><thead><tr><th>Fecha</th><th>Persona</th>${ver ? '' : '<th>Asesor</th>'}<th>Quién lo contactó</th><th>Satisfacción</th><th>Dudas resueltas</th><th>Recomienda</th><th>En qué está</th><th>Comentario</th></tr></thead><tbody>${filas}</tbody></table></div>` : '<p class="vacio" style="margin-top:14px">Sin respuestas en este período.</p>'}`;
 }
 
 /* ---------- Recursos de venta ---------- */
@@ -407,13 +450,14 @@ export async function rutaAsesores(request, env, url) {
     await env.DB.prepare('DELETE FROM recursos WHERE id = ?').bind(parseInt(f.get('id'), 10)).run().catch(() => {});
     return ir('/asesores?v=recursos');
   }
-  const vista = ['inicio', 'reuniones', 'leads', 'recursos'].includes(url.searchParams.get('v')) ? url.searchParams.get('v') : 'inicio';
+  const vistas = ['inicio', 'reuniones', 'leads', 'recursos', ...(yo.rol === 'admin' ? ['encuestas'] : [])];
+  const vista = vistas.includes(url.searchParams.get('v')) ? url.searchParams.get('v') : 'inicio';
   const dias = [7, 30, 90, 365].includes(Number(url.searchParams.get('dias'))) ? Number(url.searchParams.get('dias')) : 30;
   // Un asesor solo se ve a sí mismo; un administrador elige (vacío = todo el equipo).
   const ver = yo.rol === 'asesor' ? yo : ASESORES_PORTAL.find((a) => a.email === url.searchParams.get('ver')) || null;
   const q = yo.rol === 'admin' && ver ? '&ver=' + encodeURIComponent(ver.email) : '';
   if (vista === 'recursos') return marco(yo, vista, await vistaRecursos(env, yo, ver), q);
   const datos = await cargar(env);
-  const cuerpo = vista === 'reuniones' ? vistaReuniones(yo, ver, datos, dias, q) : vista === 'leads' ? vistaLeads(yo, ver, datos, dias, q) : vistaInicio(yo, ver, datos, dias, q);
+  const cuerpo = vista === 'reuniones' ? vistaReuniones(yo, ver, datos, dias, q) : vista === 'leads' ? vistaLeads(yo, ver, datos, dias, q) : vista === 'encuestas' ? vistaEncuestas(yo, ver, datos, dias, q) : vistaInicio(yo, ver, datos, dias, q);
   return marco(yo, vista, cuerpo, q + (dias !== 30 ? '&dias=' + dias : ''));
 }
