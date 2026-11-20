@@ -169,7 +169,7 @@ async function agendar(request, env, url) {
     if (agendas.length > 1) {
       return pagina('Agendar reunión', `<p class="eyebrow">Agendar reunión · ${esc(d.s)}</p>
 <h1>Hola ${esc(d.n.split(' ')[0])}, elige con quién quieres reunirte</h1>
-<p>${esc(agendas.map((a) => a.nombre).join(' y '))} son los cofundadores de Pulso. Elige a uno y luego el día y la hora que te acomoden. Puedes venir con tu pareja, tu socio o tu abogado.</p>
+<p>${esc(agendas.map((a) => a.nombre).join(' y '))} son los cofundadores de Pulso Inversor. Elige a uno y luego el día y la hora que te acomoden. Puedes venir con tu pareja, tu socio o tu abogado.</p>
 ${agendas.map((a, i) => `<p><a href="/seguimiento/agendar?t=${esc(t)}&amp;con=${i}" style="display:inline-block;background:${C.lima};color:${C.verde};font-weight:700;text-decoration:none;padding:14px 24px;border-radius:999px">Agendar con ${esc(a.nombre)} →</a></p>`).join('')}
 <p class="nota">No te vamos a pedir que decidas en la reunión.</p>`);
     }
@@ -245,13 +245,13 @@ async function encuesta(request, env, url) {
     const quienes = [...ps.map((a) => a.nombre), 'Otra persona del equipo'];
     return pagina('Cuéntanos tu experiencia', `<p class="eyebrow">Tu experiencia · ${esc(d.s)}</p>
 <h1>Gracias por conversar con nosotros, ${esc(d.n.split(' ')[0])}</h1>
-<p>Son seis preguntas rápidas. Tu opinión nos ayuda a acompañar mejor a cada persona que confía en Pulso.</p>
+<p>Son seis preguntas rápidas. Tu opinión nos ayuda a acompañar mejor a cada persona que confía en Pulso Inversor.</p>
 <form method="post"><input type="hidden" name="t" value="${esc(t)}">
 <fieldset><legend>¿Quién te contactó?</legend>${opciones('quien', quienes)}</fieldset>
 <fieldset><legend>¿Cómo te contactaron?</legend>${opciones('medio', MEDIOS)}</fieldset>
 <fieldset><legend>¿Qué tan satisfecho quedaste con la atención?</legend>${opciones('satisfaccion', ['1', '2', '3', '4', '5'], true, 'escala')}<div class="ayuda"><span>1 · Nada satisfecho</span><span>5 · Muy satisfecho</span></div></fieldset>
 <fieldset><legend>¿Te resolvieron tus dudas?</legend>${opciones('dudas', DUDAS)}</fieldset>
-<fieldset><legend>Del 0 al 10, ¿qué tan probable es que recomiendes Pulso a un amigo o familiar?</legend>${opciones('recomienda', ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'], true, 'escala')}<div class="ayuda"><span>0 · Nada probable</span><span>10 · Muy probable</span></div></fieldset>
+<fieldset><legend>Del 0 al 10, ¿qué tan probable es que recomiendes Pulso Inversor a un amigo o familiar?</legend>${opciones('recomienda', ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'], true, 'escala')}<div class="ayuda"><span>0 · Nada probable</span><span>10 · Muy probable</span></div></fieldset>
 <fieldset><legend>¿En qué estás hoy?</legend>${opciones('etapa', ETAPAS)}</fieldset>
 <fieldset><legend>¿Algo que quieras contarnos? <span style="font-weight:400;color:${C.gris}">(opcional)</span></legend><textarea name="comentario" maxlength="1000"></textarea></fieldset>
 <button type="submit">Enviar mi opinión</button></form>`);
@@ -276,7 +276,7 @@ async function encuesta(request, env, url) {
       eyebrow: `Encuesta de experiencia · ${d.s}`,
       titulo: `${esc(d.n)} respondió la encuesta`,
       cuerpo: P(`Confirmó que ya fue contactado y respondió la encuesta del correo de seguimiento.`)
-        + bloqueResumen([`Quién lo contactó: ${f.quien}`, `Medio: ${f.medio}`, `Satisfacción con la atención: ${f.satisfaccion} de 5`, `Dudas resueltas: ${f.dudas}`, `Recomendaría Pulso: ${nps} de 10 (${tipoNps})`, `En qué está hoy: ${f.etapa}`, `Comentario: ${f.comentario || '—'}`])
+        + bloqueResumen([`Quién lo contactó: ${f.quien}`, `Medio: ${f.medio}`, `Satisfacción con la atención: ${f.satisfaccion} de 5`, `Dudas resueltas: ${f.dudas}`, `Recomendaría Pulso Inversor: ${nps} de 10 (${tipoNps})`, `En qué está hoy: ${f.etapa}`, `Comentario: ${f.comentario || '—'}`])
         + bloqueResumen([`Nombre: ${d.n}`, `Correo: ${d.e}`, `Teléfono: ${d.p ? '+56 ' + d.p : '—'}`, `Simulador: ${d.s}`, `Monto simulado: ${d.m ? clp(d.m) : '—'}`, `Asesor asignado: ${nombres(ps)}`, `Fecha de la simulación: ${new Date(d.f).toLocaleDateString('es-CL', { timeZone: 'America/Santiago', dateStyle: 'long' })}`]),
       pie: 'Aviso interno del seguimiento de simulaciones de pulsoinversor.cl.',
     }),

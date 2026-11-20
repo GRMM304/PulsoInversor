@@ -82,7 +82,7 @@ function correo(r, col) {
   const rec = asesorDeReunion(r.asesor);
   if (rec) r = { ...r, asesor: rec.asesor.nombre };
   const primer = esc((r.nombre || '').split(' ')[0] || 'Hola');
-  const quien = esc(r.asesor || 'tu asesor de Pulso');
+  const quien = esc(r.asesor || 'tu asesor de Pulso Inversor');
   const cuando = fechaLarga(r.inicio);
   const video = r.url_video ? boton(col === 'r1m' ? 'Entrar a la reunión ahora' : 'Enlace de la videollamada', r.url_video) : '';
   const cambiar = r.url_cambio ? boton('Reagendar o cancelar', r.url_cambio, false) : '';
@@ -134,7 +134,7 @@ async function correoPosterior(env, r, col) {
   const nombre = r.nombre || (sim && sim.nombre) || '';
   const primer = esc(nombre.split(' ')[0] || 'Hola');
   const quien = esc(asesor.nombre.split(' ')[0]);
-  const t = await firmar(env, { a: asesor.nombre, i: sim ? sim.id : null, n: nombre || r.email, e: r.email, p: sim ? sim.telefono : '', s: sim ? sim.tipo : 'Reunión con Pulso', m: sim ? sim.monto : 0, g, f: Date.now() });
+  const t = await firmar(env, { a: asesor.nombre, i: sim ? sim.id : null, n: nombre || r.email, e: r.email, p: sim ? sim.telefono : '', s: sim ? sim.tipo : 'Reunión con Pulso Inversor', m: sim ? sim.monto : 0, g, f: Date.now() });
   const wa = 'https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(`Hola, soy ${nombre || r.email}. Conversé con ${asesor.nombre} y quiero seguir avanzando.`);
   if (col === 'p1h') return {
     asunto: `Gracias por conversar con ${asesor.nombre}`,
@@ -199,7 +199,7 @@ async function correoNoShow(env, r) {
   const primer = esc((r.nombre || '').split(' ')[0] || 'Hola');
   const quien = asesor ? esc(asesor.nombre.split(' ')[0]) : 'nuestro equipo';
   const sim = await env.DB.prepare('SELECT * FROM simulaciones WHERE lower(email) = ? ORDER BY creado DESC LIMIT 1').bind(r.email).first().catch(() => null);
-  const t = await firmar(env, { a: asesor ? asesor.nombre : undefined, i: sim ? sim.id : null, n: r.nombre || r.email, e: r.email, p: sim ? sim.telefono : '', s: sim ? sim.tipo : 'Reunión con Pulso', m: sim ? sim.monto : 0, g: x ? x.grupo : (sim && sim.grupo != null ? sim.grupo : 0), f: Date.now() });
+  const t = await firmar(env, { a: asesor ? asesor.nombre : undefined, i: sim ? sim.id : null, n: r.nombre || r.email, e: r.email, p: sim ? sim.telefono : '', s: sim ? sim.tipo : 'Reunión con Pulso Inversor', m: sim ? sim.monto : 0, g: x ? x.grupo : (sim && sim.grupo != null ? sim.grupo : 0), f: Date.now() });
   const enlace = r.url_cambio || `${SITIO}/seguimiento/agendar?t=${t}`;
   return {
     asunto: `${(r.nombre || '').split(' ')[0] || 'Hola'}, ¿buscamos otro horario?`,

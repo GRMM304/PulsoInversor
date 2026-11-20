@@ -31,7 +31,7 @@ function correoInversionista({ tipo, nombre, lineas, personas, conWhatsapp }) {
   const varios = personas.length > 1;
   const quien = personas.map((a) => a.nombre).join(' y ');
   const quienCorto = personas.map((a) => a.nombre.split(' ')[0]).join(' y ');
-  const cargo = varios ? 'cofundadores de Pulso' : (personas[0].cargo.toLowerCase().startsWith('asesora') ? 'tu asesora' : 'tu asesor');
+  const cargo = varios ? 'cofundadores de Pulso Inversor' : (personas[0].cargo.toLowerCase().startsWith('asesora') ? 'tu asesora' : 'tu asesor');
   const wa = 'https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(`Hola, soy ${nombre}. Hice mi simulación de ${tipo} y me gustaría revisarla con ${quienCorto}.`);
   return plantilla({
     preheader: `Tu simulación de ${tipo} va adjunta en PDF.`,
