@@ -1553,9 +1553,9 @@ page('reunion-agendada.html', 'Tu reunión quedó agendada', 'Tu reunión con un
 <ol style="line-height:1.8;padding-left:22px">
 <li><strong>Revisa tu correo:</strong> te enviamos la confirmación con el día, la hora y el enlace para entrar a la reunión.</li>
 <li><strong>Revisa tu WhatsApp:</strong> te escribiremos desde el número de Pulso Inversor, <strong>+56 9 5879 2038</strong>. Guárdalo para reconocernos.</li>
-<li><strong>Te recordamos la reunión</strong> un día antes y una hora antes, por correo y WhatsApp.</li>
+<li><strong>Te recordamos la reunión</strong> para que no pierdas la oportunidad de resolver tus dudas.</li>
 </ol>
-<p>Puedes venir acompañado de tu pareja, tu socio o tu abogado. Si necesitas cambiar la hora, responde el WhatsApp o usa el enlace del correo de confirmación.</p>
+<p>Puedes estar acompañado de tu pareja, tu socio o tu abogado. Si necesitas cambiar la hora, responde el WhatsApp o usa el enlace del correo de confirmación.</p>
 <p style="display:flex;gap:12px;flex-wrap:wrap;margin-top:26px"><a class="btn btn-primary" href="verifica-a-pulso.html">Verifica a Pulso Inversor</a> <a class="btn btn-outline" href="como-funciona.html">Cómo funciona</a> <a class="btn btn-outline" href="https://wa.me/{WHATSAPP}?text={urllib.parse.quote('Hola, acabo de agendar una reunión con Pulso Inversor y tengo una consulta.')}" target="_blank" rel="noopener">Escribirnos por WhatsApp</a></p>
 </div></section>''',
      scripts='<script>window.addEventListener("load",function(){if(window.pulsoMedir)pulsoMedir("agendar_reunion",{origen:"Reserva confirmada en la agenda"});});</script>')
