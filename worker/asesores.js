@@ -9,16 +9,18 @@
 import { ASESORES, AGENDA_BREVO, RESENAS_GOOGLE, asesorDeReunion, esPrueba, SITIO, DEFAULT_SENDER, P, esc, clp, brevo, boton, plantilla } from './comun.js';
 
 // Quiénes entran. Los asesores salen de ASESORES (grupo 0 = Renato, grupo 1 = Pamela).
+// Por ahora (19-nov-2026) solo entran los administradores: Renato y Pamela quedan sin acceso (acceso: false)
+// hasta confirmar sus correos. Más adelante, cualquier persona @grupomm.cl podrá tener su espacio como asesor.
 const ADMINS = [
+  { email: 'eorrego@grupomm.cl', nombre: 'Erika' },
   { email: 'ibarboza@grupomm.cl', nombre: 'Iván Barboza' },
   { email: 'frojas@grupomm.cl', nombre: 'Felipe Rojas' },
-  { email: 'eorrego@grupomm.cl', nombre: 'Pruebas' },
 ];
 export const EQUIPO_PORTAL = [
-  ...[0, 1].map((g) => ({ ...ASESORES[g].personas[0], grupo: g, rol: 'asesor' })),
-  ...ADMINS.map((a) => ({ ...a, rol: 'admin' })),
+  ...[0, 1].map((g) => ({ ...ASESORES[g].personas[0], grupo: g, rol: 'asesor', acceso: false })),
+  ...ADMINS.map((a) => ({ ...a, rol: 'admin', acceso: true })),
 ];
-const persona = (email) => EQUIPO_PORTAL.find((p) => p.email === String(email || '').trim().toLowerCase()) || null;
+const persona = (email) => EQUIPO_PORTAL.find((p) => p.acceso && p.email === String(email || '').trim().toLowerCase()) || null;
 const ASESORES_PORTAL = EQUIPO_PORTAL.filter((p) => p.rol === 'asesor');
 
 const PRESENTACION = 'https://presentacion.pulsoinversor.cl/';
