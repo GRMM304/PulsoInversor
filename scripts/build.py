@@ -1571,5 +1571,5 @@ _urls = ''.join(
     for f in _paginas)
 open(os.path.join(R, 'sitemap.xml'), 'w').write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + _urls + '</urlset>\n')
 open(os.path.join(R, 'robots.txt'), 'w').write(
-    'User-agent: *\nAllow: /\nDisallow: /panel\nDisallow: /api/\nDisallow: /seguimiento/\nDisallow: /simuladores-equipo\n\n'
+    'User-agent: *\nAllow: /\nDisallow: /panel\nDisallow: /asesores\nDisallow: /api/\nDisallow: /seguimiento/\nDisallow: /simuladores-equipo\n\n'
     f'Sitemap: {_DOMINIO}/sitemap.xml\n')

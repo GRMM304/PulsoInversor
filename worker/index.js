@@ -20,6 +20,7 @@ import { recibirRespondio, avanzarNegocio } from './crm.js';
 import { avisoWhatsapp, esPrueba, DEFAULT_SENDER, EQUIPO, MAX_PDF_BYTES, ORIGENES, TIPOS, ASESORES, asesoresPara, json, esc, clp, brevo, plantilla, boton, bloqueResumen, P, C, WHATSAPP } from './comun.js';
 import { programarSeguimiento, rutaSeguimiento, HORAS_SEGUIMIENTO } from './seguimiento.js';
 import { rutaPanel } from './panel.js';
+import { rutaAsesores } from './asesores.js';
 import { recibirReunion } from './reuniones.js';
 import { procesarRecordatorios } from './recordatorios.js';
 
@@ -240,6 +241,10 @@ export default {
     if (/^\/simuladores-equipo(\.html)?\/?$/.test(url.pathname)) return new Response('No encontrado', { status: 404, headers: { 'content-type': 'text/plain; charset=utf-8' } });
     if (url.pathname.startsWith('/api/brevo-reuniones/')) return recibirReunion(request, env, url);
     if (url.pathname === '/panel' || url.pathname.startsWith('/panel/')) return rutaPanel(request, env, url);
+    if (url.pathname === '/asesores' || url.pathname.startsWith('/asesores/')) {
+      try { return await rutaAsesores(request, env, url); }
+      catch (e) { console.error('asesores', e); return new Response('No pudimos cargar el portal. Intenta de nuevo en un momento.', { status: 502, headers: { 'content-type': 'text/plain; charset=utf-8' } }); }
+    }
     if (url.pathname.startsWith('/seguimiento/')) {
       try { const r = await rutaSeguimiento(request, env, url); if (r) return r; }
       catch (e) { console.error(e); return new Response('No pudimos procesar tu solicitud. Escríbenos por WhatsApp al +56 9 5879 2038.', { status: 502, headers: { 'content-type': 'text/plain; charset=utf-8' } }); }

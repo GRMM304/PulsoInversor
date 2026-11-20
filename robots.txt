@@ -1,6 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /panel
+Disallow: /asesores
 Disallow: /api/
 Disallow: /seguimiento/
 Disallow: /simuladores-equipo

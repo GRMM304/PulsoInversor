@@ -151,7 +151,11 @@ async function marcarAgendado(request, env) {
 // "Invirtió": lo marca el equipo cuando la persona concreta su inversión → Purchase en Meta (API de conversiones).
 async function marcarInvirtio(request, env) {
   const f = await request.formData();
-  const id = parseInt(f.get('id'), 10);
+  await registrarInversion(env, parseInt(f.get('id'), 10));
+  return new Response(null, { status: 303, headers: { location: '/panel' } });
+}
+// También lo usa el portal de asesores (/asesores).
+export async function registrarInversion(env, id) {
   await env.DB.prepare('ALTER TABLE simulaciones ADD COLUMN invirtio TEXT').run().catch(() => {});
   const s = await env.DB.prepare('SELECT * FROM simulaciones WHERE id = ?').bind(id).first();
   if (s && !s.invirtio) {
@@ -163,7 +167,6 @@ async function marcarInvirtio(request, env) {
     });
     await avanzarNegocio(env, { email: s.email }, 'Invirtió', { nombre: s.nombre, estrategia: s.tipo, monto: s.monto });
   }
-  return new Response(null, { status: 303, headers: { location: '/panel' } });
 }
 
 async function csv(env) {
@@ -219,7 +222,9 @@ async function rutaSimuladores(request, env, url) {
     const cookie = `sim_eq=${encodeURIComponent(exp + '.' + await firmaSim(env, exp))}; Path=/panel/simuladores; HttpOnly; Secure; SameSite=Lax; Max-Age=${14 * 86400}`;
     return new Response(null, { status: 303, headers: { location: '/panel/simuladores', 'set-cookie': cookie } });
   }
-  if (!(await sesionSim(request, env)) && !(await sesionValida(request, env))) return loginSim();
+  // Entran con la clave de simuladores, con la sesión del panel o con la del portal de asesores.
+  const { sesionAsesor } = await import('./asesores.js');
+  if (!(await sesionSim(request, env)) && !(await sesionValida(request, env)) && !(await sesionAsesor(request, env))) return loginSim();
   const r = await env.ASSETS.fetch(new Request(new URL('/simuladores-equipo', url)));
   return new Response(r.body, { status: r.status, headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store', 'x-robots-tag': 'noindex' } });
 }
