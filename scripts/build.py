@@ -303,7 +303,7 @@ _ICONS['doc-check'] = '<path d="M6 3h9l3 3v8"/><path d="M6 3v18h7"/><path d="M9 
 
 # Matriz de estrategias del Modelo IGR (imagen entregada por la usuaria el 2026-11-18).
 CAMINOS = [
-    ('renta-de-capital', 'Renta de Capital', 'Proyecto Nuevo Hogar',
+    ('renta-de-capital', 'Renta de Capital', 'Rescate Inmobiliario',
      'Una estrategia para poner a trabajar tu capital disponible y generar una renta periódica alta, segura y con respaldo real.',
      'Si tienes desde $5.000.000 para invertir y buscas rentabilizar tu capital con respaldo inmobiliario.',
      'Renta periódica, con respaldo patrimonial inmobiliario y una rentabilidad muy superior a la de un depósito a plazo.'),
