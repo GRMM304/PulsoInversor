@@ -983,9 +983,9 @@ PICKS_PUBLICO = f'''    <button type="button" class="sim-pick" role="tab" data-s
 PICKS_EQUIPO = '''    <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-proyecta" aria-selected="false">
       <span class="sim-pick-ico">RC</span><strong>Renta de Capital</strong><span>Invierte tu capital con título, hipoteca o pagaré y compáralo con un depósito a plazo.</span><em>Simulación habilitada</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
     <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-hipoteca" aria-selected="false">
-      <span class="sim-pick-ico">PC</span><strong>Producción de Capital</strong><span>Arma la configuración con la capacidad de crédito del cliente.</span><em>Simulación asistida</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
+      <span class="sim-pick-ico">PC</span><strong>Producción de Capital</strong><span>Arma la configuración con la capacidad de crédito del cliente.</span><em>Simulación habilitada</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>
     <button type="button" class="sim-pick" role="tab" data-sim-tab="sim-patrimonial" aria-selected="false">
-      <span class="sim-pick-ico">AC</span><strong>Arquitectura de Capital</strong><span>Portafolio de propiedades con descuento y financiamiento bancario, y cómo crece el patrimonio.</span><em>Simulación asistida</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>'''
+      <span class="sim-pick-ico">AC</span><strong>Arquitectura de Capital</strong><span>Portafolio de propiedades con descuento y financiamiento bancario, y cómo crece el patrimonio.</span><em>Simulación habilitada</em><span class="sim-pick-go">Abrir simulador <i aria-hidden="true">↓</i></span></button>'''
 
 def _asistido(id_, t, img, texto):
     return f"""<div class="sim-panel sim-asistido" id="{id_}" data-sim-panel="{id_}" data-asistido hidden><div class="sim-panel-body">
