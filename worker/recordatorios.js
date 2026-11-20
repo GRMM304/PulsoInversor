@@ -14,7 +14,7 @@ import { firmar, procesarSeguimientos } from './seguimiento.js';
 import { whatsappPlantilla, telefonoChile } from './respondio.js';
 
 // WhatsApp del flujo de reuniones (respond.io): mismo momento que cada correo. Plantilla por etapa.
-const WA_PLANTILLAS = { conf: 'pulso_reunion_agendada', r24: 'pulso_reunion_24h', r1h: 'pulso_reunion_1h_v2', r1m: 'pulso_reunion_ahora_v2', p1h: 'pulso_reunion_gracias', noshow: 'pulso_reunion_reagendar', p48: 'pulso_reunion_seguimiento' };
+const WA_PLANTILLAS = { conf: 'pulso_reunion_agendada', r24: 'pulso_reunion_24h', r1h: 'pulso_reunion_1h', r1m: 'pulso_reunion_ahora', p1h: 'pulso_reunion_gracias', noshow: 'pulso_reunion_reagendar', p48: 'pulso_reunion_seguimiento' };
 async function waReunion(env, r, etapa, enlace) {
   const a = asesorDeReunion(r.asesor);
   const asesor = a ? a.asesor.nombre : (r.asesor || 'nuestro equipo');
