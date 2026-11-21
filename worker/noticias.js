@@ -91,7 +91,6 @@ function tarjeta(n, ms, destacada) {
 }
 
 /* ---------- Portada de noticias (estética de portal de noticias) ---------- */
-const FUENTE_TITULARES = '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600;6..72,700&display=swap">';
 const fechaCorta = (f) => (f ? new Date(f + 'T12:00:00Z').toLocaleDateString('es-CL', { timeZone: 'UTC', day: 'numeric', month: 'short', year: 'numeric' }).replace('.', '') : '');
 function imagenDe(ms) {
   const foto = ms.find((m) => m.tipo === 'foto'), video = ms.find((m) => m.tipo === 'video'), poster = ms.find((m) => m.tipo === 'poster');
@@ -161,7 +160,7 @@ export async function paginaNoticias(request, env, url) {
     }
   }
   const contenido = cuerpo;
-  let t = (await plantilla(env, url, '/noticias')).replace('<!--NOTICIAS-->', contenido).replace('</head>', FUENTE_TITULARES + '\n</head>');
+  let t = (await plantilla(env, url, '/noticias')).replace('<!--NOTICIAS-->', contenido);
   const pagina = SITIO + '/noticias';
   t = ponerLd(t, [...grafoBase(t),
     { '@type': ['WebPage', 'CollectionPage'], '@id': pagina + '#pagina', url: pagina, name: 'Noticias y blog de Pulso Inversor',
