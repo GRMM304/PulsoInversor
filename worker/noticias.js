@@ -26,6 +26,8 @@ export async function esquema(env) {
   if (esquemaListo) return;
   await env.DB.prepare('CREATE TABLE IF NOT EXISTS noticias (id INTEGER PRIMARY KEY AUTOINCREMENT, slug TEXT UNIQUE, titulo TEXT, categoria TEXT, fecha TEXT, bajada TEXT, cuerpo TEXT, video_texto TEXT, fuente_url TEXT, publicada INTEGER DEFAULT 0, creado TEXT, actualizado TEXT, autor TEXT)').run();
   await env.DB.prepare('CREATE TABLE IF NOT EXISTS noticias_medios (id INTEGER PRIMARY KEY AUTOINCREMENT, noticia_id INTEGER, tipo TEXT, orden INTEGER, mime TEXT, bytes INTEGER, parte INTEGER, partes INTEGER, subidas INTEGER DEFAULT 0, ancho INTEGER, alto INTEGER, url TEXT, creado TEXT)').run();
+  // Columna agregada después (duración del video, para los datos estructurados). Si ya existe, el ALTER falla y se ignora.
+  try { await env.DB.prepare('ALTER TABLE noticias_medios ADD COLUMN duracion REAL').run(); } catch (e) { /* ya existe */ }
   esquemaListo = true;
 }
 
@@ -60,11 +62,26 @@ async function noEncontrada(env, url) {
 }
 const respuestaHtml = (t, extra = {}) => new Response(t, { headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-cache', ...extra } });
 
+/* ---------- Datos estructurados (schema.org) ---------- */
+const OG_IMAGEN = { '@type': 'ImageObject', url: SITIO + '/assets/img/og-pulso-inversor.jpg', width: 1200, height: 630 };
+const ORG_REF = { '@type': 'Organization', '@id': SITIO + '/#organizacion', name: 'Pulso Inversor', url: SITIO + '/' };
+const fechaIso = (f) => (f ? f + 'T12:00:00-03:00' : undefined);  // fecha de publicación con zona horaria de Chile
+const duracionIso = (s) => { s = Math.round(Number(s) || 0); if (!s) return undefined; const m = Math.floor(s / 60); return 'PT' + (m ? m + 'M' : '') + (s % 60 ? (s % 60) + 'S' : ''); };
+// Toma el grafo de la plantilla (Organization y WebSite de seo.py) y le cambia los nodos de la página.
+function grafoBase(t) {
+  const m = t.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
+  let grafo = [];
+  try { grafo = JSON.parse(m[1])['@graph'] || []; } catch (e) { grafo = []; }
+  return grafo.filter((x) => { const ty = [].concat(x['@type']); return ty.includes('Organization') || ty.includes('WebSite'); });
+}
+const ponerLd = (t, grafo) => t.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/, () => '<script type="application/ld+json">' + JSON.stringify({ '@context': 'https://schema.org', '@graph': grafo }).replace(/</g, '\\u003c') + '</script>');
+
 /* ---------- Lista ---------- */
 function tarjeta(n, ms, destacada) {
-  const fotos = ms.filter((m) => m.tipo === 'foto'), video = ms.find((m) => m.tipo === 'video');
+  const fotos = ms.filter((m) => m.tipo === 'foto'), video = ms.find((m) => m.tipo === 'video'), poster = video && ms.find((m) => m.tipo === 'poster');
   const portada = fotos[0]
     ? `<img src="${src(fotos[0])}" alt="" width="${fotos[0].ancho || 1200}" height="${fotos[0].alto || 675}" loading="${destacada ? 'eager' : 'lazy'}" decoding="async">`
+    : poster ? `<img src="${src(poster)}" alt="" width="${poster.ancho || 1080}" height="${poster.alto || 1920}" loading="${destacada ? 'eager' : 'lazy'}" decoding="async">`
     : video ? `<video src="${src(video)}#t=0.5" muted playsinline preload="metadata" aria-hidden="true" tabindex="-1"></video>`
       : '<div class="nt-sinfoto" aria-hidden="true"><img src="/assets/img/logo-pulso-footer.png" alt="" width="760" height="234"></div>';
   return `<article class="nt-card${destacada ? ' nt-dest' : ''}"><a class="nt-card-a" href="/noticias/${esc(n.slug)}">
@@ -84,6 +101,16 @@ export async function paginaNoticias(request, env, url) {
     + (lista.length ? `<div class="nt-grid">${lista.map((n, i) => tarjeta(n, medios[n.id] || [], i === 0 && !cat)).join('')}</div>`
       : `<p class="nt-vacio">${cat ? 'Todavía no hay publicaciones en este tema.' : 'Pronto publicaremos novedades aquí.'}</p>`);
   let t = (await plantilla(env, url, '/noticias')).replace('<!--NOTICIAS-->', contenido);
+  const pagina = SITIO + '/noticias';
+  t = ponerLd(t, [...grafoBase(t),
+    { '@type': ['WebPage', 'CollectionPage'], '@id': pagina + '#pagina', url: pagina, name: 'Noticias y blog de Pulso Inversor',
+      description: 'Noticias de Pulso Inversor y de las empresas de Grupo Matchmaking, y artículos para invertir con más información.',
+      inLanguage: 'es-CL', isPartOf: { '@id': SITIO + '/#sitio' }, about: { '@id': SITIO + '/#organizacion' }, breadcrumb: { '@id': pagina + '#migas' },
+      mainEntity: { '@type': 'ItemList', numberOfItems: lista.length, itemListElement: lista.map((n, i) => ({ '@type': 'ListItem', position: i + 1, url: SITIO + '/noticias/' + n.slug, name: n.titulo })) } },
+    { '@type': 'BreadcrumbList', '@id': pagina + '#migas', itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Inicio', item: SITIO + '/' },
+      { '@type': 'ListItem', position: 2, name: 'Noticias', item: pagina }] },
+  ]);
   // Las vistas filtradas no compiten en Google con /noticias.
   if (cat) t = t.replace(/<meta name="robots" content="[^"]*">/, '<meta name="robots" content="noindex, follow">');
   return respuestaHtml(t);
@@ -108,7 +135,7 @@ export async function paginaNoticia(request, env, url, slug) {
   }
   if (!n) return noEncontrada(env, url);
   const ms = (await mediosDe(env, [n.id]))[n.id] || [];
-  const fotos = ms.filter((m) => m.tipo === 'foto').slice(0, MAX_FOTOS), video = ms.find((m) => m.tipo === 'video');
+  const fotos = ms.filter((m) => m.tipo === 'foto').slice(0, MAX_FOTOS), video = ms.find((m) => m.tipo === 'video'), poster = video && ms.find((m) => m.tipo === 'poster');
   const enlace = SITIO + '/noticias/' + n.slug;
   const waTxt = `Hola, leí la noticia "${n.titulo}" en el sitio de Pulso Inversor y quiero conversar con un asesor.`;
   const compartirWa = 'https://wa.me/?text=' + encodeURIComponent(n.titulo + ' ' + enlace);
@@ -123,7 +150,7 @@ export async function paginaNoticia(request, env, url, slug) {
 <section class="section nt-articulo"><div class="container nt-angosto">
 ${galeria(fotos, n.titulo)}
 <div class="nt-texto">${parrafos(n.cuerpo)}</div>
-${video ? `<div class="nt-video"><div class="nt-video-marco"><video src="${src(video)}#t=0.1" controls playsinline preload="metadata" width="${video.ancho || 1080}" height="${video.alto || 1920}"></video></div><div class="nt-video-texto">${parrafos(n.video_texto)}</div></div>` : ''}
+${video ? `<div class="nt-video"><div class="nt-video-marco"><video src="${src(video)}#t=0.1"${poster ? ` poster="${src(poster)}"` : ''} controls playsinline preload="metadata" width="${video.ancho || 1080}" height="${video.alto || 1920}"></video></div><div class="nt-video-texto">${parrafos(n.video_texto)}</div></div>` : ''}
 ${n.fuente_url ? `<p class="nt-fuente"><a href="${esc(n.fuente_url)}" target="_blank" rel="noopener">Ver la publicación original <span aria-hidden="true">↗</span></a></p>` : ''}
 <div class="nt-compartir"><span>Compartir</span>
 <a class="nt-sh" href="${esc(compartirWa)}" target="_blank" rel="noopener">WhatsApp</a>
@@ -153,19 +180,39 @@ ${(otras || []).length ? `<section class="section section-soft"><div class="cont
     t = reemplazarMeta(t, /(<meta property="og:image:height" content=")[^"]*/, String(fotos[0].alto || 675));
     t = reemplazarMeta(t, /(<meta property="og:image:alt" content=")[^"]*/, titulo);
   }
-  const ld = {
-    '@context': 'https://schema.org', '@graph': [
-      { '@type': n.categoria === 'blog' ? 'BlogPosting' : 'NewsArticle', '@id': enlace + '#articulo', headline: n.titulo.slice(0, 110), description: textoPlano(n.bajada, 300),
-        datePublished: n.fecha, dateModified: (n.actualizado || n.creado || n.fecha).slice(0, 10), inLanguage: 'es-CL', mainEntityOfPage: enlace,
-        ...(imagen ? { image: fotos.map((m) => SITIO + src(m)) } : {}),
-        author: { '@id': SITIO + '/#organizacion' }, publisher: { '@id': SITIO + '/#organizacion' } },
-      { '@type': 'BreadcrumbList', itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Inicio', item: SITIO + '/' },
-        { '@type': 'ListItem', position: 2, name: 'Noticias', item: SITIO + '/noticias' },
-        { '@type': 'ListItem', position: 3, name: n.titulo, item: enlace }] },
-    ],
-  };
-  t = t.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/, () => '<script type="application/ld+json">' + JSON.stringify(ld).replace(/</g, '\\u003c') + '</script>');
+  const publicado = fechaIso(n.fecha), modificado = n.actualizado || n.creado || publicado;
+  t = t.replace('<meta property="og:type" content="article">', () => `<meta property="og:type" content="article">\n<meta property="article:published_time" content="${esc(publicado)}">\n<meta property="article:modified_time" content="${esc(modificado)}">\n<meta property="article:section" content="${esc(nombreCat(n.categoria))}">\n<meta property="article:publisher" content="https://www.linkedin.com/company/pulsoinversor/">`);
+  const imagenes = fotos.length ? fotos.map((m) => ({ '@type': 'ImageObject', url: SITIO + src(m), width: m.ancho || undefined, height: m.alto || undefined }))
+    : poster ? [{ '@type': 'ImageObject', url: SITIO + src(poster), width: poster.ancho || undefined, height: poster.alto || undefined }] : [OG_IMAGEN];
+  const textoArticulo = textoPlano([n.cuerpo, n.video_texto].filter(Boolean).join('\n\n'), 100000);
+  const nodoVideo = video ? {
+    '@type': 'VideoObject', '@id': enlace + '#video', name: n.titulo, description: textoPlano(n.video_texto || n.bajada, 300) || n.titulo,
+    thumbnailUrl: (poster ? [SITIO + src(poster)] : []).concat(fotos.length ? [SITIO + src(fotos[0])] : [OG_IMAGEN.url]),
+    uploadDate: (video.creado || modificado), contentUrl: SITIO + src(video), embedUrl: enlace, encodingFormat: video.mime,
+    ...(video.duracion ? { duration: duracionIso(video.duracion) } : {}), ...(video.ancho ? { width: video.ancho, height: video.alto } : {}),
+    inLanguage: 'es-CL', publisher: { '@id': SITIO + '/#organizacion' },
+  } : null;
+  const grafo = [...grafoBase(t),
+    { '@type': 'WebPage', '@id': enlace + '#pagina', url: enlace, name: n.titulo, description: textoPlano(n.bajada, 300), inLanguage: 'es-CL',
+      isPartOf: { '@id': SITIO + '/#sitio' }, breadcrumb: { '@id': enlace + '#migas' }, primaryImageOfPage: imagenes[0], datePublished: publicado, dateModified: modificado },
+    { '@type': n.categoria === 'blog' ? 'BlogPosting' : 'NewsArticle', '@id': enlace + '#articulo', headline: n.titulo.slice(0, 110), description: textoPlano(n.bajada, 300),
+      articleSection: nombreCat(n.categoria), articleBody: textoArticulo, wordCount: textoArticulo.split(/\s+/).filter(Boolean).length,
+      datePublished: publicado, dateModified: modificado, inLanguage: 'es-CL', mainEntityOfPage: { '@id': enlace + '#pagina' }, isPartOf: { '@id': SITIO + '/noticias#pagina' },
+      image: imagenes, author: ORG_REF, publisher: { '@id': SITIO + '/#organizacion' },
+      ...(nodoVideo ? { video: { '@id': enlace + '#video' } } : {}), ...(n.fuente_url ? { sameAs: n.fuente_url } : {}) },
+    ...(nodoVideo ? [nodoVideo] : []),
+    { '@type': 'BreadcrumbList', '@id': enlace + '#migas', itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Inicio', item: SITIO + '/' },
+      { '@type': 'ListItem', position: 2, name: 'Noticias', item: SITIO + '/noticias' },
+      { '@type': 'ListItem', position: 3, name: n.titulo, item: enlace }] },
+  ];
+  t = ponerLd(t, grafo);
+  if (!fotos.length && poster) {  // sin fotos, la portada del video es la imagen al compartir
+    for (const k of ['og:image', 'twitter:image']) t = reemplazarMeta(t, new RegExp(`(<meta (?:property|name)="${k}" content=")[^"]*`), SITIO + src(poster));
+    t = reemplazarMeta(t, /(<meta property="og:image:width" content=")[^"]*/, String(poster.ancho || 1080));
+    t = reemplazarMeta(t, /(<meta property="og:image:height" content=")[^"]*/, String(poster.alto || 1920));
+    t = reemplazarMeta(t, /(<meta property="og:image:alt" content=")[^"]*/, titulo);
+  }
   return respuestaHtml(t, previa ? { 'x-robots-tag': 'noindex' } : {});
 }
 
@@ -265,6 +312,10 @@ async function guardar(request, env, yo) {
   if (quitar.length) {
     const { results } = await env.DB.prepare(`SELECT * FROM noticias_medios WHERE noticia_id = ? AND id IN (${quitar.map(() => '?').join(',')})`).bind(nid, ...quitar).all();
     for (const m of results || []) await borrarMedio(env, m);
+    if ((results || []).some((m) => m.tipo === 'video')) {
+      const { results: portadas } = await env.DB.prepare("SELECT * FROM noticias_medios WHERE noticia_id = ? AND tipo = 'poster'").bind(nid).all();
+      for (const m of portadas || []) await borrarMedio(env, m);
+    }
   }
   return jsonR({ ok: true, id: nid, slug });
 }
@@ -272,14 +323,19 @@ async function guardar(request, env, yo) {
 async function nuevoMedio(request, env) {
   const d = await request.json().catch(() => ({}));
   const nid = parseInt(d.noticia, 10), bytes = parseInt(d.bytes, 10), ancho = parseInt(d.ancho, 10) || 0, alto = parseInt(d.alto, 10) || 0;
-  const tipo = d.tipo === 'video' ? 'video' : 'foto', mime = String(d.mime || '').toLowerCase();
+  const tipo = ['video', 'poster'].includes(d.tipo) ? d.tipo : 'foto', mime = String(d.mime || '').toLowerCase();
+  const duracion = Math.max(0, Math.min(Number(d.duracion) || 0, 36000)) || null;
   if (!(await env.DB.prepare('SELECT id FROM noticias WHERE id = ?').bind(nid).first())) return jsonR({ ok: false, error: 'La noticia no existe.' }, 404);
   if (!(bytes > 0)) return jsonR({ ok: false, error: 'Archivo vacío.' }, 400);
   const { results } = await env.DB.prepare('SELECT * FROM noticias_medios WHERE noticia_id = ? AND tipo = ?').bind(nid, tipo).all();
   // Subidas que quedaron a medias hace más de una hora: se limpian.
   const vivos = [];
   for (const m of results || []) { if (!completo(m) && Date.now() - Date.parse(m.creado) > 3600e3) await borrarMedio(env, m); else vivos.push(m); }
-  if (tipo === 'foto') {
+  if (tipo === 'poster') {  // portada del video (un cuadro), para la vista previa y los datos estructurados
+    if (!MIMES_FOTO.includes(mime) || bytes > 3 * 1024 * 1024) return jsonR({ ok: false, error: 'La portada del video no es válida.' }, 400);
+    for (const m of vivos) await borrarMedio(env, m);
+    vivos.length = 0;
+  } else if (tipo === 'foto') {
     if (!MIMES_FOTO.includes(mime)) return jsonR({ ok: false, error: 'La foto debe ser JPG, PNG o WebP.' }, 400);
     if (bytes > MAX_FOTO_BYTES) return jsonR({ ok: false, error: 'La foto pesa más de 8 MB.' }, 400);
     if (vivos.length >= MAX_FOTOS) return jsonR({ ok: false, error: `Cada noticia lleva máximo ${MAX_FOTOS} fotos.` }, 400);
@@ -287,13 +343,15 @@ async function nuevoMedio(request, env) {
     if (!MIMES_VIDEO.includes(mime)) return jsonR({ ok: false, error: 'El video debe ser MP4, MOV o WebM.' }, 400);
     if (bytes > MAX_VIDEO_BYTES) return jsonR({ ok: false, error: 'El video pesa más de 150 MB.' }, 400);
     if (ancho && alto && ancho >= alto) return jsonR({ ok: false, error: 'El video debe ser vertical.' }, 400);
-    for (const m of vivos) await borrarMedio(env, m);  // un video por noticia: el nuevo reemplaza al anterior
+    for (const m of vivos) await borrarMedio(env, m);  // un video por noticia: el nuevo reemplaza al anterior (y su portada)
+    const { results: portadas } = await env.DB.prepare("SELECT * FROM noticias_medios WHERE noticia_id = ? AND tipo = 'poster'").bind(nid).all();
+    for (const m of portadas || []) await borrarMedio(env, m);
     vivos.length = 0;
   }
   const orden = vivos.reduce((a, m) => Math.max(a, m.orden || 0), 0) + 1;
   const partes = Math.ceil(bytes / PARTE);
-  const r = await env.DB.prepare('INSERT INTO noticias_medios (noticia_id, tipo, orden, mime, bytes, parte, partes, subidas, ancho, alto, creado) VALUES (?,?,?,?,?,?,?,0,?,?,?)')
-    .bind(nid, tipo, orden, mime, bytes, PARTE, partes, ancho, alto, new Date().toISOString()).run();
+  const r = await env.DB.prepare('INSERT INTO noticias_medios (noticia_id, tipo, orden, mime, bytes, parte, partes, subidas, ancho, alto, duracion, creado) VALUES (?,?,?,?,?,?,?,0,?,?,?,?)')
+    .bind(nid, tipo, orden, mime, bytes, PARTE, partes, ancho, alto, tipo === 'video' ? duracion : null, new Date().toISOString()).run();
   return jsonR({ ok: true, id: r.meta.last_row_id, parte: PARTE, partes });
 }
 
@@ -379,11 +437,13 @@ var F=document.getElementById('nt-form'),fi=document.getElementById('f-fotos'),v
 var MAX=${MAX_FOTOS},EXIST=${fotos.length};
 function msg(t,e){est.textContent=t;est.className=e?'err':'';}
 fi.addEventListener('change',function(){var c=document.getElementById('f-fotos-prev');c.innerHTML='';[].slice.call(fi.files).forEach(function(f){var i=document.createElement('img');i.src=URL.createObjectURL(f);var g=document.createElement('figure');g.appendChild(i);c.appendChild(g);});});
-function dimsVideo(f){return new Promise(function(ok,no){var v=document.createElement('video');v.preload='metadata';v.muted=true;v.onloadedmetadata=function(){ok({w:v.videoWidth,h:v.videoHeight});};v.onerror=function(){ok({w:0,h:0});};v.src=URL.createObjectURL(f);});}
+function dimsVideo(f){return new Promise(function(ok,no){var v=document.createElement('video');v.preload='metadata';v.muted=true;v.onloadedmetadata=function(){ok({w:v.videoWidth,h:v.videoHeight,dur:v.duration,url:v.src});};v.onerror=function(){ok({w:0,h:0});};v.src=URL.createObjectURL(f);});}
+function portadaVideo(u,dur){return new Promise(function(ok){var v=document.createElement('video');v.muted=true;v.playsInline=true;v.preload='auto';v.src=u;
+v.onloadeddata=function(){v.currentTime=Math.min(1,(dur||2)/2);};v.onseeked=function(){try{var k=Math.min(1,1080/v.videoWidth),c=document.createElement('canvas');c.width=Math.round(v.videoWidth*k);c.height=Math.round(v.videoHeight*k);c.getContext('2d').drawImage(v,0,0,c.width,c.height);c.toBlob(function(b){ok(b?{blob:b,w:c.width,h:c.height}:null);},'image/jpeg',0.85);}catch(e){ok(null);}};v.onerror=function(){ok(null);};setTimeout(function(){ok(null);},15000);});}
 function achicar(f){return createImageBitmap(f,{imageOrientation:'from-image'}).then(function(b){var k=Math.min(1,2000/Math.max(b.width,b.height)),w=Math.round(b.width*k),h=Math.round(b.height*k),c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(b,0,0,w,h);
 return new Promise(function(ok){c.toBlob(function(x){ok({blob:x,w:w,h:h});},'image/jpeg',0.86);});});}
 function post(u,body,json){return fetch(u,{method:'POST',credentials:'same-origin',headers:json?{'content-type':'application/json'}:{},body:json?JSON.stringify(body):body}).then(function(r){return r.json().catch(function(){return{ok:false,error:'Error del servidor ('+r.status+')'};});});}
-async function subir(nid,tipo,blob,d,nombre){var j=await post('/asesores/noticias/medio',{noticia:nid,tipo:tipo,mime:blob.type,bytes:blob.size,ancho:d.w,alto:d.h},true);if(!j.ok)throw new Error(j.error||'No se pudo subir '+nombre);
+async function subir(nid,tipo,blob,d,nombre){var j=await post('/asesores/noticias/medio',{noticia:nid,tipo:tipo,mime:blob.type,bytes:blob.size,ancho:d.w,alto:d.h,duracion:d.dur||0},true);if(!j.ok)throw new Error(j.error||'No se pudo subir '+nombre);
 for(var n=0;n<j.partes;n++){var parte=blob.slice(n*j.parte,(n+1)*j.parte),r=null;for(var k=0;k<3&&!(r&&r.ok);k++)r=await post('/asesores/noticias/parte?m='+j.id+'&n='+n,parte);if(!r.ok)throw new Error((r&&r.error)||'No se pudo subir '+nombre);
 barra.style.width=Math.round((n+1)/j.partes*100)+'%';msg('Subiendo '+nombre+'… '+Math.round((n+1)/j.partes*100)+'%');}}
 F.addEventListener('submit',async function(e){e.preventDefault();var b=F.querySelector('button[type=submit]');
@@ -396,7 +456,7 @@ try{var j=await post('/asesores/noticias/guardar',(function(){var fd=new FormDat
 if(!F.querySelector('input[name=id]')){var h=document.createElement('input');h.type='hidden';h.name='id';h.value=j.id;F.appendChild(h);}
 if(nuevas||v){pr.hidden=false;}
 for(var i=0;i<nuevas;i++){barra.style.width='0';var a=await achicar(fi.files[i]);await subir(j.id,'foto',a.blob,a,'la foto '+(i+1));}
-if(v){barra.style.width='0';await subir(j.id,'video',v,dv,'el video');}
+if(v){barra.style.width='0';await subir(j.id,'video',v,dv,'el video');var pt=await portadaVideo(dv.url,dv.dur);if(pt)await subir(j.id,'poster',pt.blob,pt,'la portada del video');}
 msg('¡Listo!');location.href='/asesores?v=noticias&ok=guardada';}
 catch(err){msg(err.message+' Lo que ya se subió quedó guardado; puedes intentar de nuevo desde Editar.',1);b.disabled=false;}});
 })();</script>`;
