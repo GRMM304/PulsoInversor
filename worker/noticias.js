@@ -90,17 +90,78 @@ function tarjeta(n, ms, destacada) {
 <h2>${esc(n.titulo)}</h2><p class="nt-bajada">${esc(n.bajada)}</p><span class="nt-mas">Leer más <span aria-hidden="true">→</span></span></div></a></article>`;
 }
 
+/* ---------- Portada de noticias (estética de portal de noticias) ---------- */
+const FUENTE_TITULARES = '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600;6..72,700&display=swap">';
+const fechaCorta = (f) => (f ? new Date(f + 'T12:00:00Z').toLocaleDateString('es-CL', { timeZone: 'UTC', day: 'numeric', month: 'short', year: 'numeric' }).replace('.', '') : '');
+function imagenDe(ms) {
+  const foto = ms.find((m) => m.tipo === 'foto'), video = ms.find((m) => m.tipo === 'video'), poster = ms.find((m) => m.tipo === 'poster');
+  const m = foto || (video && poster);
+  return m ? { src: src(m), ancho: m.ancho || 1200, alto: m.alto || 675, video: !!video } : (video ? { video: true } : null);
+}
+const antetitulo = (n) => `<span class="np-ante np-ante-${esc(n.categoria)}">${esc(nombreCat(n.categoria))}</span>`;
+const fechaHtml = (n) => `<time datetime="${esc(n.fecha)}">${esc(fechaCorta(n.fecha))}</time>`;
+const iconoVideo = '<span class="np-video" title="Incluye video"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>Video</span>';
+function figura(img, clase, eager) {
+  if (!img || !img.src) return '';
+  return `<figure class="${clase}"><img src="${img.src}" alt="" width="${img.ancho}" height="${img.alto}" loading="${eager ? 'eager' : 'lazy'}" decoding="async">${img.video ? iconoVideo : ''}</figure>`;
+}
+// Nota principal: foto grande, antetítulo, titular, bajada y firma
+function notaPrincipal(n, ms) {
+  const img = imagenDe(ms);
+  return `<article class="np-principal${img && img.src ? '' : ' np-sinfoto'}"><a href="/noticias/${esc(n.slug)}">
+${figura(img, 'np-fig', true)}
+<div class="np-principal-txt">${antetitulo(n)}<h2>${esc(n.titulo)}</h2><p class="np-bajada">${esc(n.bajada)}</p>
+<p class="np-firma">Por Pulso Inversor · ${fechaHtml(n)}${img && img.video && !img.src ? ' · ' + iconoVideo : ''}</p></div></a></article>`;
+}
+// Ítem de la columna "Lo último": titular corto con miniatura opcional
+function notaLateral(n, ms) {
+  const img = imagenDe(ms);
+  return `<li><a href="/noticias/${esc(n.slug)}"><div>${antetitulo(n)}<h3>${esc(n.titulo)}</h3><p class="np-meta">${fechaHtml(n)}${img && img.video ? ' · Video' : ''}</p></div>${img && img.src ? `<img src="${img.src}" alt="" width="${img.ancho}" height="${img.alto}" loading="lazy" decoding="async">` : ''}</a></li>`;
+}
+// Nota de sección: con foto arriba si la tiene; si no, solo texto (como en un diario)
+function notaSeccion(n, ms) {
+  const img = imagenDe(ms);
+  return `<article class="np-nota"><a href="/noticias/${esc(n.slug)}">${figura(img, 'np-fig', false)}${antetitulo(n)}<h3>${esc(n.titulo)}</h3><p class="np-bajada">${esc(n.bajada)}</p><p class="np-meta">${fechaHtml(n)}</p></a></article>`;
+}
+function bloqueSeccion(titulo, enlace, notas, medios) {
+  if (!notas.length) return '';
+  return `<section class="np-seccion" aria-label="${esc(titulo)}"><div class="np-seccion-cab"><h2>${esc(titulo)}</h2>${enlace ? `<a href="${enlace}">Ver todo <span aria-hidden="true">›</span></a>` : ''}</div>
+<div class="np-grilla">${notas.map((n) => notaSeccion(n, medios[n.id] || [])).join('')}</div></section>`;
+}
+
 export async function paginaNoticias(request, env, url) {
   await esquema(env);
   const cat = (CATEGORIAS_NOTICIAS.find((c) => c.k === url.searchParams.get('cat')) || {}).k || '';
   const { results } = await env.DB.prepare(`SELECT * FROM noticias WHERE publicada = 1${cat ? ' AND categoria = ?' : ''} ORDER BY fecha DESC, id DESC LIMIT 60`).bind(...(cat ? [cat] : [])).all();
   const lista = results || [];
   const medios = await mediosDe(env, lista.map((n) => n.id));
-  const chips = [{ k: '', t: 'Todas' }, ...CATEGORIAS_NOTICIAS].map((c) => `<a class="nt-chip${c.k === cat ? ' on' : ''}" href="/noticias${c.k ? '?cat=' + c.k : ''}"${c.k === cat ? ' aria-current="page"' : ''}>${esc(c.t)}</a>`).join('');
-  const contenido = `<nav class="nt-chips" aria-label="Filtrar por tema">${chips}</nav>`
-    + (lista.length ? `<div class="nt-grid">${lista.map((n, i) => tarjeta(n, medios[n.id] || [], i === 0 && !cat)).join('')}</div>`
-      : `<p class="nt-vacio">${cat ? 'Todavía no hay publicaciones en este tema.' : 'Pronto publicaremos novedades aquí.'}</p>`);
-  let t = (await plantilla(env, url, '/noticias')).replace('<!--NOTICIAS-->', contenido);
+  const hoy = new Date().toLocaleDateString('es-CL', { timeZone: 'America/Santiago', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  const secciones = [{ k: '', t: 'Portada' }, ...CATEGORIAS_NOTICIAS].map((c) => `<a href="/noticias${c.k ? '?cat=' + c.k : ''}"${c.k === cat ? ' class="on" aria-current="page"' : ''}>${esc(c.t)}</a>`).join('');
+  const seccionActual = cat ? nombreCat(cat) : '';
+  let cuerpo = `<header class="np-cab">
+<div class="np-cab-sup"><span class="np-hoy">${esc(hoy.charAt(0).toUpperCase() + hoy.slice(1))}</span><span>Santiago, Chile</span></div>
+<h1 class="np-marca"><a href="/noticias">Noticias</a>${seccionActual ? ` <span>· ${esc(seccionActual)}</span>` : ''}</h1>
+<p class="np-lema">Pulso Inversor y las empresas de Grupo Matchmaking: novedades, encuentros y análisis para invertir con más información.</p>
+<nav class="np-secciones" aria-label="Secciones">${secciones}</nav></header>`;
+  if (!lista.length) cuerpo += `<p class="np-vacio">${cat ? 'Todavía no hay publicaciones en esta sección.' : 'Pronto publicaremos novedades aquí.'}</p>`;
+  else if (cat) {
+    // Sección: la más reciente como principal y el resto en grilla
+    cuerpo += `<div class="np-destacado np-destacado-solo">${notaPrincipal(lista[0], medios[lista[0].id] || [])}</div>` + bloqueSeccion('Más en ' + nombreCat(cat), '', lista.slice(1), medios);
+  } else {
+    // Portada: principal (la más reciente con imagen), columna "Lo último" y bloques por sección sin repetir notas
+    const principal = lista.find((n) => { const i = imagenDe(medios[n.id] || []); return i && i.src; }) || lista[0];
+    const usadas = new Set([principal.id]);
+    const ultimas = lista.filter((n) => !usadas.has(n.id)).slice(0, 5);
+    ultimas.forEach((n) => usadas.add(n.id));
+    cuerpo += `<div class="np-destacado">${notaPrincipal(principal, medios[principal.id] || [])}
+<aside class="np-lateral" aria-label="Lo último"><h2>Lo último</h2><ol>${ultimas.map((n) => notaLateral(n, medios[n.id] || [])).join('')}</ol></aside></div>`;
+    for (const c of CATEGORIAS_NOTICIAS) {
+      const notas = lista.filter((n) => n.categoria === c.k && !usadas.has(n.id));
+      cuerpo += bloqueSeccion(c.t, '/noticias?cat=' + c.k, notas, medios);
+    }
+  }
+  const contenido = cuerpo;
+  let t = (await plantilla(env, url, '/noticias')).replace('<!--NOTICIAS-->', contenido).replace('</head>', FUENTE_TITULARES + '\n</head>');
   const pagina = SITIO + '/noticias';
   t = ponerLd(t, [...grafoBase(t),
     { '@type': ['WebPage', 'CollectionPage'], '@id': pagina + '#pagina', url: pagina, name: 'Noticias y blog de Pulso Inversor',

@@ -1568,12 +1568,9 @@ page('reunion-agendada.html', 'Tu reunión quedó agendada', 'Tu reunión con un
 # con lo que se publica desde el portal de asesores (/asesores?v=noticias). noticia-plantilla no se publica sola (404).
 page('noticias.html', 'Noticias',
      'Noticias de Pulso Inversor y de las empresas de Grupo Matchmaking: encuentros con inversionistas, novedades y artículos para invertir con más información.',
-     '''<section class="page-hero"><div class="container">
-<div class="breadcrumb"><a href="index.html">Inicio</a> / Noticias</div>
-<h1>Noticias</h1><p>Lo que pasa en Pulso Inversor y en las empresas de Grupo Matchmaking: encuentros, novedades y artículos para invertir con más información.</p></div></section>
-<section class="section nt-lista"><div class="container">
+     '''<section class="np"><div class="container">
 <!--NOTICIAS-->
-</div></section>''')
+</div></section>''')  # la cabecera (con h1), la portada y las secciones las arma worker/noticias.js
 page('noticia-plantilla.html', 'Noticia', 'Noticia de Pulso Inversor.', '<!--NOTICIA-->')
 
 # ---------------- sitemap.xml y robots.txt (Google Search Console) ----------------
