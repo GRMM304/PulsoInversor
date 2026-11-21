@@ -176,7 +176,8 @@ function streamRango(env, m, ini, fin) {
   return new ReadableStream({
     async pull(ctrl) {
       if (p > ultima) { ctrl.close(); return; }
-      const buf = await env.NOTICIAS_KV.get(`medio/${m.id}/${p}`, 'arrayBuffer');
+      // cacheTtl: Cloudflare guarda la parte en el centro de datos más cercano; las siguientes lecturas no van a KV central.
+      const buf = await env.NOTICIAS_KV.get(`medio/${m.id}/${p}`, { type: 'arrayBuffer', cacheTtl: m.publicada ? 31536000 : 60 });
       if (!buf) { ctrl.error(new Error('falta la parte ' + p)); return; }
       const base = p * m.parte, a = Math.max(ini - base, 0), b = Math.min(fin - base + 1, buf.byteLength);
       ctrl.enqueue(new Uint8Array(buf, a, b - a));
@@ -186,27 +187,23 @@ function streamRango(env, m, ini, fin) {
 }
 
 export async function medioNoticia(request, env, url, ctx, id) {
-  const cache = caches.default;
-  const clave = new Request(url.origin + '/noticias/medios/' + id);
-  const rango = request.headers.get('range');
-  const guardada = await cache.match(rango ? new Request(clave.url, { headers: { range: rango } }) : clave);
-  if (guardada && (!rango || guardada.status === 206)) return guardada;
+  // Solo se leen las partes que cubren el rango pedido. No se arma el archivo completo en segundo plano:
+  // con videos grandes, eso saturaba el Worker en cada petición del navegador.
   await esquema(env);
   const m = await env.DB.prepare('SELECT m.*, n.publicada FROM noticias_medios m JOIN noticias n ON n.id = m.noticia_id WHERE m.id = ?').bind(id).first();
   if (!m || !completo(m)) return new Response('No encontrado', { status: 404 });
   if (m.url) return Response.redirect(url.origin + m.url, 302);
   const cab = { 'content-type': m.mime, 'accept-ranges': 'bytes', 'cache-control': m.publicada ? 'public, max-age=31536000, immutable' : 'private, no-store' };
-  // Copia completa al caché de Cloudflare para las siguientes visitas (solo si la noticia está publicada).
-  if (m.publicada && ctx) ctx.waitUntil(cache.put(clave, new Response(streamRango(env, m, 0, m.bytes - 1), { headers: { ...cab, 'content-length': String(m.bytes) } })).catch(() => {}));
+  const rango = request.headers.get('range');
   const r = rango && rango.match(/^bytes=(\d*)-(\d*)$/);
-  if (r) {
+  if (r && (r[1] !== '' || r[2] !== '')) {
     let ini, fin;
-    if (r[1] === '') { ini = Math.max(m.bytes - parseInt(r[2] || '0', 10), 0); fin = m.bytes - 1; }
+    if (r[1] === '') { ini = Math.max(m.bytes - parseInt(r[2], 10), 0); fin = m.bytes - 1; }
     else { ini = parseInt(r[1], 10); fin = r[2] === '' ? m.bytes - 1 : Math.min(parseInt(r[2], 10), m.bytes - 1); }
     if (ini >= m.bytes || ini > fin) return new Response(null, { status: 416, headers: { 'content-range': `bytes */${m.bytes}` } });
-    return new Response(streamRango(env, m, ini, fin), { status: 206, headers: { ...cab, 'content-range': `bytes ${ini}-${fin}/${m.bytes}`, 'content-length': String(fin - ini + 1) } });
+    return new Response(request.method === 'HEAD' ? null : streamRango(env, m, ini, fin), { status: 206, headers: { ...cab, 'content-range': `bytes ${ini}-${fin}/${m.bytes}`, 'content-length': String(fin - ini + 1) } });
   }
-  return new Response(streamRango(env, m, 0, m.bytes - 1), { headers: { ...cab, 'content-length': String(m.bytes) } });
+  return new Response(request.method === 'HEAD' ? null : streamRango(env, m, 0, m.bytes - 1), { headers: { ...cab, 'content-length': String(m.bytes) } });
 }
 
 // Agrega las noticias publicadas al sitemap.xml estático.
