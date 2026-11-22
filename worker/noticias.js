@@ -139,7 +139,7 @@ export async function paginaNoticias(request, env, url) {
   const seccionActual = cat ? nombreCat(cat) : '';
   let cuerpo = `<header class="np-cab">
 <div class="np-cab-sup"><span class="np-hoy">${esc(hoy.charAt(0).toUpperCase() + hoy.slice(1))}</span><span>Santiago, Chile</span></div>
-<h1 class="np-marca"><a href="/noticias">Noticias</a>${seccionActual ? ` <span>· ${esc(seccionActual)}</span>` : ''}</h1>
+<h1 class="np-marca"><a href="/noticias">Pulso al Día</a>${seccionActual ? ` <span>· ${esc(seccionActual)}</span>` : ''}</h1>
 <p class="np-lema">Pulso Inversor y las empresas de Grupo Matchmaking: novedades, encuentros y análisis para invertir con más información.</p>
 <nav class="np-secciones" aria-label="Secciones">${secciones}</nav></header>`;
   if (!lista.length) cuerpo += `<p class="np-vacio">${cat ? 'Todavía no hay publicaciones en esta sección.' : 'Pronto publicaremos novedades aquí.'}</p>`;
