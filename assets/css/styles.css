@@ -2401,3 +2401,12 @@ iframe[title="Webchat Widget"]{z-index:2147483000!important}
   .np-secciones{justify-content:flex-start;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}.np-secciones::-webkit-scrollbar{display:none}.np-secciones a{white-space:nowrap;padding:12px 12px}
   .np-grilla{grid-template-columns:1fr;gap:0}.np-nota{padding:16px 0;border-top:1px solid var(--np-linea)}.np-nota:has(.np-fig){border-top:1px solid var(--np-linea);padding-top:16px}.np-grilla>.np-nota:first-child{border-top:0;padding-top:4px}
   .np-principal .np-bajada{font-size:17px}.np-lateral img{flex-basis:84px;width:84px;height:64px}}
+
+/* Página para anuncios: tu dinero en el banco */
+.lp-comp .lp-fila{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--gray-200)}
+.lp-comp .lp-fila strong{display:block;color:var(--green-900);font-size:15px}.lp-comp .lp-fila small{color:var(--gray-500);font-size:13px}
+.lp-comp .lp-fila b{font-size:clamp(20px,2.4vw,26px);letter-spacing:-.02em;white-space:nowrap}
+.lp-comp .lp-banco b{color:var(--gray-700)}.lp-comp .lp-pulso b{color:var(--green-700)}
+.lp-barras{display:grid;gap:8px;margin:16px 0 4px}.lp-barras span{display:block;height:12px;border-radius:99px;background:var(--gray-200)}.lp-barras span+span{background:linear-gradient(90deg,var(--green-700),var(--lime))}
+.lp-tres{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+@media (max-width:860px){.lp-tres{grid-template-columns:1fr}}

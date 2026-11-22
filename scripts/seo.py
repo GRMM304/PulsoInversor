@@ -65,7 +65,7 @@ SEO = {
     'privacidad.html': (None, None),
 }
 
-NO_INDEXAR = {'simuladores-equipo.html', '404.html', 'inversion-circular.html', 'reunion-agendada.html', 'noticia-plantilla.html'}
+NO_INDEXAR = {'simuladores-equipo.html', '404.html', 'inversion-circular.html', 'reunion-agendada.html', 'noticia-plantilla.html', 'tu-dinero-en-el-banco.html'}
 
 REDES = ['https://www.instagram.com/pulsoinversorcl', 'https://www.facebook.com/pulsoinversor.cl/',
          'https://www.linkedin.com/company/pulsoinversor/']
@@ -121,7 +121,7 @@ CONTENIDO_META = {
     'como-funciona.html': 'Cómo funciona', 'simuladores.html': 'Simuladores',
     'inversion-circular.html': 'Inversión Circular', 'mi-primera-inversion.html': 'Mi primera inversión',
     'ya-tengo-experiencia.html': 'Ya tengo experiencia', 'verifica-a-pulso.html': 'Verifica a Pulso Inversor',
-    'nosotros.html': 'Nosotros', 'preguntas-frecuentes.html': 'Preguntas frecuentes', 'noticias.html': 'Noticias',
+    'nosotros.html': 'Nosotros', 'preguntas-frecuentes.html': 'Preguntas frecuentes', 'noticias.html': 'Noticias', 'tu-dinero-en-el-banco.html': 'Tu dinero en el banco',
 }
 
 

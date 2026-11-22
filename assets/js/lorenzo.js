@@ -158,7 +158,19 @@
   $('.lz-form').addEventListener('submit', function (e) { e.preventDefault(); enviar(input.value); input.value = ''; });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !panel.hidden) abrir(false); });
 
-  // Invitación: aparece a los pocos segundos, una vez por visita.
+  // Invitación: una vez por visita, cuando la persona ya mostró interés: a los 25 segundos o al bajar la mitad
+  // de la página (lo que ocurra primero). Antes aparecía a los 4 s y en celular tapaba el contenido al llegar.
   var visto = false; try { visto = sessionStorage.getItem('lzVisto') === '1'; } catch (e) {}
-  if (!visto) setTimeout(function () { if (panel.hidden) teaser.hidden = false; }, 4000);
+  if (!visto) {
+    var invitada = false, reloj = setTimeout(invitar, 25000);
+    function invitar() {
+      if (invitada) return; invitada = true; clearTimeout(reloj); window.removeEventListener('scroll', alBajar);
+      if (panel.hidden) teaser.hidden = false;
+    }
+    function alBajar() {
+      var alto = document.documentElement.scrollHeight - window.innerHeight;
+      if (alto > 0 && window.scrollY / alto >= 0.5) invitar();
+    }
+    window.addEventListener('scroll', alBajar, { passive: true });
+  }
 })();

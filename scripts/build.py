@@ -1563,6 +1563,41 @@ page('reunion-agendada.html', 'Tu reunión quedó agendada', 'Tu reunión con un
 </div></section>''',
      scripts='<script>window.addEventListener("load",function(){if(window.pulsoMedir)pulsoMedir("agendar_reunion",{origen:"Reserva confirmada en la agenda"});});</script>')
 
+# ---------------- Página para los anuncios de Meta: "tu dinero en el banco" ----------------
+# Continúa el mensaje del video (Gonzalo, "plata/ahorros en el banco"): un solo objetivo, escribir por WhatsApp,
+# donde Lorenzo precalifica. No se indexa (seo.NO_INDEXAR) para no competir con Mi primera inversión.
+WA_BANCO = whatsapp('Hola, vi el video de Pulso Inversor sobre el dinero en el banco y quiero conversar con un asesor.')
+_comp_banco = f"""<aside class="rx-card lp-comp" data-reveal><span class="rx-card-kicker">Ejemplo con $10.000.000 a 12 meses</span>
+<div class="lp-fila lp-banco"><div><strong>Depósito a plazo</strong><small>4,8% anual, renovable</small></div><b>$480.000</b></div>
+<div class="lp-fila lp-pulso"><div><strong>Renta de Capital con pagaré</strong><small>1,0% mensual</small></div><b>$1.200.000</b></div>
+<div class="lp-barras" aria-hidden="true"><span style="width:40%"></span><span style="width:100%"></span></div>
+<p class="rx-card-note">Intereses del período, antes de impuestos. Ejemplo referencial: no es una oferta ni asegura resultados; las condiciones finales quedan en el contrato. Toda inversión tiene riesgos.</p></aside>"""
+page('tu-dinero-en-el-banco.html', 'Tu dinero en el banco puede trabajar más',
+     'Si tienes ahorros en el banco, conoce cómo invertir desde $5 millones con una propiedad que respalda tu dinero y documentos que revisas antes de firmar.',
+     rx_hero('¿Tienes tu dinero en el banco?',
+             'Tu dinero puede trabajar más. <span class="accent">Con un respaldo que puedes revisar.</span>',
+             'En Pulso Inversor tu dinero financia una operación concreta, respaldada por una propiedad. Antes de firmar ves la propiedad, su tasación y el documento que queda a tu favor, y lo revisas con calma.',
+             'Conversar por WhatsApp', 'Tu dinero en el banco', '¿Qué respalda mi dinero?', '#ejemplo',
+             ['Desde $5 millones', 'Pagaré, hipoteca o propiedad a tu nombre', 'Firma ante notario', 'No te pedimos decidir en la reunión'],
+             _comp_banco, agenda=WA_BANCO).replace('<div class="breadcrumb"><a href="index.html">Inicio</a> / Recursos</div>', '')
+     + f'''<section class="section" id="ejemplo"><div class="container" style="max-width:980px">
+<div class="title center"><span class="eyebrow">Qué respalda tu dinero</span><h2>Antes de invertir, deberías poder responder tres preguntas</h2>
+<p class="lead">Si alguien te ofrece invertir y no te las responde con documentos, no firmes. Tampoco con nosotros.</p></div>
+<div class="lp-tres">
+<div class="card"><div class="card-icon">{icon('casa')}</div><h3>¿Qué respalda mi dinero?</h3><p>Una propiedad concreta, con su tasación y su precio de compra, que puedes revisar en el Conservador de Bienes Raíces.</p></div>
+<div class="card"><div class="card-icon">{icon('documento')}</div><h3>¿Qué queda a mi favor?</h3><p>Según el monto: un pagaré (desde $5 millones), una hipoteca inscrita (desde $25 millones) o la propiedad a tu nombre (desde $100 millones).</p></div>
+<div class="card"><div class="card-icon">{icon('reloj')}</div><h3>¿Cómo recupero mi dinero?</h3><p>Con un calendario de pagos por escrito, antes de firmar. Plazos de 12 a 27 meses, según la alternativa.</p></div>
+</div></div></section>
+<section class="section section-soft"><div class="container" style="max-width:860px">
+<div class="title center"><span class="eyebrow">Cómo empezar</span><h2>Así de simple, y sin apuro</h2></div>
+{pasos([('Nos escribes por WhatsApp', 'Te responde Lorenzo, el asistente de Pulso Inversor, para entender lo que buscas.'),
+        ('Conversas con un asesor', 'Con nombre y apellido. Revisa tu situación y te dice con honestidad si esto es para ti hoy.'),
+        ('Revisas una operación real', 'La propiedad, su tasación y los documentos. Te los llevas y los revisas con tu abogado.'),
+        ('Firmas ante notario, solo si decides avanzar', 'Después recibes tus pagos en las fechas pactadas y un reporte cada trimestre.')])}
+<p style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:30px"><a class="btn btn-primary btn-xl" href="{WA_BANCO}" target="_blank" rel="noopener">Conversar por WhatsApp</a> <a class="btn btn-outline btn-xl" href="simuladores.html">Simular con mis números</a></p>
+<p class="small" style="text-align:center;margin-top:14px">Operaciones bajo contratos civiles, no reguladas por la CMF. Toda inversión tiene riesgos. Revisa los documentos con tu abogado antes de firmar. <a href="verifica-a-pulso.html">Verifica a Pulso Inversor</a>.</p>
+</div></section>''')
+
 # ---------------- Noticias y blog ----------------
 # Plantillas: el Worker (worker/noticias.js) reemplaza <!--NOTICIAS--> por las tarjetas y <!--NOTICIA--> por la noticia,
 # con lo que se publica desde el portal de asesores (/asesores?v=noticias). noticia-plantilla no se publica sola (404).
