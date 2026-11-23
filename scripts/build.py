@@ -1598,6 +1598,38 @@ page('tu-dinero-en-el-banco.html', 'Tu dinero en el banco puede trabajar más',
 <p class="small" style="text-align:center;margin-top:14px">Operaciones bajo contratos civiles, no reguladas por la CMF. Toda inversión tiene riesgos. Revisa los documentos con tu abogado antes de firmar. <a href="verifica-a-pulso.html">Verifica a Pulso Inversor</a>.</p>
 </div></section>''')
 
+# ---------------- Enlaces del perfil de Instagram (/instagram) ----------------
+# Página simple para el enlace de la biografía de @pulsoinversorcl: sin menú, pie ni chat, pensada para celular.
+# Cada enlace lleva utm_source=instagram para medir en Analytics cuántas visitas y contactos trae el perfil. No se indexa.
+def _ig(ruta, contenido):
+    limpia = '/' if ruta == 'index.html' else '/' + ruta[:-5]
+    return f'{limpia}?utm_source=instagram&amp;utm_medium=social&amp;utm_campaign=bio&amp;utm_content={contenido}'
+_IG_WA = whatsapp('Hola, vengo desde Instagram y quiero conversar con un asesor de Pulso Inversor.')
+_ig_botones = [
+    ('ig-primario', _ig('simuladores.html', 'simular'), 'Simular mi inversión', 'Compárala con un depósito a plazo', False),
+    ('ig-blanco', _IG_WA, 'Conversar por WhatsApp', 'Te responde una persona del equipo', True),
+    ('ig-linea', _ig('noticias.html', 'pulso-al-dia'), 'Pulso al Día', 'Noticias y artículos para invertir mejor', False),
+    ('ig-linea', _ig('verifica-a-pulso.html', 'verifica'), 'Verifica a Pulso Inversor', 'Revísanos por tu cuenta antes de invertir', False),
+]
+_EXT = ' target="_blank" rel="noopener"'
+_ig_html = ''.join(f'<a class="ig-btn {c}" href="{h}"{_EXT if ext else ""} data-cta="instagram-{t.lower().split()[0]}"><b>{t}</b><span>{d}</span></a>' for c, h, t, d, ext in _ig_botones)
+page('instagram.html', 'Pulso Inversor en Instagram',
+     'Simula tu inversión, conversa con un asesor por WhatsApp, lee Pulso al Día y verifica a Pulso Inversor.',
+     f'''<style>.header,.tabbar,.footer,.to-top,.skip,[class^="lz-"],[class*=" lz-"]{{display:none!important}}main{{padding:0!important}}body{{background:#111514}}</style>
+<section class="ig">
+  <div class="ig-in">
+    <img class="ig-logo" src="assets/img/logo-pulso-footer.png" alt="Pulso Inversor" width="760" height="234">
+    <h1 class="ig-titulo">Invierte con respaldo inmobiliario</h1>
+    <p class="ig-texto">Te mostramos la propiedad, el contrato y cómo recuperas tu dinero. Desde $5 millones.</p>
+    <nav class="ig-botones" aria-label="Enlaces">
+      {_ig_html}
+    </nav>
+    <a class="ig-resena" href="{RESENAS_GOOGLE}" target="_blank" rel="noopener"><span aria-hidden="true">★★★★★</span> Déjanos tu reseña en Google</a>
+    <p class="ig-redes"><a href="{_ig('index.html', 'sitio')}">Sitio web</a> · <a href="{LINKEDIN}" target="_blank" rel="noopener">LinkedIn</a> · <a href="{FACEBOOK}" target="_blank" rel="noopener">Facebook</a></p>
+    <p class="ig-legal">Pulso Inversor SpA · Una empresa de Grupo Matchmaking. Operaciones bajo contratos civiles, no reguladas por la CMF. Toda inversión tiene riesgos.</p>
+  </div>
+</section>''')
+
 # ---------------- Noticias y blog ----------------
 # Plantillas: el Worker (worker/noticias.js) reemplaza <!--NOTICIAS--> por las tarjetas y <!--NOTICIA--> por la noticia,
 # con lo que se publica desde el portal de asesores (/asesores?v=noticias). noticia-plantilla no se publica sola (404).

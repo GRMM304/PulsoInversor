@@ -65,7 +65,7 @@ SEO = {
     'privacidad.html': (None, None),
 }
 
-NO_INDEXAR = {'simuladores-equipo.html', '404.html', 'inversion-circular.html', 'reunion-agendada.html', 'noticia-plantilla.html', 'tu-dinero-en-el-banco.html'}
+NO_INDEXAR = {'simuladores-equipo.html', '404.html', 'inversion-circular.html', 'reunion-agendada.html', 'noticia-plantilla.html', 'tu-dinero-en-el-banco.html', 'instagram.html'}
 
 REDES = ['https://www.instagram.com/pulsoinversorcl', 'https://www.facebook.com/pulsoinversor.cl/',
          'https://www.linkedin.com/company/pulsoinversor/']

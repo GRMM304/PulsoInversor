@@ -2410,3 +2410,21 @@ iframe[title="Webchat Widget"]{z-index:2147483000!important}
 .lp-barras{display:grid;gap:8px;margin:16px 0 4px}.lp-barras span{display:block;height:12px;border-radius:99px;background:var(--gray-200)}.lp-barras span+span{background:linear-gradient(90deg,var(--green-700),var(--lime))}
 .lp-tres{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
 @media (max-width:860px){.lp-tres{grid-template-columns:1fr}}
+
+/* Enlaces del perfil de Instagram (/instagram) */
+.ig{min-height:100svh;display:flex;justify-content:center;background:radial-gradient(circle at 20% 0%,rgba(199,217,93,.22),transparent 45%),linear-gradient(160deg,var(--green-900),var(--dark));color:#fff;padding:44px 18px 36px}
+.ig-in{width:100%;max-width:440px;display:flex;flex-direction:column;align-items:center;text-align:center}
+.ig-logo{width:170px;height:auto;margin-bottom:26px}
+.ig-titulo{font-size:30px;line-height:1.1;letter-spacing:-.03em;color:#fff;margin:0 0 10px}
+.ig-texto{font-size:16px;line-height:1.5;color:rgba(255,255,255,.8);margin:0 0 26px;max-width:360px}
+.ig-botones{display:grid;gap:12px;width:100%}
+.ig-btn{display:flex;flex-direction:column;gap:3px;padding:17px 20px;border-radius:18px;text-decoration:none;transition:transform .15s,box-shadow .15s}
+.ig-btn:hover{transform:translateY(-2px)}
+.ig-btn b{font-size:17px;font-weight:850}.ig-btn span{font-size:13.5px;opacity:.8}
+.ig-primario{background:var(--lime);color:var(--green-900);box-shadow:0 12px 30px rgba(199,217,93,.25)}
+.ig-blanco{background:#fff;color:var(--green-900)}
+.ig-linea{border:1.5px solid rgba(255,255,255,.28);color:#fff;background:rgba(255,255,255,.05)}
+.ig-resena{margin-top:24px;display:inline-flex;gap:8px;align-items:center;font-weight:800;font-size:15px;color:var(--lime);text-decoration:none}
+.ig-resena span{color:#F5B800;letter-spacing:2px}
+.ig-redes{margin:18px 0 0;font-size:14px;color:rgba(255,255,255,.7)}.ig-redes a{color:#fff;font-weight:700;text-decoration:none}
+.ig-legal{margin-top:24px;font-size:11.5px;line-height:1.5;color:rgba(255,255,255,.5)}
