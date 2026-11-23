@@ -392,7 +392,7 @@ document.addEventListener('click', function (e) {
     e.preventDefault();
     if (evento) {
       evento.prompt();
-      evento.userChoice.then(function (r) { if (r.outcome === 'accepted') { if (window.fbq) fbq('trackCustom', 'InstalarApp'); if (window.pulsoMedir) pulsoMedir('instalar_app'); } evento = null; });
+      evento.userChoice.then(function (r) { if (r.outcome === 'accepted') { if (window.pulsoMedir) pulsoMedir('instalar_app'); } evento = null; });
       return;
     }
     var nota = document.querySelector('.usar-app-nota');
@@ -459,12 +459,12 @@ document.addEventListener('click', function (e) {
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') cerrar(); });
 })();
 
-// Píxel y Analytics: reproducir un video del sitio (testimonios, Iván, Felipe) = "VioVideo", una vez por video en la visita.
+// Analytics: reproducir un video del sitio (testimonios, Iván, Felipe), una vez por video en la visita.
+// A Meta no se envía: bloquea los eventos personalizados en servicios financieros.
 document.addEventListener('play', function (e) {
   var v = e.target;
   if (!v || v.tagName !== 'VIDEO' || !v.controls) return; // el video de fondo de la portada no cuenta
   var nombre = ((v.getAttribute('poster') || v.currentSrc || '').split('/').pop() || 'video').replace(/\.[a-z0-9]+$/i, '');
   try { if (sessionStorage.getItem('pv_' + nombre)) return; sessionStorage.setItem('pv_' + nombre, '1'); } catch (er) {}
-  if (window.fbq) fbq('trackCustom', 'VioVideo', { content_name: nombre });
   if (window.pulsoMedir) pulsoMedir('ver_video', { video: nombre });
 }, true);

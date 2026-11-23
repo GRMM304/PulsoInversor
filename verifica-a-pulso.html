@@ -52,7 +52,7 @@ window.pulsoAM=function(c){var n=String(c.nombre||'').trim().toLowerCase().split
 var _pc=null;try{_pc=JSON.parse(sessionStorage.getItem('pulsoContacto')||'null');}catch(e){}
 fbq('init', '4384764601785320', _pc && _pc.email ? pulsoAM(_pc) : {});
 fbq('track', 'PageView');
-window.pulsoInteres=function(n){try{var k='pi_'+n;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');}catch(e){}if(window.fbq)fbq('trackCustom',n);if(window.pulsoMedir)pulsoMedir('interes',{tema:n});};
+window.pulsoInteres=function(n){try{var k='pi_'+n;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');}catch(e){}if(window.pulsoMedir)pulsoMedir('interes',{tema:n});};
 fbq('track', 'ViewContent', {content_name: 'Verifica a Pulso Inversor', content_category: 'Página'});
 pulsoInteres('VerificoEmpresa');
 </script>

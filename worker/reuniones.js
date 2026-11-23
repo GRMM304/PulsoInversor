@@ -43,7 +43,7 @@ export async function recibirReunion(request, env, url) {
       const r = await crmReunion(env, { email: String(p.EMAIL || ''), nombre: [p.FIRSTNAME, p.LASTNAME].filter(Boolean).join(' '), estado: evento === 'reservada' ? 'Agendada' : 'Cancelada', inicio: m.meeting_start_timestamp, asesor: m.meeting_name || '', detalle: evento === 'reservada' && m.meeting_url ? 'videollamada' : '' });
       if (!r.ok && !r.omitido) console.error('crm reunion', r.error);
     }
-    // Meta (API de conversiones): reunión reservada de verdad = Schedule. ReunionRealizada sale de la confirmación del asesor.
+    // Meta (API de conversiones): reunión reservada de verdad = Schedule. CompleteRegistration (reunión realizada) sale de la confirmación del asesor.
     if (evento === 'reservada') {
       const email = String(p.EMAIL || '').trim().toLowerCase();
       const clave = [evento, email, m.meeting_start_timestamp || '', m.reschedule_cancel_url || ''].join('|');

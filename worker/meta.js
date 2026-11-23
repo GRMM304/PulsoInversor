@@ -1,7 +1,8 @@
 // API de conversiones de Meta (servidor → píxel Sitio_Pulso_Inversor).
 // Secreto META_CAPI_TOKEN. Opcional META_TEST_CODE: si existe, los eventos van como prueba (pestaña "Probar eventos"
 // del Administrador de eventos) y no cuentan para las campañas.
-// Eventos: Schedule (reunión reservada en Brevo), ReunionRealizada (reunión iniciada) y Purchase (el equipo marca
+// Eventos: Schedule (reunión reservada en Brevo), CompleteRegistration (el asesor confirma que la reunión se realizó; antes ReunionRealizada,
+// que Meta bloquea por ser evento personalizado en servicios financieros) y Purchase (el equipo marca
 // "Invirtió" en el panel). Con la configuración básica de Meta, lo que más importa es el nombre del evento.
 export const PIXEL_ID = '4384764601785320';
 const VERSION = 'v21.0';

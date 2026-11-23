@@ -182,7 +182,6 @@
       if (window.fbq) {
         var metaEventId = 'sim-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8);
         fbq('track', 'SubmitApplication', valor > 0 ? { content_name: tipo, value: valor, currency: 'CLP' } : { content_name: tipo }, { eventID: metaEventId });
-        fbq('trackCustom', 'EnviarSimulacion', { simulador: tipo });
       }
       if (window.pulsoMedir) pulsoMedir('simulacion_enviada', valor > 0 ? { simulador: tipo, value: valor, currency: 'CLP' } : { simulador: tipo });
     }

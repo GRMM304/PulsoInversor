@@ -125,8 +125,9 @@ CONTENIDO_META = {
 }
 
 
-# Con la configuración básica de Meta solo llega el NOMBRE del evento: un evento propio por interés permite
-# audiencias segmentadas (quién vio cada estrategia o cada ruta). Se envía una vez por sesión.
+# Interés por ruta (una vez por sesión): solo Google Analytics. A Meta ya no se envía como evento personalizado,
+# porque Meta bloquea los eventos personalizados en servicios financieros (diagnóstico del 22-nov-2026).
+# En Meta, los públicos por interés se arman con la URL visitada (por ejemplo, contiene /mi-primera-inversion).
 INTERES_POR_PAGINA = {
     'mi-primera-inversion.html': 'PerfilPrimeraVez',
     'ya-tengo-experiencia.html': 'PerfilConExperiencia',
@@ -134,7 +135,7 @@ INTERES_POR_PAGINA = {
     'verifica-a-pulso.html': 'VerificoEmpresa',
 }
 INTERES_JS = ("window.pulsoInteres=function(n){try{var k='pi_'+n;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');}catch(e){}"
-              "if(window.fbq)fbq('trackCustom',n);if(window.pulsoMedir)pulsoMedir('interes',{tema:n});};")
+              "if(window.pulsoMedir)pulsoMedir('interes',{tema:n});};")
 
 
 def vista_contenido(slug):

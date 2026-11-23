@@ -304,7 +304,7 @@ async function confirmarReunion(env, url) {
     }
     if (r === 'si' && rec.realizada !== 'si') {
       const { eventoMeta } = await import('./meta.js');
-      await eventoMeta(env, { nombreEvento: 'ReunionRealizada', eventoId: 'reunion-realizada-' + rec.id, persona: { email: rec.email, nombre: rec.nombre }, datos: { content_name: rec.asesor || 'Reunión' } });
+      await eventoMeta(env, { nombreEvento: 'CompleteRegistration', eventoId: 'reunion-realizada-' + rec.id, persona: { email: rec.email, nombre: rec.nombre }, datos: { content_name: rec.asesor || 'Reunión' } });
     }
   }
   const final = yaEnviado ? rec.realizada : r;
