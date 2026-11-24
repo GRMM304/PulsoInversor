@@ -194,10 +194,17 @@ export default {
       if (url.pathname === '/robots.txt') return new Response('User-agent: *\nDisallow: /\n', { headers: { 'content-type': 'text/plain; charset=utf-8' } });
       // / = la presentación; /simuladores = los tres simuladores sin pedir clave ni datos (la vista del equipo).
       // /assets y /api siguen su curso normal; cualquier otra ruta va al sitio en www.
-      const pagina = url.pathname === '/' ? '/presentacion/' : /^\/simuladores\/?$/.test(url.pathname) ? '/simuladores-equipo' : null;
+      const pagina = url.pathname === '/' ? '/presentacion/' : /^\/simuladores\/?$/.test(url.pathname) ? '/simuladores-equipo'
+        : /^\/simulador-circular\/?$/.test(url.pathname) ? '/inversion-circular' : null;
       if (pagina) {
         let r = await env.ASSETS.fetch(new Request(new URL(pagina, url)));
         // En los simuladores de la presentación no va el menú del sitio (ni barra inferior, pie ni chat): solo el logo, que vuelve a la presentación.
+        // /simulador-circular = simulador de Inversión Circular sin pedir datos (vista del equipo), para la lámina de la presentación.
+        if (pagina === '/inversion-circular') r = new HTMLRewriter()
+          .on('[data-simuladores]', { element: (e) => e.setAttribute('data-equipo', '') })
+          .on('head', { element: (e) => e.append('<meta name="robots" content="noindex, nofollow"><style>.header nav,.header .nav-actions,.header .mobile-toggle,.tabbar,.footer{display:none!important}</style>', { html: true }) })
+          .on('script[src*="lorenzo.js"]', { element: (e) => e.remove() })
+          .transform(r);
         if (pagina === '/simuladores-equipo') r = new HTMLRewriter()
           .on('head', { element: (e) => e.append('<style>.header nav,.header .nav-actions,.header .mobile-toggle,.tabbar,.footer{display:none!important}</style>', { html: true }) })
           .on('script[src*="lorenzo.js"]', { element: (e) => e.remove() })
