@@ -1073,16 +1073,16 @@ page('inversion-circular.html', 'Inversión Inmobiliaria Circular',
   </div>
   {P("CASILLAS (revisión 17-11-2026): Política de privacidad obligatoria; publicidad OPCIONAL y sin marcar. Términos y condiciones pendientes de validación legal.")}
   <div class="sim-panel" id="sim-circular" data-sim-panel="sim-circular"><div class="sim-panel-body">
-    <div class="sim-head"><h2>Simula tu Inversión Circular</h2><p class="muted">Compara conservar tu propiedad arrendada con venderla e invertir el capital en Pulso Inversor. Cifras en pesos.</p></div>
+    <div class="sim-head"><h2>Simula tu Inversión Circular</h2><p class="muted">Descubre cómo duplicar el ingreso mensual que hoy te dan tus arriendos, vendiendo e invirtiendo el capital en Pulso Inversor. Cifras en pesos.</p></div>
     <div class="ic">
       <form class="pro-form ic-form" id="ic-form" novalidate>
         <span class="pro-label">¿Tu propiedad tiene deuda?</span>
         <div class="pro-yesno"><button type="button" class="chip-opt" data-ic-debt="no">Sin deuda</button><button type="button" class="chip-opt" data-ic-debt="yes">Con deuda</button></div>
-        <label class="pro-label" for="ic-value">¿Cuánto vale tu propiedad hoy?</label>
+        <label class="pro-label" for="ic-value">¿Cuánto vale tu propiedad hoy? <small>Si son varias, suma sus tasaciones.</small></label>
         <div class="money-in"><span>$</span><input id="ic-value" inputmode="numeric" autocomplete="off" placeholder="0"></div>
-        <label class="pro-label" for="ic-rent">¿Cuánto recibes de arriendo al mes? <small>Si no está arrendada, déjalo vacío.</small></label>
+        <label class="pro-label" for="ic-rent">¿Cuánto recibes de arriendo al mes? <small>Si son varias, suma los arriendos.</small></label>
         <div class="money-in"><span>$</span><input id="ic-rent" inputmode="numeric" autocomplete="off" placeholder="0"></div>
-        <label class="pro-label" for="ic-oldpayment">¿Cuánto pagas de dividendo al mes?</label>
+        <label class="pro-label" for="ic-oldpayment">¿Cuánto pagas de dividendo al mes? <small>Si no tienes dividendo, déjalo vacío.</small></label>
         <div class="money-in"><span>$</span><input id="ic-oldpayment" inputmode="numeric" autocomplete="off" placeholder="0"></div>
         <div id="ic-debtfields" class="ic-sub" hidden>
           <label class="pro-label" for="ic-debt">¿Cuánto debes hoy? <small>Saldo de prepago que informa tu banco.</small></label>
@@ -1091,9 +1091,9 @@ page('inversion-circular.html', 'Inversión Inmobiliaria Circular',
           <input id="ic-oldmonths" type="number" inputmode="numeric" min="1" max="600" placeholder="Ej. 225">
         </div>
         <span class="pro-label">¿Cada cuánto quieres recibir tus intereses?</span>
-        <div class="pro-chips"><button type="button" class="chip-opt" data-ic-freq="quarterly">Cada 3 meses · 1,2% mensual</button><button type="button" class="chip-opt" data-ic-freq="monthly">Cada mes · 1,0% mensual</button></div>
+        <div class="pro-chips"><button type="button" class="chip-opt" data-ic-freq="quarterly">Cada 3 meses · 1,1% mensual</button><button type="button" class="chip-opt" data-ic-freq="monthly">Cada mes · 1,0% mensual</button></div>
         <span class="pro-label">¿A cuántos años quieres proyectar?</span>
-        <div class="pro-yesno"><button type="button" class="chip-opt" data-ic-years="5">5 años</button><button type="button" class="chip-opt" data-ic-years="10">10 años</button></div>
+        <div class="pro-yesno"><button type="button" class="chip-opt" data-ic-years="1">1 año</button><button type="button" class="chip-opt" data-ic-years="5">5 años</button><button type="button" class="chip-opt" data-ic-years="10">10 años</button></div>
         <label class="check ic-purchase"><input type="checkbox" id="ic-purchase"><span>Quiero evaluar comprar una nueva propiedad con el capital <small>(opcional)</small></span></label>
         <div id="ic-purchasefields" class="ic-sub" hidden>
           <label class="pro-label" for="ic-newvalue">Valor de la nueva propiedad</label>
@@ -1112,15 +1112,19 @@ page('inversion-circular.html', 'Inversión Inmobiliaria Circular',
         <div class="ic-head"><h3>Más claridad para decidir</h3><span id="ic-period">Proyección a 5 años</span></div>
         <div class="ic-gain" id="ic-gain" hidden></div>
         <div class="ic-kpis">
-          <div class="ic-kpi"><small>Capital neto de la venta</small><strong id="ic-k-net">—</strong><span>Venta menos prepago y gastos</span></div>
-          <div class="ic-kpi hl"><small>Ingreso mensual equivalente con Pulso Inversor</small><strong id="ic-k-monthly">—</strong><span id="ic-k-monthly-sub">—</span></div>
-          <div class="ic-kpi"><small>Flujo actual antes de costos</small><strong id="ic-k-flow">—</strong><span>Arriendo menos dividendo actual</span></div>
+          <div class="ic-kpi"><small>Tu ingreso mensual hoy*</small><strong id="ic-k-flow">—</strong><span>Arriendo menos dividendo</span></div>
+          <div class="ic-kpi hl"><small>Tu nuevo ingreso mensual con Pulso Inversor</small><strong id="ic-k-monthly">—</strong><span id="ic-k-monthly-sub">—</span></div>
+          <div class="ic-kpi"><small>Capital a invertir</small><strong id="ic-k-net">—</strong><span>Lo que queda de la venta, descontada la deuda</span></div>
         </div>
+        <div class="ic-desc" id="ic-desc" hidden><div><small>Descuento aplicado a la venta</small><strong id="ic-d-pct">—</strong></div><p id="ic-d-txt"></p></div>
         <p class="ic-summary" id="ic-summary"></p>
+        <div class="ic-card ic-year"><div class="ic-head"><h4>Tu primer año: más liquidez desde el inicio</h4><span>Flujo anual</span></div>
+          <div class="ic-tablewrap"><table class="ic-table"><thead><tr><th>Alternativa</th><th>Al mes</th><th>Al año</th></tr></thead><tbody id="ic-anual"></tbody></table></div>
+          <p class="ic-note">*El ingreso actual por arriendo corresponde a condiciones normales. Puede disminuir por vacancia, mantenciones o contribuciones.</p></div>
         <div class="ic-card"><h4 id="ic-bars-title">¿Con cuánto terminas?</h4><div class="cb" id="ic-bars"></div>
           <p class="cb-legend"><span class="cb-a"></span>Patrimonio o capital al término <span class="cb-b"></span>Ingresos recibidos en el período</p></div>
         <div class="ic-card"><div class="ic-head"><h4>La comparación que respalda tu decisión</h4><span>TIR anual efectiva</span></div>
-          <div class="ic-tablewrap"><table class="ic-table"><thead><tr><th>Alternativa</th><th>5 años</th><th>10 años*</th></tr></thead><tbody id="ic-tir"></tbody></table></div>
+          <div class="ic-tablewrap"><table class="ic-table"><thead><tr><th>Alternativa</th><th class="hl">1 año</th><th>5 años</th><th>10 años*</th></tr></thead><tbody id="ic-tir"></tbody></table></div>
           <p class="ic-note" id="ic-base"></p>
           <p class="ic-note">*Proyectar diez años exige continuidad de tasa, condiciones y cumplimiento de pagos. La nueva compra es opcional y se evalúa por separado.</p>
           <p class="ic-note">Esta simulación no constituye una cotización ni asegura rentabilidades futuras. La rentabilidad simulada es referencial a esta fecha y no compromete a Pulso Inversor SpA. La rentabilidad y las condiciones finales se fijan al momento de la firma del contrato respectivo.</p></div>
@@ -1129,7 +1133,7 @@ page('inversion-circular.html', 'Inversión Inmobiliaria Circular',
         <p class="sim-status" id="ic-status" role="status"></p>
       </div>
     </div>
-    {P("SUPUESTOS fijos (como el simulador de referencia): venta 15% bajo valor comercial, tasas Pulso 1,2% (pago trimestral) y 1,0% (mensual), inflación 3%, arriendo +3% anual, mantención $150.000/año, vacancia 42 días cada 3 años con 1 mes de garantía, reparaciones $1.200.000 cada 3 años. VALIDAR.")}
+    {P("SUPUESTOS (revisión 24-11-2026): la meta es DUPLICAR el ingreso mensual actual (arriendo menos dividendo); el descuento de venta es el resultado de cada caso (rango atractivo 15% a 20% o algo más; bajo 15% no es viable). Sin flujo actual positivo se usa 15% de referencia. Tasas Pulso 1,1% (pago trimestral) y 1,0% (mensual), inflación 3%, arriendo +3% anual, mantención $150.000/año, vacancia 42 días cada 3 años con 1 mes de garantía, reparaciones $1.200.000 cada 3 años. VALIDAR.")}
   </div></div>
   </div>
 </div></section>

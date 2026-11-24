@@ -620,7 +620,7 @@
   (function () {
     if (!$('#ic-form')) return;
     // Supuestos de referencia (fijos)
-    var FIJOS = { discount: 15, sellcost: 0, quarterrate: 1.2, monthrate: 1, base: 'market', inflation: 3, growth: 0, rentgrowth: 3,
+    var FIJOS = { discount: 15, sellcost: 0, quarterrate: 1.1, monthrate: 1, base: 'market', inflation: 3, growth: 0, rentgrowth: 3,
       maintenance: 150000, turnyears: 3, vacancydays: 42, repairs: 1200000, guarantee: 1 };
     function payment(p, r, n) { return p <= 0 ? 0 : r === 0 ? p / n : p * r / (1 - Math.pow(1 + r, -n)); }
     function loanRate(p, a, n) { if (p <= 0) return 0; if (a * n < p - 1) throw new Error('El dividendo y las cuotas que te quedan no alcanzan para pagar la deuda. Revisa esos datos.'); var lo = 0, hi = 1; for (var j = 0; j < 100; j++) { var m = (lo + hi) / 2; if (payment(p, m, n) > a) hi = m; else lo = m; } return (lo + hi) / 2; }
@@ -663,9 +663,12 @@
     var X = { debtmode: null, frequency: null, years: null, purchase: false };
     var editoNueva = false;
     var num = function (id) { var el = $('#ic-' + id); return MONEY.indexOf(id) >= 0 ? Number(el.value.replace(/\D/g, '')) : Number(el.value); };
-    var money = function (n) { return '$' + Math.round(n || 0).toLocaleString('es-CL'); };
+    var money = function (n) { n = Math.round(n || 0); return (n < 0 ? '−$' : '$') + Math.abs(n).toLocaleString('es-CL'); };
     var compact = function (n) { return '$' + (n / 1e6).toLocaleString('es-CL', { maximumFractionDigits: 1 }) + ' MM'; };
     var pct = function (n) { return n === null ? 'No calculable' : (n * 100).toLocaleString('es-CL', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '%'; };
+    var pct1 = function (n) { return n.toLocaleString('es-CL', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'; };
+    var anios = function (n) { return n + (n === 1 ? ' año' : ' años'); };
+    var DESC_MIN = 15; // bajo este descuento la operación no es atractiva para el inversionista (rango objetivo 15% a 20% o algo más)
     function inputs() {
       var x = { value: num('value'), rent: num('rent'), oldpayment: num('oldpayment'), debt: num('debt'), oldmonths: num('oldmonths'),
         newvalue: num('newvalue'), newrent: num('newrent'), ltv: num('ltv'), term: num('term'), rate: num('rate'), buycost: num('buycost'),
@@ -689,13 +692,14 @@
       $('#ic-correo').disabled = falta;
       if (falta) {
         ['ic-k-net', 'ic-k-monthly', 'ic-k-flow'].forEach(function (id) { $('#' + id).textContent = '—'; });
+        $('#ic-desc').hidden = true; $('#ic-anual').innerHTML = '<tr><td colspan="3" class="ic-empty">Aquí verás tu ingreso del primer año en cada alternativa.</td></tr>';
         $('#ic-k-monthly-sub').textContent = 'Según cada cuánto recibas tus intereses';
         $('#ic-gain').hidden = true;
-        $('#ic-summary').textContent = 'Completa los datos de tu propiedad, elige cada cuánto quieres recibir tus intereses y el horizonte para ver tu comparación.';
-        $('#ic-period').textContent = X.years ? 'Proyección a ' + X.years + ' años' : 'Proyección';
+        $('#ic-summary').textContent = 'Completa los datos de tu propiedad, elige cada cuánto quieres recibir tus intereses y el horizonte para ver cómo duplicar tu ingreso.';
+        $('#ic-period').textContent = X.years ? 'Proyección a ' + anios(X.years) : 'Proyección';
         $('#ic-bars-title').textContent = '¿Con cuánto terminas?';
         $('#ic-bars').innerHTML = '<p class="ic-empty">Aquí verás cuánto terminas teniendo en cada alternativa.</p>';
-        $('#ic-tir').innerHTML = '<tr><td colspan="3" class="ic-empty">Aquí verás la TIR de cada alternativa.</td></tr>';
+        $('#ic-tir').innerHTML = '<tr><td colspan="4" class="ic-empty">Aquí verás la TIR de cada alternativa.</td></tr>';
         $('#ic-base').textContent = ''; ultimo = null; return;
       }
       if (!(x.value >= 1000000)) return err('Ingresa el valor de tu propiedad.');
@@ -703,24 +707,41 @@
       if (X.debtmode === 'yes' && !(x.oldmonths > 0)) return err('Ingresa cuántas cuotas te quedan.');
       if (x.debt >= x.value) return err('La deuda debe ser menor al valor de tu propiedad.');
       if (X.purchase && !(x.newvalue > 0 && x.ltv >= 0 && x.term > 0)) return err('Completa los datos de la nueva propiedad.');
-      var c, c5, c10;
-      try { c = compute(x); c5 = compute(x, 5); c10 = compute(x, 10); } catch (e) { return err(e.message); }
+      // Simulador inverso: la meta es duplicar el ingreso mensual actual (arriendo menos dividendo).
+      // El descuento de venta es el resultado: el precio que deja, descontada la deuda, el capital que da el doble.
+      var flujoActual = x.rent - x.oldpayment, meta = 2 * flujoActual, tasaMes = (X.frequency === 'quarterly' ? x.quarterrate : x.monthrate) / 100;
+      var conMeta = flujoActual > 0, capitalMeta = conMeta ? meta / tasaMes : 0;
+      if (conMeta) x.discount = (1 - (capitalMeta + x.debt) / x.value) * 100;
+      var viable = x.discount >= DESC_MIN;
+      if (conMeta && x.discount <= 0) return err('Con estos datos, ni vendiendo al valor de tasación se alcanza el capital para duplicar tu ingreso. Revisemos tu caso con un asesor.');
+      var c, c1, c5, c10;
+      try { c = compute(x); c1 = compute(x, 1); c5 = compute(x, 5); c10 = compute(x, 10); } catch (e) { return err(e.message); }
       if (c.net <= 0) return err('La venta no libera capital después del descuento y el prepago. Revisa los valores.');
-      var cicloOk = !X.purchase || c.invest >= 0;
-      if (!cicloOk) { $('#ic-warning').textContent = 'El pie de la nueva compra supera el capital liberado: el ciclo con nueva propiedad no es viable con estos datos.'; $('#ic-warning').hidden = false; }
-      var flujoActual = x.rent - x.oldpayment;
+      var cicloOk = !X.purchase || c.invest >= 0, avisos = [];
+      if (!conMeta) avisos.push('Hoy tu arriendo no supera el dividendo, así que no hay un ingreso que duplicar: calculamos con un descuento de venta de referencia de ' + FIJOS.discount + '%.');
+      else if (!viable) avisos.push('Para duplicar tu ingreso, la venta quedaría con un descuento de solo ' + pct1(x.discount) + ' sobre la tasación, bajo el rango que hace viable la operación (desde ' + DESC_MIN + '%). Revisemos tu caso con un asesor.');
+      if (!cicloOk) avisos.push('El pie de la nueva compra supera el capital liberado: el ciclo con nueva propiedad no es viable con estos datos.');
+      if (avisos.length) { $('#ic-warning').textContent = avisos.join(' '); $('#ic-warning').hidden = false; }
       $('#ic-k-net').textContent = compact(c.net);
       $('#ic-k-monthly').textContent = money(c.monthly);
       $('#ic-k-monthly-sub').textContent = X.frequency === 'quarterly' ? 'Pago efectivo trimestral: ' + money(c.payout) : 'Pago mensual';
       $('#ic-k-flow').textContent = money(flujoActual);
+      $('#ic-desc').hidden = false; $('#ic-desc').classList.toggle('warn', conMeta && !viable);
+      $('#ic-d-pct').textContent = pct1(x.discount);
+      $('#ic-d-txt').innerHTML = 'Tu propiedad se vende en <b>' + money(c.sale) + '</b>, ' + money(x.value - c.sale) + ' bajo su tasación de ' + money(x.value) + '.' + (conMeta ? (viable ? ' Es el descuento que permite duplicar tu ingreso.' : ' <span class="ic-sale-flag">Bajo el rango viable</span>') : ' Descuento de referencia.');
+      // Primer año: el aumento de liquidez es inmediato.
+      var anualHoy = flujoActual * 12, anualPulso = c.monthly * 12;
+      $('#ic-anual').innerHTML = '<tr><td>Hoy, con tus arriendos*</td><td>' + money(flujoActual) + '</td><td>' + money(anualHoy) + '</td></tr>' +
+        '<tr class="hl"><td>Con Pulso Inversor</td><td>' + money(c.monthly) + '</td><td>' + money(anualPulso) + '</td></tr>' +
+        '<tr><td>Diferencia en tu primer año</td><td>' + (c.monthly - flujoActual >= 0 ? '+' : '−') + money(Math.abs(c.monthly - flujoActual)) + '</td><td>' + (anualPulso - anualHoy >= 0 ? '+' : '−') + money(Math.abs(anualPulso - anualHoy)) + '</td></tr>';
       var dif = c.monthly - flujoActual;
       var g = $('#ic-gain');
       g.hidden = false; g.classList.toggle('neg', dif < 0);
       g.innerHTML = dif >= 0
-        ? '<span class="ic-gain-k">Con el modelo Pulso Inversor</span><strong>Tu ingreso mensual aumenta <b>+' + money(dif) + '</b></strong><span>De ' + money(flujoActual) + ' a ' + money(c.monthly) + ' al mes' + (flujoActual > 0 ? ' · ' + (c.monthly / flujoActual >= 3 ? 'más del triple de lo que recibes hoy' : c.monthly / flujoActual >= 2 ? 'más del doble de lo que recibes hoy' : '+' + Math.round((c.monthly / flujoActual - 1) * 100) + '% sobre lo que recibes hoy') : '') + '</span>'
+        ? '<span class="ic-gain-k">Con el modelo Pulso Inversor</span><strong>' + (conMeta ? 'Duplicas tu ingreso mensual: <b>+' + money(dif) + '</b>' : 'Tu ingreso mensual aumenta <b>+' + money(dif) + '</b>') + '</strong><span>De ' + money(flujoActual) + ' a ' + money(c.monthly) + ' al mes' + (conMeta ? ' · el doble de lo que recibes hoy' : '') + '</span>'
         : '<span class="ic-gain-k">Con el modelo Pulso Inversor</span><strong>Tu ingreso mensual sería ' + money(Math.abs(dif)) + ' menor</strong><span>De ' + money(flujoActual) + ' a ' + money(c.monthly) + ' al mes, antes de costos</span>';
-      $('#ic-summary').textContent = 'La venta estima ' + money(c.sale) + '. Después de prepagar ' + money(x.debt) + ' y descontar gastos, quedan ' + money(c.net) + ' para invertir en Pulso Inversor, a ' + (c.rate * 100).toLocaleString('es-CL', { minimumFractionDigits: 1 }) + '% mensual simple. La comparación es frente al arriendo menos dividendo, antes de costos.';
-      $('#ic-period').textContent = 'Proyección a ' + X.years + ' años';
+      $('#ic-summary').textContent = (conMeta ? 'Para duplicar tu ingreso mensual necesitas invertir ' + money(c.net) + ' en Pulso Inversor, a ' : 'Invirtiendo ' + money(c.net) + ' en Pulso Inversor, a ') + (c.rate * 100).toLocaleString('es-CL', { minimumFractionDigits: 1 }) + '% mensual simple. Ese capital sale de vender en ' + money(c.sale) + (x.debt ? ' y prepagar ' + money(x.debt) + ' de deuda' : '') + '. La comparación es frente al arriendo menos dividendo, antes de mantención y vacancia.';
+      $('#ic-period').textContent = 'Proyección a ' + anios(X.years);
       // Barras: ¿con cuánto terminas?
       var nombres = ['Si conservas y arriendas', 'Si vendes e inviertes en Pulso Inversor', 'Si vendes, inviertes y compras otra propiedad'];
       var pa = [(x.debt ? 'Tu propiedad, descontada la deuda' : 'Valor de tu propiedad') + ' (incluye plusvalía de ' + compact(c.plusvalia) + ')', 'Capital invertido', 'Capital invertido y nueva propiedad'];
@@ -729,7 +750,7 @@
       for (var i = 0; i < n; i++) { if (i === 2 && !cicloOk) { filas.push({ i: i, nv: true }); continue; } filas.push({ i: i, a: c.end[i], b: c.totals[i], t: c.end[i] + c.totals[i] }); }
       var ok = filas.filter(function (r) { return !r.nv; }), max = Math.max.apply(null, [1].concat(ok.map(function (r) { return Math.max(0, r.a) + Math.max(0, r.b); })));
       var best = ok.reduce(function (m, r) { return r.t > m.t ? r : m; }, ok[0]);
-      $('#ic-bars-title').textContent = '¿Con cuánto terminas en ' + X.years + ' años?';
+      $('#ic-bars-title').textContent = '¿Con cuánto terminas en ' + anios(X.years) + '?';
       $('#ic-bars').innerHTML = filas.map(function (r) {
         if (r.nv) return '<div class="cb-row"><div class="cb-head"><b>' + nombres[r.i] + '</b><span class="cb-nv">No viable con estos datos</span></div></div>';
         return '<div class="cb-row' + (r === best ? ' is-best' : '') + '"><div class="cb-head"><b>' + nombres[r.i] + (ok.length > 1 && r === best ? '<span class="cb-best">Mayor resultado</span>' : '') + '</b><span class="cb-total">' + compact(r.t) + '</span></div>' +
@@ -738,9 +759,9 @@
       }).join('');
       // TIR
       var tnames = ['Conservar y arrendar', 'Vender, prepagar e invertir', 'Ciclo completo con nueva compra'];
-      $('#ic-tir').innerHTML = tnames.slice(0, n).map(function (nm, i) { var nv = i === 2 && !cicloOk; return '<tr><td>' + nm + '</td><td>' + (nv ? 'No viable' : pct(c5.tirs[i])) + '</td><td>' + (nv ? 'No viable' : pct(c10.tirs[i])) + '</td></tr>'; }).join('');
+      $('#ic-tir').innerHTML = tnames.slice(0, n).map(function (nm, i) { var nv = i === 2 && !cicloOk; return '<tr><td>' + nm + '</td><td class="hl">' + (nv ? 'No viable' : pct(c1.tirs[i])) + '</td><td>' + (nv ? 'No viable' : pct(c5.tirs[i])) + '</td><td>' + (nv ? 'No viable' : pct(c10.tirs[i])) + '</td></tr>'; }).join('');
       $('#ic-base').textContent = 'Base inicial común: ' + money(c.base) + '. Patrimonio actual (valor comercial' + (x.debt ? ' menos deuda' : '') + '). La TIR reconoce el descuento de venta.';
-      ultimo = { x: x, c: c, c5: c5, c10: c10, n: n, cicloOk: cicloOk, flujoActual: flujoActual, best: best ? nombres[best.i] : '' };
+      ultimo = { x: x, c: c, c1: c1, c5: c5, c10: c10, n: n, cicloOk: cicloOk, flujoActual: flujoActual, conMeta: conMeta, viable: viable, best: best ? nombres[best.i] : '' };
     }
     MONEY.forEach(function (id) { $('#ic-' + id).addEventListener('input', function (e) { var raw = e.target.value.replace(/\D/g, ''); e.target.value = raw ? Number(raw).toLocaleString('es-CL') : ''; }); });
     $('#ic-form').addEventListener('input', function (e) {
@@ -764,17 +785,18 @@
       if (!contacto || !ultimo || !$('#ic-error').hidden || $('#ic-results').classList.contains('is-empty')) { st.textContent = 'Completa los datos del simulador antes de enviar.'; return; }
       if (!jspdfListo(st)) return;
       var u = ultimo, x = u.x, c = u.c;
-      var filasTir = ['Conservar y arrendar', 'Vender, prepagar e invertir', 'Ciclo completo con nueva compra'].slice(0, u.n).map(function (nm, i) { var nv = i === 2 && !u.cicloOk; return [nm, (nv ? 'No viable' : pct(u.c5.tirs[i])) + ' (5 años) · ' + (nv ? 'No viable' : pct(u.c10.tirs[i])) + ' (10 años)']; });
-      var resumenIC = ['Valor de la propiedad: ' + money(x.value), 'Deuda: ' + money(x.debt), 'Capital neto de la venta: ' + money(c.net), 'Ingreso mensual equivalente: ' + money(c.monthly),
-        'Flujo actual antes de costos: ' + money(u.flujoActual), 'Horizonte: ' + x.years + ' años', 'Mayor resultado: ' + u.best];
-      var doc = pdfSimple('Simulación Inversión Circular', 'Proyección a ' + x.years + ' años', [
+      var filasTir = ['Conservar y arrendar', 'Vender, prepagar e invertir', 'Ciclo completo con nueva compra'].slice(0, u.n).map(function (nm, i) { var nv = i === 2 && !u.cicloOk; return [nm, (nv ? 'No viable' : pct(u.c1.tirs[i])) + ' (1 año) · ' + (nv ? 'No viable' : pct(u.c5.tirs[i])) + ' (5 años) · ' + (nv ? 'No viable' : pct(u.c10.tirs[i])) + ' (10 años)']; });
+      var resumenIC = ['Valor de la propiedad: ' + money(x.value), 'Deuda: ' + money(x.debt), 'Ingreso mensual hoy: ' + money(u.flujoActual), 'Nuevo ingreso mensual: ' + money(c.monthly),
+        'Capital a invertir: ' + money(c.net), 'Descuento de venta resultante: ' + pct1(x.discount) + (u.conMeta && !u.viable ? ' (bajo el rango viable)' : ''), 'Horizonte: ' + anios(x.years), 'Mayor resultado: ' + u.best];
+      var doc = pdfSimple('Simulación Inversión Circular', 'Proyección a ' + anios(x.years), [
         { t: 'Tu propiedad', rows: [['Valor comercial', money(x.value)], ['Arriendo mensual', money(x.rent)], ['Dividendo mensual', money(x.oldpayment)], ['Deuda a prepagar', money(x.debt)]] },
-        { t: 'Lo esencial', rows: [['Capital neto de la venta', money(c.net)], ['Ingreso mensual equivalente', money(c.monthly)], [x.frequency === 'quarterly' ? 'Pago efectivo trimestral' : 'Pago mensual', money(x.frequency === 'quarterly' ? c.payout : c.monthly)], ['Flujo actual antes de costos', money(u.flujoActual)]] },
+        { t: 'Lo esencial', rows: [['Tu ingreso mensual hoy*', money(u.flujoActual)], ['Tu nuevo ingreso mensual con Pulso Inversor', money(c.monthly), 'pos'], [x.frequency === 'quarterly' ? 'Pago efectivo trimestral' : 'Pago mensual', money(x.frequency === 'quarterly' ? c.payout : c.monthly)], ['Capital a invertir', money(c.net)], ['Descuento aplicado a la venta', pct1(x.discount) + ' sobre la tasación'], ['Precio de venta estimado', money(c.sale)]] },
+        { t: 'Tu primer año', rows: [['Hoy, con tus arriendos*', money(u.flujoActual * 12) + ' al año'], ['Con Pulso Inversor', money(c.monthly * 12) + ' al año', 'pos'], ['Diferencia en tu primer año', money((c.monthly - u.flujoActual) * 12)]] },
         { t: 'Resumen', text: $('#ic-summary').textContent },
-        { t: '¿Con cuánto terminas en ' + x.years + ' años?', rows: [['Si conservas y arriendas', compact(c.end[0] + c.totals[0])], ['Si vendes e inviertes en Pulso Inversor', compact(c.end[1] + c.totals[1])]].concat(u.n === 3 && u.cicloOk ? [['Si vendes, inviertes y compras otra', compact(c.end[2] + c.totals[2])]] : []).concat([['Mayor resultado', u.best, 'pos']]) },
+        { t: '¿Con cuánto terminas en ' + anios(x.years) + '?', rows: [['Si conservas y arriendas', compact(c.end[0] + c.totals[0])], ['Si vendes e inviertes en Pulso Inversor', compact(c.end[1] + c.totals[1])]].concat(u.n === 3 && u.cicloOk ? [['Si vendes, inviertes y compras otra', compact(c.end[2] + c.totals[2])]] : []).concat([['Mayor resultado', u.best, 'pos']]) },
         { t: 'TIR anual efectiva', rows: filasTir },
         { t: 'Tus próximos pasos', proximos: true },
-        { t: 'Supuestos', small: true, text: $('#ic-base').textContent + ' Venta 15% bajo el valor comercial; inflación 3% anual; arriendo reajustado 3% anual; mantención, vacancia y reparaciones estimadas. Proyectar diez años exige continuidad de tasa, condiciones y cumplimiento de pagos. La nueva compra es opcional y se evalúa por separado. ' + DISCLAIMER }
+        { t: 'Supuestos', small: true, text: $('#ic-base').textContent + ' *El ingreso actual por arriendo corresponde a condiciones normales y puede disminuir por vacancia, mantenciones o contribuciones. Meta: duplicar el ingreso mensual actual; el descuento de venta resulta de cada caso (' + pct1(x.discount) + ' sobre la tasación). Inflación 3% anual; arriendo reajustado 3% anual; mantención, vacancia y reparaciones estimadas. Proyectar diez años exige continuidad de tasa, condiciones y cumplimiento de pagos. La nueva compra es opcional y se evalúa por separado. ' + DISCLAIMER }
       ], { tipo: 'Inversión Inmobiliaria Circular', monto: c.net });
       enviarCorreo('circular', doc, 'Simulacion_InversionCircular', resumenIC, st, btn, c.net);
     });
