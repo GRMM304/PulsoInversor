@@ -116,13 +116,16 @@ src="https://www.facebook.com/tr?id=4384764601785320&ev=PageView&noscript=1"
   </div>
   <!-- PENDIENTE: CASILLAS (revisión 17-11-2026): Política de privacidad obligatoria; publicidad OPCIONAL y sin marcar. Términos y condiciones pendientes de validación legal. -->
   <div class="sim-panel" id="sim-circular" data-sim-panel="sim-circular"><div class="sim-panel-body">
-    <div class="sim-head"><h2>Simula tu Inversión Circular</h2><p class="muted">Descubre cómo duplicar el ingreso mensual que hoy te dan tus arriendos, vendiendo e invirtiendo el capital en Pulso Inversor. Cifras en pesos.</p></div>
+    <div class="sim-head"><h2>Simula tu Inversión Circular</h2><p class="muted">Descubre cuánto puede crecer el ingreso mensual que hoy te dan tus arriendos, vendiendo e invirtiendo el capital en Pulso Inversor. Cifras en pesos.</p></div>
     <div class="ic">
       <form class="pro-form ic-form" id="ic-form" novalidate>
         <span class="pro-label">Tus propiedades <small>Agrega cada departamento o casa que arriendas.</small></span>
         <div class="ic-props" id="ic-props"></div>
         <button type="button" class="ic-add" id="ic-add"><span aria-hidden="true">+</span> Agregar otro departamento</button>
         <p class="ic-total" id="ic-total" hidden></p>
+        <label class="pro-label" for="ic-retiro">¿Quieres retirar parte del capital de la venta? <small>Opcional. El resto queda invertido.</small></label>
+        <div class="money-in"><span>$</span><input id="ic-retiro" inputmode="numeric" autocomplete="off" placeholder="0"></div>
+        <p class="ic-hint" id="ic-retiro-hint">Hasta 30% del capital de la venta, dejando al menos $25.000.000 invertidos.</p>
         <span class="pro-label">¿Cada cuánto quieres recibir tus intereses?</span>
         <div class="pro-chips"><button type="button" class="chip-opt" data-ic-freq="quarterly">Cada 3 meses · 1,1% mensual</button><button type="button" class="chip-opt" data-ic-freq="monthly">Cada mes · 1,0% mensual</button></div>
         <label class="check ic-purchase"><input type="checkbox" id="ic-purchase"><span>Quiero evaluar comprar una nueva propiedad con el capital <small>(opcional)</small></span></label>
@@ -145,7 +148,7 @@ src="https://www.facebook.com/tr?id=4384764601785320&ev=PageView&noscript=1"
         <div class="ic-kpis">
           <div class="ic-kpi"><small>Tu ingreso mensual hoy*</small><strong id="ic-k-flow">—</strong><span>Arriendo menos dividendo</span></div>
           <div class="ic-kpi hl"><small>Tu nuevo ingreso mensual con Pulso Inversor</small><strong id="ic-k-monthly">—</strong><span id="ic-k-monthly-sub">—</span></div>
-          <div class="ic-kpi"><small>Capital a invertir</small><strong id="ic-k-net">—</strong><span>Lo que queda de la venta, descontada la deuda</span></div>
+          <div class="ic-kpi"><small>Capital a invertir</small><strong id="ic-k-net">—</strong><span id="ic-k-net-sub">Lo que queda de la venta, descontada la deuda</span></div>
         </div>
         <div class="ic-desc" id="ic-desc" hidden><div><small>Descuento aplicado a la venta</small><strong id="ic-d-pct">—</strong></div><p id="ic-d-txt"></p></div>
         <p class="ic-summary" id="ic-summary"></p>
@@ -164,7 +167,7 @@ src="https://www.facebook.com/tr?id=4384764601785320&ev=PageView&noscript=1"
         <p class="sim-status" id="ic-status" role="status"></p>
       </div>
     </div>
-    <!-- PENDIENTE: SUPUESTOS (revisión 24-11-2026): la meta es DUPLICAR el ingreso mensual actual (arriendo menos dividendo); el descuento de venta es el resultado de cada caso y queda entre 15% y 20% (tope: nunca pasa de 20%; si duplicar exigiera más, se vende con 20% y el ingreso queda sobre el doble). Si duplicar exigiera menos de 15% (o no se alcanza ni a valor de tasación), se calcula con 15% y se muestra el aumento logrado: el simulador siempre muestra resultados. Sin flujo actual positivo se usa 15% de referencia. Tasas Pulso 1,1% (pago trimestral) y 1,0% (mensual), inflación 3%, arriendo +3% anual, mantención $150.000/año, vacancia 42 días cada 3 años con 1 mes de garantía, reparaciones $1.200.000 cada 3 años. VALIDAR. -->
+    <!-- PENDIENTE: SUPUESTOS (revisión 24-11-2026): la meta es DUPLICAR el ingreso mensual actual (arriendo menos dividendo); el descuento de venta es el resultado de cada caso y queda entre 15% y 20% (tope: nunca pasa de 20%; si duplicar exigiera más, se vende con 20% y el ingreso queda sobre el doble). Si duplicar exigiera menos de 15% (o no se alcanza ni a valor de tasación), se calcula con 15% y se muestra el aumento logrado: el simulador siempre muestra resultados. RETIRO opcional del capital de la venta: hasta 30% del capital (después de prepagar deuda) y dejando al menos $25.000.000 invertidos; el retiro no genera intereses. Los mensajes al cliente no hablan de «duplicar». Sin flujo actual positivo se usa 15% de referencia. Tasas Pulso 1,1% (pago trimestral) y 1,0% (mensual), inflación 3%, arriendo +3% anual, mantención $150.000/año, vacancia 42 días cada 3 años con 1 mes de garantía, reparaciones $1.200.000 cada 3 años. VALIDAR. -->
   </div></div>
   </div>
 </div></section>
