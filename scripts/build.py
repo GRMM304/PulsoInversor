@@ -1107,11 +1107,11 @@ page('inversion-circular.html', 'Inversión Inmobiliaria Circular',
           <div class="ic-kpi hl"><small>Tu nuevo ingreso mensual con Pulso Inversor</small><strong id="ic-k-monthly">—</strong><span id="ic-k-monthly-sub">—</span></div>
           <div class="ic-kpi"><small>Capital a invertir</small><strong id="ic-k-net">—</strong><span id="ic-k-net-sub">Lo que queda de la venta, descontada la deuda</span></div>
         </div>
-        <p class="ic-cond"><b>*Importante:</b> el ingreso actual por arriendo corresponde a condiciones normales. Puede disminuir por vacancia, mantenciones o contribuciones.</p>
         <div class="ic-desc" id="ic-desc" hidden><div><small>Descuento aplicado a la venta</small><strong id="ic-d-pct">—</strong></div><p id="ic-d-txt"></p></div>
         <p class="ic-summary" id="ic-summary"></p>
         <div class="ic-card ic-year"><div class="ic-head"><h4>Tu primer año: más liquidez desde el inicio</h4><span>Flujo anual</span></div>
           <div class="ic-tablewrap"><table class="ic-table"><thead><tr><th>Alternativa</th><th>Al mes</th><th>Al año</th></tr></thead><tbody id="ic-anual"></tbody></table></div></div>
+        <p class="ic-cond"><b>*Importante:</b> el ingreso actual por arriendo corresponde a condiciones normales. Puede disminuir por vacancia, mantenciones o contribuciones.</p>
         <div class="ic-card"><h4 id="ic-bars-title">¿Con cuánto terminas?</h4><div class="cb" id="ic-bars"></div>
           <p class="cb-legend"><span class="cb-a"></span>Patrimonio o capital al término <span class="cb-b"></span>Ingresos recibidos en el período</p></div>
         <div class="ic-card"><div class="ic-head"><h4>La comparación que respalda tu decisión</h4><span>TIR anual efectiva</span></div>

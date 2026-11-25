@@ -747,7 +747,7 @@
       // Primer año: el aumento de liquidez es inmediato.
       var anualHoy = flujoActual * 12, anualPulso = c.monthly * 12;
       $('#ic-anual').innerHTML = '<tr class="ic-base-row"><td>Hoy, con tus arriendos*</td><td>' + money(flujoActual) + '</td><td>' + money(anualHoy) + '</td></tr>' +
-        '<tr class="hl"><td>Con Pulso Inversor</td><td>' + money(c.monthly) + '</td><td>' + money(anualPulso) + '</td></tr>' +
+        '<tr class="hl"><td>Con Pulso Inversor<span class="ic-tag">Tu nuevo ingreso</span></td><td>' + money(c.monthly) + '</td><td>' + money(anualPulso) + '</td></tr>' +
         '<tr><td>Diferencia en tu primer año</td><td>' + (c.monthly - flujoActual >= 0 ? '+' : '−') + money(Math.abs(c.monthly - flujoActual)) + '</td><td>' + (anualPulso - anualHoy >= 0 ? '+' : '−') + money(Math.abs(anualPulso - anualHoy)) + '</td></tr>';
       var dif = c.monthly - flujoActual;
       var g = $('#ic-gain');
@@ -774,7 +774,7 @@
       }).join('');
       // TIR
       var tnames = ['Conservar y arrendar', 'Vender e invertir en Pulso Inversor', 'Pulso Inversor y nueva compra'];
-      $('#ic-tir').innerHTML = tnames.slice(0, n).map(function (nm, i) { var nv = i === 2 && !cicloOk; return '<tr' + (i > 0 ? ' class="hl"' : ' class="ic-base-row"') + '><td>' + nm + '</td><td>' + (nv ? 'No viable' : pct(c5.tirs[i])) + '</td><td>' + (nv ? 'No viable' : pct(c10.tirs[i])) + '</td></tr>'; }).join('');
+      $('#ic-tir').innerHTML = tnames.slice(0, n).map(function (nm, i) { var nv = i === 2 && !cicloOk; return '<tr' + (i > 0 ? ' class="hl"' : ' class="ic-base-row"') + '><td>' + nm + (i > 0 && !nv && c10.tirs[i] !== null && c10.tirs[i] === Math.max.apply(null, c10.tirs.slice(0, n).filter(function (t, k) { return t !== null && !(k === 2 && !cicloOk); })) ? '<span class="ic-tag">Mejor rentabilidad</span>' : '') + '</td><td>' + (nv ? 'No viable' : pct(c5.tirs[i])) + '</td><td>' + (nv ? 'No viable' : pct(c10.tirs[i])) + '</td></tr>'; }).join('');
       // Se muestran las tablas donde vender (Pulso Inversor) obtiene el mejor resultado.
       var barrasPulso = !!best && best.i > 0;
       var tir10 = function (i) { var v = c10.tirs[i]; return v === null || (i === 2 && !cicloOk) ? -Infinity : v; };
