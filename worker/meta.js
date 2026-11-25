@@ -5,7 +5,7 @@
 // que Meta bloquea por ser evento personalizado en servicios financieros) y Purchase (el equipo marca
 // "Invirtió" en el panel). Con la configuración básica de Meta, lo que más importa es el nombre del evento.
 export const PIXEL_ID = '4384764601785320';
-const VERSION = 'v21.0';
+export const VERSION = 'v21.0';
 
 async function sha256(texto) {
   const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(texto));

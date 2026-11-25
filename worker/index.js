@@ -24,6 +24,7 @@ import { rutaAsesores } from './asesores.js';
 import { paginaNoticias, paginaNoticia, medioNoticia, sitemapConNoticias } from './noticias.js';
 import { recibirReunion } from './reuniones.js';
 import { procesarRecordatorios } from './recordatorios.js';
+import { webhookComentarios } from './comentarios.js';
 
 
 function correoInversionista({ tipo, nombre, lineas, personas, conWhatsapp }) {
@@ -249,6 +250,8 @@ export default {
       return Response.redirect(url.origin + limpio + url.search, 301);
     }
     if (url.pathname === '/api/respondio-webhook') return recibirRespondio(request, env, url);
+    // Comentarios de Facebook e Instagram: webhook de la app de Meta (worker/comentarios.js).
+    if (url.pathname === '/api/meta-comentarios') return webhookComentarios(request, env, ctx);
     if (url.pathname === '/api/meta-lead') {
       if (request.method !== 'POST') return json({ ok: false, error: 'metodo_no_permitido' }, 405);
       try { return await metaLead(request, env); } catch (e) { console.error('meta-lead', e); return json({ ok: false }, 500); }
