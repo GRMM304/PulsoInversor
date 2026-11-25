@@ -631,20 +631,20 @@
       var equity = x.value - x.debt, base = x.base === 'net' ? net : equity;
       var newprice = x.newvalue * (1 - x.discount / 100), loan = Math.min(newprice, x.newvalue * x.ltv / 100), upfront = newprice - loan + newprice * x.buycost / 100, invest = net - upfront;
       var q = x.frequency === 'quarterly' ? 3 : 1, rate = (q === 3 ? x.quarterrate : x.monthrate) / 100;
-      var oldrate = x.debt > 0 ? loanRate(x.debt, x.oldpayment, x.oldmonths) : 0, newrate = x.rate / 1200;
+      var loans = x.loans.map(function (l) { var r; try { r = loanRate(l.debt, l.pay, l.months); } catch (e) { throw new Error(l.name + ': ' + e.message); } return { bal: l.debt, pay: l.pay, months: l.months, r: r }; }), newrate = x.rate / 1200;
       var newpayment = payment(loan, newrate, x.term * 12), infl = x.inflation / 100, app = (1 + infl) * (1 + x.growth / 100);
       var bal = x.debt, newbal = loan, flows = [[-base], [-base], [-base]], series = [[], [], []], totals = [0, 0, 0];
       var rentAt = function (r, m) { return r * Math.pow(1 + x.rentgrowth / 100, Math.floor((m - 1) / 12)); };
-      var parts = function (r, m) { if (m % 12) return { vac: 0, maint: 0, rep: 0 }; var year = m / 12, f = Math.pow(1 + infl, year - 1), turn = year % x.turnyears === 0; return { vac: turn ? Math.max(0, (x.vacancydays / 30 - x.guarantee) * r) : 0, maint: x.maintenance * f, rep: turn ? x.repairs * f : 0 }; };
+      var parts = function (r, m, k) { k = k || 1; if (m % 12) return { vac: 0, maint: 0, rep: 0 }; var year = m / 12, f = Math.pow(1 + infl, year - 1), turn = year % x.turnyears === 0; return { vac: turn ? Math.max(0, (x.vacancydays / 30 - x.guarantee) * r) : 0, maint: x.maintenance * f * k, rep: turn ? x.repairs * f * k : 0 }; };
       var expense = function (r, m) { var p = parts(r, m); return p.vac + p.maint + p.rep; };
       var keepFirstYear = 0;
       for (var t = 0; t <= months; t++) {
         if (t) {
-          var idx0 = Math.pow(1 + infl, (t - 1) / 12), oldpaid = t <= x.oldmonths && bal > 0 ? Math.min(x.oldpayment, bal * (1 + oldrate)) : 0;
-          bal = Math.max(0, bal * (1 + oldrate) - oldpaid);
+          var idx0 = Math.pow(1 + infl, (t - 1) / 12), oldpaid = 0; bal = 0;
+          loans.forEach(function (l) { var p = t <= l.months && l.bal > 0 ? Math.min(l.pay, l.bal * (1 + l.r)) : 0; oldpaid += p; l.bal = Math.max(0, l.bal * (1 + l.r) - p); bal += l.bal; });
           var np = t <= x.term * 12 && newbal > 0 ? Math.min(newpayment, newbal * (1 + newrate)) : 0; newbal = Math.max(0, newbal * (1 + newrate) - np);
           var rent = rentAt(x.rent, t), newrent = rentAt(x.newrent, t), payout = t % q === 0 ? q * rate : 0;
-          var kp = parts(rent, t), kdiv = oldpaid * idx0 + (x.flatpayment || 0) * idx0;
+          var kp = parts(rent, t, x.nprops), kdiv = oldpaid * idx0 + (x.flatpayment || 0) * idx0;
           if (t <= 12) keepFirstYear += rent - kdiv - kp.vac - kp.maint - kp.rep;
           var last = [rent - kdiv - kp.vac - kp.maint - kp.rep, net * payout, invest * payout + (x.purchase ? newrent - np * idx0 - expense(newrent, t) : 0)];
           for (var i = 0; i < 3; i++) { flows[i].push(last[i]); totals[i] += last[i]; }
@@ -659,8 +659,8 @@
         totals: totals, end: end, tirs: flows.map(irr), rate: rate, q: q, monthly: net * rate, payout: net * rate * q };
     }
 
-    var MONEY = ['value', 'rent', 'oldpayment', 'debt', 'newvalue', 'newrent'];
-    var X = { debtmode: null, frequency: null, years: null, purchase: false };
+    var MONEY = ['newvalue', 'newrent'];
+    var X = { frequency: null, years: null, purchase: false };
     var editoNueva = false;
     var num = function (id) { var el = $('#ic-' + id); return MONEY.indexOf(id) >= 0 ? Number(el.value.replace(/\D/g, '')) : Number(el.value); };
     var money = function (n) { n = Math.round(n || 0); return (n < 0 ? '−$' : '$') + Math.abs(n).toLocaleString('es-CL'); };
@@ -670,24 +670,26 @@
     var anios = function (n) { return n + (n === 1 ? ' año' : ' años'); };
     var DESC_MIN = 15; // bajo este descuento la operación no es atractiva para el inversionista (rango objetivo 15% a 20% o algo más)
     function inputs() {
-      var x = { value: num('value'), rent: num('rent'), oldpayment: num('oldpayment'), debt: num('debt'), oldmonths: num('oldmonths'),
+      var props = leerProps().filter(function (p) { return p.value || p.rent || p.pay || p.debt || p.months; });
+      var x = { props: props, nprops: Math.max(1, props.length), value: 0, rent: 0, oldpayment: 0, debt: 0, flatpayment: 0, loans: [],
         newvalue: num('newvalue'), newrent: num('newrent'), ltv: num('ltv'), term: num('term'), rate: num('rate'), buycost: num('buycost'),
-        frequency: X.frequency, years: X.years, purchase: X.purchase, debtmode: X.debtmode, flatpayment: 0 };
+        frequency: X.frequency, years: X.years, purchase: X.purchase };
+      props.forEach(function (p) { x.value += p.value; x.rent += p.rent; x.oldpayment += p.pay; x.debt += p.debt;
+        if (p.debt > 0) x.loans.push({ name: p.name, debt: p.debt, pay: p.pay, months: p.months }); else x.flatpayment += p.pay; });
       Object.keys(FIJOS).forEach(function (k) { x[k] = FIJOS[k]; });
-      if (X.debtmode === 'no') { x.debt = 0; x.flatpayment = x.oldpayment; }
       return x;
     }
     function err(msg) { var e = $('#ic-error'); e.textContent = msg; e.hidden = false; $('#ic-results').classList.add('is-stale'); }
     var ultimo = null;
     function render() {
       $('#ic-error').hidden = true; $('#ic-warning').hidden = true; $('#ic-results').classList.remove('is-stale');
-      $$('[data-ic-debt]').forEach(function (b) { var on = b.getAttribute('data-ic-debt') === X.debtmode; b.classList.toggle('is-active', on); b.setAttribute('aria-pressed', on); });
       $$('[data-ic-freq]').forEach(function (b) { var on = b.getAttribute('data-ic-freq') === X.frequency; b.classList.toggle('is-active', on); b.setAttribute('aria-pressed', on); });
       $$('[data-ic-years]').forEach(function (b) { var on = +b.getAttribute('data-ic-years') === X.years; b.classList.toggle('is-active', on); b.setAttribute('aria-pressed', on); });
-      $('#ic-debtfields').hidden = X.debtmode !== 'yes';
       $('#ic-purchasefields').hidden = !X.purchase;
-      var x = inputs();
-      var falta = !X.debtmode || !X.frequency || !X.years || !(x.value > 0);
+      var x = inputs(), varias = x.props.length > 1;
+      $('#ic-total').hidden = !varias;
+      if (varias) $('#ic-total').innerHTML = x.props.length + ' propiedades · tasación total <b>' + money(x.value) + '</b> · arriendos <b>' + money(x.rent) + '</b> · dividendos <b>' + money(x.oldpayment) + '</b>' + (x.debt ? ' · deuda <b>' + money(x.debt) + '</b>' : '');
+      var falta = !X.frequency || !X.years || !(x.value > 0);
       $('#ic-results').classList.toggle('is-empty', falta);
       $('#ic-correo').disabled = falta;
       if (falta) {
@@ -702,10 +704,13 @@
         $('#ic-tir').innerHTML = '<tr><td colspan="4" class="ic-empty">Aquí verás la TIR de cada alternativa.</td></tr>';
         $('#ic-base').textContent = ''; ultimo = null; return;
       }
-      if (!(x.value >= 1000000)) return err('Ingresa el valor de tu propiedad.');
-      if (X.debtmode === 'yes' && !(x.debt > 0)) return err('Ingresa cuánto debes hoy, o elige «Sin deuda».');
-      if (X.debtmode === 'yes' && !(x.oldmonths > 0)) return err('Ingresa cuántas cuotas te quedan.');
-      if (x.debt >= x.value) return err('La deuda debe ser menor al valor de tu propiedad.');
+      for (var k = 0; k < x.props.length; k++) {
+        var pr = x.props[k];
+        if (!(pr.value >= 1000000)) return err(pr.name + ': ingresa su valor de tasación.');
+        if (pr.debt > 0 && !(pr.months > 0)) return err(pr.name + ': ingresa cuántas cuotas le quedan.');
+        if (pr.debt > 0 && !(pr.pay > 0)) return err(pr.name + ': ingresa el dividendo que pagas.');
+        if (pr.debt >= pr.value) return err(pr.name + ': la deuda debe ser menor a su valor.');
+      }
       if (X.purchase && !(x.newvalue > 0 && x.ltv >= 0 && x.term > 0)) return err('Completa los datos de la nueva propiedad.');
       // Simulador inverso: la meta es duplicar el ingreso mensual actual (arriendo menos dividendo).
       // El descuento de venta es el resultado: el precio que deja, descontada la deuda, el capital que da el doble.
@@ -728,7 +733,7 @@
       $('#ic-k-flow').textContent = money(flujoActual);
       $('#ic-desc').hidden = false; $('#ic-desc').classList.toggle('warn', conMeta && !viable);
       $('#ic-d-pct').textContent = pct1(x.discount);
-      $('#ic-d-txt').innerHTML = 'Tu propiedad se vende en <b>' + money(c.sale) + '</b>, ' + money(x.value - c.sale) + ' bajo su tasación de ' + money(x.value) + '.' + (conMeta ? (viable ? ' Es el descuento que permite duplicar tu ingreso.' : ' <span class="ic-sale-flag">Bajo el rango viable</span>') : ' Descuento de referencia.');
+      $('#ic-d-txt').innerHTML = (varias ? 'Tus propiedades se venden en <b>' : 'Tu propiedad se vende en <b>') + money(c.sale) + '</b>, ' + money(x.value - c.sale) + ' bajo ' + (varias ? 'su tasación total' : 'su tasación') + ' de ' + money(x.value) + '.' + (conMeta ? (viable ? ' Es el descuento que permite duplicar tu ingreso.' : ' <span class="ic-sale-flag">Bajo el rango viable</span>') : ' Descuento de referencia.');
       // Primer año: el aumento de liquidez es inmediato.
       var anualHoy = flujoActual * 12, anualPulso = c.monthly * 12;
       $('#ic-anual').innerHTML = '<tr><td>Hoy, con tus arriendos*</td><td>' + money(flujoActual) + '</td><td>' + money(anualHoy) + '</td></tr>' +
@@ -744,7 +749,7 @@
       $('#ic-period').textContent = 'Proyección a ' + anios(X.years);
       // Barras: ¿con cuánto terminas?
       var nombres = ['Si conservas y arriendas', 'Si vendes e inviertes en Pulso Inversor', 'Si vendes, inviertes y compras otra propiedad'];
-      var pa = [(x.debt ? 'Tu propiedad, descontada la deuda' : 'Valor de tu propiedad') + ' (incluye plusvalía de ' + compact(c.plusvalia) + ')', 'Capital invertido', 'Capital invertido y nueva propiedad'];
+      var pa = [(varias ? (x.debt ? 'Tus propiedades, descontada la deuda' : 'Valor de tus propiedades') : (x.debt ? 'Tu propiedad, descontada la deuda' : 'Valor de tu propiedad')) + ' (incluye plusvalía de ' + compact(c.plusvalia) + ')', 'Capital invertido', 'Capital invertido y nueva propiedad'];
       var pb = ['Arriendos netos recibidos', 'Intereses recibidos', 'Intereses y arriendos netos recibidos'];
       var n = X.purchase ? 3 : 2, filas = [];
       for (var i = 0; i < n; i++) { if (i === 2 && !cicloOk) { filas.push({ i: i, nv: true }); continue; } filas.push({ i: i, a: c.end[i], b: c.totals[i], t: c.end[i] + c.totals[i] }); }
@@ -763,16 +768,39 @@
       $('#ic-base').textContent = 'Base inicial común: ' + money(c.base) + '. Patrimonio actual (valor comercial' + (x.debt ? ' menos deuda' : '') + '). La TIR reconoce el descuento de venta.';
       ultimo = { x: x, c: c, c1: c1, c5: c5, c10: c10, n: n, cicloOk: cicloOk, flujoActual: flujoActual, conMeta: conMeta, viable: viable, best: best ? nombres[best.i] : '' };
     }
-    MONEY.forEach(function (id) { $('#ic-' + id).addEventListener('input', function (e) { var raw = e.target.value.replace(/\D/g, ''); e.target.value = raw ? Number(raw).toLocaleString('es-CL') : ''; }); });
+    // Propiedades: una tarjeta por departamento o casa; se pueden agregar y quitar.
+    function moneyIn(f, ph) { return '<div class="money-in"><span>$</span><input data-f="' + f + '" inputmode="numeric" autocomplete="off" placeholder="' + ph + '"></div>'; }
+    function tarjeta() {
+      var el = document.createElement('fieldset'); el.className = 'ic-prop';
+      el.innerHTML = '<legend></legend><button type="button" class="ic-del" aria-label="Quitar">Quitar</button>' +
+        '<label class="pro-label">Valor de tasación</label>' + moneyIn('value', '0') +
+        '<div class="ic-2"><label><span class="pro-label">Arriendo al mes</span>' + moneyIn('rent', '0') + '</label><label><span class="pro-label">Dividendo al mes</span>' + moneyIn('pay', '0') + '</label></div>' +
+        '<div class="ic-2"><label><span class="pro-label">Deuda hoy (saldo)</span>' + moneyIn('debt', 'Vacío si no tiene') + '</label><label><span class="pro-label">Cuotas que quedan</span><input data-f="months" type="number" inputmode="numeric" min="1" max="600" placeholder="Ej. 225"></label></div>';
+      $('#ic-props').appendChild(el); numerar(); return el;
+    }
+    function numerar() {
+      var cards = $$('#ic-props .ic-prop');
+      cards.forEach(function (c, i) { c.querySelector('legend').textContent = cards.length > 1 ? 'Propiedad ' + (i + 1) : 'Tu propiedad'; c.querySelector('.ic-del').hidden = cards.length < 2; c.querySelector('.ic-del').setAttribute('aria-label', 'Quitar propiedad ' + (i + 1)); });
+    }
+    function leerProps() {
+      return $$('#ic-props .ic-prop').map(function (c, i) {
+        var v = function (f) { var e = c.querySelector('[data-f="' + f + '"]'); return Number(e.value.replace(/\D/g, '')) || 0; };
+        return { name: 'Propiedad ' + (i + 1), value: v('value'), rent: v('rent'), pay: v('pay'), debt: v('debt'), months: v('months') };
+      });
+    }
+    tarjeta();
+    $('#ic-add').addEventListener('click', function () { var el = tarjeta(); el.querySelector('[data-f="value"]').focus(); render(); });
+    $('#ic-props').addEventListener('click', function (e) { var b = e.target.closest('.ic-del'); if (!b) return; b.closest('.ic-prop').remove(); numerar(); render(); });
     $('#ic-form').addEventListener('input', function (e) {
+      var f = e.target.getAttribute('data-f');
+      if ((f && f !== 'months') || MONEY.indexOf(e.target.id.replace('ic-', '')) >= 0) { var raw = e.target.value.replace(/\D/g, ''); e.target.value = raw ? Number(raw).toLocaleString('es-CL') : ''; }
       if (e.target.id === 'ic-newvalue') editoNueva = true;
-      if (e.target.id === 'ic-value' && !editoNueva) $('#ic-newvalue').value = Math.round(num('value') * .8).toLocaleString('es-CL');
+      if (f === 'value' && !editoNueva) { var pv = leerProps()[0]; $('#ic-newvalue').value = Math.round((pv ? pv.value : 0) * .8).toLocaleString('es-CL'); }
       render();
     });
     $('#ic-form').addEventListener('click', function (e) {
       var b;
-      if ((b = e.target.closest('[data-ic-debt]'))) { X.debtmode = b.getAttribute('data-ic-debt'); render(); }
-      else if ((b = e.target.closest('[data-ic-freq]'))) { X.frequency = b.getAttribute('data-ic-freq'); render(); }
+      if ((b = e.target.closest('[data-ic-freq]'))) { X.frequency = b.getAttribute('data-ic-freq'); render(); }
       else if ((b = e.target.closest('[data-ic-years]'))) { X.years = +b.getAttribute('data-ic-years'); render(); }
     });
     $('#ic-purchase').addEventListener('change', function (e) { X.purchase = e.target.checked; render(); });
@@ -786,10 +814,10 @@
       if (!jspdfListo(st)) return;
       var u = ultimo, x = u.x, c = u.c;
       var filasTir = ['Conservar y arrendar', 'Vender, prepagar e invertir', 'Ciclo completo con nueva compra'].slice(0, u.n).map(function (nm, i) { var nv = i === 2 && !u.cicloOk; return [nm, (nv ? 'No viable' : pct(u.c1.tirs[i])) + ' (1 año) · ' + (nv ? 'No viable' : pct(u.c5.tirs[i])) + ' (5 años) · ' + (nv ? 'No viable' : pct(u.c10.tirs[i])) + ' (10 años)']; });
-      var resumenIC = ['Valor de la propiedad: ' + money(x.value), 'Deuda: ' + money(x.debt), 'Ingreso mensual hoy: ' + money(u.flujoActual), 'Nuevo ingreso mensual: ' + money(c.monthly),
+      var resumenIC = [(x.props.length > 1 ? x.props.length + ' propiedades, tasación total: ' : 'Valor de la propiedad: ') + money(x.value), 'Deuda: ' + money(x.debt), 'Ingreso mensual hoy: ' + money(u.flujoActual), 'Nuevo ingreso mensual: ' + money(c.monthly),
         'Capital a invertir: ' + money(c.net), 'Descuento de venta resultante: ' + pct1(x.discount) + (u.conMeta && !u.viable ? ' (bajo el rango viable)' : ''), 'Horizonte: ' + anios(x.years), 'Mayor resultado: ' + u.best];
       var doc = pdfSimple('Simulación Inversión Circular', 'Proyección a ' + anios(x.years), [
-        { t: 'Tu propiedad', rows: [['Valor comercial', money(x.value)], ['Arriendo mensual', money(x.rent)], ['Dividendo mensual', money(x.oldpayment)], ['Deuda a prepagar', money(x.debt)]] },
+        { t: x.props.length > 1 ? 'Tus propiedades' : 'Tu propiedad', rows: (x.props.length > 1 ? x.props.map(function (p) { return [p.name, 'Tasación ' + money(p.value) + ' · arriendo ' + money(p.rent) + ' · dividendo ' + money(p.pay) + (p.debt ? ' · deuda ' + money(p.debt) : '')]; }) : []).concat([['Valor comercial' + (x.props.length > 1 ? ' total' : ''), money(x.value)], ['Arriendo mensual', money(x.rent)], ['Dividendo mensual', money(x.oldpayment)], ['Deuda a prepagar', money(x.debt)]]) },
         { t: 'Lo esencial', rows: [['Tu ingreso mensual hoy*', money(u.flujoActual)], ['Tu nuevo ingreso mensual con Pulso Inversor', money(c.monthly), 'pos'], [x.frequency === 'quarterly' ? 'Pago efectivo trimestral' : 'Pago mensual', money(x.frequency === 'quarterly' ? c.payout : c.monthly)], ['Capital a invertir', money(c.net)], ['Descuento aplicado a la venta', pct1(x.discount) + ' sobre la tasación'], ['Precio de venta estimado', money(c.sale)]] },
         { t: 'Tu primer año', rows: [['Hoy, con tus arriendos*', money(u.flujoActual * 12) + ' al año'], ['Con Pulso Inversor', money(c.monthly * 12) + ' al año', 'pos'], ['Diferencia en tu primer año', money((c.monthly - u.flujoActual) * 12)]] },
         { t: 'Resumen', text: $('#ic-summary').textContent },
