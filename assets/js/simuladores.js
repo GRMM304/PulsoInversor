@@ -670,7 +670,7 @@
     var anios = function (n) { return n + (n === 1 ? ' año' : ' años'); };
     var DESC_MIN = 15; // bajo este descuento la operación no es atractiva para el inversionista (rango objetivo 15% a 20% o algo más)
     function inputs() {
-      var props = leerProps().filter(function (p) { return p.value || p.rent || p.pay || p.debt || p.months; });
+      var props = leerProps().filter(function (p) { return p.value || p.rent || p.pay || p.debt || p.months || p.modo; });
       var x = { props: props, nprops: Math.max(1, props.length), value: 0, rent: 0, oldpayment: 0, debt: 0, flatpayment: 0, loans: [],
         newvalue: num('newvalue'), newrent: num('newrent'), ltv: num('ltv'), term: num('term'), rate: num('rate'), buycost: num('buycost'),
         frequency: X.frequency, years: X.years, purchase: X.purchase };
@@ -686,10 +686,11 @@
       $$('[data-ic-freq]').forEach(function (b) { var on = b.getAttribute('data-ic-freq') === X.frequency; b.classList.toggle('is-active', on); b.setAttribute('aria-pressed', on); });
       $$('[data-ic-years]').forEach(function (b) { var on = +b.getAttribute('data-ic-years') === X.years; b.classList.toggle('is-active', on); b.setAttribute('aria-pressed', on); });
       $('#ic-purchasefields').hidden = !X.purchase;
-      var x = inputs(), varias = x.props.length > 1;
+      $$('#ic-props .ic-prop').forEach(function (c) { var m = c.getAttribute('data-modo'); $$('[data-debt]', c).forEach(function (b) { var on = b.getAttribute('data-debt') === m; b.classList.toggle('is-active', on); b.setAttribute('aria-pressed', on); }); c.querySelector('[data-debtfields]').hidden = m !== 'yes'; });
+      var x = inputs(), varias = x.props.length > 1, sinModo = x.props.filter(function (p) { return !p.modo; });
       $('#ic-total').hidden = !varias;
       if (varias) $('#ic-total').innerHTML = x.props.length + ' propiedades · tasación total <b>' + money(x.value) + '</b> · arriendos <b>' + money(x.rent) + '</b> · dividendos <b>' + money(x.oldpayment) + '</b>' + (x.debt ? ' · deuda <b>' + money(x.debt) + '</b>' : '');
-      var falta = !X.frequency || !X.years || !(x.value > 0);
+      var falta = !X.frequency || !X.years || !(x.value > 0) || (sinModo.length > 0 && !varias);
       $('#ic-results').classList.toggle('is-empty', falta);
       $('#ic-correo').disabled = falta;
       if (falta) {
@@ -704,8 +705,10 @@
         $('#ic-tir').innerHTML = '<tr><td colspan="4" class="ic-empty">Aquí verás la TIR de cada alternativa.</td></tr>';
         $('#ic-base').textContent = ''; ultimo = null; return;
       }
+      if (sinModo.length) return err(sinModo[0].name + ': indica si tiene deuda.');
       for (var k = 0; k < x.props.length; k++) {
         var pr = x.props[k];
+        if (pr.modo === 'yes' && !(pr.debt > 0)) return err(pr.name + ': ingresa cuánto debes hoy, o elige «Sin deuda».');
         if (!(pr.value >= 1000000)) return err(pr.name + ': ingresa su valor de tasación.');
         if (pr.debt > 0 && !(pr.months > 0)) return err(pr.name + ': ingresa cuántas cuotas le quedan.');
         if (pr.debt > 0 && !(pr.pay > 0)) return err(pr.name + ': ingresa el dividendo que pagas.');
@@ -773,9 +776,11 @@
     function tarjeta() {
       var el = document.createElement('fieldset'); el.className = 'ic-prop';
       el.innerHTML = '<legend></legend><button type="button" class="ic-del" aria-label="Quitar">Quitar</button>' +
+        '<span class="pro-label">¿Tiene deuda?</span><div class="pro-yesno"><button type="button" class="chip-opt" data-debt="no">Sin deuda</button><button type="button" class="chip-opt" data-debt="yes">Con deuda</button></div>' +
         '<label class="pro-label">Valor de tasación</label>' + moneyIn('value', '0') +
         '<div class="ic-2"><label><span class="pro-label">Arriendo al mes</span>' + moneyIn('rent', '0') + '</label><label><span class="pro-label">Dividendo al mes</span>' + moneyIn('pay', '0') + '</label></div>' +
-        '<div class="ic-2"><label><span class="pro-label">Deuda hoy (saldo)</span>' + moneyIn('debt', 'Vacío si no tiene') + '</label><label><span class="pro-label">Cuotas que quedan</span><input data-f="months" type="number" inputmode="numeric" min="1" max="600" placeholder="Ej. 225"></label></div>';
+        '<div class="ic-sub" data-debtfields hidden><label class="pro-label">¿Cuánto debes hoy? <small>Saldo de prepago que informa tu banco.</small></label>' + moneyIn('debt', 'Ej. 40.000.000') +
+        '<label class="pro-label">¿Cuántas cuotas te quedan?</label><input data-f="months" type="number" inputmode="numeric" min="1" max="600" placeholder="Ej. 225"></div>';
       $('#ic-props').appendChild(el); numerar(); return el;
     }
     function numerar() {
@@ -785,12 +790,17 @@
     function leerProps() {
       return $$('#ic-props .ic-prop').map(function (c, i) {
         var v = function (f) { var e = c.querySelector('[data-f="' + f + '"]'); return Number(e.value.replace(/\D/g, '')) || 0; };
-        return { name: 'Propiedad ' + (i + 1), value: v('value'), rent: v('rent'), pay: v('pay'), debt: v('debt'), months: v('months') };
+        var modo = c.getAttribute('data-modo') || '', con = modo === 'yes';
+        return { name: $$('#ic-props .ic-prop').length > 1 ? 'Propiedad ' + (i + 1) : 'Tu propiedad', modo: modo, value: v('value'), rent: v('rent'), pay: v('pay'), debt: con ? v('debt') : 0, months: con ? v('months') : 0 };
       });
     }
     tarjeta();
     $('#ic-add').addEventListener('click', function () { var el = tarjeta(); el.querySelector('[data-f="value"]').focus(); render(); });
-    $('#ic-props').addEventListener('click', function (e) { var b = e.target.closest('.ic-del'); if (!b) return; b.closest('.ic-prop').remove(); numerar(); render(); });
+    $('#ic-props').addEventListener('click', function (e) {
+      var d = e.target.closest('[data-debt]');
+      if (d) { d.closest('.ic-prop').setAttribute('data-modo', d.getAttribute('data-debt')); render(); return; }
+      var b = e.target.closest('.ic-del'); if (!b) return; b.closest('.ic-prop').remove(); numerar(); render();
+    });
     $('#ic-form').addEventListener('input', function (e) {
       var f = e.target.getAttribute('data-f');
       if ((f && f !== 'months') || MONEY.indexOf(e.target.id.replace('ic-', '')) >= 0) { var raw = e.target.value.replace(/\D/g, ''); e.target.value = raw ? Number(raw).toLocaleString('es-CL') : ''; }
