@@ -1284,6 +1284,8 @@ select{appearance:none;-webkit-appearance:none;padding-right:40px;background:#ff
 .ic-props{display:grid;gap:12px}.ic-prop{position:relative;margin:0;padding:14px 16px 16px;border:1px solid var(--gray-200);border-radius:var(--radius-lg);background:#f7f8f3;min-width:0}.ic-prop legend{padding:0 6px;font-weight:800;font-size:14px;color:var(--green-900)}.ic-prop .pro-label{margin-top:8px}.ic-prop .ic-2{margin-top:4px}
 .ic-del{position:absolute;top:10px;right:12px;border:0;background:none;color:var(--gray-500);font:inherit;font-size:13px;text-decoration:underline;cursor:pointer}.ic-del:hover{color:#a33}.ic-del[hidden]{display:none}
 .ic-add{justify-self:start;margin-top:4px;padding:10px 16px;border:1.5px dashed var(--green-800);border-radius:99px;background:none;color:var(--green-900);font:inherit;font-weight:700;font-size:14.5px;cursor:pointer}.ic-add:hover{background:#eef1e6}
+.ic-cond{margin:12px 0 0;padding:14px 18px;border-radius:var(--radius-lg);background:#fff6e0;border:1.5px solid #f0c36d;color:#5c3d00;font-size:15px;line-height:1.5}.ic-cond b{color:#5c3d00}
+.ic-card[hidden]{display:none}
 .ic-hint{margin:6px 2px 0;font-size:13px;color:var(--gray-500)}
 .ic-total{margin:4px 0 0;font-size:13.5px;color:var(--gray-700)}.ic-total b{color:var(--green-900)}
 .ic-table th.hl,.ic-table td.hl{background:#eef1e6!important;color:var(--green-900);font-weight:700}
