@@ -1082,8 +1082,6 @@ page('inversion-circular.html', 'Inversión Inmobiliaria Circular',
         <p class="ic-total" id="ic-total" hidden></p>
         <span class="pro-label">¿Cada cuánto quieres recibir tus intereses?</span>
         <div class="pro-chips"><button type="button" class="chip-opt" data-ic-freq="quarterly">Cada 3 meses · 1,1% mensual</button><button type="button" class="chip-opt" data-ic-freq="monthly">Cada mes · 1,0% mensual</button></div>
-        <span class="pro-label">¿A cuántos años quieres proyectar?</span>
-        <div class="pro-yesno"><button type="button" class="chip-opt" data-ic-years="1">1 año</button><button type="button" class="chip-opt" data-ic-years="5">5 años</button><button type="button" class="chip-opt" data-ic-years="10">10 años</button></div>
         <label class="check ic-purchase"><input type="checkbox" id="ic-purchase"><span>Quiero evaluar comprar una nueva propiedad con el capital <small>(opcional)</small></span></label>
         <div id="ic-purchasefields" class="ic-sub" hidden>
           <label class="pro-label" for="ic-newvalue">Valor de la nueva propiedad</label>
@@ -1114,7 +1112,7 @@ page('inversion-circular.html', 'Inversión Inmobiliaria Circular',
         <div class="ic-card"><h4 id="ic-bars-title">¿Con cuánto terminas?</h4><div class="cb" id="ic-bars"></div>
           <p class="cb-legend"><span class="cb-a"></span>Patrimonio o capital al término <span class="cb-b"></span>Ingresos recibidos en el período</p></div>
         <div class="ic-card"><div class="ic-head"><h4>La comparación que respalda tu decisión</h4><span>TIR anual efectiva</span></div>
-          <div class="ic-tablewrap"><table class="ic-table"><thead><tr><th>Alternativa</th><th class="hl">1 año</th><th>5 años</th><th>10 años*</th></tr></thead><tbody id="ic-tir"></tbody></table></div>
+          <div class="ic-tablewrap"><table class="ic-table"><thead><tr><th>Alternativa</th><th>5 años</th><th>10 años*</th></tr></thead><tbody id="ic-tir"></tbody></table></div>
           <p class="ic-note" id="ic-base"></p>
           <p class="ic-note">*Proyectar diez años exige continuidad de tasa, condiciones y cumplimiento de pagos. La nueva compra es opcional y se evalúa por separado.</p>
           <p class="ic-note">Esta simulación no constituye una cotización ni asegura rentabilidades futuras. La rentabilidad simulada es referencial a esta fecha y no compromete a Pulso Inversor SpA. La rentabilidad y las condiciones finales se fijan al momento de la firma del contrato respectivo.</p></div>
