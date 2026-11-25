@@ -1,0 +1,37 @@
+// Landing de la campaña Red Capital (doble ruta: inversión / financiamiento) · Pulso Inversor.
+// Worker + D1, previsto para 5.pulsoinversor.cl. AÚN NO PUBLICADO (ver README.md).
+// Secretos (no van en este archivo): BREVO_API_KEY y CLAVE_PANEL → `npx wrangler secret put NOMBRE`.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "pulso-landing-red-capital",
+  "main": "src/worker.js",
+  "compatibility_date": "2025-09-01",
+  "workers_dev": false,
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "html_handling": "auto-trailing-slash"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "pulso-landing-red-capital",
+      "database_id": "PENDIENTE-crear-con-wrangler-d1-create"
+    }
+  ],
+  "routes": [
+    { "pattern": "5.pulsoinversor.cl", "custom_domain": true }
+  ],
+  "vars": {
+    "REMITENTE_NOMBRE": "Pulso Inversor",
+    "REMITENTE_EMAIL": "contacto@pulsoinversor.cl",
+    "RESPONDER_A": "contacto@pulsoinversor.cl",
+    // Aviso de cada registro de la ruta INVERSIÓN (separar con coma).
+    "AVISO_EQUIPO_INVERSION": "ibarboza@grupomm.cl, frojas@grupomm.cl, jvalenzuela@grupomm.cl, eorrego@grupomm.cl, ibarboza@pulsoinversor.cl, frojas@pulsoinversor.cl",
+    // Aviso de cada registro de la ruta FINANCIAMIENTO. Confirmar responsable financiamiento (hoy es la misma lista).
+    "AVISO_EQUIPO_FINANCIAMIENTO": "ibarboza@grupomm.cl, frojas@grupomm.cl, jvalenzuela@grupomm.cl, eorrego@grupomm.cl, ibarboza@pulsoinversor.cl, frojas@pulsoinversor.cl",
+    // ID de la lista de Brevo "RC · Formulario" (la automatización de activación excluye a esta lista). Completar.
+    "BREVO_LISTA_FORMULARIO": ""
+  },
+  "observability": { "enabled": true }
+}
