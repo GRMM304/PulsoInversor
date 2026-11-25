@@ -1,4 +1,4 @@
-// Landing Red Capital · doble ruta
+// Landing de activación · doble ruta
 (function () {
   var RUTAS = ['inversion', 'financiamiento'];
   var q = new URLSearchParams(location.search);

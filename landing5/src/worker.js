@@ -91,7 +91,7 @@ function correoInteresado(d) {
       p('En esa conversación te mostramos una operación real con sus documentos: <b>qué propiedad respalda tu dinero, qué documento queda a tu favor y cómo lo recuperas.</b>') +
       p('Puedes venir con tu pareja, tu socio o tu abogado. No te vamos a pedir que decidas nada en esa conversación.') +
       boton(wa(`Hola, soy ${d.nombre}. Dejé mis datos en Pulso Inversor y quiero conocer cómo invertir con respaldo inmobiliario.`), 'Escríbenos por WhatsApp') +
-      p('Mientras tanto, puedes revisar <a href="https://4.pulsoinversor.cl/?utm_source=brevo&utm_medium=email&utm_campaign=red-capital&utm_content=confirmacion" style="color:#1d5248">las operaciones de este mes</a>.')),
+      p('Mientras tanto, puedes revisar <a href="https://4.pulsoinversor.cl/?utm_source=brevo&utm_medium=email&utm_campaign=activacion-dic-2026&utm_content=confirmacion" style="color:#1d5248">las operaciones de este mes</a>.')),
   };
 }
 
