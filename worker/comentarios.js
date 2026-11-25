@@ -253,6 +253,16 @@ export async function webhookComentarios(request, env, ctx) {
   return new Response('ok');
 }
 
+// Mensaje interno según tipo y red; si Meta bloquea los enlaces, reintenta una vez sin ellos.
+async function enviarInterno(env, c, tipo, nombre) {
+  const largo = tipo === 'negativo' ? (c.red === 'instagram' ? PRIVADO_NEGATIVO_IG : PRIVADO_NEGATIVO) : privadoInfo(nombre, c.red);
+  try { await responderPrivado(env, c, largo); }
+  catch (e) {
+    if (esBloqueoEnlace(e) && sinEnlaces(largo) !== largo) await responderPrivado(env, c, sinEnlaces(largo));
+    else throw e;
+  }
+}
+
 async function procesar(env, c) {
   await esquema(env);
   const propio = c.propio || (env.META_PAGE_ID && c.autor_id === env.META_PAGE_ID) || (env.META_IG_ID && c.autor_id === env.META_IG_ID);
@@ -274,13 +284,7 @@ async function procesar(env, c) {
     else {
       const nombre = c.red === 'facebook' ? String(c.autor).split(/\s+/)[0] : '';
       try { await responderPublico(env, c, elegir(PUBLICO[cl.tipo], c.id)); publico = 1; } catch (e) { errores.push('Pública: ' + e.message); }
-      const largo = cl.tipo === 'negativo' ? (c.red === 'instagram' ? PRIVADO_NEGATIVO_IG : PRIVADO_NEGATIVO) : privadoInfo(nombre, c.red);
-      try { await responderPrivado(env, c, largo); privado = 1; }
-      catch (e) {
-        if (esBloqueoEnlace(e) && sinEnlaces(largo) !== largo) {
-          try { await responderPrivado(env, c, sinEnlaces(largo)); privado = 1; } catch (e2) { errores.push('Interno: ' + e2.message); }
-        } else errores.push('Interno: ' + e.message);
-      }
+      try { await enviarInterno(env, c, cl.tipo, nombre); privado = 1; } catch (e) { errores.push('Interno: ' + e.message); }
       estado = publico || privado ? 'respondido' : 'error';
     }
   }
@@ -319,10 +323,11 @@ export async function vistaComentarios(env, url) {
   const tabla = filas.length ? `<div class="tabla"><table><thead><tr><th>Fecha</th><th>Red</th><th>Persona</th><th>Comentario</th><th>Clasificación</th><th>Qué se hizo</th></tr></thead><tbody>${filas.map((f) => `<tr data-fila>
 <td>${esc(new Date(f.creado).toLocaleString('es-CL', { timeZone: 'America/Santiago', dateStyle: 'short', timeStyle: 'short' }))}</td><td>${esc(RED_TXT[f.red] || f.red)}</td><td>${esc(f.autor)}</td>
 <td style="min-width:260px">${esc(f.texto)}</td><td>${pill(f.tipo)}<br><small style="color:var(--g)">${esc(f.motivo || '')}${f.via === 'palabras' ? ' (por palabras clave)' : ''}</small></td>
-<td>${esc(estadoTxt[f.estado] || f.estado)}${f.estado === 'respondido' ? `<br><small>${f.publico ? '✓ pública' : '✗ pública'} · ${f.privado ? '✓ interno' : '✗ interno'}</small>` : ''}${f.error ? `<br><small style="color:#9b2c22">${esc(f.error)}</small>` : ''}</td></tr>`).join('')}</tbody></table></div>` : '<p class="vacio">Todavía no llegan comentarios. Aparecerán aquí apenas la app de Meta quede conectada.</p>';
+<td>${esc(estadoTxt[f.estado] || f.estado)}${f.estado === 'respondido' ? `<br><small>${f.publico ? '✓ pública' : '✗ pública'} · ${f.privado ? '✓ interno' : '✗ interno'}</small>` : ''}${f.error ? `<br><small style="color:#9b2c22">${esc(f.error)}</small>` : ''}${f.estado === 'respondido' && !f.privado && f.tipo !== 'spam' && Date.now() - Date.parse(f.creado) < 7 * 864e5 ? `<form method="post" action="/asesores/comentarios/reenviar" style="margin-top:8px"><input type="hidden" name="id" value="${esc(f.id)}"><button class="btn peq">Reenviar mensaje interno</button></form>` : ''}</td></tr>`).join('')}</tbody></table></div>` : '<p class="vacio">Todavía no llegan comentarios. Aparecerán aquí apenas la app de Meta quede conectada.</p>';
   return `<h1>Comentarios de Facebook e Instagram</h1>
 <p class="sub">Claude clasifica cada comentario nuevo. Negativos: respuesta pública corta y mensaje interno con el respaldo. Preguntas, positivos y neutros: respuesta pública breve y mensaje interno que explica Pulso Inversor. El spam no se responde.</p>
 ${faltan.length ? `<div class="aviso">Falta configurar en Cloudflare: ${faltan.map(([k, t]) => `<b>${k}</b> (${t})`).join(', ')}.</div>` : ''}
+${url.searchParams.get('reenvio') ? `<div class="aviso">${url.searchParams.get('reenvio') === 'ok' ? 'Listo: el mensaje interno se envió.' : 'Meta no aceptó el mensaje interno: el detalle quedó en la fila del comentario.'}</div>` : ''}
 ${conectado ? `<div class="aviso">${conectado === 'ok' ? 'Listo: la página quedó suscrita a la app.' : 'No se pudo suscribir la página: ' + esc(conectado)}</div>` : ''}
 <div class="barra"><span>Respuesta automática: <b>${modo === 'responder' ? 'ACTIVA' : 'EN PAUSA (solo registra)'}</b></span>
 <form method="post" action="/asesores/comentarios/modo"><input type="hidden" name="modo" value="${modo === 'responder' ? 'registrar' : 'responder'}"><button class="btn ${modo === 'responder' ? '' : 'p'}">${modo === 'responder' ? 'Pausar respuestas' : 'Activar respuestas automáticas'}</button></form>
@@ -341,6 +346,20 @@ export async function rutaComentariosAdmin(request, env, url) {
   if (url.pathname === '/asesores/comentarios/modo') { await cambiarModoComentarios(env, f.get('modo')); return ir(); }
   if (url.pathname === '/asesores/comentarios/conectar') {
     try { await conectarPagina(env); return ir('conectado=ok'); } catch (e) { return ir('conectado=' + encodeURIComponent(String(e.message).slice(0, 200))); }
+  }
+  if (url.pathname === '/asesores/comentarios/reenviar') {
+    await esquema(env);
+    const f2 = await env.DB.prepare('SELECT * FROM comentarios WHERE id = ?').bind(String(f.get('id') || '')).first();
+    if (!f2 || f2.privado) return ir();
+    const nombre = f2.red === 'facebook' ? String(f2.autor).split(/\s+/)[0] : '';
+    try {
+      await enviarInterno(env, f2, f2.tipo, nombre);
+      await env.DB.prepare('UPDATE comentarios SET privado = 1, error = NULL WHERE id = ?').bind(f2.id).run();
+      return ir('reenvio=ok');
+    } catch (e) {
+      await env.DB.prepare('UPDATE comentarios SET error = ? WHERE id = ?').bind(('Interno: ' + e.message).slice(0, 900), f2.id).run();
+      return ir('reenvio=error');
+    }
   }
   if (url.pathname === '/asesores/comentarios/probar') {
     const texto = String(f.get('texto') || '').slice(0, 500);
