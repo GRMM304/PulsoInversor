@@ -746,7 +746,7 @@
       $('#ic-d-txt').innerHTML = (varias ? 'Tus propiedades se venden en <b>' : 'Tu propiedad se vende en <b>') + money(c.sale) + '</b>, ' + money(x.value - c.sale) + ' bajo ' + (varias ? 'su tasación total' : 'su tasación') + ' de ' + money(x.value) + '.' + (conMeta ? (sobre ? ' Es el descuento máximo de la operación.' : logra ? '' : ' Es el descuento mínimo de la operación.') : ' Descuento de referencia.');
       // Primer año: el aumento de liquidez es inmediato.
       var anualHoy = flujoActual * 12, anualPulso = c.monthly * 12;
-      $('#ic-anual').innerHTML = '<tr><td>Hoy, con tus arriendos*</td><td>' + money(flujoActual) + '</td><td>' + money(anualHoy) + '</td></tr>' +
+      $('#ic-anual').innerHTML = '<tr class="ic-base-row"><td>Hoy, con tus arriendos*</td><td>' + money(flujoActual) + '</td><td>' + money(anualHoy) + '</td></tr>' +
         '<tr class="hl"><td>Con Pulso Inversor</td><td>' + money(c.monthly) + '</td><td>' + money(anualPulso) + '</td></tr>' +
         '<tr><td>Diferencia en tu primer año</td><td>' + (c.monthly - flujoActual >= 0 ? '+' : '−') + money(Math.abs(c.monthly - flujoActual)) + '</td><td>' + (anualPulso - anualHoy >= 0 ? '+' : '−') + money(Math.abs(anualPulso - anualHoy)) + '</td></tr>';
       var dif = c.monthly - flujoActual;
@@ -768,13 +768,13 @@
       $('#ic-bars-title').textContent = '¿Con cuánto terminas en ' + anios(X.years) + '?';
       $('#ic-bars').innerHTML = filas.map(function (r) {
         if (r.nv) return '<div class="cb-row"><div class="cb-head"><b>' + nombres[r.i] + '</b><span class="cb-nv">No viable con estos datos</span></div></div>';
-        return '<div class="cb-row' + (r === best ? ' is-best' : '') + '"><div class="cb-head"><b>' + nombres[r.i] + (ok.length > 1 && r === best ? '<span class="cb-best">Mayor resultado</span>' : '') + '</b><span class="cb-total">' + compact(r.t) + '</span></div>' +
+        return '<div class="cb-row' + (r.i > 0 ? ' is-pulso' : ' is-base') + (r === best ? ' is-best' : '') + '"><div class="cb-head"><b>' + nombres[r.i] + (ok.length > 1 && r === best ? '<span class="cb-best">Mayor resultado</span>' : '') + '</b><span class="cb-total">' + compact(r.t) + '</span></div>' +
           '<div class="cb-track" role="img" aria-label="' + nombres[r.i] + ': ' + compact(r.t) + '"><span class="cb-a" style="width:' + (Math.max(0, r.a) / max * 100).toFixed(2) + '%"></span><span class="cb-b" style="width:' + (Math.max(0, r.b) / max * 100).toFixed(2) + '%"></span></div>' +
           '<p class="cb-detail">' + pa[r.i] + ': <b>' + compact(r.a) + '</b> · ' + (r.b >= 0 ? pb[r.i] + ': <b>' + compact(r.b) + '</b>' : '<span class="neg">Pagaste ' + compact(-r.b) + ' más de lo que recibiste</span>') + '</p></div>';
       }).join('');
       // TIR
-      var tnames = ['Conservar y arrendar', 'Vender, prepagar e invertir', 'Ciclo completo con nueva compra'];
-      $('#ic-tir').innerHTML = tnames.slice(0, n).map(function (nm, i) { var nv = i === 2 && !cicloOk; return '<tr><td>' + nm + '</td><td>' + (nv ? 'No viable' : pct(c5.tirs[i])) + '</td><td>' + (nv ? 'No viable' : pct(c10.tirs[i])) + '</td></tr>'; }).join('');
+      var tnames = ['Conservar y arrendar', 'Vender e invertir en Pulso Inversor', 'Pulso Inversor y nueva compra'];
+      $('#ic-tir').innerHTML = tnames.slice(0, n).map(function (nm, i) { var nv = i === 2 && !cicloOk; return '<tr' + (i > 0 ? ' class="hl"' : ' class="ic-base-row"') + '><td>' + nm + '</td><td>' + (nv ? 'No viable' : pct(c5.tirs[i])) + '</td><td>' + (nv ? 'No viable' : pct(c10.tirs[i])) + '</td></tr>'; }).join('');
       // Se muestran las tablas donde vender (Pulso Inversor) obtiene el mejor resultado.
       var barrasPulso = !!best && best.i > 0;
       var tir10 = function (i) { var v = c10.tirs[i]; return v === null || (i === 2 && !cicloOk) ? -Infinity : v; };
@@ -836,7 +836,7 @@
       if (!contacto || !ultimo || !$('#ic-error').hidden || $('#ic-results').classList.contains('is-empty')) { st.textContent = 'Completa los datos del simulador antes de enviar.'; return; }
       if (!jspdfListo(st)) return;
       var u = ultimo, x = u.x, c = u.c;
-      var filasTir = ['Conservar y arrendar', 'Vender, prepagar e invertir', 'Ciclo completo con nueva compra'].slice(0, u.n).map(function (nm, i) { var nv = i === 2 && !u.cicloOk; return [nm, (nv ? 'No viable' : pct(u.c5.tirs[i])) + ' (5 años) · ' + (nv ? 'No viable' : pct(u.c10.tirs[i])) + ' (10 años)']; });
+      var filasTir = ['Conservar y arrendar', 'Vender e invertir en Pulso Inversor', 'Pulso Inversor y nueva compra'].slice(0, u.n).map(function (nm, i) { var nv = i === 2 && !u.cicloOk; return [nm, (nv ? 'No viable' : pct(u.c5.tirs[i])) + ' (5 años) · ' + (nv ? 'No viable' : pct(u.c10.tirs[i])) + ' (10 años)']; });
       var resumenIC = [(x.props.length > 1 ? x.props.length + ' propiedades, tasación total: ' : 'Valor de la propiedad: ') + money(x.value), 'Deuda: ' + money(x.debt), 'Ingreso mensual hoy: ' + money(u.flujoActual), 'Nuevo ingreso mensual: ' + money(c.monthly),
         'Capital a invertir: ' + money(c.inv), 'Retiro en efectivo: ' + money(c.ret), 'Descuento de venta resultante: ' + pct1(x.discount) + (u.conMeta && !u.logra ? ' (mínimo de la operación)' : u.sobre ? ' (máximo de la operación)' : ''), 'Mayor resultado: ' + u.best];
       var doc = pdfSimple('Simulación Inversión Circular', 'Proyección a 5 años', [

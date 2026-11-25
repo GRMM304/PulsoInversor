@@ -1555,6 +1555,16 @@ button.tipo{font:inherit;text-align:left;cursor:pointer;width:100%}
 @media (max-width:620px){
   .why-compare{grid-template-columns:repeat(2,minmax(230px,1fr));overflow-x:auto;-webkit-overflow-scrolling:touch}
   .ic-tablewrap .ic-table{min-width:520px}
+.ic-table tr.hl td{font-weight:800;font-size:16.5px}
+.ic-table tr.hl td:first-child{box-shadow:inset 4px 0 0 var(--lime)}
+.ic-table tr.ic-base-row td{color:var(--gray-500)}
+.ic-table tr.ic-base-row td:first-child{color:var(--gray-700);font-weight:500}
+.cb-row.is-pulso{border-color:rgba(199,217,93,.8);background:rgba(199,217,93,.12);box-shadow:inset 4px 0 0 var(--lime)}
+.cb-row.is-base .cb-head b,.cb-row.is-base .cb-total{color:var(--gray-500)}
+.cb-row.is-base .cb-total{font-size:16px;font-weight:700}
+.cb-row.is-base .cb-track .cb-a{background:#9aa59f}
+.cb-row.is-base .cb-track .cb-b{background:#c9cfcb}
+.cb-row.is-pulso .cb-total{font-size:20px}
   /* Revisión 17-11: sin justificado (dejaba espacios grandes entre palabras). Textos a la izquierda; los centrados se mantienen centrados. */
   .title.center p,.cta-final p,.disclaimer,.why-cta span,.cta-final-small,.hero-form-note,.r2-caption,.port-title,.gate-sub{text-align:center}
   .btn,.chip-opt,.rx-chips span,.tipo-chip,.aht-chips span{text-align:center;text-align-last:auto}
