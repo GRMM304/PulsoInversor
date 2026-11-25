@@ -661,7 +661,7 @@
     }
 
     var MONEY = ['newvalue', 'newrent', 'retiro'];
-    var X = { frequency: null, years: 1, purchase: false }; // barras «¿Con cuánto terminas?» a 1 año; TIR a 5 y 10 años
+    var X = { frequency: null, years: 10, purchase: false }; // barras «¿Con cuánto terminas?» a 10 años; TIR a 5 y 10 años
     var editoNueva = false;
     var num = function (id) { var el = $('#ic-' + id); return MONEY.indexOf(id) >= 0 ? Number(el.value.replace(/\D/g, '')) : Number(el.value); };
     var money = function (n) { n = Math.round(n || 0); return (n < 0 ? '−$' : '$') + Math.abs(n).toLocaleString('es-CL'); };
