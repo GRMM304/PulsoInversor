@@ -19,7 +19,7 @@
 //   ANTHROPIC_API_KEY   (secreto)  clave de la API de Claude. Sin ella clasifica solo por palabras clave.
 
 import { VERSION } from './meta.js';
-import { DEFAULT_SENDER, SITIO, WHATSAPP, esc, brevo, plantilla, P, bloqueResumen, boton } from './comun.js';
+import { DEFAULT_SENDER, SITIO, WHATSAPP, WHATSAPP_TXT, esc, brevo, plantilla, P, bloqueResumen, boton } from './comun.js';
 
 const AVISO_NEGATIVOS = ['eorrego@grupomm.cl'];
 const MODELO = 'claude-opus-5-5';
@@ -70,22 +70,30 @@ En Pulso Inversor llevamos 10 años trabajando con inversionistas y tenemos ofic
 
 📄 Todo queda en documentos legales que puedes revisar antes de invertir.
 
-No te pedimos que creas en nuestra palabra: te invitamos a conocer nuestras oficinas y revisar los antecedentes de cada inversión. Lorenzo te ayuda por WhatsApp: ${SITIO}/verifica-a-pulso
+No te pedimos que creas en nuestra palabra: te invitamos a conocer nuestras oficinas y revisar los antecedentes de cada inversión. Si quieres, Lorenzo te ayuda por WhatsApp al ${WHATSAPP_TXT}.
 
 La confianza no se pide, se construye con hechos y respaldos que puedes verificar.`;
 export const LIMITE_MENSAJE = { facebook: 2000, instagram: 1000 };
-export const TEXTOS_PRIVADOS = () => ({ negativo: PRIVADO_NEGATIVO, negativoIg: PRIVADO_NEGATIVO_IG, info: privadoInfo('Nombre') });
+export const TEXTOS_PRIVADOS = () => ({ negativo: PRIVADO_NEGATIVO, negativoIg: PRIVADO_NEGATIVO_IG, info: privadoInfo('Nombre', 'facebook'), infoIg: privadoInfo('', 'instagram') });
 
-const privadoInfo = (nombre) => `¡Hola${nombre ? ', ' + nombre : ''}! Gracias por tu comentario 😊 Te cuento de qué se trata Pulso Inversor:
+// Instagram puede bloquear los enlaces en mensajes ("Link can't be shared"): allí va sin enlaces, con el WhatsApp escrito.
+const privadoInfo = (nombre, red) => `¡Hola${nombre ? ', ' + nombre : ''}! Gracias por tu comentario 😊 Te cuento de qué se trata Pulso Inversor:
 
 Conectamos a personas que quieren hacer crecer su dinero con inversiones vinculadas a propiedades concretas. Cada operación tiene un respaldo inmobiliario y queda establecida en documentos legales que puedes revisar antes de invertir.
 
 Llevamos 10 años trabajando con inversionistas y tenemos oficinas en Los Militares 5890, of. 304, Las Condes, donde puedes conocer a nuestro equipo.
 
-📊 En nuestro sitio puedes simular cuánto podría rendir tu inversión: ${SITIO}/simuladores
-💬 Si prefieres conversar, Lorenzo te ayuda por WhatsApp: https://wa.me/${WHATSAPP}
+${red === 'instagram'
+    ? `📊 En nuestro sitio web, sección Simuladores, puedes ver cuánto podría rendir tu inversión.
+💬 Si prefieres conversar, Lorenzo te ayuda por WhatsApp al ${WHATSAPP_TXT}.`
+    : `📊 En nuestro sitio puedes simular cuánto podría rendir tu inversión: ${SITIO}/simuladores
+💬 Si prefieres conversar, Lorenzo te ayuda por WhatsApp: https://wa.me/${WHATSAPP}`}
 
 ¿Hay algo en particular que te gustaría saber?`;
+
+// Respaldo: si Meta rechaza un mensaje por llevar enlaces, se reintenta una vez con los enlaces quitados.
+const sinEnlaces = (t) => t.replace(/WhatsApp:\s*https?:\/\/\S+/g, `WhatsApp al ${WHATSAPP_TXT}.`).replace(/:?\s*https?:\/\/\S+/g, '.').replace(/\.\./g, '.');
+const esBloqueoEnlace = (e) => /2534122|Link can/.test(String(e && e.message));
 
 const elegir = (lista, semilla) => lista[[...String(semilla)].reduce((s, c) => s + c.charCodeAt(0), 0) % lista.length];
 
@@ -266,8 +274,13 @@ async function procesar(env, c) {
     else {
       const nombre = c.red === 'facebook' ? String(c.autor).split(/\s+/)[0] : '';
       try { await responderPublico(env, c, elegir(PUBLICO[cl.tipo], c.id)); publico = 1; } catch (e) { errores.push('Pública: ' + e.message); }
-      const largo = cl.tipo === 'negativo' ? (c.red === 'instagram' ? PRIVADO_NEGATIVO_IG : PRIVADO_NEGATIVO) : privadoInfo(nombre);
-      try { await responderPrivado(env, c, largo); privado = 1; } catch (e) { errores.push('Interno: ' + e.message); }
+      const largo = cl.tipo === 'negativo' ? (c.red === 'instagram' ? PRIVADO_NEGATIVO_IG : PRIVADO_NEGATIVO) : privadoInfo(nombre, c.red);
+      try { await responderPrivado(env, c, largo); privado = 1; }
+      catch (e) {
+        if (esBloqueoEnlace(e) && sinEnlaces(largo) !== largo) {
+          try { await responderPrivado(env, c, sinEnlaces(largo)); privado = 1; } catch (e2) { errores.push('Interno: ' + e2.message); }
+        } else errores.push('Interno: ' + e.message);
+      }
       estado = publico || privado ? 'respondido' : 'error';
     }
   }
