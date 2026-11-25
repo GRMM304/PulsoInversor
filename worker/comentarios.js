@@ -61,6 +61,21 @@ No te pedimos que creas en nuestra palabra. Te invitamos a conocer nuestras ofic
 
 La confianza no se pide, se construye con hechos y respaldos que puedes verificar.`;
 
+// Instagram acepta mensajes de hasta 1.000 caracteres (Facebook, 2.000): versión condensada del mismo texto.
+const PRIVADO_NEGATIVO_IG = `¡Hola! Entendemos tu desconfianza: cuando se trata de dinero, es importante saber con quién estás tratando y qué respalda tu inversión.
+
+En Pulso Inversor llevamos 10 años trabajando con inversionistas y tenemos oficinas donde puedes conocer a nuestro equipo.
+
+🏠 Cada inversión está vinculada a una propiedad concreta que, en algunas operaciones, puede llegar a tener un valor comercial equivalente al doble del capital invertido. Según la operación, se pueden constituir garantías reales, como una hipoteca inscrita en el Conservador de Bienes Raíces.
+
+📄 Todo queda en documentos legales que puedes revisar antes de invertir.
+
+No te pedimos que creas en nuestra palabra: te invitamos a conocer nuestras oficinas y revisar los antecedentes de cada inversión. Lorenzo te ayuda por WhatsApp: ${SITIO}/verifica-a-pulso
+
+La confianza no se pide, se construye con hechos y respaldos que puedes verificar.`;
+export const LIMITE_MENSAJE = { facebook: 2000, instagram: 1000 };
+export const TEXTOS_PRIVADOS = () => ({ negativo: PRIVADO_NEGATIVO, negativoIg: PRIVADO_NEGATIVO_IG, info: privadoInfo('Nombre') });
+
 const privadoInfo = (nombre) => `¡Hola${nombre ? ', ' + nombre : ''}! Gracias por tu comentario 😊 Te cuento de qué se trata Pulso Inversor:
 
 Conectamos a personas que quieren hacer crecer su dinero con inversiones vinculadas a propiedades concretas. Cada operación tiene un respaldo inmobiliario y queda establecida en documentos legales que puedes revisar antes de invertir.
@@ -251,7 +266,8 @@ async function procesar(env, c) {
     else {
       const nombre = c.red === 'facebook' ? String(c.autor).split(/\s+/)[0] : '';
       try { await responderPublico(env, c, elegir(PUBLICO[cl.tipo], c.id)); publico = 1; } catch (e) { errores.push('Pública: ' + e.message); }
-      try { await responderPrivado(env, c, cl.tipo === 'negativo' ? PRIVADO_NEGATIVO : privadoInfo(nombre)); privado = 1; } catch (e) { errores.push('Interno: ' + e.message); }
+      const largo = cl.tipo === 'negativo' ? (c.red === 'instagram' ? PRIVADO_NEGATIVO_IG : PRIVADO_NEGATIVO) : privadoInfo(nombre);
+      try { await responderPrivado(env, c, largo); privado = 1; } catch (e) { errores.push('Interno: ' + e.message); }
       estado = publico || privado ? 'respondido' : 'error';
     }
   }
