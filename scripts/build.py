@@ -1121,7 +1121,7 @@ page('inversion-circular.html', 'Inversión Inmobiliaria Circular',
         <p class="sim-status" id="ic-status" role="status"></p>
       </div>
     </div>
-    {P("SUPUESTOS (revisión 24-11-2026): la meta es DUPLICAR el ingreso mensual actual (arriendo menos dividendo); el descuento de venta es el resultado de cada caso (rango atractivo 15% a 20% o algo más). Si duplicar exigiera menos de 15% (o no se alcanza ni a valor de tasación), se calcula con 15% y se muestra el aumento logrado: el simulador siempre muestra resultados. Sin flujo actual positivo se usa 15% de referencia. Tasas Pulso 1,1% (pago trimestral) y 1,0% (mensual), inflación 3%, arriendo +3% anual, mantención $150.000/año, vacancia 42 días cada 3 años con 1 mes de garantía, reparaciones $1.200.000 cada 3 años. VALIDAR.")}
+    {P("SUPUESTOS (revisión 24-11-2026): la meta es DUPLICAR el ingreso mensual actual (arriendo menos dividendo); el descuento de venta es el resultado de cada caso y queda entre 15% y 20% (tope: nunca pasa de 20%; si duplicar exigiera más, se vende con 20% y el ingreso queda sobre el doble). Si duplicar exigiera menos de 15% (o no se alcanza ni a valor de tasación), se calcula con 15% y se muestra el aumento logrado: el simulador siempre muestra resultados. Sin flujo actual positivo se usa 15% de referencia. Tasas Pulso 1,1% (pago trimestral) y 1,0% (mensual), inflación 3%, arriendo +3% anual, mantención $150.000/año, vacancia 42 días cada 3 años con 1 mes de garantía, reparaciones $1.200.000 cada 3 años. VALIDAR.")}
   </div></div>
   </div>
 </div></section>
