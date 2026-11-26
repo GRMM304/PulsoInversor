@@ -1,0 +1,26 @@
+// Landing de diagnóstico (QR del video FFW) · Pulso Inversor · 6.pulsoinversor.cl
+// Desplegar con la cuenta Cloudflare de Grupo MM: XDG_CONFIG_HOME=~/.config/pulso-wrangler npx wrangler deploy
+// Secreto (no va en este archivo): CLAVE_PANEL → `npx wrangler secret put CLAVE_PANEL`.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "pulso-landing-diagnostico",
+  "main": "src/worker.js",
+  "compatibility_date": "2025-09-01",
+  "workers_dev": false,
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "html_handling": "auto-trailing-slash"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "pulso-landing-diagnostico",
+      "database_id": "9a16ac26-2948-4822-9848-d6e0ecd5c257"
+    }
+  ],
+  "routes": [
+    { "pattern": "6.pulsoinversor.cl", "custom_domain": true }
+  ],
+  "observability": { "enabled": true }
+}

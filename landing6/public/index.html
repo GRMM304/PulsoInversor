@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Diagnóstico de inversión · Pulso Inversor</title>
+<meta name="description" content="Responde 8 preguntas y descubre qué solución de Invierte con Respaldo Inmobiliario calza con tu capital y tu perfil de inversionista.">
+<!--
+  LANDING · DIAGNÓSTICO (QR del video FFW) · 6.pulsoinversor.cl
+  Flujo: formulario simple → diagnóstico (capital + perfil de inversionista) → preguntas frecuentes → WhatsApp con el consolidado.
+  Reglas de mensaje: sin tasas; nunca "seguro", "garantizado", "sin riesgo" ni "Modelo IGR"; "dinero", nunca "plata";
+  línea legal en hero y pie. WhatsApp: Lorenzo (+56 9 5879 2038) precalifica; ningún botón va directo a la agenda.
+-->
+<link rel="icon" type="image/png" href="assets/img/favicon.png">
+<link rel="apple-touch-icon" href="assets/img/icono-180.png">
+<meta name="theme-color" content="#0E2C28">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Pulso Inversor">
+<meta property="og:title" content="¿Qué inversión calza con tu capital y tu perfil?">
+<meta property="og:description" content="Diagnóstico en 2 minutos. Invierte con Respaldo Inmobiliario.">
+<meta property="og:image" content="https://6.pulsoinversor.cl/assets/img/compartir-pulso.jpg">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/diag.css">
+<script type="module" src="assets/js/diag.js"></script>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a href="#inicio" aria-label="Pulso Inversor, inicio"><img src="assets/img/logo-pulso-gmm.png" alt="Pulso Inversor · Una empresa de Grupo MatchMaking" width="861" height="101"></a>
+    <a class="btn btn-verde" href="#diagnostico"><span class="largo">Hacer mi diagnóstico</span><span class="corto">Diagnóstico</span></a>
+  </div>
+</header>
+
+<main>
+<!-- 1. HERO -->
+<section class="hero" id="inicio" style="padding:0">
+  <img class="hero-bg" src="assets/img/hero-santiago.jpg" srcset="assets/img/hero-santiago-movil.jpg 1000w, assets/img/hero-santiago.jpg 1920w" sizes="100vw" alt="" fetchpriority="high">
+  <div class="wrap">
+    <span class="eyebrow">Invierte con Respaldo Inmobiliario</span>
+    <h1>¿Qué inversión calza con <em>tu capital y tu perfil?</em></h1>
+    <p class="lead">Responde 8 preguntas y recibe tu diagnóstico al instante: tu perfil de inversionista, la solución que mejor se ajusta a tu monto y lo que deberías cuidar antes de invertir.</p>
+    <div class="hero-acc">
+      <a class="btn btn-lima btn-grande" href="#diagnostico">Hacer mi diagnóstico</a>
+      <span class="hero-nota">2 minutos · sin compromiso · no pedimos tu RUT</span>
+    </div>
+    <p class="legal-mini">Operaciones bajo contratos civiles, no reguladas por la CMF. Toda inversión tiene riesgos. Revisa los documentos con tu abogado antes de firmar.</p>
+  </div>
+</section>
+
+<!-- 2. DIAGNÓSTICO -->
+<section id="diagnostico">
+  <div class="wrap">
+    <div class="cab centro">
+      <span class="eyebrow">Tu diagnóstico</span>
+      <h2 class="t">Cuéntanos de tu capital y de ti</h2>
+      <p>Las preguntas de perfil siguen los mismos temas que el cuestionario de perfil del inversionista que la CMF exige a los intermediarios: objetivo, plazo, experiencia, tolerancia al riesgo y situación financiera.</p>
+    </div>
+    <div class="caja">
+      <form id="form" novalidate>
+        <div class="trampa" aria-hidden="true"><label>Sitio web <input type="text" name="sitio" tabindex="-1" autocomplete="off"></label></div>
+
+        <div class="campos">
+          <div class="campo">
+            <label for="nombre">Tu nombre</label>
+            <input type="text" id="nombre" name="nombre" autocomplete="given-name" required maxlength="120">
+            <div class="err">Escribe tu nombre.</div>
+          </div>
+          <div class="campo">
+            <label for="edad">Edad</label>
+            <input type="number" id="edad" name="edad" min="18" max="99" inputmode="numeric" required>
+            <div class="err">Escribe una edad entre 18 y 99.</div>
+          </div>
+        </div>
+
+        <fieldset class="campo bloque" id="q-capital">
+          <legend><span class="num">1</span> ¿Cuánto capital te gustaría invertir?</legend>
+          <div class="opciones" data-grupo="capital"></div>
+          <div class="err">Elige un monto.</div>
+        </fieldset>
+        <div id="preguntas-perfil"></div>
+
+        <div class="consent">
+          <div class="check-w" id="w-consentimiento">
+            <label class="check"><input type="checkbox" id="consentimiento" name="consentimiento" value="Sí" required>
+              <span><span class="ob" aria-hidden="true">*</span> Autorizo a Pulso Inversor y a las empresas de Grupo MatchMaking a guardar mis respuestas para darme este diagnóstico y atenderme si los contacto, según la <a href="privacidad.html" target="_blank" rel="noopener">Política de Privacidad</a>.</span></label>
+            <div class="err">Necesitamos tu autorización para darte el diagnóstico.</div>
+          </div>
+          <label class="check"><input type="checkbox" id="acepta_publicidad" name="acepta_publicidad" value="Sí">
+            <span>Quiero recibir novedades, oportunidades de inversión y publicidad de Pulso Inversor y Grupo MatchMaking. <small style="color:var(--suave)">(Opcional)</small></span></label>
+          <p class="nota">Puedes modificar o eliminar tus datos escribiendo a <a href="mailto:contacto@pulsoinversor.cl">contacto@pulsoinversor.cl</a>.</p>
+        </div>
+
+        <div class="enviar">
+          <button class="btn btn-lima" type="submit" id="btn-enviar">Ver mi diagnóstico</button>
+          <p class="estado-envio" id="estado-envio" role="status" aria-live="polite"></p>
+        </div>
+      </form>
+
+      <!-- Resultado -->
+      <div class="resultado" id="resultado" hidden tabindex="-1">
+        <p class="res-eyebrow">Diagnóstico de <span id="r-nombre"></span></p>
+        <div class="res-perfil">
+          <div><span class="res-k">Tu perfil de inversionista</span><b id="r-perfil"></b></div>
+          <div class="medidor" aria-hidden="true"><i data-p="Conservador">Conservador</i><i data-p="Moderado">Moderado</i><i data-p="Agresivo">Agresivo</i></div>
+        </div>
+        <p class="res-desc" id="r-perfil-desc"></p>
+
+        <div id="r-solucion" class="res-sol" hidden>
+          <span class="res-k">Solución que mejor calza con tu monto y tu perfil</span>
+          <h3 id="r-sol-nombre"></h3>
+          <dl>
+            <div><dt>Qué queda a tu favor</dt><dd id="r-sol-respaldo"></dd></div>
+            <div><dt>Plazos</dt><dd id="r-sol-plazos"></dd></div>
+            <div><dt>Desde</dt><dd id="r-sol-desde"></dd></div>
+          </dl>
+          <p class="res-extra" id="r-sol-extra"></p>
+          <p class="res-alt" id="r-alt" hidden></p>
+        </div>
+        <div id="r-sin" class="res-sin" hidden>
+          <span class="res-k">Resultado</span>
+          <h3 id="r-sin-titulo"></h3>
+        </div>
+
+        <div id="r-alertas-w" hidden>
+          <span class="res-k">Antes de invertir, ten en cuenta</span>
+          <ul class="alertas" id="r-alertas"></ul>
+        </div>
+
+        <p class="res-tasa">La tasa de cada solución es fija, depende del plazo y queda pactada en tu contrato. Tu asesor te la muestra con la propiedad concreta de tu operación.</p>
+
+        <div class="res-wa">
+          <label for="duda">¿Te quedó alguna duda? <small>(opcional, se agrega a tu mensaje)</small></label>
+          <textarea id="duda" rows="2" maxlength="400" placeholder="Ej.: ¿puedo invertir junto a mi pareja?"></textarea>
+          <a class="btn btn-wa btn-grande" id="btn-wa" href="https://wa.me/56958792038" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4a.5.5 0 0 0 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.7-1.2 2.2 2.2 0 0 0 .2-1.2c-.1-.1-.3-.2-.5-.3z"/></svg>
+            Conversar por WhatsApp
+          </a>
+          <p class="nota centro-t">Se abre WhatsApp con tus respuestas y tu diagnóstico ya escritos. Un asesor de Pulso te responde con su nombre.</p>
+        </div>
+        <p class="res-legal">Diagnóstico referencial, hecho con tus respuestas. No es una recomendación personalizada ni una oferta. Pulso Inversor no está regulado por la CMF: sus operaciones se hacen bajo contratos civiles. Toda inversión tiene riesgos.</p>
+        <button type="button" class="btn btn-borde" id="btn-rehacer">Cambiar mis respuestas</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. LAS TRES SOLUCIONES -->
+<section class="alt" id="soluciones">
+  <div class="wrap">
+    <div class="cab">
+      <span class="eyebrow">Las soluciones</span>
+      <h2 class="t">Tres formas de invertir, cada una con su documento a tu favor</h2>
+      <p>Todas se firman ante notario. Lo que cambia es qué herramienta legal tienes si algo sale mal.</p>
+    </div>
+    <div class="sols">
+      <article class="sol"><span class="sol-desde">Desde $5 MM · 12, 18 o 24 meses</span><h3>Renta de Capital</h3><p>Mutuo y pagaré ejecutable, respaldado por el portafolio de propiedades de Pulso. Permite retiros trimestrales.</p><p class="sol-si"><b>Si algo sale mal:</b> puedes cobrar el pagaré ante tribunales.</p></article>
+      <article class="sol"><span class="sol-desde">Desde $25 MM · 15, 21 o 27 meses</span><h3>Hipoteca Inteligente</h3><p>Hipoteca inscrita a tu favor en el Conservador de Bienes Raíces, sobre una propiedad identificada y tasada. Capital reajustable en UF.</p><p class="sol-si"><b>Si algo sale mal:</b> la hipoteca permite ejecutar la propiedad para recuperar tu capital.</p></article>
+      <article class="sol"><span class="sol-desde">Desde $60 MM · 15, 21 o 27 meses</span><h3>Arquitectura de Capital</h3><p>La propiedad queda inscrita a tu nombre: eres el dueño. Capital reajustable en UF.</p><p class="sol-si"><b>Si algo sale mal:</b> la propiedad está a tu nombre; si Pulso dejara de funcionar, sigue siendo tuya.</p></article>
+    </div>
+    <p class="disc">Ninguna estructura elimina el riesgo. Cada una define qué herramienta legal tienes. Revisa los documentos con tu abogado antes de firmar.</p>
+  </div>
+</section>
+
+<!-- 4. PREGUNTAS FRECUENTES -->
+<section id="preguntas">
+  <div class="wrap">
+    <div class="cab centro"><span class="eyebrow">Preguntas frecuentes</span><h2 class="t">Lo que todos preguntan antes de invertir</h2></div>
+    <div class="faq">
+      <details><summary>¿Quién es Pulso Inversor?</summary><p>Pulso Inversor es una empresa de Grupo MatchMaking que conecta capital con propiedades. Estructura y gestiona cada operación, y te acompaña con una asesora con nombre y apellido desde el diagnóstico hasta que vuelve tu capital. Nuestra oficina está en Avenida Los Militares 5890, oficina 304, Las Condes.</p></details>
+      <details><summary>¿Qué respalda mi inversión?</summary><p>Depende de la solución: un mutuo y un pagaré respaldados por el portafolio de propiedades de Pulso (Renta de Capital), una hipoteca inscrita a tu favor (Hipoteca Inteligente) o la propiedad inscrita a tu nombre (Arquitectura de Capital). En las dos últimas ves la propiedad y su tasación antes de firmar, y puedes verificar la inscripción en el Conservador de Bienes Raíces.</p></details>
+      <details><summary>¿Qué pasa si algo sale mal?</summary><p>Cada solución te da una herramienta legal distinta: cobrar el pagaré ante tribunales, ejecutar la hipoteca para recuperar tu capital o, si la propiedad está a tu nombre, conservarla aunque Pulso dejara de funcionar. Ninguna estructura elimina el riesgo; por eso te pedimos revisar los documentos con tu abogado antes de firmar.</p></details>
+      <details><summary>¿Pulso está regulado por la CMF?</summary><p>No. Las operaciones de Pulso se hacen bajo contratos civiles firmados ante notario y no están reguladas por la CMF. Usamos los mismos temas del cuestionario de perfil del inversionista de la CMF solo como referencia, para orientarte mejor.</p></details>
+      <details><summary>¿Cuánto rinde?</summary><p>Cada solución tiene una tasa mensual fija que depende del plazo (a menor plazo, menor tasa) y queda escrita en tu contrato. En Hipoteca Inteligente y Arquitectura de Capital, además, tu capital se reajusta en UF. Tu asesor te muestra la tasa con la operación concreta. Resultados anteriores no aseguran resultados futuros.</p></details>
+      <details><summary>¿Desde cuánto puedo invertir y por cuánto tiempo?</summary><p>Desde $5 millones en Renta de Capital (12, 18 o 24 meses), desde $25 millones en Hipoteca Inteligente y desde $60 millones en Arquitectura de Capital (15, 21 o 27 meses).</p></details>
+      <details><summary>¿Puedo sacar mi dinero antes?</summary><p>Las operaciones tienen un plazo definido en el contrato. Por eso no te recomendamos invertir dinero que podrías necesitar en los próximos 12 meses. En Renta de Capital existe la opción de retiros trimestrales, pactada desde el inicio.</p></details>
+      <details><summary>¿Puedo ir con mi pareja, socio o abogado?</summary><p>Sí, y te lo recomendamos. En la reunión revisas documentos tipo y la propiedad concreta de tu operación. No firmas nada en esa conversación.</p></details>
+      <details><summary>¿Por qué no me muestran la operación de otro cliente?</summary><p>Porque ningún inversionista quiere exponer su patrimonio, y tú tampoco querrías que mostráramos el tuyo. En tu reunión revisas documentos tipo y la propiedad de tu operación, sin datos de otros clientes.</p></details>
+      <details><summary>¿Tiene costo el diagnóstico o la reunión?</summary><p>No. El diagnóstico y la primera reunión no tienen costo ni te obligan a nada.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- 5. CIERRE -->
+<section class="cierre">
+  <div class="wrap centro-t">
+    <h2 class="t">¿Te quedó una duda?</h2>
+    <p>Escríbenos por WhatsApp. Si ya hiciste tu diagnóstico, el mensaje incluye tus respuestas y tu resultado.</p>
+    <a class="btn btn-wa btn-grande" id="btn-wa-final" href="https://wa.me/56958792038?text=Hola%2C%20vengo%20de%20la%20p%C3%A1gina%20de%20diagn%C3%B3stico%20de%20Pulso%20Inversor%20y%20tengo%20una%20duda." target="_blank" rel="noopener">Conversar por WhatsApp</a>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <img src="assets/img/logo-pulso-blanco.png" alt="Pulso Inversor" width="861" height="101" loading="lazy">
+    <p>Pulso Inversor, una empresa de Grupo MatchMaking · Avenida Los Militares 5890, oficina 304, Las Condes.</p>
+    <p>WhatsApp <a href="https://wa.me/56958792038">+56 9 5879 2038</a> · <a href="mailto:contacto@pulsoinversor.cl">contacto@pulsoinversor.cl</a> · <a href="privacidad.html">Política de privacidad</a></p>
+    <p style="margin-top:14px;font-size:13px">Operaciones bajo contratos civiles, no reguladas por la CMF. Toda inversión tiene riesgos. Revisa los documentos con tu abogado antes de firmar.</p>
+  </div>
+</footer>
+
+<div class="flot" id="flot"><a class="btn btn-lima" href="#diagnostico">Hacer mi diagnóstico</a></div>
+</body>
+</html>
