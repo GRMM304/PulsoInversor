@@ -661,6 +661,7 @@ PASOS_HI = [
 PASOS_IC = [
     ('Vendes tu propiedad', 'Se ofrece a un precio que permita una venta ágil.'),
     ('Liberas su capital', 'Si tiene una deuda hipotecaria, se salda con la venta.'),
+    ('Puedes retirar parte del dinero', 'Del dinero que te queda de la venta puedes retirar un monto para lo que necesites: hasta 30%, dejando al menos $25.000.000 invertidos.', True),
     ('Lo inviertes en Pulso Inversor', 'El capital genera intereses fijos cada mes y te da un flujo de caja constante.'),
     ('Puedes optar a comprar otra propiedad con descuento', 'Si quieres seguir en el mercado inmobiliario, puedes comprar otra propiedad con descuento.', True),
 ]
@@ -1076,9 +1077,9 @@ page('inversion-circular.html', 'Inversión Inmobiliaria Circular',
     <div class="sim-head"><h2>Simula tu Inversión Circular</h2><p class="muted">Descubre cuánto puede crecer el ingreso mensual que hoy te dan tus arriendos, vendiendo e invirtiendo el capital en Pulso Inversor. Cifras en pesos.</p></div>
     <div class="ic">
       <form class="pro-form ic-form" id="ic-form" novalidate>
-        <span class="pro-label">Tus propiedades <small>Agrega cada departamento o casa que arriendas.</small></span>
+        <span class="pro-label">Tus propiedades <small>Agrega cada propiedad que arriendas.</small></span>
         <div class="ic-props" id="ic-props"></div>
-        <button type="button" class="ic-add" id="ic-add"><span aria-hidden="true">+</span> Agregar otro departamento</button>
+        <button type="button" class="ic-add" id="ic-add"><span aria-hidden="true">+</span> Agregar otra propiedad</button>
         <p class="ic-total" id="ic-total" hidden></p>
         <label class="pro-label" for="ic-retiro">¿Quieres retirar parte del capital de la venta? <small>Opcional. El resto queda invertido.</small></label>
         <div class="money-in"><span>$</span><input id="ic-retiro" inputmode="numeric" autocomplete="off" placeholder="0"></div>
@@ -1125,7 +1126,7 @@ page('inversion-circular.html', 'Inversión Inmobiliaria Circular',
         <p class="sim-status" id="ic-status" role="status"></p>
       </div>
     </div>
-    {P("SUPUESTOS (revisión 24-11-2026): la meta es DUPLICAR el ingreso mensual actual (arriendo menos dividendo); el descuento de venta es el resultado de cada caso y queda entre 15% y 20% (tope: nunca pasa de 20%; si duplicar exigiera más, se vende con 20% y el ingreso queda sobre el doble). Si duplicar exigiera menos de 15% (o no se alcanza ni a valor de tasación), se calcula con 15% y se muestra el aumento logrado: el simulador siempre muestra resultados. RETIRO opcional del capital de la venta: hasta 30% del capital (después de prepagar deuda) y dejando al menos $25.000.000 invertidos; el retiro no genera intereses. Los mensajes al cliente no hablan de «duplicar». Sin flujo actual positivo se usa 15% de referencia. Tasas Pulso 1,1% (pago trimestral) y 1,0% (mensual), inflación 3%, arriendo +3% anual, mantención $150.000/año, vacancia 42 días cada 3 años con 1 mes de garantía, reparaciones $1.200.000 cada 3 años. VALIDAR.")}
+    {P("SUPUESTOS (revisión 26-11-2026): propiedades CON DEUDA se venden siempre con 20% de descuento; el descuento resultante (15% a 20%) se aplica a las SIN deuda. 15% es el mínimo, pero en general no es lo que más conviene a Pulso. Si con 15% no se logra un buen resultado, igual se simula y el ejecutivo evalúa. Revisión 24-11-2026: la meta es DUPLICAR el ingreso mensual actual (arriendo menos dividendo); el descuento de venta es el resultado de cada caso y queda entre 15% y 20% (tope: nunca pasa de 20%; si duplicar exigiera más, se vende con 20% y el ingreso queda sobre el doble). Si duplicar exigiera menos de 15% (o no se alcanza ni a valor de tasación), se calcula con 15% y se muestra el aumento logrado: el simulador siempre muestra resultados. RETIRO opcional del capital de la venta: hasta 30% del capital (después de prepagar deuda) y dejando al menos $25.000.000 invertidos; el retiro no genera intereses. Los mensajes al cliente no hablan de «duplicar». Sin flujo actual positivo se usa 15% de referencia. Tasas Pulso 1,1% (pago trimestral) y 1,0% (mensual), inflación 3%, arriendo +3% anual, mantención $150.000/año, vacancia 42 días cada 3 años con 1 mes de garantía, reparaciones $1.200.000 cada 3 años. VALIDAR.")}
   </div></div>
   </div>
 </div></section>

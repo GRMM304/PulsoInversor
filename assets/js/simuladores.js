@@ -722,11 +722,13 @@
       // El descuento de venta es el resultado: el precio que deja, descontada la deuda, el capital que da el doble.
       var flujoActual = x.rent - x.oldpayment, meta = 2 * flujoActual, tasaMes = (X.frequency === 'quarterly' ? x.quarterrate : x.monthrate) / 100;
       var conMeta = flujoActual > 0, capitalMeta = conMeta ? meta / tasaMes : 0;
-      if (conMeta) x.discount = (1 - (capitalMeta + x.debt) / x.value) * 100;
-      var logra = !conMeta || x.discount >= DESC_MIN; // duplica con un descuento viable
-      var sobre = conMeta && x.discount > DESC_MAX;   // con el tope de descuento, el ingreso queda sobre el doble
-      if (!logra) x.discount = DESC_MIN;
-      if (sobre) x.discount = DESC_MAX;
+      var vCon = x.props.reduce(function (s, p) { return s + (p.debt > 0 ? p.value : 0); }, 0), vSin = x.value - vCon;
+      var dSin = conMeta && vSin > 0 ? (1 - (capitalMeta + x.debt - vCon * (1 - DESC_MAX / 100)) / vSin) * 100 : DESC_MAX;
+      var logra = !conMeta || vSin <= 0 || dSin >= DESC_MIN; // con menos de 15% igual se simula (con 15%); el ejecutivo evalúa
+      var sobre = conMeta && vSin > 0 && dSin > DESC_MAX;
+      dSin = Math.min(DESC_MAX, Math.max(DESC_MIN, dSin));
+      x.discount = (vCon * DESC_MAX + vSin * dSin) / x.value;
+      x.dSin = dSin; x.vCon = vCon; x.vSin = vSin;
       var capVenta = x.value * (1 - x.discount / 100) * (1 - x.sellcost / 100) - x.debt, retMax = Math.max(0, Math.min(RETIRO_MAX * capVenta, capVenta - INV_MIN));
       if (x.retiro > retMax) { x.retiro = Math.floor(retMax); $('#ic-retiro').value = x.retiro > 0 ? x.retiro.toLocaleString('es-CL') : ''; }
       $('#ic-retiro-hint').textContent = retMax > 0 ? 'Puedes retirar hasta ' + money(Math.floor(retMax)) + '.' : 'Con este capital no es posible retirar: la inversión debe quedar en al menos ' + money(INV_MIN) + '.';
@@ -743,7 +745,7 @@
       $('#ic-k-flow').textContent = money(flujoActual);
       $('#ic-desc').hidden = false; $('#ic-desc').classList.toggle('warn', false);
       $('#ic-d-pct').textContent = pct1(x.discount);
-      $('#ic-d-txt').innerHTML = (varias ? 'Tus propiedades se venden en <b>' : 'Tu propiedad se vende en <b>') + money(c.sale) + '</b>, ' + money(x.value - c.sale) + ' bajo ' + (varias ? 'su tasación total' : 'su tasación') + ' de ' + money(x.value) + '.' + (conMeta ? (sobre ? ' Es el descuento máximo de la operación.' : logra ? '' : ' Es el descuento mínimo de la operación.') : ' Descuento de referencia.');
+      $('#ic-d-txt').innerHTML = (varias ? 'Tus propiedades se venden en <b>' : 'Tu propiedad se vende en <b>') + money(c.sale) + '</b>, ' + money(x.value - c.sale) + ' bajo ' + (varias ? 'su tasación total' : 'su tasación') + ' de ' + money(x.value) + '.' + (vCon > 0 ? (vSin > 0 ? ' Las propiedades con deuda se venden con ' + DESC_MAX + '% de descuento y las sin deuda con ' + pct1(dSin) + '.' : ' Las propiedades con deuda se venden con ' + DESC_MAX + '% de descuento.') : conMeta ? (sobre ? ' Es el descuento máximo de la operación.' : logra ? '' : ' Es el descuento mínimo de la operación.') : '');
       // Primer año: el aumento de liquidez es inmediato.
       var anualHoy = flujoActual * 12, anualPulso = c.monthly * 12;
       $('#ic-anual').innerHTML = '<tr class="ic-base-row"><td>Hoy, con tus arriendos*</td><td>' + money(flujoActual) + '</td><td>' + money(anualHoy) + '</td></tr>' +
@@ -784,7 +786,7 @@
       $('#ic-base').textContent = 'Base inicial común: ' + money(c.base) + '. Patrimonio actual (valor comercial' + (x.debt ? ' menos deuda' : '') + '). La TIR reconoce el descuento de venta.';
       ultimo = { x: x, c: c, c5: c5, c10: c10, n: n, cicloOk: cicloOk, flujoActual: flujoActual, conMeta: conMeta, logra: logra, sobre: sobre, barrasPulso: barrasPulso, tirPulso: tirPulso, best: best ? nombres[best.i] : '' };
     }
-    // Propiedades: una tarjeta por departamento o casa; se pueden agregar y quitar.
+    // Propiedades: una tarjeta por propiedad; se pueden agregar y quitar.
     function moneyIn(f, ph) { return '<div class="money-in"><span>$</span><input data-f="' + f + '" inputmode="numeric" autocomplete="off" placeholder="' + ph + '"></div>'; }
     function tarjeta() {
       var el = document.createElement('fieldset'); el.className = 'ic-prop';
@@ -847,7 +849,7 @@
         u.barrasPulso && { t: '¿Con cuánto terminas en ' + anios(x.years) + '?', rows: [['Si conservas y arriendas', compact(c.end[0] + c.totals[0])], ['Si vendes e inviertes en Pulso Inversor', compact(c.end[1] + c.totals[1])]].concat(u.n === 3 && u.cicloOk ? [['Si vendes, inviertes y compras otra', compact(c.end[2] + c.totals[2])]] : []).concat([['Mayor resultado', u.best, 'pos']]) },
         u.tirPulso && { t: 'TIR anual efectiva', rows: filasTir },
         { t: 'Tus próximos pasos', proximos: true },
-        { t: 'Supuestos', small: true, text: $('#ic-base').textContent + ' *El ingreso actual por arriendo corresponde a condiciones normales y puede disminuir por vacancia, mantenciones o contribuciones. El descuento de venta resulta de cada caso, entre 15% y 20% (' + pct1(x.discount) + ' sobre la tasación). Inflación 3% anual; arriendo reajustado 3% anual; mantención, vacancia y reparaciones estimadas. Proyectar diez años exige continuidad de tasa, condiciones y cumplimiento de pagos. La nueva compra es opcional y se evalúa por separado. ' + DISCLAIMER }
+        { t: 'Supuestos', small: true, text: $('#ic-base').textContent + ' *El ingreso actual por arriendo corresponde a condiciones normales y puede disminuir por vacancia, mantenciones o contribuciones. Las propiedades con deuda se venden con 20% de descuento; en las sin deuda, el descuento resulta de cada caso, entre 15% y 20% (total: ' + pct1(x.discount) + ' sobre la tasación). Inflación 3% anual; arriendo reajustado 3% anual; mantención, vacancia y reparaciones estimadas. Proyectar diez años exige continuidad de tasa, condiciones y cumplimiento de pagos. La nueva compra es opcional y se evalúa por separado. ' + DISCLAIMER }
       ].filter(Boolean), { tipo: 'Inversión Inmobiliaria Circular', monto: c.inv });
       enviarCorreo('circular', doc, 'Simulacion_InversionCircular', resumenIC, st, btn, c.inv);
     });
