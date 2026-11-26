@@ -1,4 +1,4 @@
-// Landing de diagnóstico · 6.pulsoinversor.cl
+// Landing de diagnóstico · diagnostico.pulsoinversor.cl
 import { CAPITALES, PREGUNTAS, SOLUCIONES, PERFILES, diagnosticar, mensajeWhatsApp } from './logica.js';
 
 const WA = 'https://wa.me/56958792038?text=';

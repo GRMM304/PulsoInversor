@@ -1,4 +1,4 @@
-// Landing de diagnóstico · 6.pulsoinversor.cl (QR del video FFW)
+// Landing de diagnóstico · diagnostico.pulsoinversor.cl (QR del video FFW)
 // - Sirve la página (carpeta public/).
 // - POST /api/diagnostico: recalcula el diagnóstico con la misma lógica de la página, lo guarda en D1 y devuelve el folio.
 // - POST /api/whatsapp: marca que la persona abrió WhatsApp desde el resultado (y la duda que escribió).
@@ -132,7 +132,7 @@ textarea{min-width:170px}
 button.guardar{background:#0E2C28;color:#fff;border:0;border-radius:999px;padding:8px 14px;font-weight:700;cursor:pointer}
 .msg{display:block;margin-top:4px}
 </style></head>
-<body><header><div><b>Diagnósticos · 6.pulsoinversor.cl</b><br><small>${todos.length} diagnósticos · ${cuenta((r) => r.whatsapp_clic)} abrieron WhatsApp</small></div><a class="btn" href="/panel/diagnosticos.csv">Descargar CSV</a></header>
+<body><header><div><b>Diagnósticos · diagnostico.pulsoinversor.cl</b><br><small>${todos.length} diagnósticos · ${cuenta((r) => r.whatsapp_clic)} abrieron WhatsApp</small></div><a class="btn" href="/panel/diagnosticos.csv">Descargar CSV</a></header>
 <div class="kpis">
 ${['Renta de Capital', 'Hipoteca Inteligente', 'Arquitectura de Capital'].map((s) => `<div class="kpi"><b>${cuenta((r) => r.solucion === s)}</b><span>${s}</span></div>`).join('')}
 <div class="kpi"><b>${cuenta((r) => !r.solucion)}</b><span>Sin solución hoy</span></div>

@@ -1,4 +1,4 @@
--- Diagnósticos de la landing 6.pulsoinversor.cl (QR del video FFW)
+-- Diagnósticos de la landing diagnostico.pulsoinversor.cl (QR del video FFW)
 CREATE TABLE IF NOT EXISTS diagnosticos (
   id INTEGER PRIMARY KEY AUTOINCREMENT,            -- es el folio que va en el mensaje de WhatsApp
   creado TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ','now')),

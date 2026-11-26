@@ -1,4 +1,4 @@
-// Landing de diagnóstico (QR del video FFW) · Pulso Inversor · 6.pulsoinversor.cl
+// Landing de diagnóstico (QR del video FFW) · Pulso Inversor · diagnostico.pulsoinversor.cl
 // Desplegar con la cuenta Cloudflare de Grupo MM: XDG_CONFIG_HOME=~/.config/pulso-wrangler npx wrangler deploy
 // Secreto (no va en este archivo): CLAVE_PANEL → `npx wrangler secret put CLAVE_PANEL`.
 {
@@ -20,7 +20,7 @@
     }
   ],
   "routes": [
-    { "pattern": "6.pulsoinversor.cl", "custom_domain": true }
+    { "pattern": "diagnostico.pulsoinversor.cl", "custom_domain": true }
   ],
   "observability": { "enabled": true }
 }

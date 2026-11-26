@@ -1,4 +1,4 @@
-// Lógica del diagnóstico · Invierte con Respaldo Inmobiliario (6.pulsoinversor.cl)
+// Lógica del diagnóstico · Invierte con Respaldo Inmobiliario (diagnostico.pulsoinversor.cl)
 // La usan la página (navegador) y el Worker, para que el resultado sea siempre el mismo.
 // Reglas de mensaje: sin tasas en piezas públicas; nunca "seguro", "garantizado" ni "sin riesgo".
 
