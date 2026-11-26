@@ -4,8 +4,8 @@
 
 export const CAPITALES = ['Menos de $5 MM', '$5 a $25 MM', '$25 a $60 MM', '$60 a $150 MM', 'Más de $150 MM'];
 
-// Preguntas de perfil: mismas dimensiones del cuestionario de perfil del inversionista que la CMF
-// exige a los intermediarios (objetivo, horizonte, experiencia, tolerancia, situación financiera).
+// Preguntas de perfil: objetivo, horizonte, experiencia, tolerancia al riesgo y situación financiera.
+// Regla de la usuaria: nunca mencionar a la CMF en ninguna pieza.
 // Cada opción suma 1, 2 o 3 puntos (orden de la lista).
 export const PREGUNTAS = [
   { id: 'objetivo', titulo: '¿Qué buscas principalmente con este dinero?', corto: 'Objetivo',
