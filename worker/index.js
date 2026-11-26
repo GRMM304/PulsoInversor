@@ -88,6 +88,8 @@ async function enviarSimulacion(request, env) {
   if (!pdf || !/^[A-Za-z0-9+/=]+$/.test(pdf) || pdf.length * 0.75 > MAX_PDF_BYTES) return json({ ok: false, error: 'pdf_invalido' }, 400);
   const archivo = String(d.archivo || 'simulacion-pulso-inversor.pdf').replace(/[^\w.\-]/g, '_').slice(0, 80);
   const lineas = Array.isArray(d.resumen) ? d.resumen.slice(0, 30).map((l) => String(l).slice(0, 200)) : [];
+  // Datos solo para el equipo (p. ej. descuento de venta): no van en el correo del inversionista.
+  const interno = Array.isArray(d.interno) ? d.interno.slice(0, 10).map((l) => String(l).slice(0, 200)) : [];
   const monto = Math.max(0, Math.min(Number(d.monto) || 0, 1e12));
 
   const personas = asesoresPara(edad);
@@ -127,7 +129,7 @@ async function enviarSimulacion(request, env) {
     cc: copias.length ? copias.map((e) => ({ email: e })) : undefined,
     replyTo: { email, name: nombre },
     subject: `Nueva simulación ${tipo}${monto ? ' · ' + clp(monto) : ''} · ${nombre}`,
-    htmlContent: correoEquipo({ tipo, nombre, email, telefono, monto, edad, lineas, personas, publicidad, consentimiento }),
+    htmlContent: correoEquipo({ tipo, nombre, email, telefono, monto, edad, lineas: lineas.concat(interno), personas, publicidad, consentimiento }),
     attachment: adjunto,
     tags: ['simulacion-equipo', d.tipo],
   }, email);

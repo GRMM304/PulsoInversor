@@ -1108,7 +1108,6 @@ page('inversion-circular.html', 'Inversión Inmobiliaria Circular',
           <div class="ic-kpi hl"><small>Tu nuevo ingreso mensual con Pulso Inversor</small><strong id="ic-k-monthly">—</strong><span id="ic-k-monthly-sub">—</span></div>
           <div class="ic-kpi"><small>Capital a invertir</small><strong id="ic-k-net">—</strong><span id="ic-k-net-sub">Lo que queda de la venta, descontada la deuda</span></div>
         </div>
-        <div class="ic-desc" id="ic-desc" hidden><div><small>Descuento aplicado a la venta</small><strong id="ic-d-pct">—</strong></div><p id="ic-d-txt"></p></div>
         <p class="ic-summary" id="ic-summary"></p>
         <div class="ic-card ic-year"><div class="ic-head"><h4>Tu primer año: más liquidez desde el inicio</h4><span>Flujo anual</span></div>
           <div class="ic-tablewrap"><table class="ic-table"><thead><tr><th>Alternativa</th><th>Al mes</th><th>Al año</th></tr></thead><tbody id="ic-anual"></tbody></table></div></div>
