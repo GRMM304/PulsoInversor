@@ -661,7 +661,7 @@ PASOS_HI = [
 PASOS_IC = [
     ('Vendes tu propiedad', 'Se ofrece a un precio que permita una venta ágil.'),
     ('Liberas su capital', 'Si tiene una deuda hipotecaria, se salda con la venta.'),
-    ('Puedes retirar parte del dinero', 'Del dinero que te queda de la venta puedes retirar un monto para lo que necesites: hasta 30%, dejando al menos $25.000.000 invertidos.', True),
+    ('Puedes retirar parte del dinero', 'Del dinero que te queda de la venta puedes retirar un monto para lo que necesites.', True),
     ('Lo inviertes en Pulso Inversor', 'El capital genera intereses fijos cada mes y te da un flujo de caja constante.'),
     ('Puedes optar a comprar otra propiedad con descuento', 'Si quieres seguir en el mercado inmobiliario, puedes comprar otra propiedad con descuento.', True),
 ]
