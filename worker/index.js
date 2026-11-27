@@ -223,6 +223,12 @@ export default {
         const h = new Headers(r.headers); h.set('x-robots-tag', cab['x-robots-tag']); h.set('cache-control', 'public, max-age=86400');
         return new Response(r.body, { status: r.status, headers: h });
       }
+      // Fichas en PDF de las propiedades (se abren en el navegador).
+      if (/^\/fichas\/[a-z0-9-]+\.pdf$/.test(url.pathname)) {
+        const r = await env.ASSETS.fetch(new Request(new URL('/portafolio' + url.pathname, url)));
+        const h = new Headers(r.headers); h.set('x-robots-tag', cab['x-robots-tag']); h.set('content-type', 'application/pdf'); h.set('cache-control', 'no-cache');
+        return new Response(r.body, { status: r.status, headers: h });
+      }
       return new Response('No encontrado', { status: 404, headers: { ...cab, 'content-type': 'text/plain; charset=utf-8' } });
     }
     if (/^\/portafolio(\/|$)/.test(url.pathname)) {

@@ -282,11 +282,11 @@ body.idle .ui{opacity:0}
       <h2 class="h-title">PORTAFOLIOS<span>Y FORMAS DE PARTICIPACIÓN</span></h2>
       <p class="lead" style="font-size:18px">Estructuras disponibles para invertir con garantía real, todas en la categoría de inversión conservadora, con condiciones de plazo y retorno atractivas para inversionistas inmobiliarios que buscan resultados financieros. En el portafolio de propiedades se informan las condiciones de cada negocio.</p>
       <div class="modes">
-        <div class="mode" style="--c:var(--c1)"><div class="n">01</div><h3>Activos adquiridos</h3><ul><li>Propiedades ya adquiridas por Pulso.</li><li>Participación como propietario o con hipoteca a tu favor.</li><li>Plazo de término definido.</li></ul></div>
-        <div class="mode" style="--c:var(--c2)"><div class="n">02</div><h3>Capital en levantamiento</h3><ul><li>Operaciones en etapa de captación de capital.</li><li>Participación como propietario o con hipoteca a tu favor.</li><li>Aporte mínimo con hipoteca: 30% de la inversión total.</li></ul></div>
+        <div class="mode" style="--c:var(--c1)"><div class="n">01</div><h3>Garantías reales</h3><ul><li>Propiedades ya adquiridas por Pulso.</li><li>Participación como propietario o con hipoteca a tu favor.</li><li>Plazo de término definido.</li></ul></div>
+        <div class="mode" style="--c:var(--c2)"><div class="n">02</div><h3>Proyectos para compra</h3><ul><li>Operaciones en etapa de captación de capital.</li><li>Participación como propietario o con hipoteca a tu favor.</li><li>Aporte mínimo con hipoteca: 30% de la inversión total.</li></ul></div>
         <div class="mode" style="--c:var(--c3)"><div class="n">03</div><h3>Hipoteca Inteligente</h3><ul><li>Compra mediante crédito bancario, sin aporte de capital en efectivo.</li><li>Plazo de recompra del expropietario: 2 a 5 años.</li><li>Pulso se encarga del pago de los dividendos mensuales.</li></ul></div>
         <div class="mode" style="--c:var(--c4)"><div class="n">04</div><h3>Subasta Dinámica</h3><ul><li>Propiedades disponibles en SeSubasta.cl.</li><li>Compra para conservar la propiedad de forma definitiva.</li><li>Posturas anticipadas: al menos 15 días antes de la subasta.</li></ul><div class="note">Propiedades saneadas o en proceso de estarlo mediante la firma de Fidelium.</div></div>
-        <div class="mode" style="--c:var(--c5)"><div class="n">05</div><h3>Propiedades para venta final</h3><ul><li>Financiamiento a Pulso con hipoteca a tu favor.</li><li>Plazo estimado: 3 a 6 meses.</li><li>Capital e intereses se pagan al concretarse la venta.</li></ul></div>
+        <div class="mode" style="--c:var(--c5)"><div class="n">05</div><h3>Para venta final</h3><ul><li>Financiamiento a Pulso con hipoteca a tu favor.</li><li>Plazo estimado: 3 a 6 meses.</li><li>Capital e intereses se pagan al concretarse la venta.</li></ul></div>
       </div>
       <p class="fine">Intereses: las tasas indicadas como mensuales se calculan proporcionalmente al tiempo invertido. La periodicidad de pago y las condiciones de cada modalidad se establecen en el contrato pactado.</p>
     </div>
@@ -319,7 +319,7 @@ body.idle .ui{opacity:0}
 // Datos del portafolio (noviembre 2026).
 const D = id => 'https://drive.google.com/file/d/' + id + '/view';
 const PORTAFOLIO = [
-  { n:'01', nombre:'Activos adquiridos', c:'var(--c1)', oscuro:true, laminas:[[
+  { n:'01', nombre:'Garantías reales', c:'var(--c1)', oscuro:true, laminas:[[
     { t:'El Retiro', l:'Loncoche', img:'el-retiro', chip:['Duración','12 meses'],
       d:'Estratégico terreno agrícola en Loncoche con buena conectividad frente a la Ruta 5 Sur. Destaca por sus fértiles suelos planos junto al río Cruces, un entorno tranquilo, sólida infraestructura productiva con energía trifásica y una cómoda casa patronal renovada.',
       s:[['Tasación activo','14.643 UF'],['Monto de inversión','5.491,2 UF'],['Interés mensual','0,7% + UF'],['Cobertura de capital','62,5%']],
@@ -329,7 +329,7 @@ const PORTAFOLIO = [
       s:[['Tasación activo','6.664 UF'],['Monto de inversión','4.171,6 UF'],['Interés mensual','1,0% + UF'],['Cobertura de capital','37,4%']],
       ficha:D('1D8sbHcTkfuJOffoj0PkkXage04KCI9sr') },
   ]]},
-  { n:'02', nombre:'Capital en levantamiento', c:'var(--c2)', laminas:[[
+  { n:'02', nombre:'Proyectos para compra', c:'var(--c2)', laminas:[[
     { t:'Cardenal Newman', l:'Las Condes', img:'cardenal-newman', chip:['Fecha de inicio','31 / 10 / 26'],
       d:'El inmueble de uso habitacional se emplaza en un sector urbano y residencial, colindante a una propiedad de Aguas Cordillera. Su entorno cuenta con urbanización completa y buena conectividad a servicios y vías principales.',
       s:[['Tasación activo','49.330 UF'],['Monto de inversión','21.540 UF'],['Interés mensual','0,7% + UF'],['Plazo','24 meses']],
@@ -365,6 +365,10 @@ const PORTAFOLIO = [
       d:'Casa de 4 pisos, con 316,92 m² construidos en un terreno de 16.122 m². Cuenta con piscina, quincho, terrazas y vivienda para cuidador. Emplazada en un entorno residencial de baja densidad, con abundante vegetación y vistas al valle.',
       s:[['Interés a 5 años','3.775 UF',1],['Tasación activo','25.052 UF'],['Crédito hipotecario','15.098 UF']],
       tas:D('1MFE_PoZXXm_fxkXBetcq88qq6dYmqL2T'), ficha:D('1nJK_qb-ahFIqsCjYzhRsV9PQCwuNbRhV') },
+    { t:'Pingueral', l:'Tomé', img:'pingueral',
+      d:'Casa de dos niveles en Pingueral, balneario residencial de Tomé junto a Dichato, con 558 m² construidos en 2.650 m² de terreno. Tiene 5 dormitorios, 5 baños, terrazas, quincho y piscina. Regularizada y con recepción final.',
+      s:[['Interés a 5 años','3.291,2 UF',1],['Tasación activo','24.807 UF'],['Crédito hipotecario','13.165 UF']],
+      tas:D('1uecDlHDPG3B60dzyPEt610-qSrntR-Wf'), ficha:'fichas/pingueral-hipoteca-inteligente.pdf' },
     { t:'Cacique Catriñi', l:'Villarrica', img:'cacique-catrini',
       d:'Casa de madera de dos pisos en buen estado de mantención. Cuenta con living-comedor, cocina, calefacción central, quincho equipado y bodega.',
       s:[['Interés a 5 años','750 UF',1],['Tasación activo','5.346 UF'],['Crédito hipotecario','3.000 UF']],
@@ -380,7 +384,7 @@ const PORTAFOLIO = [
       s:[['Tasación activo','13.296 UF'],['Puja mínima','6.800 UF'],['Remate programado','15/12/26',1]],
       tas:D('10sY-jHIKKGWYJqhIMTehV6KP-TTJdXED') },
   ]]},
-  { n:'05', nombre:'Propiedades para venta final', c:'var(--c5)', laminas:[[
+  { n:'05', nombre:'Para venta final', c:'var(--c5)', laminas:[[
     { t:'Santa Amalia', l:'La Florida', img:'santa-amalia', feats:['3 Habs.','2 Baños','76 m²'],
       d:'Acogedor departamento en venta, ubicado en una zona con excelente conectividad, rodeado de servicios y comercios para vivir cómodamente. A pasos de Av. Tobalaba Oriente, es una excelente opción para ti y tu familia.',
       s:[['Valor publicado de venta','3.190 UF',1],['Hipot. máxima (60%)','1.914 UF'],['Dispon. hipoteca','0 UF']],
@@ -413,7 +417,7 @@ const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':
 const PIN = '<svg width="13" height="16" viewBox="0 0 12 16" fill="currentColor" aria-hidden="true"><path d="M6 0a6 6 0 00-6 6c0 4.5 6 10 6 10s6-5.5 6-10a6 6 0 00-6-6zm0 8.5A2.5 2.5 0 116 3.5a2.5 2.5 0 010 5z"/></svg>';
 const tarjeta = p => `
   <article class="card">
-    <div class="photo"><img src="img/${p.img}.jpg?v=2" alt="${esc(p.t)}, ${esc(p.l)}" loading="lazy">
+    <div class="photo"><img src="img/${p.img}.jpg?v=3" alt="${esc(p.t)}, ${esc(p.l)}" loading="lazy">
       ${p.chip ? `<div class="chip"><small>${p.chip[0]}</small><strong>${p.chip[1]}</strong></div>` : ''}
       ${p.feats ? `<div class="feats">${p.feats.map(f => `<span>${f}</span>`).join('')}</div>` : ''}
       ${p.desc ? `<div class="disc">${p.desc}<small>de descuento</small></div>` : ''}
