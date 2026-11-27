@@ -670,7 +670,8 @@
     var pct1 = function (n) { return n.toLocaleString('es-CL', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'; };
     var anios = function (n) { return n + (n === 1 ? ' año' : ' años'); };
     var INV_MIN = 25000000, RETIRO_MAX = 0.3; // retiro: hasta 30% del capital y dejando al menos $25 MM invertidos
-    var DESC_MAX = 20; // el descuento de venta nunca pasa de 20%
+    var DESC_MAX = 20; // descuento objetivo (referencia cuando no hay meta)
+    var DESC_TOPE = 30; // el descuento de venta nunca pasa de 30%
     var DESC_MIN = 15; // bajo este descuento la operación no es atractiva para el inversionista (rango objetivo 15% a 20% o algo más)
     function inputs() {
       var props = leerProps().filter(function (p) { return p.value || p.rent || p.pay || p.debt || p.months || p.modo; });
@@ -724,14 +725,15 @@
       var conMeta = flujoActual > 0, capitalMeta = conMeta ? meta / tasaMes : 0;
       var dMeta = conMeta ? (1 - (Math.max(capitalMeta, INV_MIN) + x.debt) / x.value) * 100 : DESC_MAX;
       var logra = !conMeta || dMeta >= DESC_MIN;     // con menos de 15% igual se simula (con 15%); el ejecutivo evalúa
-      var sobre = conMeta && dMeta > DESC_MAX;       // duplica con un descuento mayor a 20% (interno)
-      x.discount = Math.max(DESC_MIN, dMeta);
-      var capVenta = x.value * (1 - x.discount / 100) * (1 - x.sellcost / 100) - x.debt, retMax = Math.max(0, Math.min(RETIRO_MAX * capVenta, capVenta - INV_MIN));
+      var sobre = conMeta && dMeta > DESC_TOPE;      // ni con el tope de 30% se llega justo al doble (interno)
+      x.discount = Math.min(DESC_TOPE, Math.max(DESC_MIN, dMeta));
+      // Tope del ingreso: no pasa del doble. Si con el tope de descuento sobra capital, el sobrante se entrega en efectivo.
+      var capVenta = x.value * (1 - x.discount / 100) * (1 - x.sellcost / 100) - x.debt;
+      var invTope = Math.max(capitalMeta, INV_MIN), excedente = conMeta && capVenta > invTope ? capVenta - invTope : 0;
+      // El retiro no recalcula nada: solo se resta del capital invertido (máx. 30% y dejando al menos $25 MM invertidos).
+      var capBase = capVenta - excedente, retMax = Math.max(0, Math.min(RETIRO_MAX * capBase, capBase - INV_MIN));
       if (x.retiro > retMax) { x.retiro = Math.floor(retMax); $('#ic-retiro').value = x.retiro > 0 ? x.retiro.toLocaleString('es-CL') : ''; }
       $('#ic-retiro-hint').textContent = retMax > 0 ? 'Puedes retirar hasta ' + money(Math.floor(retMax)) + '.' : 'Con este capital no es posible retirar: la inversión debe quedar en al menos ' + money(INV_MIN) + '.';
-      // Tope: el ingreso no pasa del doble. Lo que sobra de la venta sobre el capital de la meta se entrega en efectivo
-      // (la inversión nunca baja del mínimo de $25 MM).
-      var invTope = Math.max(capitalMeta, INV_MIN), excedente = conMeta && capVenta - x.retiro > invTope ? capVenta - x.retiro - invTope : 0;
       x.excedente = excedente; x.retiro += excedente;
       var c, c5, c10;
       try { c = compute(x); c5 = compute(x, 5); c10 = compute(x, 10); } catch (e) { return err(e.message); }
@@ -839,7 +841,7 @@
       var filasTir = ['Conservar y arrendar', 'Vender e invertir en Pulso Inversor', 'Pulso Inversor y nueva compra'].slice(0, u.n).map(function (nm, i) { var nv = i === 2 && !u.cicloOk; return [nm, (nv ? 'No viable' : pct(u.c5.tirs[i])) + ' (5 años) · ' + (nv ? 'No viable' : pct(u.c10.tirs[i])) + ' (10 años)']; });
       var resumenIC = [(x.props.length > 1 ? x.props.length + ' propiedades, tasación total: ' : 'Valor de la propiedad: ') + money(x.value), 'Deuda: ' + money(x.debt), 'Ingreso mensual hoy: ' + money(u.flujoActual), 'Nuevo ingreso mensual: ' + money(c.monthly),
         'Capital a invertir: ' + money(c.inv), 'Efectivo que recibe: ' + money(c.ret), 'Tasa de interés elegida: ' + (c.rate * 100).toLocaleString('es-CL', { minimumFractionDigits: 1 }) + '% mensual, ' + (x.frequency === 'quarterly' ? 'pago cada 3 meses' : 'pago cada mes')];
-      var internoIC = ['Mayor resultado (interno): ' + u.best, 'Descuento de venta (interno): ' + pct1(x.discount) + (u.conMeta && !u.logra ? ' (mínimo 15%: no alcanza a duplicar)' : u.sobre ? ' (sobre 20%)' : ''), 'Precio de venta estimado (interno): ' + money(c.sale), 'Excedente sobre la meta, entregado en efectivo (interno): ' + money(x.excedente || 0)];
+      var internoIC = ['Mayor resultado (interno): ' + u.best, 'Descuento de venta (interno): ' + pct1(x.discount) + (u.conMeta && !u.logra ? ' (mínimo 15%: no alcanza a duplicar)' : u.sobre ? ' (tope 30%)' : ''), 'Precio de venta estimado (interno): ' + money(c.sale), 'Excedente sobre la meta, entregado en efectivo (interno): ' + money(x.excedente || 0)];
       var doc = pdfSimple('Simulación Inversión Circular', 'Proyección a 5 años', [
         { t: x.props.length > 1 ? 'Tus propiedades' : 'Tu propiedad', rows: (x.props.length > 1 ? x.props.map(function (p) { return [p.name, 'Tasación ' + money(p.value) + ' · arriendo ' + money(p.rent) + ' · dividendo ' + money(p.pay) + (p.debt ? ' · deuda ' + money(p.debt) : '')]; }) : []).concat([['Valor comercial' + (x.props.length > 1 ? ' total' : ''), money(x.value)], ['Arriendo mensual', money(x.rent)], ['Dividendo mensual', money(x.oldpayment)], ['Deuda a prepagar', money(x.debt)]]) },
         { t: 'Lo esencial', rows: [['Tu ingreso mensual hoy*', money(u.flujoActual)], ['Tu nuevo ingreso mensual con Pulso Inversor', money(c.monthly), 'pos'], [x.frequency === 'quarterly' ? 'Pago efectivo trimestral' : 'Pago mensual', money(x.frequency === 'quarterly' ? c.payout : c.monthly)], ['Capital a invertir', money(c.inv)], ['Efectivo que recibes', c.ret ? money(c.ret) : 'No aplica']] },
