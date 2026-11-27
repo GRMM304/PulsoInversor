@@ -722,13 +722,10 @@
       // El descuento de venta es el resultado: el precio que deja, descontada la deuda, el capital que da el doble.
       var flujoActual = x.rent - x.oldpayment, meta = 2 * flujoActual, tasaMes = (X.frequency === 'quarterly' ? x.quarterrate : x.monthrate) / 100;
       var conMeta = flujoActual > 0, capitalMeta = conMeta ? meta / tasaMes : 0;
-      var vCon = x.props.reduce(function (s, p) { return s + (p.debt > 0 ? p.value : 0); }, 0), vSin = x.value - vCon;
-      var dSin = conMeta && vSin > 0 ? (1 - (capitalMeta + x.debt - vCon * (1 - DESC_MAX / 100)) / vSin) * 100 : DESC_MAX;
-      var logra = !conMeta || vSin <= 0 || dSin >= DESC_MIN; // con menos de 15% igual se simula (con 15%); el ejecutivo evalúa
-      var sobre = conMeta && vSin > 0 && dSin > DESC_MAX;
-      dSin = Math.min(DESC_MAX, Math.max(DESC_MIN, dSin));
-      x.discount = (vCon * DESC_MAX + vSin * dSin) / x.value;
-      x.dSin = dSin; x.vCon = vCon; x.vSin = vSin;
+      var dMeta = conMeta ? (1 - (Math.max(capitalMeta, INV_MIN) + x.debt) / x.value) * 100 : DESC_MAX;
+      var logra = !conMeta || dMeta >= DESC_MIN;     // con menos de 15% igual se simula (con 15%); el ejecutivo evalúa
+      var sobre = conMeta && dMeta > DESC_MAX;       // duplica con un descuento mayor a 20% (interno)
+      x.discount = Math.max(DESC_MIN, dMeta);
       var capVenta = x.value * (1 - x.discount / 100) * (1 - x.sellcost / 100) - x.debt, retMax = Math.max(0, Math.min(RETIRO_MAX * capVenta, capVenta - INV_MIN));
       if (x.retiro > retMax) { x.retiro = Math.floor(retMax); $('#ic-retiro').value = x.retiro > 0 ? x.retiro.toLocaleString('es-CL') : ''; }
       $('#ic-retiro-hint').textContent = retMax > 0 ? 'Puedes retirar hasta ' + money(Math.floor(retMax)) + '.' : 'Con este capital no es posible retirar: la inversión debe quedar en al menos ' + money(INV_MIN) + '.';
@@ -841,14 +838,14 @@
       var u = ultimo, x = u.x, c = u.c;
       var filasTir = ['Conservar y arrendar', 'Vender e invertir en Pulso Inversor', 'Pulso Inversor y nueva compra'].slice(0, u.n).map(function (nm, i) { var nv = i === 2 && !u.cicloOk; return [nm, (nv ? 'No viable' : pct(u.c5.tirs[i])) + ' (5 años) · ' + (nv ? 'No viable' : pct(u.c10.tirs[i])) + ' (10 años)']; });
       var resumenIC = [(x.props.length > 1 ? x.props.length + ' propiedades, tasación total: ' : 'Valor de la propiedad: ') + money(x.value), 'Deuda: ' + money(x.debt), 'Ingreso mensual hoy: ' + money(u.flujoActual), 'Nuevo ingreso mensual: ' + money(c.monthly),
-        'Capital a invertir: ' + money(c.inv), 'Efectivo que recibe: ' + money(c.ret), 'Mayor resultado: ' + u.best];
-      var internoIC = ['Descuento de venta (interno): ' + pct1(x.discount) + (x.vCon > 0 ? ' · con deuda 20%' + (x.vSin > 0 ? ' · sin deuda ' + pct1(x.dSin) : '') : '') + (u.conMeta && !u.logra ? ' (mínimo de la operación)' : u.sobre ? ' (máximo de la operación)' : ''), 'Precio de venta estimado (interno): ' + money(c.sale), 'Excedente sobre la meta, entregado en efectivo (interno): ' + money(x.excedente || 0)];
+        'Capital a invertir: ' + money(c.inv), 'Efectivo que recibe: ' + money(c.ret), 'Tasa de interés elegida: ' + (c.rate * 100).toLocaleString('es-CL', { minimumFractionDigits: 1 }) + '% mensual, ' + (x.frequency === 'quarterly' ? 'pago cada 3 meses' : 'pago cada mes')];
+      var internoIC = ['Mayor resultado (interno): ' + u.best, 'Descuento de venta (interno): ' + pct1(x.discount) + (u.conMeta && !u.logra ? ' (mínimo 15%: no alcanza a duplicar)' : u.sobre ? ' (sobre 20%)' : ''), 'Precio de venta estimado (interno): ' + money(c.sale), 'Excedente sobre la meta, entregado en efectivo (interno): ' + money(x.excedente || 0)];
       var doc = pdfSimple('Simulación Inversión Circular', 'Proyección a 5 años', [
         { t: x.props.length > 1 ? 'Tus propiedades' : 'Tu propiedad', rows: (x.props.length > 1 ? x.props.map(function (p) { return [p.name, 'Tasación ' + money(p.value) + ' · arriendo ' + money(p.rent) + ' · dividendo ' + money(p.pay) + (p.debt ? ' · deuda ' + money(p.debt) : '')]; }) : []).concat([['Valor comercial' + (x.props.length > 1 ? ' total' : ''), money(x.value)], ['Arriendo mensual', money(x.rent)], ['Dividendo mensual', money(x.oldpayment)], ['Deuda a prepagar', money(x.debt)]]) },
         { t: 'Lo esencial', rows: [['Tu ingreso mensual hoy*', money(u.flujoActual)], ['Tu nuevo ingreso mensual con Pulso Inversor', money(c.monthly), 'pos'], [x.frequency === 'quarterly' ? 'Pago efectivo trimestral' : 'Pago mensual', money(x.frequency === 'quarterly' ? c.payout : c.monthly)], ['Capital a invertir', money(c.inv)], ['Efectivo que recibes', c.ret ? money(c.ret) : 'No aplica']] },
         { t: 'Tu primer año', rows: [['Hoy, con tus arriendos*', money(u.flujoActual * 12) + ' al año'], ['Con Pulso Inversor', money(c.monthly * 12) + ' al año', 'pos'], ['Diferencia en tu primer año', money((c.monthly - u.flujoActual) * 12)]] },
         { t: 'Resumen', text: $('#ic-summary').textContent },
-        u.barrasPulso && { t: '¿Con cuánto terminas en ' + anios(x.years) + '?', rows: [['Si conservas y arriendas', compact(c.end[0] + c.totals[0])], ['Si vendes e inviertes en Pulso Inversor', compact(c.end[1] + c.totals[1])]].concat(u.n === 3 && u.cicloOk ? [['Si vendes, inviertes y compras otra', compact(c.end[2] + c.totals[2])]] : []).concat([['Mayor resultado', u.best, 'pos']]) },
+        u.barrasPulso && { t: '¿Con cuánto terminas en ' + anios(x.years) + '?', rows: [['Si conservas y arriendas', compact(c.end[0] + c.totals[0])], ['Si vendes e inviertes en Pulso Inversor', compact(c.end[1] + c.totals[1])]].concat(u.n === 3 && u.cicloOk ? [['Si vendes, inviertes y compras otra', compact(c.end[2] + c.totals[2])]] : []) },
         u.tirPulso && { t: 'TIR anual efectiva', rows: filasTir },
         { t: 'Tus próximos pasos', proximos: true },
         { t: 'Supuestos', small: true, text: $('#ic-base').textContent + ' *El ingreso actual por arriendo corresponde a condiciones normales y puede disminuir por vacancia, mantenciones o contribuciones. El precio de venta considera un descuento sobre la tasación para lograr una venta ágil. Inflación 3% anual; arriendo reajustado 3% anual; mantención, vacancia y reparaciones estimadas. Proyectar diez años exige continuidad de tasa, condiciones y cumplimiento de pagos. La nueva compra es opcional y se evalúa por separado. ' + DISCLAIMER }
