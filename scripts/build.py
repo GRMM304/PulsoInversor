@@ -1120,6 +1120,7 @@ page('inversion-circular.html', 'Inversión Inmobiliaria Circular',
 </div>
         <p class="ic-note">Proyectar diez años exige continuidad de tasa, condiciones y cumplimiento de pagos. La nueva compra es opcional y se evalúa por separado.</p>
         <p class="ic-note">Esta simulación no constituye una cotización ni asegura rentabilidades futuras. La rentabilidad simulada es referencial a esta fecha y no compromete a Pulso Inversor SpA. La rentabilidad y las condiciones finales se fijan al momento de la firma del contrato respectivo.</p>
+        <p class="ic-asesor"><b>Esta es una simulación referencial.</b> Los valores son estimados y se pueden ajustar a tu caso. Si tienes dudas, <a href="https://wa.me/{WHATSAPP}?text={urllib.parse.quote('Hola, simulé la Inversión Circular y tengo dudas.')}" target="_blank" rel="noopener">habla con un asesor de Pulso Inversor</a>.</p>
         <div class="pro-actions"><button type="button" class="btn btn-primary btn-xl" id="ic-correo">Enviar a mi correo <span aria-hidden="true">→</span></button></div>
         <p class="sim-aut">Al completar tus datos personales, Pulso Inversor SpA podrá usarlos para contactarte por correo y WhatsApp, enviarte tu simulación y entregarte opciones de inversión, además de verificar el funcionamiento de la plataforma. Si quieres saber más sobre el uso y resguardo de tu información, revisa nuestra <a href="privacidad.html" target="_blank">Política de privacidad</a>.</p>
         <p class="sim-status" id="ic-status" role="status"></p>

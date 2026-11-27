@@ -2454,3 +2454,5 @@ iframe[title="Webchat Widget"]{z-index:2147483000!important}
 .cb-row.is-base .cb-track .cb-a{background:#9aa59f}
 .cb-row.is-base .cb-track .cb-b{background:#c9cfcb}
 .cb-row.is-pulso .cb-total{font-size:20px}
+.ic-asesor{margin:18px 0 0;padding:14px 18px;border-radius:var(--radius-lg);background:#eef1e6;color:var(--green-900);font-size:15px;line-height:1.5}
+.ic-asesor a{color:var(--green-900);font-weight:700;text-decoration:underline}
